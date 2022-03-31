@@ -9,7 +9,7 @@ Datamanagement System
 
 # Workflow
 
-# I. Guest opens application:
+# I. Client opens application:
 	
 		Completes data
 		Saves data (data to database)
