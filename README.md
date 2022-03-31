@@ -9,7 +9,7 @@ Datamanagement System
 
 # Workflow
 
-![Workflow diagram](https://user-images.githubusercontent.com/25910991/161052023-c44f42b5-893e-4f9e-96ae-2490e50d10a1.png)
+![Price Manager](https://user-images.githubusercontent.com/25910991/161135720-d12bbedf-0cf3-46b2-9185-fa6526c7a771.png)
 
 # I. Client opens application:
 	
@@ -66,3 +66,4 @@ Datamanagement System
 	Approved/declined Date Filter
 	Saved/notSaved Date Filter
 	Export Button
+
