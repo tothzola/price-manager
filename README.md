@@ -13,7 +13,7 @@ Datamanagement System
 
 # I. Client opens application:
 	
-	Completes data
+	Complets fomr data
 	Saves data (data to database)
 	Auto Notifie Approver 
 
@@ -56,10 +56,11 @@ Datamanagement System
 	Add Button
 	Edit Button
 	List (Currently added prices)
+	Save Button
 
 ## Fields available for approver:
 	Customer Filter 
 	Approved/declined Filter
 	Approved/declined Date Filter
 	Saved/notSaved Date Filter
-	Export
+	Export Button
