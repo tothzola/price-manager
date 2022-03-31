@@ -59,4 +59,5 @@ Datamanagement System
 			Saved/notSaved Date Filter
 			Export
 
+![Workflow diagram](https://user-images.githubusercontent.com/25910991/161052023-c44f42b5-893e-4f9e-96ae-2490e50d10a1.png)
 
