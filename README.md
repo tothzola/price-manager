@@ -1,11 +1,11 @@
 # price-manager
 
 Application User Intarface 
-  - ex.: Excel (stored on local computer)
+  - ex.: Excel 
   - 
 Datamanagement System
-  - ex.: Access (stored on sharepoint)
-  - UserManagementTable (Ex.: Client, Approver, Manager, Developer)
+  - ex.: Access 
+  - Users Table (Client, Approver, Manager, Developer)
 
 # Workflow
 
