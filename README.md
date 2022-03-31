@@ -1,6 +1,6 @@
 # price-manager
 
-Application User Intarface 
+Application User Interface 
   - ex.: Excel 
   - 
 Datamanagement System
@@ -13,9 +13,9 @@ Datamanagement System
 
 # I. Client opens application:
 	
-	Complets fomr data
+	Complets form data
 	Saves data (data to database)
-	Auto Notifie Approver 
+	Auto Notify Approver 
 
 
 # II. Approver opens application:
@@ -29,6 +29,7 @@ Datamanagement System
     
 # Application Form Context:
 ## Fields available for client
+	
 	Customer field
 		- field features: 	-> required
 					-> validation (maxLength 6, starts with nr. 4 or 5)
@@ -59,6 +60,7 @@ Datamanagement System
 	Save Button
 
 ## Fields available for approver:
+	
 	Customer Filter 
 	Approved/declined Filter
 	Approved/declined Date Filter
