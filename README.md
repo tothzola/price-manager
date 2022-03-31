@@ -28,7 +28,7 @@ Datamanagement System
     
     
 # Application Form Context:
- 	## A. Fields available for client
+## Fields available for client
 	Customer field
 		- field features: 	-> required
 					-> validation (maxLength 6, starts with nr. 4 or 5)
@@ -57,7 +57,7 @@ Datamanagement System
 	Edit Button
 	List (Currently added prices)
 
-	## B. Fields available for approver:
+## Fields available for approver:
 	Customer Filter 
 	Approved/declined Filter
 	Approved/declined Date Filter
