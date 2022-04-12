@@ -1,0 +1,58 @@
+> Create skeleton of view 
+
+> Create basic structure of ProjectServices Class
+> Create basic structure of ProjectRepository Class
+
+> Design MainModel, MainPresenter 
+> Design Main Table
+> Insert Dependent Mehtods & Properties in MainView, ProjectServices & ProjectRepository Class 
+> Test Application's Start & Closing Operations 
+> Bugs & Issues Fixation of Application Flow
+
+> Design LoginModel, LoginPresenter 
+> Design Users Table
+> Insert Dependent Mehtods & Properties in MainView, ProjectServices & ProjectRepository Class 
+> Test Login Service Utility
+> Bugs & Issues Fixation for Login Service Utility
+
+> Design UserManagerModel, UserManagerPresenter
+> Insert Dependent Mehtods & Properties in MainView, ProjectServices & ProjectRepository Class 
+> Test User Manager Utility & Login Service
+> Bugs & Issues Fixation for User Manager Utility
+
+> Design PriceFormModel, PriceFormPresenter
+> Insert Dependent Mehtods & Properties in MainView, ProjectServices & ProjectRepository Class 
+> Test Price Form with different clients 
+> Bugs & Issues Fixation for Price Form 
+
+> Design RecordsContainerModel, RecordContainerPresenter
+> Insert Dependent Mehtods & Properties in MainView, ProjectServices & ProjectRepository Class for Client History 
+> Insert Dependent Mehtods & Properties in MainView, ProjectServices & ProjectRepository Class for Approver Pendings
+> Insert Dependent Mehtods & Properties in MainView, ProjectServices & ProjectRepository Class for All History
+> Test Client History, Approver Pendings & All History 
+> Bugs & Issues Fixation for Client History, Approver Pendings and All History Flows 
+
+> Design ExportServiceModel, ExportServicePresenter
+> Insert Dependent Mehtods & Properties in MainView, ProjectServices & ProjectRepository Class 
+> Test Export Service Utility
+> Bugs & Issues Fixation for Export Service Utility
+
+> BETA Integration Test (Local Database) 
+> Bugs & Issues Fixation of BETA Test
+
+> Replace Excel Named Range Database Structure with Access DBMS
+> Insert Dependent Mehtods & Properties in ProjectServices & ProjectRepository Class for Access Queries (LOCAL)
+> BETA Integration Test 
+> Bugs & Issues Fixation of BETA Test
+
+> Place Access Database File On the Cloud/SharePoint
+> Re-Configure the Settings in ProjectRepository Class (CLOUD)
+> BETA Integration Test (Cloud)
+> Bugs & Issues Fixation of BETA Test
+
+> Alpha Integration Test (This will be done by the Volunteer) 
+> Bugs & Issues Fixation of ALPHA Test
+> Final Testing By The Developers
+
+> Luanch of Price Approving Model V1.0
+
