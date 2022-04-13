@@ -1,0 +1,135 @@
+> Get all the table data 
+	
+	SELECT * FROM table_name;
+		
+		PARAMETER 1: table_name : STRING
+
+> specific table data based on the given table 
+
+	SELECT column1, column2, ...
+	FROM table_name;
+		
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: columns() : PARAMARRAY 
+
+> Get table data based on the condition 
+
+	SELECT column1, column2, ...
+	FROM table_name
+	WHERE condition;
+
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: columns() : PARAMARRAY
+		PARAMETER 3: condition : STRING : "columnName = 'value'"
+
+> Get table data based on the many conditions
+
+    ~ AND Syntax:
+
+	SELECT column1, column2, ...
+	FROM table_name
+	WHERE condition1 AND condition2 AND condition3 ...;
+
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: columns() : PARAMARRAY
+		PARAMETER 3: conditions() : PARAMARRAY
+	
+    ~ OR Syntax: 
+
+	SELECT column1, column2, ...
+	FROM table_name
+	WHERE condition1 OR condition2 OR condition3 ...;
+
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: columns() : PARAMARRAY
+		PARAMETER 3: conditions() : PARAMARRAY
+
+    ~ NOT Syntax:
+
+	SELECT column1, column2, ...
+	FROM table_name
+	WHERE NOT condition;
+
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: columns() : PARAMARRAY
+		PARAMETER 3: condition : STRING : "columnName = 'value'"
+
+    ~ IS NULL Syntax:
+
+	SELECT column_names
+	FROM table_name
+	WHERE column_name IS NULL;
+
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: column_name : STRING
+
+    ~ IS NOT NULL Syntax:
+
+	SELECT column_namesz
+	FROM table_name
+	WHERE column_name IS NOT NULL;
+
+> Insert new entry in to the table 
+
+    ~ Specify both the column names and the values to be inserted:
+	
+	INSERT INTO table_name (column1, column2, column3, ...)
+	VALUES (value1, value2, value3, ...);
+
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: columns : string
+		PARAMETER 3: values : PARAMARRAY 
+
+    ~ If you are adding values for all the columns of the table
+
+	INSERT INTO table_name
+	VALUES (value1, value2, value3, ...);
+	
+> UPDATE statement is used to modify the existing records in a table.
+
+
+    ~ UPDATE Syntax:
+
+	UPDATE table_name
+	SET column1 = value1, column2 = value2, ...
+	WHERE condition;
+
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: columns&ValuePair() : PARAMARRAY : "column1 = 'xyz',column2 = 'abc'"
+		PARAMETER 3: condition : STRING : "columnName = 'value'"
+
+> DELETE statement is used to delete existing records in a table.
+
+    ~ DELETE Syntax:
+
+	DELETE FROM table_name WHERE condition;
+
+		PARAMETER 1: table_name : STRING
+		PARAMETER 2: condition : STRING : "columnName = 'value'"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

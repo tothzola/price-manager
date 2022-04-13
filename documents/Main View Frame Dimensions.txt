@@ -1,0 +1,11 @@
+Side Frame Configuration
+Top	7
+Left	6
+Width	140
+Height	318
+
+Main Frame Configuration
+Top	7
+Left	150
+Width	432
+Height	318
