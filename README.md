@@ -25,8 +25,11 @@ Datamanagement System
 
 # Application Form Context:	
 ## Client Fields (features and validation)
+
 ### Customer
+
 **Feature:** entry is required, numeric filed (format: "######")
+
 **Validation:** exact 6 char length, range should be between [399999] and [599999] 
 
 **ex. for validation failed:** 
@@ -43,7 +46,9 @@ Datamanagement System
 ---
 
 ### Material
+
 **Feature:** entry is required, numeric field (format: "########")
+
 **Validation:** exact 8 char length, range should be between [49999999] and [59999999] 
 
 **ex. for validation failed:**
@@ -60,7 +65,9 @@ Datamanagement System
 ---
 
 ### Price
+
 **Feature:** entry is required, string field (format: "#.###,00") is currency
+
 **Validation:** maximal 6 char length
 
 **ex. for validation failed:**
@@ -77,11 +84,14 @@ Datamanagement System
 ---
 
 ### Currency
+
 **Feature:** selection is required, dropdownlist 
 - list values: EUR, USD, GBP, PLN
 
 ### Price Unit
+
 **Feature:** no entry is required, numeric field (format: "####") 
+
 **Validation:** maximal 4 char length
 
 **ex. for validation failed:**
@@ -98,12 +108,15 @@ Datamanagement System
 ---
 
 ### Unit of Measure
+
 **Feature:** selection is required if Price Unit field hase a valid value, dropdownlist 
 - list values: KAR, RO, ST, KG, LM, M2
 ---
 
 ### Valid from
+
 **Feature:** entry is required, numeric field (format: "##.##.####") is date, autocompeted as todays date, user is allowed to change the entry.
+
 **Validation:** exact 10 char length
 
 **ex. for validation failed:**
@@ -120,7 +133,9 @@ Datamanagement System
 ---
 
 ### Valid to
+
 **Feature:** entry is required, numeric field (format: "##.##.####") is date, autocompeted as [31.12.9999] date, user is allowed to change the entry.
+
 **Validation:** exact 10 char length
 
 **ex. for validation failed:**
