@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 'SETTINGS
-Const MESSAGE_WELCOMESCREEN_LOGOUT_STATE As String = "Welcome to The Price Approval Manager..."
+Const MESSAGE_WELCOMESCREEN_LOGOUT_STATE As String = "Welcome to The Price Approval Manager"
 Const MESSAGE_WELCOMESCREEN_LOGIN_STATE As String = "Welcome "
 
 'Private Variables/Objects
@@ -48,11 +48,13 @@ End Sub
 
 Private Sub cmdCancelRecordContainer_Click()
     'back to the dashboard
-    If Me.lblActiveUserType.Caption = "Client" Then
-        Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
-    Else
-        Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
-    End If
+    With ExtendedMethods
+        If Me.lblActiveUserType.Caption = "Client" Then
+            Call .ActivateFrames(Me.frameClient, Me.frameWelcome)
+        Else
+            Call .ActivateFrames(Me.frameApprover, Me.frameWelcome)
+        End If
+    End With
     Call UpdateWelcomeMessage
 End Sub
 
@@ -70,7 +72,7 @@ End Sub
 
 Private Sub cmdExit_Click()
     'get exit from the application
-    Unload Me
+    Me.Hide
 End Sub
 
 Private Sub cmdLogin_Click()
