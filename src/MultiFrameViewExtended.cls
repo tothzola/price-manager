@@ -20,9 +20,10 @@ Const PANEL_TYPE_ALWAYSON As String = "INFO"
 Const PANEL_TYPE_SIDE As String = "SIDE"
 Const PANEL_TYPE_MAIN As String = "MAIN"
 
-Public TargetForm As Object 'Instance of User Form/VIEW
+'Public Properties
 
-'Userform Dimensions
+'Userform Properties
+Public TargetForm As Object 'Instance of User Form/VIEW
 Public formWidth As Integer
 Public formHeight As Integer
 
@@ -47,6 +48,8 @@ Public mainFrameWidth As Integer
 Public mainFrameHeight As Integer
 
 'Public Methods
+
+'Following method will set the dimention of the userform
 
 Public Sub ReDimensionForm()
     With TargetForm
@@ -94,21 +97,22 @@ Public Sub ActivateFrames(ByVal sidePanelFrame As MSForms.Frame, ByVal mainPanel
     Dim ctrl As MSForms.Control
     For Each ctrl In TargetForm.Controls
         If VBA.TypeName(ctrl) = CONTROL_TYPE_FRAME Then
-            If ctrl.name = sidePanelFrame.name Then
-                Call RedimensioningOfFramesBasedOnNature(sidePanelFrame, PANEL_TYPE_SIDE)
-                If ctrl.Visible = False Then ctrl.Visible = True
-            ElseIf ctrl.name = mainPanelFrame.name Then
-                Call RedimensioningOfFramesBasedOnNature(mainPanelFrame, PANEL_TYPE_MAIN)
-                If ctrl.Visible = False Then ctrl.Visible = True
-            ElseIf ctrl.name = frameAlwaysOn.name Then 'Always ON
-                If IsAlwaysOnFrameVisible = False Then 'We are doing this because always on frame would be set only for the one time during the initialization
-                    IsAlwaysOnFrameVisible = True
-                    Call RedimensioningOfFramesBasedOnNature(frameAlwaysOn, PANEL_TYPE_ALWAYSON)
-                    ctrl.Visible = True
-                End If
-            Else
-                If ctrl.Visible = True Then ctrl.Visible = False
-            End If
+            Select Case ctrl.name
+                Case sidePanelFrame.name
+                    Call RedimensioningOfFramesBasedOnNature(sidePanelFrame, PANEL_TYPE_SIDE)
+                    If ctrl.Visible = False Then ctrl.Visible = True
+                Case mainPanelFrame.name
+                    Call RedimensioningOfFramesBasedOnNature(mainPanelFrame, PANEL_TYPE_MAIN)
+                    If ctrl.Visible = False Then ctrl.Visible = True
+                Case frameAlwaysOn.name
+                    If IsAlwaysOnFrameVisible = False Then
+                        IsAlwaysOnFrameVisible = True
+                        Call RedimensioningOfFramesBasedOnNature(frameAlwaysOn, PANEL_TYPE_ALWAYSON)
+                        ctrl.Visible = True
+                    End If
+                Case Else
+                    If ctrl.Visible = True Then ctrl.Visible = False
+            End Select
         End If
     Next ctrl
     Set ctrl = Nothing
