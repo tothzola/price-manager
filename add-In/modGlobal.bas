@@ -17,7 +17,7 @@ Public Const USERTYPE_APPROVER As String = "APPROVER"
 
 'COLORS
 Public Const COLOR_OF_OKAY As Long = &H8000&
-Public Const COLOR_OF_NOT_OKAY As Long = VBA.ColorConstants.vbYellow '&H2D04D2
+Public Const COLOR_OF_NOT_OKAY As Long = &H2D04D2
 
 'Other Settings
 
