@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'@Folder "View"
 Option Explicit
 'By Kamal Bharakhda
 
@@ -19,6 +20,14 @@ Const CONTROL_TYPE_LISTBOX As String = "ListBox"
 Const PANEL_TYPE_ALWAYSON As String = "INFO"
 Const PANEL_TYPE_SIDE As String = "SIDE"
 Const PANEL_TYPE_MAIN As String = "MAIN"
+Const SYMBOL_OK As String = "ü"
+Const CONTROL_NAME_OK As String = "OK"
+
+'Colors
+Const INVALID_FIELD_BACKCOLOR As Long = COLOR_OF_NOT_OKAY
+Const INVALID_FIELD_FONTCOLOR As Long = vbWhite
+Const VALID_FIELD_BACKCOLOR As Long = vbWhite
+Const VALID_FIELD_FONTCOLOR As Long = vbBlack
 
 'Public Properties
 
@@ -49,13 +58,34 @@ Public mainFrameHeight As Integer
 
 'Public Methods
 
-'Following method will set the dimention of the userform
+Public Sub UpdateControlAfterValidation(ByVal ctrl As MSForms.Control, ByVal valid As Boolean, Optional warning As WarningType, Optional warningMessage As String = vbNullString)
+    With ctrl
+        Select Case VBA.TypeName(ctrl)
+            Case "TextBox", "ComboBox"
+                If valid Then
+                    .BackColor = VALID_FIELD_BACKCOLOR
+                    .ForeColor = VALID_FIELD_FONTCOLOR
+                    Call RemoveWarningLabel(ctrl, warning)
+                Else
+                    .BackColor = INVALID_FIELD_BACKCOLOR
+                    .ForeColor = INVALID_FIELD_FONTCOLOR
+                    Call InsertWarningLabel(ctrl, warning, warningMessage)
+                End If
+        End Select
+    End With
+End Sub
 
+'Following method will set the dimention of the userform
 Public Sub ReDimensionForm()
     With TargetForm
         .Width = formWidth
         .Height = formHeight
     End With
+End Sub
+
+'Hydrate Comboboxes
+Public Sub HydrateComboBox(ByVal cmb As MSForms.ComboBox, ByVal data As Variant)
+    cmb.List = data
 End Sub
 
 'Change Control's Value and Font Color
@@ -118,7 +148,116 @@ Public Sub ActivateFrames(ByVal sidePanelFrame As MSForms.Frame, ByVal mainPanel
     Set ctrl = Nothing
 End Sub
 
+'this method will show popup message
+Public Sub ShowMessage(ByVal message As String, ByVal typeOfMessage As messageType)
+    Select Case typeOfMessage
+        Case messageType.TYPE_CRITICAL
+            MsgBox message, vbCritical, SIGN
+        Case messageType.TYPE_INFORMATION
+            MsgBox message, vbInformation, SIGN
+    End Select
+End Sub
+
 'Private abstract methods
+
+'Following method will add label on runtime. if it present then it will only change the visible property of the label
+Private Sub InsertWarningLabel(ByVal ctrl As MSForms.Control, Optional warning As WarningType, Optional warningMessage As String)
+    Select Case warning
+        Case WarningType.TYPE_NA
+            'do nothing
+        Case WarningType.TYPE_NUMBERSONLY
+            HidingLabel ctrl, CONTROL_NAME_OK
+            InsertingLabel ctrl, "TYPE_NUMBERSONLY", "Only numerics are allowed!"
+        Case WarningType.TYPE_STRINGSNOTMATCHED
+            HidingLabel ctrl, CONTROL_NAME_OK
+            InsertingLabel ctrl, "TYPE_STRINGSNOTMATCHED", "Doesn't matched!" & " " & warningMessage
+        Case WarningType.TYPE_WRONGPASSWORDPATTERN
+            HidingLabel ctrl, CONTROL_NAME_OK
+            InsertingLabel ctrl, "TYPE_WRONGPASSWORDPATTERN", "Password must have min. 8 characters, One A-Z, a-z, 0-9 and Special Character"
+        Case WarningType.TYPE_FIXEDLENGTHSTRING
+            HidingLabel ctrl, CONTROL_NAME_OK
+            InsertingLabel ctrl, "TYPE_FIXEDLENGTHSTRING", "String must have minimum of " & warningMessage & " characters"
+    End Select
+End Sub
+
+'Following method wiil remove label runtime.
+Private Sub RemoveWarningLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As String)
+    Select Case ctrlName
+        Case WarningType.TYPE_NUMBERSONLY
+            HidingLabel ctrl, "TYPE_NUMBERSONLY"
+            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+        Case WarningType.TYPE_STRINGSNOTMATCHED
+            HidingLabel ctrl, "TYPE_STRINGSNOTMATCHED"
+            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+        Case WarningType.TYPE_WRONGPASSWORDPATTERN
+            HidingLabel ctrl, "TYPE_WRONGPASSWORDPATTERN"
+            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+        Case WarningType.TYPE_FIXEDLENGTHSTRING
+            HidingLabel ctrl, "TYPE_FIXEDLENGTHSTRING"
+            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+    End Select
+End Sub
+
+'Inserting Warning Label
+
+Private Sub InsertingLabel(ctrl As MSForms.Control, ByVal ctrlName As String, ByVal message As String, Optional IsItSymbol As Boolean = False)
+    Dim TargetTop As Long
+    Dim TargetLeft As Long
+    Dim TargetFrame As MSForms.Frame
+    Dim warningLabel As MSForms.Label
+    Dim LabelName As String
+    'Setting up Label
+    Set TargetFrame = ctrl.parent
+    LabelName = ctrl.name & "_" & ctrlName
+    TargetTop = ctrl.Top
+    TargetLeft = ctrl.Left + ctrl.Width + 6
+    On Error Resume Next
+    Set warningLabel = TargetForm.Controls(LabelName)
+    If Err Then
+        Set warningLabel = TargetFrame.Controls.Add("Forms.Label.1", LabelName, True)
+        Err.Clear
+    End If
+    On Error GoTo 0
+    
+    With warningLabel
+        .Visible = True
+        .Top = TargetTop
+        .Left = TargetLeft
+        .Caption = IIf(IsItSymbol, message, "* " & message)
+        If IsItSymbol Then
+            .Height = 18
+            .Width = 18
+            .ForeColor = COLOR_OF_OKAY
+            With .Font
+                .Charset = 2
+                .name = "Wingdings"
+                .Size = 22
+            End With
+        Else
+            .WordWrap = True
+            .AutoSize = True
+            .Width = TargetFrame.Width - ctrl.Left - ctrl.Width - 12
+            .ForeColor = COLOR_OF_NOT_OKAY
+            .Font.Size = 9
+        End If
+    End With
+    Set TargetFrame = Nothing
+    Set warningLabel = Nothing
+End Sub
+
+'Removing Warning Labels
+
+Private Sub HidingLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As String)
+    Dim warningLabel As MSForms.Label
+    Dim LabelName As String
+    LabelName = ctrl.name & "_" & ctrlName
+    On Error Resume Next
+    Set warningLabel = TargetForm.Controls(LabelName)
+    warningLabel.Visible = False
+    If Err Then Err.Clear
+    On Error GoTo 0
+    Set warningLabel = Nothing
+End Sub
 
 'Following method will distribute frame dimensions based on their nature
 
