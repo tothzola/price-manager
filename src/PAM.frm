@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -339,28 +338,28 @@ End Sub
 
 Private Sub cmbUserStatus_Change()
     'Hydrate model property
-    UserModel.userStatus = Me.cmbUserStatus.value
+    UserModel.userStatus = Me.cmbUserStatus.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserStatus, UserModel.IsValidField(COL_userStatus), TYPE_NA
 End Sub
 
 Private Sub cmbUserType_Change()
     'Hydrate model property
-    UserModel.userType = Me.cmbUserType.value
+    UserModel.userType = Me.cmbUserType.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserType, UserModel.IsValidField(COL_userType), TYPE_NA
 End Sub
 
 Private Sub txtSetUsername_Change()
     'Hydrate model property
-    UserModel.userName = Me.txtSetUsername.value
+    UserModel.userName = Me.txtSetUsername.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_FIXEDLENGTHSTRING, 6
 End Sub
 
 Private Sub txtSetPassword_Change()
     'hydrate model property
-    UserModel.userPassword = Me.txtSetPassword.value
+    UserModel.userPassword = Me.txtSetPassword.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtSetPassword, UserModel.IsValidField(COL_password), TYPE_WRONGPASSWORDPATTERN
 End Sub
@@ -396,7 +395,7 @@ Private Sub txtNewPassword_Change()
     'Hydrate model properties
     PasswordModel.newPassword = Me.txtNewPassword.Text
     'On Every change, of New Password TextBox, We have to reset Confirm Password Field
-    Me.txtConfirmNewPassword.value = vbNullString
+    Me.txtConfirmNewPassword.Value = vbNullString
     PasswordModel.confirmNewPassword = Me.txtConfirmNewPassword.Text
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtNewPassword, PasswordModel.IsValidField(2), TYPE_WRONGPASSWORDPATTERN
@@ -619,8 +618,8 @@ Private Sub StateForNewRecordForUserManager()
         Call UserModel.SetPropertiesToNewUserState
         'Input Field State
         .lblUserID.Caption = UserModel.userID
-        .cmbUserStatus.value = UserModel.userStatus
-        .cmbUserType.value = UserModel.userType
+        .cmbUserStatus.Value = UserModel.userStatus
+        .cmbUserType.Value = UserModel.userType
         'Buttons State
         .cmdAddNewUser.Enabled = True
         .cmdUpdateUser.Enabled = False
@@ -634,10 +633,10 @@ Private Sub StateForUpdateRecordForUserManager()
         Call UserModel.SetPropertiesToUpdateUserState
         'input field state
         .lblUserID.Caption = UserModel.userID
-        .cmbUserStatus.value = UserModel.userStatus
-        .cmbUserType.value = UserModel.userType
-        .txtSetUsername.value = UserModel.userName
-        .txtSetPassword.value = UserModel.userPassword
+        .cmbUserStatus.Value = UserModel.userStatus
+        .cmbUserType.Value = UserModel.userType
+        .txtSetUsername.Value = UserModel.userName
+        .txtSetPassword.Value = UserModel.userPassword
         'Button State
         .cmdAddNewUser.Enabled = False
         .cmdUpdateUser.Enabled = True
