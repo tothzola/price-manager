@@ -7,13 +7,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "UserManager"
 Option Explicit
 
 '-------------------------------------------------------------------------
 
 Private Type TUserManagerFormModelComponents
+    'Validation Objects
     Validator As ValidationServices
+    CheckFields(UsersTableFields.COL_userStatus To UsersTableFields.COL_password) As Variant
     'Table
     usersTable As Variant
     'single column lists
@@ -131,9 +132,6 @@ Public Property Let userPassword(ByVal vNewValue As String)
 End Property
 
 '-------------------------------------------------------------------------
-
-
-'-------------------------------------------------------------------------
 'InIt this model
 '-------------------------------------------------------------------------
 
@@ -142,6 +140,11 @@ Public Sub InItModel(ByVal usersData As Variant, ByVal StatusOfUser As Variant, 
     usersTable = usersData
     userStatusList = StatusOfUser
     userTypesList = TypesOfUser
+    'reset check field array
+    Dim CheckField As Variant
+    For Each CheckField In this.CheckFields
+        CheckField = False
+    Next CheckField
 End Sub
 
 '-------------------------------------------------------------------------
@@ -190,64 +193,44 @@ End Sub
 'Validation Methods
 '-------------------------------------------------------------------------
 
-'3. userStatus  4. userType    5. userName    6. password
 Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
+    'Reset CheckField's State to False
+    this.CheckFields(FieldIndex) = False
+    'Check the validation of field based on field index
     Select Case FieldIndex
-    'USER STATUS
-        Case 3
+        Case UsersTableFields.COL_userStatus
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userStatus, VBA.TypeName(Me.userStatus))
-    'USER TYPE
-        Case 4
+            If Not IsValidField = True Then Exit Function
+       Case UsersTableFields.COL_userType
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userType, VBA.TypeName(Me.userType))
-    'USERNAME
-        Case 5
+            If Not IsValidField = True Then Exit Function
+        Case UsersTableFields.COL_userName
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userName, VBA.TypeName(Me.userName))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = Validator.IsValidStringLength(Me.userName, 6)
-    'PASSWORD
-        Case 6
+            If Not IsValidField = True Then Exit Function
+        Case UsersTableFields.COL_password
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userPassword, VBA.TypeName(Me.userPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = Validator.IsValidPasswordString(Me.userPassword)
+            If Not IsValidField = True Then Exit Function
     End Select
+    'If All Goes Well!
+    this.CheckFields(FieldIndex) = True
 End Function
 
 Public Function IsEverythingOkayToSaveUser() As Variant
-    Dim checkField1 As Boolean
-    Dim checkField2 As Boolean
-    Dim checkField3 As Boolean
-    Dim checkField4 As Boolean
-    Dim tmp As String
-    checkField1 = IsValidField(COL_userStatus)
-    checkField2 = IsValidField(COL_userType)
-    checkField3 = IsValidField(COL_userName)
-    checkField4 = IsValidField(COL_password)
-    If checkField1 = True And checkField2 = True And checkField3 = True And checkField4 = True Then
-        IsEverythingOkayToSaveUser = True
-    Else
-        tmp = vbNullString
-        If checkField1 = False Then
-            tmp = tmp & "User Status" & vbNewLine
-        End If
-        If checkField2 = False Then
-            tmp = tmp & "User Type" & vbNewLine
-        End If
-        If checkField3 = False Then
-            tmp = tmp & "Username" & vbNewLine
-        End If
-        If checkField4 = False Then
-            tmp = tmp & "Password" & vbNewLine
-        End If
-        IsEverythingOkayToSaveUser = "Kindly fill the following fields(s) to proceed further!" & vbNewLine & vbNewLine & tmp
-    End If
+    IsEverythingOkayToSaveUser = Validator.IsEverythingOkay(this.CheckFields, _
+                                                            modDataSources.arrListOfColumns_USERS_TABLE, _
+                                                            UsersTableFields.COL_userStatus, _
+                                                            UsersTableFields.COL_password)
 End Function
-
 
 '-------------------------------------------------------------------------
 

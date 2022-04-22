@@ -7,12 +7,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "UserManager"
 Option Explicit
 
 '-------------------------------------------------------------------------
 
-'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents MainView As PAM
 Attribute MainView.VB_VarHelpID = -1
 

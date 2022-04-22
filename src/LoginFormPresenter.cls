@@ -11,7 +11,6 @@ Option Explicit
 
 '-------------------------------------------------------------------------
 
-'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents MainView As PAM
 Attribute MainView.VB_VarHelpID = -1
 

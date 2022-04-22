@@ -1,7 +1,11 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PAM 
    Caption         =   "Price Approval Manager V1.0"
+<<<<<<< Updated upstream
    ClientHeight    =   17415
+=======
+   ClientHeight    =   6015
+>>>>>>> Stashed changes
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   20700
@@ -36,8 +40,16 @@ Public Event CloseUserManagerFrame()
 Public Event ResetUserManagerFrame()
 Public Event UpdateUserManagerFrameRecord()
 Public Event DoCRUDOperationForUserManager(ByVal TypeOfOperation As CRUDOperations)
+<<<<<<< Updated upstream
 Public Event AddNewUserFromUserManagerFrame()
 Public Event UpdateUserFromUserManagerFrame()
+=======
+'Price Form Frame Events
+Public Event OpenPriceFormFrame()
+Public Event ClosePriceFormFrame()
+Public Event ResetPriceFormFrame()
+Public Event DoCRUDOperationForPriceForm(ByVal TypeOfOperation As CRUDOperations)
+>>>>>>> Stashed changes
 
 '-------------------------------------------------------------------------
 'SETTINGS
@@ -55,6 +67,10 @@ Private Type TViewComponents
     LoginModel As LoginFormModel
     PasswordModel As PasswordManagerModel
     UserModel As UserManagerModel
+<<<<<<< Updated upstream
+=======
+    PriceModel As PriceFormModel
+>>>>>>> Stashed changes
 End Type
 
 Private this As TViewComponents
@@ -101,6 +117,17 @@ Private Property Set UserModel(ByVal vNewValue As UserManagerModel)
     Set this.UserModel = vNewValue
 End Property
 
+<<<<<<< Updated upstream
+=======
+Private Property Get PriceModel() As PriceFormModel
+    Set PriceModel = this.PriceModel
+End Property
+
+Private Property Set PriceModel(ByVal vNewValue As PriceFormModel)
+    Set this.PriceModel = vNewValue
+End Property
+
+>>>>>>> Stashed changes
 '-------------------------------------------------------------------------
 'public Methods Called From Presenters
 '-------------------------------------------------------------------------
@@ -118,6 +145,16 @@ Public Sub UserWantsToCloseFrame(ByVal FrameIdentifier As ApplicationForms)
         Case ApplicationForms.FORM_USERMANAGER
             Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
             Call UpdateWelcomeFrame
+<<<<<<< Updated upstream
+=======
+        Case ApplicationForms.FORM_PRICEFORM
+            If MainModel.ActiveUserType = USERTYPE_CLIENT Then
+                Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
+            Else
+                Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+            End If
+            Call UpdateWelcomeFrame
+>>>>>>> Stashed changes
     End Select
 End Sub
 
@@ -150,15 +187,31 @@ Public Sub UserWantsToOpenUserManagerFrame(ByVal UserManagerFormModel As UserMan
     Call ResetUserManagerFrame(UserManagerFormModel, OPERATION_NEW)
 End Sub
 
+<<<<<<< Updated upstream
 Public Sub UserWantsToUpdateUserManagerRecord()
     'reset user manager frame
     Call ResetUserManagerFrame(UserModel, OPERATION_UPDATE)
+=======
+Public Sub UserWantsToOpenPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel)
+    'open Price Form Interface
+    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
+    'Reset Price Form Frame
+    'Call ResetPriceFormFrame(PriceFormFrameModel, OPERATION_NEW)
+>>>>>>> Stashed changes
 End Sub
 
 '------------------------------------------------------------------------
 'Public methods to perfrom operations
 '-------------------------------------------------------------------------
 
+<<<<<<< Updated upstream
+=======
+Public Sub UserWantsToUpdateUserManagerRecord()
+    'reset user manager frame
+    Call ResetUserManagerFrame(UserModel, OPERATION_UPDATE)
+End Sub
+
+>>>>>>> Stashed changes
 Public Sub ShowWarning(ByVal message As String, ByVal typeOfMessage As messageType)
     Call ExtendedMethods.ShowMessage(message, TYPE_CRITICAL)
 End Sub
@@ -191,6 +244,13 @@ Private Sub cmdCancelPasswordManager_Click()
     RaiseEvent ClosePasswordManagerFrame
 End Sub
 
+<<<<<<< Updated upstream
+=======
+Private Sub cmdOpenPriceForm_Click()
+    RaiseEvent OpenPriceFormFrame
+End Sub
+
+>>>>>>> Stashed changes
 Private Sub cmdOpenUserManager_Click()
     RaiseEvent OpenUserManagerFrame
 End Sub
@@ -303,11 +363,6 @@ Private Sub cmdOpenPendingList_Click()
     Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
 End Sub
 
-Private Sub cmdOpenPriceForm_Click()
-    'open Price Form Interface
-    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
-End Sub
-
 '-------------------------------------------------------------------------
 'User Manager Fileds Change Events
 '-------------------------------------------------------------------------
@@ -319,6 +374,20 @@ Private Sub cmbUserStatus_Change()
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserStatus, UserModel.IsValidField(COL_userStatus), TYPE_NA
 End Sub
 
+<<<<<<< Updated upstream
+'-------------------------------------------------------------------------
+'User Manager Fileds Change Events
+'-------------------------------------------------------------------------
+
+Private Sub cmbUserStatus_Change()
+    'Hydrate model property
+    UserModel.userStatus = Me.cmbUserStatus.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbUserStatus, UserModel.IsValidField(COL_userStatus), TYPE_NA
+End Sub
+
+=======
+>>>>>>> Stashed changes
 Private Sub cmbUserType_Change()
     'Hydrate model property
     UserModel.userType = Me.cmbUserType.Value
@@ -438,6 +507,7 @@ Public Sub InItApplication(ByVal ApplicationModel As AppModel)
         'InIt Interface
         Call .ActivateFrames(Me.frameLogin, Me.frameWelcome)
         Call UpdateWelcomeFrame(FORM_LOGIN)
+<<<<<<< Updated upstream
     End With
 End Sub
 
@@ -494,6 +564,64 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
     End With
 End Sub
 
+=======
+    End With
+End Sub
+
+'-------------------------------------------------------------------------
+'Frame Reset Methods
+'-------------------------------------------------------------------------
+
+Private Sub ResetLoginFrame(ByVal LoginFrameModel As LoginFormModel)
+    With Me
+        'Attach Model
+        If LoginModel Is Nothing Then Set LoginModel = LoginFrameModel
+        'clear values of login frame fields
+        Call ExtendedMethods.SetStateofControlsToNullState(.txtUsername, .txtPassword)
+        'set focus
+        .txtUsername.SetFocus
+    End With
+End Sub
+
+Private Sub ResetPasswordManagerFrame(ByVal PasswordManagerFormModel As PasswordManagerModel)
+    With Me
+        'Attach Model
+        If PasswordModel Is Nothing Then Set PasswordModel = PasswordManagerFormModel
+        'clear values of Password manager frame fields
+        Call ExtendedMethods.SetStateofControlsToNullState(.txtCurrentPassword, .txtNewPassword, .txtConfirmNewPassword)
+        'set focus
+        .txtCurrentPassword.SetFocus
+    End With
+End Sub
+
+Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel, ByVal Operation As FormOperation)
+    With Me
+        'Attach Model
+        If UserModel Is Nothing Then Set UserModel = UserManagerFormModel
+        'clear values of user manager frame fields
+        Call ExtendedMethods.SetStateofControlsToNullState(.lblUserID, .txtSetUsername, .txtSetPassword, .cmbUserStatus, .cmbUserType, lstUsers)
+        'Repopulate ComboBoxes and Listbox
+        .cmbUserStatus.List = UserModel.userStatusList
+        .cmbUserType.List = UserModel.userTypesList
+        With .lstUsers
+            .ColumnCount = 6
+            .ColumnWidths = "35;45;60"
+            .List = UserModel.usersTable
+        End With
+        'Put Default Values based on Operation
+        If Operation = OPERATION_NEW Then
+            Call StateForNewRecordForUserManager
+            'Set focus
+            .txtSetUsername.SetFocus
+        Else
+            Call StateForUpdateRecordForUserManager
+            'Set focus
+            .cmbUserStatus.SetFocus
+        End If
+    End With
+End Sub
+
+>>>>>>> Stashed changes
 '-------------------------------------------------------------------------
 'Button Clicked Operations
 '-------------------------------------------------------------------------
@@ -510,6 +638,8 @@ Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     'Update Active User Frame
     With LoginModel
         Call UpdateActiveUserInfomation(.userName, .userType, .userStatus, .userID, .password)
+<<<<<<< Updated upstream
+=======
     End With
     'Update Welcome Frame with Username
     Call UpdateWelcomeFrame
@@ -600,9 +730,103 @@ Private Sub StateForNewRecordForUserManager()
         .cmdAddNewUser.Enabled = True
         .cmdUpdateUser.Enabled = False
         .cmdDeleteUser.Enabled = False
+>>>>>>> Stashed changes
+    End With
+    'Update Welcome Frame with Username
+    Call UpdateWelcomeFrame
+End Sub
+
+'Password Manager Frame
+
+Public Sub AfterChangePasswordOperation()
+    MsgBox "Password has been changed successfully! Please Sign-In again.", vbInformation, SIGN
+    'Go back to logout state
+    Call ExtendedMethods.ActivateFrames(Me.frameLogin, Me.frameWelcome)
+    Call UpdateWelcomeFrame(FORM_LOGIN)
+End Sub
+
+<<<<<<< Updated upstream
+'User Manager Frame
+
+Public Sub AfterUserManagerCRUDOperation(ByVal TypeOfOperation As CRUDOperations)
+    Select Case TypeOfOperation
+        Case CRUDOperations.CRUD_OPERATION_ADDNEW
+            MsgBox "New USER added successfully!", vbInformation, SIGN
+        Case CRUDOperations.CRUD_OPERATION_UPDATE
+            MsgBox "User's record has been UPDATED successfully!", vbInformation, SIGN
+        Case CRUDOperations.CRUD_OPERATION_DELETE
+            MsgBox "User has been DELETED successfully!", vbInformation, SIGN
+    End Select
+    'Refresh Data Again
+    RaiseEvent OpenUserManagerFrame
+End Sub
+
+'-------------------------------------------------------------------------
+'Userform Events
+'-------------------------------------------------------------------------
+
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+    If CloseMode = VbQueryClose.vbFormControlMenu Then
+        Cancel = True
+        OnCancel
+    End If
+End Sub
+
+Private Sub UserForm_Terminate()
+    Set ExtendedMethods = Nothing
+    Set MainModel = Nothing
+    Set LoginModel = Nothing
+    Set UserModel = Nothing
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'-------------------------------------------------------------------------
+'Abstract Methods
+'-------------------------------------------------------------------------
+
+Private Sub StateForNewRecordForUserManager()
+    With Me
+        'Update Model
+        Call UserModel.SetPropertiesToNewUserState
+        'Input Field State
+        .lblUserID.Caption = UserModel.userID
+        .cmbUserStatus.Value = UserModel.userStatus
+        .cmbUserType.Value = UserModel.userType
+        'Buttons State
+        .cmdAddNewUser.Enabled = True
+        .cmdUpdateUser.Enabled = False
+        .cmdDeleteUser.Enabled = False
     End With
 End Sub
 
+=======
+>>>>>>> Stashed changes
 Private Sub StateForUpdateRecordForUserManager()
     With Me
         'Field State

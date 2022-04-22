@@ -13,18 +13,16 @@ Option Explicit
 'Event handllers
 '-------------------------------------------------------------------------
 
-'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents view As PAM
 Attribute view.VB_VarHelpID = -1
-'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterLoginFrame As LoginFormPresenter
 Attribute presenterLoginFrame.VB_VarHelpID = -1
-'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterPasswordManagerFrame As PasswordManagerPresenter
 Attribute presenterPasswordManagerFrame.VB_VarHelpID = -1
-'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterUserManagerFrame As UserManagerPresenter
 Attribute presenterUserManagerFrame.VB_VarHelpID = -1
+Private WithEvents presenterPriceFormFrame As PriceFormPresenter
+Attribute presenterPriceFormFrame.VB_VarHelpID = -1
 
 '-------------------------------------------------------------------------
 'Private Componenets Set
@@ -76,7 +74,6 @@ End Property
 
 'InIt Main Services
 Public Sub InItMainService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String)
-    
     Set mainService = New ServicesMain
     Call mainService.InItService(SelectedRepositoryType, TableName)
 End Sub
@@ -125,6 +122,10 @@ End Sub
 
 Private Sub view_OpenUserManagerFrame()
     Call OpenUserManager
+End Sub
+
+Private Sub view_OpenPriceFormFrame()
+    Call OpenPriceForm
 End Sub
 
 Private Sub view_ExitApp()
@@ -219,6 +220,18 @@ Private Sub presenterUserManagerFrame_OnSomethingWentWrong(ByVal message As Stri
     Call view.ShowWarning(message, TYPE_CRITICAL)
 End Sub
 
+'-------------------
+'Private FORM Events
+'-------------------
+
+Private Sub presenterPriceFormFrame_OpenPriceForm(ByVal PFModel As PriceFormModel)
+    Call view.UserWantsToOpenPriceFormFrame(PFModel)
+End Sub
+
+Private Sub presenterPriceFormFrame_ClosePriceForm()
+    Call view.UserWantsToCloseFrame(FORM_PRICEFORM)
+End Sub
+
 '-------------------------------------------------------------------------
 'Private Methods to increase abstractiveness of presenter code
 '-------------------------------------------------------------------------
@@ -226,7 +239,6 @@ End Sub
 Private Sub OpenLoginForm()
     'Refresh Model Data Table with Updated information
     Call RefreshUsersTable '(Only user because Login Mechanism does not required other tables)
-    model.usersTable = userService.GetListOfAllRecordsFromContextTable
     'Open New Login Form
     If presenterLoginFrame Is Nothing Then Set presenterLoginFrame = New LoginFormPresenter
     'InIt Presenter from here
@@ -253,8 +265,19 @@ Private Sub OpenUserManager()
     End With
 End Sub
 
+Private Sub OpenPriceForm()
+    'Refresh Model Data Table with Updated information
+    Call RefreshMainTable '(Only user because password manager does not required other tables)
+    'open usermanager
+    If presenterPriceFormFrame Is Nothing Then Set presenterPriceFormFrame = New PriceFormPresenter
+    'InIt Presenter from here
+    With model
+        Call presenterPriceFormFrame.InItPriceForm(view, .mainTable)
+    End With
+End Sub
+
 Private Sub RefreshMainTable()
-    model.MainTable = mainService.GetListOfAllRecordsFromContextTable
+    model.mainTable = mainService.GetListOfAllRecordsFromContextTable
 End Sub
 
 Private Sub RefreshUsersTable()
@@ -266,6 +289,7 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
+    Set presenterPriceFormFrame = Nothing
     Set presenterUserManagerFrame = Nothing
     Set presenterPasswordManagerFrame = Nothing
     Set presenterLoginFrame = Nothing
@@ -274,5 +298,6 @@ Private Sub Class_Terminate()
     Set userService = Nothing
     Set mainService = Nothing
 End Sub
+
 
 
