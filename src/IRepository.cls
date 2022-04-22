@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'@Folder "Repository"
 Option Explicit
 
 Public Function GetRecords(ByVal TargetNamedRange As String) As Variant
