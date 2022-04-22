@@ -12,13 +12,13 @@ Option Explicit
 Implements IRepository
 
 Private Function IRepository_GetRecords(ByVal TargetNamedRange As String) As Variant
-    IRepository_GetRecords = Application.Range(TargetNamedRange)
+    IRepository_GetRecords = DataBase.Range(TargetNamedRange)
 End Function
 
 Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
-    Dim item            As Variant
+    Dim Item            As Variant
     Dim TotalItems      As Long
     Dim TRow            As Long
     Dim index           As Long
@@ -29,7 +29,7 @@ Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray L
     
     'Collect & configure some driving parameters
     TotalItems = UBound(LineItems) + 1
-    With Application.Range(TargetNamedRange)
+    With DataBase.Range(TargetNamedRange)
         Set TargetRange = .Resize(.Rows.Count + 1, .Columns.Count)
     End With
     With TargetRange
@@ -46,10 +46,10 @@ Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray L
     I = 2
     
     'Insert mechanism
-    For Each item In LineItems
-        TargetRange.Cells(TRow, I).Value = item
+    For Each Item In LineItems
+        TargetRange.Cells(TRow, I).Value = Item
         I = I + 1
-    Next item
+    Next Item
     
 LeaveThisProcedure:
     
@@ -75,7 +75,7 @@ Private Sub IRepository_DeleteRecord(ByVal TargetNamedRange As String, ByVal Tar
     On Error GoTo EhhErr:
     
     'Collect & configure some driving parameters
-    Set TargetRange = Application.Range(TargetNamedRange)
+    Set TargetRange = DataBase.Range(TargetNamedRange)
     TRow = TargetIndex + 1
     
     'delte the row from the target range
@@ -106,7 +106,7 @@ End Sub
 Private Sub IRepository_UpdateRecord(ByVal TargetNamedRange As String, ByVal TargetIndex As Long, ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
-    Dim item            As Variant
+    Dim Item            As Variant
     Dim TotalItems      As Long
     Dim TRow            As Long
     Dim I               As Long
@@ -116,17 +116,17 @@ Private Sub IRepository_UpdateRecord(ByVal TargetNamedRange As String, ByVal Tar
     
     'Collect & configure some driving parameters
     TotalItems = UBound(LineItems) + 1
-    Set TargetRange = Application.Range(TargetNamedRange)
+    Set TargetRange = DataBase.Range(TargetNamedRange)
     TRow = TargetIndex + 1
     
     'init loop paramters
     I = 2
     
     'Insert mechanism
-    For Each item In LineItems
-        TargetRange.Cells(TRow, I).Value = item
+    For Each Item In LineItems
+        TargetRange.Cells(TRow, I).Value = Item
         I = I + 1
-    Next item
+    Next Item
     
 LeaveThisProcedure:
     
