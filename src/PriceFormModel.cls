@@ -201,6 +201,8 @@ Public Function IsEverythingOkayToSaveRecord() As Variant
 End Function
 
 Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
+    Dim startDate As Date
+    Dim endDate As Date
     'Reset CheckField's State to False
     this.CheckFields(FieldIndex) = False
     'Check the validation of field based on field index
@@ -217,13 +219,37 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.customerID, VBA.TypeName(Me.customerID))
             If Not IsValidField = True Then Exit Function
+            'Check 2
+            IsValidField = VBA.IsNumeric(Me.customerID)
+            If Not IsValidField = True Then Exit Function
+            'check 3
+            IsValidField = Validator.IsValidStringLength(Me.customerID, 6)
+            If Not IsValidField = True Then Exit Function
+            'Check 4
+            IsValidField = Validator.IsBetweenNumericalRange(Me.customerID, INDEX_USERID_FIRST, INDEX_USERID_LAST)
+            If Not IsValidField = True Then Exit Function
         Case MainTableFields.COL_MAIN_materialID
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.materialID, VBA.TypeName(Me.materialID))
             If Not IsValidField = True Then Exit Function
+            'Check 2
+            IsValidField = VBA.IsNumeric(Me.materialID)
+            If Not IsValidField = True Then Exit Function
+            'check 3
+            IsValidField = Validator.IsValidStringLength(Me.materialID, 8)
+            If Not IsValidField = True Then Exit Function
+            'Check 4
+            IsValidField = Validator.IsBetweenNumericalRange(Me.materialID, INDEX_MATERIALID_FIRST, INDEX_MATERIALID_LAST)
+            If Not IsValidField = True Then Exit Function
         Case MainTableFields.COL_MAIN_price
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.price, VBA.TypeName(Me.price))
+            If Not IsValidField = True Then Exit Function
+            'Check 2
+            IsValidField = VBA.IsNumeric(Me.price)
+            If Not IsValidField = True Then Exit Function
+            'Check 3
+            IsValidField = Validator.IsBetweenNumericalRange(Me.price, MIN_PRICE_VALUE, MAX_PRICE_VALUE)
             If Not IsValidField = True Then Exit Function
         Case MainTableFields.COL_MAIN_currency
             'Check 1
@@ -232,6 +258,18 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
         Case MainTableFields.COL_MAIN_unitOfPrice
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.unitOfPrice, VBA.TypeName(Me.unitOfPrice))
+            If IsValidField = False Then
+                IsValidField = True
+                Exit Function
+            End If
+            'Check 2
+            IsValidField = VBA.IsNumeric(Me.unitOfPrice)
+            If Not IsValidField = True Then Exit Function
+            'Check 3
+            IsValidField = Validator.IsValidStringLength(Me.unitOfPrice, 4)
+            If Not IsValidField = True Then Exit Function
+            'Check 4
+            IsValidField = Validator.IsBetweenNumericalRange(Me.unitOfPrice, MIN_UNITOFPRICE_VALUE, MAX_UNITOFPRICE_VALUE)
             If Not IsValidField = True Then Exit Function
         Case MainTableFields.COL_MAIN_unitOfMeasure
             'Check 1
@@ -241,9 +279,25 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.validFromDate, VBA.TypeName(Me.validFromDate))
             If Not IsValidField = True Then Exit Function
+            'Check 2
+            IsValidField = Validator.IsValidGermanFormatDate(Me.validFromDate)
+            If Not IsValidField = True Then Exit Function
+            'Check 3
+            startDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+            endDate = startDate
+            IsValidField = Validator.IsValidDateInRange(Me.validFromDate, startDate, endDate)
+            If Not IsValidField = True Then Exit Function
         Case MainTableFields.COL_MAIN_validToDate
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.validToDate, VBA.TypeName(Me.validToDate))
+            If Not IsValidField = True Then Exit Function
+            'Check 2
+            IsValidField = Validator.IsValidGermanFormatDate(Me.validToDate)
+            If Not IsValidField = True Then Exit Function
+            'Check 3
+            startDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+            endDate = VBA.CDate("31-Dec-9999")
+            IsValidField = Validator.IsValidDateInRange(Me.validToDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
     End Select
     'If All Goes Well!
