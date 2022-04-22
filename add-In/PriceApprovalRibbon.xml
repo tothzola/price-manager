@@ -8,39 +8,28 @@
             <group id="PriceApprovalGroupA" getVisible="PriceApprovalGetVisible" getLabel="PriceApprovalGetLabel">
                <button id="ButtonA_01" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_01"/>
-
                <button id="ButtonA_02" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_02"/>
 
                <button id="ButtonA_03" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_03"/>
 
                <button id="ButtonA_04" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_04"/>
 
                <button id="ButtonA_05" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_05"/>
 
                <button id="ButtonA_06" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_06"/>
 
                <button id="ButtonA_07" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_07"/>
 
                <button id="ButtonA_08" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_08"/>
-
                <button id="ButtonA_09" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupASeperator_09"/>
 
                <button id="ButtonA_10" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
@@ -49,39 +38,30 @@
             <group id="PriceApprovalGroupB" getVisible="PriceApprovalGetVisible" getLabel="PriceApprovalGetLabel">
                <button id="ButtonB_01" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_01"/>
 
                <button id="ButtonB_02" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_02"/>
 
                <button id="ButtonB_03" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_03"/>
 
                <button id="ButtonB_04" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_04"/>
 
                <button id="ButtonB_05" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_05"/>
 
                <button id="ButtonB_06" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_06"/>
 
                <button id="ButtonB_07" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_07"/>
 
                <button id="ButtonB_08" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_08"/>
 
                <button id="ButtonB_09" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
-               <separator id="PriceApprovalGroupBSeperator_09"/>
 
                <button id="ButtonB_10" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
 
