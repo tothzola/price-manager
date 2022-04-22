@@ -7,7 +7,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "Services"
 Option Explicit
 Implements IServices
 
@@ -58,10 +57,12 @@ Private Sub IServices_InItService(ByVal SelectedRepositoryType As RepositoryType
     this.RepositoryType = SelectedRepositoryType
     IServices_ContextTableName = TableName
     Select Case this.RepositoryType
-         Case RepositoryType.TYPE_EXCEL_NAMED_RANGE
+        Case RepositoryType.TYPE_EXCEL_NAMED_RANGE
             Set IServices_Repository = New RepositoryExcel
-         Case RepositoryType.TYPE_SHAREPOINT_LIST
+        Case RepositoryType.TYPE_SHAREPOINT_LIST
             Set IServices_Repository = New RepositorySharePoint
+        Case RepositoryType.TYPE_MYSQL
+            Set IServices_Repository = New RepositoryMySQL
     End Select
 End Sub
 

@@ -7,13 +7,15 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "UserManager"
 Option Explicit
 
 '-------------------------------------------------------------------------
 
 Private Type TPasswordManagerFormModelComponents
+    'Validation Objects
     Validator As ValidationServices
+    CheckFields(PasswordManagerFields.PM_CURRENT_PASSWORD To PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD) As Variant
+    'field Properties
     password As String
     insertedPassword As String
     newPassword As String
@@ -83,57 +85,46 @@ Public Sub InItModel(ByVal ActiveUserPassword As String)
     Me.password = ActiveUserPassword
 End Sub
 
-'Methods and Function
+'-------------------------------------------------------------------------
+'Validation Method
+'-------------------------------------------------------------------------
 
-Public Function IsValidField(ByVal FieldIndex As Long) As Boolean
+Public Function IsEverythingOkayToChangePassword() As Variant
+    IsEverythingOkayToChangePassword = Validator.IsEverythingOkay(this.CheckFields, _
+                                                                modDataSources.arrListOfFields_PASSWORD_MANAGER, _
+                                                                PasswordManagerFields.PM_CURRENT_PASSWORD, _
+                                                                PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD)
+End Function
+
+Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boolean
+    'Reset CheckField's State to False
+    this.CheckFields(FieldIndex) = False
+    'Check the validation of field based on field index
     Select Case FieldIndex
-        'Current Password Field
-        Case 1
+        Case PasswordManagerFields.PM_CURRENT_PASSWORD
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.insertedPassword, VBA.TypeName(Me.insertedPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = Validator.ComapreTwoStrings(Me.insertedPassword, Me.password)
-        'New Password Field
-        Case 2
+            If Not IsValidField = True Then Exit Function
+        Case PasswordManagerFields.PM_NEW_PASSWORD
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.newPassword, VBA.TypeName(Me.newPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = Validator.IsValidPasswordString(Me.newPassword)
-        'Confirm new Password Field
-        Case 3
+            If Not IsValidField = True Then Exit Function
+        Case PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.confirmNewPassword, VBA.TypeName(Me.confirmNewPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = Validator.ComapreTwoStrings(Me.newPassword, Me.confirmNewPassword)
+            If Not IsValidField = True Then Exit Function
     End Select
-End Function
-
-Public Function IsEverythingOkayToChangePassword() As Variant
-    Dim checkField1 As Boolean
-    Dim checkField2 As Boolean
-    Dim checkField3 As Boolean
-    Dim tmp As String
-    checkField1 = IsValidField(1)
-    checkField2 = IsValidField(2)
-    checkField3 = IsValidField(3)
-    If checkField1 = True And checkField2 = True And checkField3 = True Then
-        IsEverythingOkayToChangePassword = True
-    Else
-        tmp = vbNullString
-        If checkField1 = False Then
-            tmp = tmp & "Current Password" & vbNewLine
-        End If
-        If checkField2 = False Then
-            tmp = tmp & "New Password" & vbNewLine
-        End If
-        If checkField3 = False Then
-            tmp = tmp & "Confirm New Password" & vbNewLine
-        End If
-        IsEverythingOkayToChangePassword = "Kindly fill the following fields(s) properly to change your Password!" & vbNewLine & vbNewLine & tmp
-    End If
+    'If All Goes Well!
+    this.CheckFields(FieldIndex) = True
 End Function
 
 '-------------------------------------------------------------------------

@@ -7,8 +7,40 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "Services"
 Option Explicit
+
+'if All goes well for the form
+Public Function IsEverythingOkay(ByVal ArrayOfCheckFieldsStatus As Variant, _
+                                ByVal ArrayOfTableFields As Variant, _
+                                ByVal FirstColIndex As Long, _
+                                ByVal LastColIndex As Long) As Variant
+    Dim flag As Boolean
+    Dim tmp As String
+    Dim I As Long
+    flag = False
+    tmp = vbNullString
+    'Checking each properties validation state
+    For I = FirstColIndex To LastColIndex Step 1
+        If ArrayOfCheckFieldsStatus(I) = False Then
+            flag = False
+            Exit For
+        Else
+            flag = True
+        End If
+    Next I
+    'Moment of Truth
+    If flag = True Then
+        IsEverythingOkay = True
+    Else
+        'Checking each properties validation state
+        For I = FirstColIndex To LastColIndex Step 1
+            If ArrayOfCheckFieldsStatus(I) = False Then
+                tmp = tmp & BULLET_LISTITEM & ArrayOfTableFields(I - 1) & vbNewLine
+            End If
+        Next I
+        IsEverythingOkay = "Kindly fill the following fields(s) properly to proceed further!" & vbNewLine & vbNewLine & tmp
+    End If
+End Function
 
 'check if the value is empty or not?
 Public Function IsNotNullValue(ByVal inputValue As Variant, ByVal inputType As String) As Boolean
@@ -32,15 +64,6 @@ Public Function IsNotNullValue(ByVal inputValue As Variant, ByVal inputType As S
                 IsNotNullValue = True
             End If
     End Select
-End Function
-
-'check if the value is numeric or not?
-Public Function IsNumeric(ByVal inputValue As Variant) As Boolean
-    If VBA.IsNumeric(inputValue) Then
-        IsNumeric = True
-    Else
-        IsNumeric = False
-    End If
 End Function
 
 'Check for the Valid Length
@@ -72,7 +95,7 @@ Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal userName As S
     End If
     'if validation check confirm then go for the next process
     For I = 1 To UBound(dataTable, 1) Step 1
-        If VBA.UCase$(dataTable(I, userCol)) = VBA.UCase$(userName) Then
+        If dataTable(I, userCol) = userName Then
         userFlag = True
             If dataTable(I, passCol) = password Then
                 passFlag = True
@@ -124,7 +147,7 @@ Public Function IsValidPasswordString(ByVal passwordString As String) As Boolean
     passwordCharacters = VBA.Split(VBA.Left(txt, Len(txt) - 1), VBA.Chr$(0))
     'Get testified
     'Criterias of checking
-        'Minimum 8 Length
+        'Minimum 8 characters of Length
         'At least One Capital
         'At least One Small Character
         'At least One Numeric

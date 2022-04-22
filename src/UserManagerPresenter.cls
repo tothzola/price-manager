@@ -7,12 +7,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "UserManager"
 Option Explicit
 
 '-------------------------------------------------------------------------
 
-'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents MainView As PAM
 Attribute MainView.VB_VarHelpID = -1
 
@@ -21,6 +19,7 @@ Attribute MainView.VB_VarHelpID = -1
 Public Event OpenUserManagerForm(ByVal UMModel As UserManagerModel)
 Public Event CloseUserManagerForm()
 Public Event ResetUserManagerForm()
+
 Public Event AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, _
                                             ByVal userID As String, _
                                             ByVal userStatus As String, _
@@ -35,7 +34,9 @@ Public Event UpdateUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperatio
                                             ByVal userType As String, _
                                             ByVal userName As String, _
                                             ByVal userPassword As String)
+                                            
 Public Event DeleteUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal index As Long)
+
 Public Event UpdateUserManagerFormRecord()
 Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
 
@@ -100,4 +101,3 @@ End Sub
 Private Sub MainView_UpdateUserManagerFrameRecord()
     RaiseEvent UpdateUserManagerFormRecord
 End Sub
-

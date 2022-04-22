@@ -15,9 +15,11 @@ Public Const USERSTATUS_INACTIVE As String = "INACTIVE"
 Public Const USERTYPE_CLIENT As String = "CLIENT"
 Public Const USERTYPE_APPROVER As String = "APPROVER"
 
+Public Const BULLET_LISTITEM As String = ">>  "
+
 'COLORS
-Public Const COLOR_OF_OKAY As Long = &H8000&
-Public Const COLOR_OF_NOT_OKAY As Long = &H2D04D2
+Public Const COLOR_OF_OKAY As Long = &H8000& 'GREEN TINT
+Public Const COLOR_OF_NOT_OKAY As Long = &H2D04D2 'RED TINT
 
 'Other Settings
 
@@ -29,6 +31,7 @@ End Enum
 Public Enum RepositoryType
     TYPE_EXCEL_NAMED_RANGE
     TYPE_SHAREPOINT_LIST
+    TYPE_MYSQL
 End Enum
 
 Public Enum UserApprovalStatus
@@ -54,12 +57,15 @@ Public Enum ApplicationForms
     FORM_LOGIN = 1
     FORM_PASSWORDMANAGER
     FORM_USERMANAGER
+    FORM_PRICEFORM
 End Enum
 
 Public Enum CRUDOperations
     CRUD_OPERATION_ADDNEW
     CRUD_OPERATION_UPDATE
     CRUD_OPERATION_DELETE
+    CRUD_OPERATION_APPROVE
+    CRUD_OPERATION_REJECT
 End Enum
 
 

@@ -15,7 +15,7 @@ Private Type TAppModelComponents
   'Validation Services
     Validator As ValidationServices
   'Data Sources
-    MainTable As Variant
+    mainTable As Variant
     usersTable As Variant
     CurrenciesList As Variant
     UnitOfMeasuresList As Variant
@@ -93,12 +93,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get MainTable() As Variant
-    MainTable = this.MainTable
+Public Property Get mainTable() As Variant
+    mainTable = this.mainTable
 End Property
 
-Public Property Let MainTable(ByVal vNewValue As Variant)
-    this.MainTable = vNewValue
+Public Property Let mainTable(ByVal vNewValue As Variant)
+    this.mainTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -157,7 +157,7 @@ Public Property Get ActiveUserIndex() As Variant
     Dim I As Long
     For I = 1 To UBound(Me.usersTable, 1) Step 1
         If Me.usersTable(I, UsersTableFields.COL_userName) = Me.ActiveUserName Then
-            ActiveUserIndex = Me.usersTable(I, UsersTableFields.COL_index)
+            ActiveUserIndex = Me.usersTable(I, UsersTableFields.COL_INDEX)
             Exit Property
         End If
     Next I
@@ -175,7 +175,7 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
                     ByVal ListofUserStatus As Variant)
     Set Validator = New ValidationServices
     'Tables of The Applications
-    MainTable = MainTableContent
+    mainTable = MainTableContent
     usersTable = UsersTableContent
     'Single Column Lists for DropDown/ComboBoxes
     CurrenciesList = ListOfCurrencies

@@ -7,7 +7,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "Repository"
 Option Explicit
 Implements IRepository
 
@@ -140,4 +139,3 @@ EhhErr:
          vbNewLine & vbNewLine & Err.Description, vbCritical, "Validator"
     Resume LeaveThisProcedure
 End Sub
-
