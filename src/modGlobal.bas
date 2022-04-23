@@ -2,7 +2,20 @@ Attribute VB_Name = "modGlobal"
 Option Explicit
 
 'Main Settings
-Public Const INDEX_USERID_FIRST As Long = "399999"
+Public Const DATEFORMAT_BACKEND As String = "DD-MMM-YYYY"
+Public Const DATEFORMAT_FRONTEND As String = "DD.MM.YYYY"
+
+Public Const INDEX_USERID_FIRST As Long = 399999
+Public Const INDEX_USERID_LAST As Long = 599999
+
+Public Const INDEX_MATERIALID_FIRST As Long = 49999999
+Public Const INDEX_MATERIALID_LAST As Long = 59999999
+
+Public Const MIN_PRICE_VALUE As Long = 0
+Public Const MAX_PRICE_VALUE As Long = 999999
+
+Public Const MIN_UNITOFPRICE_VALUE As Long = 0
+Public Const MAX_UNITOFPRICE_VALUE As Long = 9999
 
 Public Const SIGN As String = "Demo Project"
 

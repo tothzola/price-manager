@@ -18,7 +18,7 @@ End Function
 Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
-    Dim Item            As Variant
+    Dim item            As Variant
     Dim TotalItems      As Long
     Dim TRow            As Long
     Dim index           As Long
@@ -46,10 +46,10 @@ Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray L
     I = 2
     
     'Insert mechanism
-    For Each Item In LineItems
-        TargetRange.Cells(TRow, I).Value = Item
+    For Each item In LineItems
+        TargetRange.Cells(TRow, I).Value = item
         I = I + 1
-    Next Item
+    Next item
     
 LeaveThisProcedure:
     
@@ -106,7 +106,7 @@ End Sub
 Private Sub IRepository_UpdateRecord(ByVal TargetNamedRange As String, ByVal TargetIndex As Long, ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
-    Dim Item            As Variant
+    Dim item            As Variant
     Dim TotalItems      As Long
     Dim TRow            As Long
     Dim I               As Long
@@ -123,10 +123,10 @@ Private Sub IRepository_UpdateRecord(ByVal TargetNamedRange As String, ByVal Tar
     I = 2
     
     'Insert mechanism
-    For Each Item In LineItems
-        TargetRange.Cells(TRow, I).Value = Item
+    For Each item In LineItems
+        TargetRange.Cells(TRow, I).Value = item
         I = I + 1
-    Next Item
+    Next item
     
 LeaveThisProcedure:
     

@@ -10,6 +10,41 @@ Attribute VB_Exposed = False
 '@Folder "Services"
 Option Explicit
 
+Private objRegEx As Object
+
+'Check if the date is between the start and end range dates or not?
+Public Function IsValidDateInRange(ByVal inputValue As String, startDate As Date, endDate As Date) As Boolean
+    Dim TargetDate As Date
+    TargetDate = VBA.CDate(IsValidGermanFormatDate(inputValue))
+    If TargetDate >= startDate And TargetDate <= endDate Then
+        IsValidDateInRange = True
+    Else
+        IsValidDateInRange = False
+    End If
+End Function
+
+'Check if the value is Valid German accepted date format or not?
+'[10.02.2009] [10022009] [31.12.2022]
+Public Function IsValidGermanFormatDate(ByVal inputValue As String) As Boolean
+    'use part strings to get if the string is date or not?
+    If GetDateFromGermanDateString(inputValue) <> vbNullString Then
+        IsValidGermanFormatDate = True
+    Else
+        IsValidGermanFormatDate = False
+    End If
+End Function
+
+'Check if Value is between Numerical Range or not?
+Public Function IsBetweenNumericalRange(ByVal inputValue As String, _
+                                        ByVal minValue As Long, _
+                                        ByVal maxvalue As Long) As Boolean
+    If VBA.CLng(inputValue) >= minValue And VBA.CLng(inputValue) <= maxvalue Then
+        IsBetweenNumericalRange = True
+    Else
+        IsBetweenNumericalRange = False
+    End If
+End Function
+
 'if All goes well for the form
 Public Function IsEverythingOkay(ByVal ArrayOfCheckFieldsStatus As Variant, _
                                 ByVal ArrayOfTableFields As Variant, _
@@ -177,3 +212,44 @@ Public Function IsValidPasswordString(ByVal passwordString As String) As Boolean
     End If
 End Function
 
+'Helping Functions
+
+'This will parse the German formatted date string into workable format
+Private Function GetDateFromGermanDateString(ByVal inputValue As String) As String
+    Dim dayPart As Long
+    Dim MonthPart As Long
+    Dim YearPart As Long
+    Dim tmp As String
+    'clean input string so we only left with 8 characters long length numerical value
+    tmp = CleanString(inputValue)
+    inputValue = tmp
+    'check for [10022009]DDMMYYYY
+    If VBA.Len(inputValue) = 8 And VBA.IsNumeric(inputValue) Then
+        'you are here because inputValue has right 8 characters that suits to DDMMYYYY
+        dayPart = VBA.CLng(VBA.Left(inputValue, 2))
+        YearPart = VBA.CLng(VBA.Right(inputValue, 4))
+        MonthPart = VBA.CLng(VBA.Mid(inputValue, 3, 2))
+        GetDateFromGermanDateString = VBA.Format(VBA.DateSerial(YearPart, MonthPart, dayPart), DATEFORMAT_BACKEND)
+    Else
+        GetDateFromGermanDateString = vbNullString
+    End If
+End Function
+
+'this function uses regexp library to remove unwanted characters from the string and it only keeps numericals!
+Private Function CleanString(ByVal inputValue As String) As String
+    With objRegEx
+        .Global = True
+        .Pattern = "[^\d]+"
+        CleanString = .Replace(inputValue, vbNullString)
+    End With
+End Function
+
+'Class Events
+
+Private Sub Class_Initialize()
+    Set objRegEx = CreateObject("vbscript.regexp")
+End Sub
+
+Private Sub Class_Terminate()
+    Set objRegEx = Nothing
+End Sub

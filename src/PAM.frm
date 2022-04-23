@@ -612,6 +612,12 @@ End Sub
 '-------------------------------------------------------------------------
 'Abstract Methods
 '-------------------------------------------------------------------------
+Private Sub StateForNewRecordForPriceForm()
+    With Me
+        'update model
+        
+    End With
+End Sub
 
 Private Sub StateForNewRecordForUserManager()
     With Me
