@@ -12,7 +12,7 @@ Option Explicit
 Implements IRepository
 
 Private Function IRepository_GetRecords(ByVal TargetNamedRange As String) As Variant
-    IRepository_GetRecords = Application.Range(TargetNamedRange)
+    IRepository_GetRecords = DataBase.Range(TargetNamedRange)
 End Function
 
 Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray LineItems() As Variant)
@@ -29,7 +29,7 @@ Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray L
     
     'Collect & configure some driving parameters
     TotalItems = UBound(LineItems) + 1
-    With Application.Range(TargetNamedRange)
+    With DataBase.Range(TargetNamedRange)
         Set TargetRange = .Resize(.Rows.Count + 1, .Columns.Count)
     End With
     With TargetRange
@@ -75,7 +75,7 @@ Private Sub IRepository_DeleteRecord(ByVal TargetNamedRange As String, ByVal Tar
     On Error GoTo EhhErr:
     
     'Collect & configure some driving parameters
-    Set TargetRange = Application.Range(TargetNamedRange)
+    Set TargetRange = DataBase.Range(TargetNamedRange)
     TRow = TargetIndex + 1
     
     'delte the row from the target range
@@ -116,7 +116,7 @@ Private Sub IRepository_UpdateRecord(ByVal TargetNamedRange As String, ByVal Tar
     
     'Collect & configure some driving parameters
     TotalItems = UBound(LineItems) + 1
-    Set TargetRange = Application.Range(TargetNamedRange)
+    Set TargetRange = DataBase.Range(TargetNamedRange)
     TRow = TargetIndex + 1
     
     'init loop paramters
