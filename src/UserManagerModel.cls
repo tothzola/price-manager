@@ -155,11 +155,6 @@ Public Sub SetPropertiesToNewUserState()
     Call SetPropertiesToNullState
     With Me
         .userIndex = 0
-        If UBound(Me.usersTable, 1) = 1 Then
-            .userID = INDEX_USERID_FIRST
-        Else
-            .userID = VBA.CLng(Me.usersTable(UBound(Me.usersTable, 1), UsersTableFields.COL_userID)) + 1
-        End If
         .userStatus = USERSTATUS_ACTIVE
         .userType = USERTYPE_CLIENT
     End With
