@@ -44,10 +44,9 @@ End Property
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItPasswordManagerForm(ByVal view As PAM, ByVal ActiveUserPassword As String)
+Public Sub InItPasswordManagerForm(ByVal view As PAM)
     If model Is Nothing Then Set model = New PasswordManagerModel
     If MainView Is Nothing Then Set MainView = view
-    Call model.InItModel(ActiveUserPassword)
     RaiseEvent OpenPasswordManagerForm(model) 'Giving Responcibility of opening frame to a AppPresenter! Only AppPresenter could handle MainView!
 End Sub
 
