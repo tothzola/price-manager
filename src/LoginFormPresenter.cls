@@ -43,10 +43,9 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Sub InItLoginForm(ByVal view As PAM, ByVal usersTable As Variant)
+Public Sub InItLoginForm(ByVal view As PAM)
     If model Is Nothing Then Set model = New LoginFormModel
     If MainView Is Nothing Then Set MainView = view
-    Call model.InItModel(usersTable)
     RaiseEvent OpenLoginForm(model) 'Giving Responcibility of opening frame to a AppPresenter! Only AppPresenter could handle MainView!
 End Sub
 
