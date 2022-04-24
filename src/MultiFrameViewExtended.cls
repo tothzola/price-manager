@@ -57,6 +57,13 @@ Public mainFrameWidth As Integer
 Public mainFrameHeight As Integer
 
 'Public Methods
+Public Sub FormEditingState(ByVal LockState As Boolean, ParamArray ctrls() As Variant)
+    Dim ctrl As Variant
+    For Each ctrl In ctrls
+        ctrl.Locked = LockState
+    Next ctrl
+    Set ctrl = Nothing
+End Sub
 
 Public Sub UpdateControlAfterValidation(ByVal ctrl As MSForms.Control, ByVal valid As Boolean, Optional warning As WarningType, Optional warningMessage As String = vbNullString)
     With ctrl
@@ -177,6 +184,12 @@ Private Sub InsertWarningLabel(ByVal ctrl As MSForms.Control, Optional warning A
         Case WarningType.TYPE_FIXEDLENGTHSTRING
             HidingLabel ctrl, CONTROL_NAME_OK
             InsertingLabel ctrl, "TYPE_FIXEDLENGTHSTRING", "String must have minimum of " & warningMessage & " characters"
+        Case WarningType.TYPE_CUSTOM
+            HidingLabel ctrl, CONTROL_NAME_OK
+            InsertingLabel ctrl, "TYPE_CUSTOM", warningMessage
+        Case WarningType.TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied
+            HidingLabel ctrl, CONTROL_NAME_OK
+            InsertingLabel ctrl, "TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied", warningMessage
     End Select
 End Sub
 
@@ -195,6 +208,16 @@ Private Sub RemoveWarningLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As 
         Case WarningType.TYPE_FIXEDLENGTHSTRING
             HidingLabel ctrl, "TYPE_FIXEDLENGTHSTRING"
             InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+        Case WarningType.TYPE_CUSTOM
+            HidingLabel ctrl, "TYPE_CUSTOM"
+            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+        Case WarningType.TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied
+            HidingLabel ctrl, "TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied"
+            If ctrl.Value <> vbNullString Then
+                InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+            Else
+                HidingLabel ctrl, CONTROL_NAME_OK
+            End If
     End Select
 End Sub
 
