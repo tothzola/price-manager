@@ -18,7 +18,7 @@ Private Type TAppModelComponents
     mainTable As Variant
     usersTable As Variant
     CurrenciesList As Variant
-    UnitOfMeasuresList As Variant
+    unitOfMeasuresList As Variant
     userTypeList As Variant
     userStatusList As Variant
   'Active User Info
@@ -123,12 +123,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get UnitOfMeasuresList() As Variant
-    UnitOfMeasuresList = this.UnitOfMeasuresList
+Public Property Get unitOfMeasuresList() As Variant
+    unitOfMeasuresList = this.unitOfMeasuresList
 End Property
 
-Public Property Let UnitOfMeasuresList(ByVal vNewValue As Variant)
-    this.UnitOfMeasuresList = vNewValue
+Public Property Let unitOfMeasuresList(ByVal vNewValue As Variant)
+    this.unitOfMeasuresList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -169,7 +169,7 @@ End Property
 
 Public Sub InItModel(ByVal MainTableContent As Variant, _
                     ByVal UsersTableContent As Variant, _
-                    ByVal ListOfCurrencies As Variant, _
+                    ByVal ListofCurrencies As Variant, _
                     ByVal ListOfUnits As Variant, _
                     ByVal ListofUserTypes As Variant, _
                     ByVal ListofUserStatus As Variant)
@@ -178,11 +178,53 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
     mainTable = MainTableContent
     usersTable = UsersTableContent
     'Single Column Lists for DropDown/ComboBoxes
-    CurrenciesList = ListOfCurrencies
-    UnitOfMeasuresList = ListOfUnits
+    CurrenciesList = ListofCurrencies
+    unitOfMeasuresList = ListOfUnits
     userTypeList = ListofUserTypes
     userStatusList = ListofUserStatus
 End Sub
+
+'-------------------------------------------------------------------------
+'Validations
+'-------------------------------------------------------------------------
+
+Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplication, ByVal index As Long, ByVal RecordID As String) As Variant
+    Dim TRow As Long
+    Dim ID As String
+    TRow = index + 1
+    Select Case TABLE
+        Case TablesOfThisApplication.TABLE_MAINRECORDS
+            ID = Me.mainTable(TRow, 2)
+        Case TablesOfThisApplication.TABLE_USERS
+            ID = Me.usersTable(TRow, 2)
+    End Select
+    If ID = RecordID Then
+        IsRecordIDAvailableToUpdate = True
+    Else
+        IsRecordIDAvailableToUpdate = "Something went wrong! Please try again!"
+    End If
+End Function
+
+'-------------------------------------------------------------------------
+'Public Methods and Functions
+'-------------------------------------------------------------------------
+
+Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
+    Select Case TABLE
+        Case TablesOfThisApplication.TABLE_MAINRECORDS
+            If UBound(Me.mainTable, 1) = 1 Then
+                GetNewID = INDEX_RECORDID_FIRST
+            Else
+                GetNewID = VBA.CLng(Me.mainTable(UBound(Me.mainTable, 1), 2)) + 1
+            End If
+        Case TablesOfThisApplication.TABLE_USERS
+            If UBound(Me.usersTable, 1) = 1 Then
+                GetNewID = INDEX_USERID_FIRST
+            Else
+                GetNewID = VBA.CLng(Me.usersTable(UBound(Me.usersTable, 1), 2)) + 1
+            End If
+    End Select
+End Function
 
 '-------------------------------------------------------------------------
 

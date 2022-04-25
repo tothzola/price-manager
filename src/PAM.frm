@@ -173,7 +173,7 @@ Public Sub UserWantsToOpenPriceFormFrame(ByVal PriceFormFrameModel As PriceFormM
     'open Price Form Interface
     Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
     'Reset Price Form Frame
-    'Call ResetPriceFormFrame(PriceFormFrameModel, OPERATION_NEW)
+    Call ResetPriceFormFrame(PriceFormFrameModel, OPERATION_NEW)
 End Sub
 
 '------------------------------------------------------------------------
@@ -225,6 +225,10 @@ Private Sub cmdOpenUserManager_Click()
     RaiseEvent OpenUserManagerFrame
 End Sub
 
+Private Sub cmdResetPriceForm_Click()
+    RaiseEvent ResetPriceFormFrame
+End Sub
+
 Private Sub cmdResetUserManager_Click()
     RaiseEvent ResetUserManagerFrame
 End Sub
@@ -263,6 +267,10 @@ End Sub
 
 Private Sub cmdUpdateUser_Click()
     RaiseEvent DoCRUDOperationForUserManager(CRUD_OPERATION_UPDATE)
+End Sub
+
+Private Sub cmdAddNewRecord_Click()
+    RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_ADDNEW)
 End Sub
 
 Private Sub cmdApproverLogout_Click()
@@ -334,6 +342,59 @@ Private Sub cmdOpenPendingList_Click()
 End Sub
 
 '-------------------------------------------------------------------------
+'Price Form Fields Change Events
+'-------------------------------------------------------------------------
+    
+Private Sub txtMaterialID_Change()
+    'Hydrate model property
+    PriceModel.materialID = Me.txtMaterialID.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtMaterialID, PriceModel.IsValidField(MainTableFields.COL_MAIN_materialID), TYPE_CUSTOM, "Need exact 8 char length, range should be between [49999999] and [59999999]"
+End Sub
+
+Private Sub txtPrice_Change()
+    'Hydrate model property
+    PriceModel.price = Me.txtPrice.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtPrice, PriceModel.IsValidField(MainTableFields.COL_MAIN_price), TYPE_CUSTOM, "maximum 6 char length allowed including decimals!"
+End Sub
+
+Private Sub cmbCurrency_Change()
+    'Hydrate model property
+    PriceModel.currencyType = Me.cmbCurrency.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbCurrency, PriceModel.IsValidField(MainTableFields.COL_MAIN_currency), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
+End Sub
+
+Private Sub cmbUnitOfMeasure_Change()
+    'Hydrate model property
+    PriceModel.unitOfMeasure = Me.cmbUnitOfMeasure.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbUnitOfMeasure, PriceModel.IsValidField(MainTableFields.COL_MAIN_unitOfMeasure), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
+End Sub
+
+Private Sub txtPriceUnit_Change()
+    'Hydrate model property
+    PriceModel.unitOfPrice = Me.txtPriceUnit.Value
+    'validate field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtPriceUnit, PriceModel.IsValidField(MainTableFields.COL_MAIN_unitOfPrice), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "maximal 4 numerical char length"
+End Sub
+
+Private Sub txtValidFrom_Change()
+    'Hydrate model property
+    PriceModel.validFromDate = Me.txtValidFrom.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtValidFrom, PriceModel.IsValidField(MainTableFields.COL_MAIN_validFromDate), TYPE_CUSTOM, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and it should be today's date only!"
+End Sub
+
+Private Sub txtValidTo_Change()
+    'Hydrate model property
+    PriceModel.validToDate = Me.txtValidTo.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtValidTo, PriceModel.IsValidField(MainTableFields.COL_MAIN_validToDate), TYPE_CUSTOM, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and it should be future date!"
+End Sub
+   
+'-------------------------------------------------------------------------
 'User Manager Fileds Change Events
 '-------------------------------------------------------------------------
 
@@ -341,14 +402,14 @@ Private Sub cmbUserStatus_Change()
     'Hydrate model property
     UserModel.userStatus = Me.cmbUserStatus.Value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.cmbUserStatus, UserModel.IsValidField(COL_userStatus), TYPE_NA
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbUserStatus, UserModel.IsValidField(COL_userStatus), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub cmbUserType_Change()
     'Hydrate model property
     UserModel.userType = Me.cmbUserType.Value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.cmbUserType, UserModel.IsValidField(COL_userType), TYPE_NA
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbUserType, UserModel.IsValidField(COL_userType), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub txtSetUsername_Change()
@@ -497,7 +558,7 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
         'Attach Model
         If UserModel Is Nothing Then Set UserModel = UserManagerFormModel
         'clear values of user manager frame fields
-        Call ExtendedMethods.SetStateofControlsToNullState(.lblUserID, .txtSetUsername, .txtSetPassword, .cmbUserStatus, .cmbUserType, lstUsers)
+        Call ExtendedMethods.SetStateofControlsToNullState(.txtSetUsername, .txtSetPassword, .cmbUserStatus, .cmbUserType, lstUsers)
         'Repopulate ComboBoxes and Listbox
         .cmbUserStatus.List = UserModel.userStatusList
         .cmbUserType.List = UserModel.userTypesList
@@ -515,6 +576,26 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
             Call StateForUpdateRecordForUserManager
             'Set focus
             .cmbUserStatus.SetFocus
+        End If
+    End With
+End Sub
+
+Private Sub ResetPriceFormFrame(ByVal PriceFormModel As PriceFormModel, ByVal Operation As FormOperation)
+    With Me
+        'Attach Model
+        If PriceModel Is Nothing Then Set PriceModel = PriceFormModel
+        'clear values of Price form frame fields
+        Call ExtendedMethods.SetStateofControlsToNullState(.lblMainRecordStatus, .lblCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+        'Repopulate ComboBox And ListBox
+        .cmbCurrency.List = PriceModel.curenciesList
+        .cmbUnitOfMeasure.List = PriceModel.unitOfMeasuresList
+        'put default values based on operation
+        If Operation = OPERATION_NEW Then
+            Call StateForNewRecordForPriceForm
+            'Set Focus
+            .txtMaterialID.SetFocus
+        ElseIf Operation = OPERATION_UPDATE Then
+            Call StateForUpdateRecordForPriceForm
         End If
     End With
 End Sub
@@ -551,18 +632,61 @@ End Sub
 
 'User Manager Frame
 
-Public Sub AfterUserManagerCRUDOperation(ByVal TypeOfOperation As CRUDOperations)
+Public Sub AfterUserManagerCRUDOperation(ByVal TypeOfOperation As CRUDOperations, ByVal IsSucceessfullOperation As Boolean)
     Select Case TypeOfOperation
         Case CRUDOperations.CRUD_OPERATION_ADDNEW
             MsgBox "New USER added successfully!", vbInformation, SIGN
         Case CRUDOperations.CRUD_OPERATION_UPDATE
-            MsgBox "User's record has been UPDATED successfully!", vbInformation, SIGN
+            If IsSucceessfullOperation Then
+                MsgBox "User's record has been UPDATED successfully!", vbInformation, SIGN
+            End If
         Case CRUDOperations.CRUD_OPERATION_DELETE
-            MsgBox "User has been DELETED successfully!", vbInformation, SIGN
+            If IsSucceessfullOperation Then
+                MsgBox "User has been DELETED successfully!", vbInformation, SIGN
+            End If
     End Select
     'Refresh Data Again
     RaiseEvent OpenUserManagerFrame
 End Sub
+
+'Price Form Frame
+Public Sub AfterPriceFormCRUDOperation(ByVal TypeOfOperation As CRUDOperations, ByVal IsSuccessfullOperation As Boolean)
+    Select Case TypeOfOperation
+        Case CRUDOperations.CRUD_OPERATION_ADDNEW
+            If IsSuccessfullOperation Then
+                MsgBox "New Record added successfully!", vbInformation, SIGN
+                'reset price form frame
+                RaiseEvent OpenPriceFormFrame
+            End If
+        Case CRUDOperations.CRUD_OPERATION_UPDATE
+            If IsSuccessfullOperation Then
+                MsgBox "Record has been UPDATED successfully!", vbInformation, SIGN
+                'open list for based on user type
+                'Not yet mentioned
+            End If
+        Case CRUDOperations.CRUD_OPERATION_DELETE
+            If IsSuccessfullOperation Then
+                MsgBox "Record has been DELETED successfully!", vbInformation, SIGN
+                'open list for based on user type
+                'Not yet mentioned
+            End If
+        Case CRUDOperations.CRUD_OPERATION_APPROVE
+            If IsSuccessfullOperation Then
+                MsgBox "Record APPROVED successfully!", vbInformation, SIGN
+                'Write here code for sending email to client to notify them
+                'open list for based on user type
+                'Not yet mentioned
+            End If
+        Case CRUDOperations.CRUD_OPERATION_REJECT
+            If IsSuccessfullOperation Then
+                MsgBox "Record REJECTED!", vbInformation, SIGN
+                'write here code for sending email to client tp notify them
+                'open list for based on user type
+                'Not yet mentioned
+            End If
+    End Select
+End Sub
+
 
 '-------------------------------------------------------------------------
 'Userform Events
@@ -615,7 +739,46 @@ End Sub
 Private Sub StateForNewRecordForPriceForm()
     With Me
         'update model
-        
+        Call PriceModel.SetPropertiesToNewRecordState(MainModel.ActiveUserID)
+        'input field state
+        .lblMainRecordStatus.Caption = PriceModel.recordStatus
+        .lblCustomerID.Caption = PriceModel.customerID
+        .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
+        .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
+        'Hide Buttons
+        If MainModel.ActiveUserType = USERTYPE_APPROVER Then
+            Call ShowApprovalRejectionButtons(True)
+        Else
+            Call ShowApprovalRejectionButtons(False)
+        End If
+        'Other Buttons State
+        .cmdAddNewRecord.Enabled = True
+        .cmdUpdateRecord.Enabled = False
+        .cmdDeleteRecord.Enabled = False
+    End With
+End Sub
+
+Private Sub StateForUpdateRecordForPriceForm()
+    With Me
+        'update model
+        Call PriceModel.SetPropertiesToUpdateRecordState
+        'input field state
+        .lblMainRecordStatus.Caption = PriceModel.recordStatus
+        .lblCustomerID.Caption = PriceModel.customerID
+        .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
+        .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
+        'Hide Buttons & Form Lock Decision
+        If MainModel.ActiveUserType = USERTYPE_APPROVER Then
+            Call ShowApprovalRejectionButtons(True)
+            Call ExtendedMethods.FormEditingState(True, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+        Else
+            Call ShowApprovalRejectionButtons(False)
+            Call ExtendedMethods.FormEditingState(False, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+        End If
+        'Other Buttons State
+        .cmdAddNewRecord.Enabled = False
+        .cmdUpdateRecord.Enabled = True
+        .cmdDeleteRecord.Enabled = True
     End With
 End Sub
 
@@ -624,7 +787,6 @@ Private Sub StateForNewRecordForUserManager()
         'Update Model
         Call UserModel.SetPropertiesToNewUserState
         'Input Field State
-        .lblUserID.Caption = UserModel.userID
         .cmbUserStatus.Value = UserModel.userStatus
         .cmbUserType.Value = UserModel.userType
         'Buttons State
@@ -639,7 +801,6 @@ Private Sub StateForUpdateRecordForUserManager()
         'Field State
         Call UserModel.SetPropertiesToUpdateUserState
         'input field state
-        .lblUserID.Caption = UserModel.userID
         .cmbUserStatus.Value = UserModel.userStatus
         .cmbUserType.Value = UserModel.userType
         .txtSetUsername.Value = UserModel.userName

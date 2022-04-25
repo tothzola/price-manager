@@ -1,9 +1,17 @@
 Attribute VB_Name = "modGlobal"
 Option Explicit
 
-'Main Settings
+'SETTINGS
+Public Const SIGN As String = "Demo Project"
+
+'DATE SETTINGS
 Public Const DATEFORMAT_BACKEND As String = "DD-MMM-YYYY"
 Public Const DATEFORMAT_FRONTEND As String = "DD.MM.YYYY"
+Public Const END_OF_THE_EARTH As String = "31-Dec-9999"
+
+'NUMERICAL RANGES
+Public Const INDEX_RECORDID_FIRST As Long = 1000000
+Public Const INDEX_RECORDID_LAST As Long = 9999999
 
 Public Const INDEX_USERID_FIRST As Long = 399999
 Public Const INDEX_USERID_LAST As Long = 599999
@@ -17,24 +25,28 @@ Public Const MAX_PRICE_VALUE As Long = 999999
 Public Const MIN_UNITOFPRICE_VALUE As Long = 0
 Public Const MAX_UNITOFPRICE_VALUE As Long = 9999
 
-Public Const SIGN As String = "Demo Project"
-
+'SEPERATORS FOR STRINGS MANIPULATION
 Public Const SEPERATOR_LINE As String = "<LINE>"
 Public Const SEPERATOR_ITEM As String = "<ITEM>"
 
+'STATUSES
 Public Const USERSTATUS_ACTIVE As String = "ACTIVE"
 Public Const USERSTATUS_INACTIVE As String = "INACTIVE"
 
 Public Const USERTYPE_CLIENT As String = "CLIENT"
 Public Const USERTYPE_APPROVER As String = "APPROVER"
 
-Public Const BULLET_LISTITEM As String = ">>  "
+Public Const RECORDSTATUS_PENDING As String = "PENDING"
+Public Const RECORDSTATUS_APPROVED As String = "APPROVED"
+Public Const RECORDSTATUS_REJECTED As String = "REJECTED"
 
 'COLORS
-Public Const COLOR_OF_OKAY As Long = &H8000& 'GREEN TINT
-Public Const COLOR_OF_NOT_OKAY As Long = &H2D04D2 'RED TINT
+Public Const COLOR_OF_OKAY As Long = &H8000&        'GREEN TINT
+Public Const COLOR_OF_NOT_OKAY As Long = &H2D04D2   'RED TINT
 
 'Other Settings
+
+Public Const BULLET_LISTITEM As String = ">>  "
 
 Public Enum FormOperation
     OPERATION_NEW
@@ -60,10 +72,12 @@ End Enum
 
 Public Enum WarningType
     TYPE_NA
+    TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied
     TYPE_NUMBERSONLY
     TYPE_STRINGSNOTMATCHED
     TYPE_WRONGPASSWORDPATTERN
     TYPE_FIXEDLENGTHSTRING
+    TYPE_CUSTOM
 End Enum
 
 Public Enum ApplicationForms

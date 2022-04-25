@@ -21,4 +21,3 @@ End Sub
 
 Public Sub DeleteRecord(ByVal TargetNamedRange As String, ByVal TargetIndex As Long)
 End Sub
-

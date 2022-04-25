@@ -3,6 +3,11 @@ Option Explicit
 
 'Data Tables Structure
 
+Public Enum TablesOfThisApplication
+    TABLE_MAINRECORDS
+    TABLE_USERS
+End Enum
+
 Public Enum PasswordManagerFields
     PM_CURRENT_PASSWORD = 1
     PM_NEW_PASSWORD

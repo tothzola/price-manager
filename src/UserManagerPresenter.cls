@@ -20,24 +20,9 @@ Attribute MainView.VB_VarHelpID = -1
 Public Event OpenUserManagerForm(ByVal UMModel As UserManagerModel)
 Public Event CloseUserManagerForm()
 Public Event ResetUserManagerForm()
-
-Public Event AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, _
-                                            ByVal userID As String, _
-                                            ByVal userStatus As String, _
-                                            ByVal userType As String, _
-                                            ByVal userName As String, _
-                                            ByVal userPassword As String)
-                                            
-Public Event UpdateUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, _
-                                            ByVal index As Long, _
-                                            ByVal userID As String, _
-                                            ByVal userStatus As String, _
-                                            ByVal userType As String, _
-                                            ByVal userName As String, _
-                                            ByVal userPassword As String)
-                                            
-Public Event DeleteUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal index As Long)
-
+Public Event AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
+Public Event UpdateUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
+Public Event DeleteUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
 Public Event UpdateUserManagerFormRecord()
 Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
 
@@ -63,10 +48,9 @@ End Property
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItUserManagerForm(ByVal view As PAM, ByVal usersData As Variant, ByVal StatusOfUser As Variant, ByVal TypesOfUser As Variant)
+Public Sub InItUserManagerForm(ByVal view As PAM)
     If model Is Nothing Then Set model = New UserManagerModel
     If MainView Is Nothing Then Set MainView = view
-    Call model.InItModel(usersData, StatusOfUser, TypesOfUser)
     RaiseEvent OpenUserManagerForm(model)
 End Sub
 
@@ -83,11 +67,11 @@ Private Sub MainView_DoCRUDOperationForUserManager(ByVal TypeOfOperation As CRUD
         If response = True Then
             Select Case TypeOfOperation
                 Case CRUDOperations.CRUD_OPERATION_ADDNEW
-                    RaiseEvent AddNewUserFromUserManagerForm(TypeOfOperation, .userID, .userStatus, .userType, .userName, .userPassword)
+                    RaiseEvent AddNewUserFromUserManagerForm(TypeOfOperation, model)
                 Case CRUDOperations.CRUD_OPERATION_UPDATE
-                    RaiseEvent UpdateUserFromUserManagerForm(TypeOfOperation, .userIndex - 1, .userID, .userStatus, .userType, .userName, .userPassword)
+                    RaiseEvent UpdateUserFromUserManagerForm(TypeOfOperation, model)
                 Case CRUDOperations.CRUD_OPERATION_DELETE
-                    RaiseEvent DeleteUserFromUserManagerForm(TypeOfOperation, .userIndex - 1)
+                    RaiseEvent DeleteUserFromUserManagerForm(TypeOfOperation, model)
             End Select
         Else
             RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)

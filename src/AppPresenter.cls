@@ -86,14 +86,14 @@ Public Sub InItUserService(ByVal SelectedRepositoryType As RepositoryType, ByVal
 End Sub
 
 'InIt Model
-Public Sub InItApplicationModel(ByVal ListOfCurrencies As Variant, _
+Public Sub InItApplicationModel(ByVal ListofCurrencies As Variant, _
                                 ByVal ListOfUnits As Variant, _
                                 ByVal TypesOfUser As Variant, _
                                 ByVal StatusOfUser As Variant)
     Set model = New AppModel
     Call model.InItModel(mainService.GetListOfAllRecordsFromContextTable, _
                         userService.GetListOfAllRecordsFromContextTable, _
-                        ListOfCurrencies, _
+                        ListofCurrencies, _
                         ListOfUnits, _
                         TypesOfUser, _
                         StatusOfUser)
@@ -107,6 +107,7 @@ Public Sub InItApp()
         Call .Show
     End With
 End Sub
+
 
 '-------------------------------------------------------------------------
 'Frame Opening Operations / Side Panel Buttons
@@ -142,6 +143,9 @@ End Sub
 '------------------
 
 Private Sub presenterLoginFrame_OpenLoginForm(ByVal LModel As LoginFormModel)
+    'Hydrate model property
+    Call LModel.InItModel(model.usersTable)
+    'Open Login Form
     Call view.UserWantsToOpenLoginFrame(LModel)
 End Sub
 
@@ -158,6 +162,9 @@ End Sub
 '------------------------
 
 Private Sub presenterPasswordManagerFrame_OpenPasswordManagerForm(ByVal PMModel As PasswordManagerModel)
+    'Hydrate Model property
+    Call PMModel.InItModel(model.ActiveUserPassword)
+    'Open Passwordmanager Frame
     Call view.UserWantsToOpenPasswordManagerFrame(PMModel)
 End Sub
 
@@ -182,6 +189,9 @@ End Sub
 '-------------------
 
 Private Sub presenterUserManagerFrame_OpenUserManagerForm(ByVal UMModel As UserManagerModel)
+    'Hydrate Model Properties
+    Call UMModel.InItModel(model.usersTable, model.userStatusList, model.userTypeList)
+    'Open User manager frame
     Call view.UserWantsToOpenUserManagerFrame(UMModel)
 End Sub
 
@@ -198,22 +208,49 @@ Private Sub presenterUserManagerFrame_UpdateUserManagerFormRecord()
 End Sub
 
 'Values shouold be in sequence of how they are in table!
-'usersTable = 1. index   2. userID  3. userStatus  4. userType    5. userName    6. password
-'index will be alloted automatically so we should start from 2 to 6
+'Columns of Users Table
+    '0. index
+    '1. userID
+    '2. userStatus
+    '3. userType
+    '4. userName
+    '5. password
+'index will be alloted automatically so we should start from 1 to 5
 
-Private Sub presenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal userID As String, ByVal userStatus As String, ByVal userType As String, ByVal userName As String, ByVal userPassword As String)
-    Call userService.AddNewRecordToContextTable(userID, userStatus, userType, userName, userPassword)
-    Call view.AfterUserManagerCRUDOperation(TypeOfOperation)
+Private Sub presenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
+    Call RefreshUsersTable
+    With UMModel
+        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .userType, .userName, .userPassword)
+    End With
+    Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
 End Sub
 
-Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal index As Long, ByVal userID As String, ByVal userStatus As String, ByVal userType As String, ByVal userName As String, ByVal userPassword As String)
-    Call userService.UpdateRecordOfContextTable(index, userID, userStatus, userType, userName, userPassword)
-    Call view.AfterUserManagerCRUDOperation(TypeOfOperation)
+Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
+    Call RefreshUsersTable
+    Dim response As Variant
+    With UMModel
+    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex - 1, .userID)
+        If response = True Then
+            Call userService.UpdateRecordOfContextTable(.userIndex - 1, .userID, .userStatus, .userType, .userName, .userPassword)
+            Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+        Else
+            Call view.ShowWarning(response, TYPE_CRITICAL)
+        End If
+    End With
 End Sub
 
-Private Sub presenterUserManagerFrame_DeleteUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal index As Long)
-    Call userService.DeleteRecordofContextTable(index)
-    Call view.AfterUserManagerCRUDOperation(TypeOfOperation)
+Private Sub presenterUserManagerFrame_DeleteUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
+    Call RefreshUsersTable
+    Dim response As Variant
+    With UMModel
+        response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex - 1, .userID)
+        If response = True Then
+            Call userService.DeleteRecordofContextTable(.userIndex - 1)
+            Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+        Else
+            Call view.ShowWarning(response, TYPE_CRITICAL)
+        End If
+    End With
 End Sub
 
 Private Sub presenterUserManagerFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
@@ -221,15 +258,116 @@ Private Sub presenterUserManagerFrame_OnSomethingWentWrong(ByVal message As Stri
 End Sub
 
 '-------------------
-'Private FORM Events
+'PRICE FORM Events
 '-------------------
 
 Private Sub presenterPriceFormFrame_OpenPriceForm(ByVal PFModel As PriceFormModel)
+    'Hydrate Model property
+    Call PFModel.InItModel(model.mainTable, model.CurrenciesList, model.unitOfMeasuresList)
+    'Open PriceForm Frame
     Call view.UserWantsToOpenPriceFormFrame(PFModel)
+End Sub
+
+Private Sub presenterPriceFormFrame_ResetPriceForm()
+    Call OpenPriceForm
+End Sub
+
+'Values shouold be in sequence of how they are in table!
+'Columns of main table
+    '0. index
+    '1. recordID
+    '2. recordStatus
+    '3. statusChangeDate
+    '4. customerID
+    '5. materialID
+    '6. price
+    '7. currency
+    '8. unitOfPrice
+    '9. unitOfMeasure
+    '10. validFromDate
+    '11. validToDate
+'index will be alloted automatically so we should start from 1 to 11
+
+Private Sub presenterPriceFormFrame_AddNewRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+    Call RefreshMainTable
+    With PFModel
+        Call mainService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), .recordStatus, vbNullString, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+    End With
+    Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+End Sub
+
+Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+    Call RefreshMainTable
+    Dim response As Variant
+    With PFModel
+    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
+        If response = True Then
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+        Else
+            Call view.ShowWarning(response, TYPE_CRITICAL)
+        End If
+    End With
+End Sub
+
+Private Sub presenterPriceFormFrame_DeleteRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+    Call RefreshMainTable
+    Dim response As Variant
+    With PFModel
+    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
+        If response = True Then
+            Call mainService.DeleteRecordofContextTable(.index - 1)
+            Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+        Else
+            Call view.ShowWarning(response, TYPE_CRITICAL)
+        End If
+    End With
 End Sub
 
 Private Sub presenterPriceFormFrame_ClosePriceForm()
     Call view.UserWantsToCloseFrame(FORM_PRICEFORM)
+End Sub
+
+Private Sub presenterPriceFormFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
+    Call view.ShowWarning(message, TYPE_CRITICAL)
+End Sub
+
+'----------------------------------------------------------------------------------------
+'Following two event handllers are for Approving and Rejecting Processes!!
+'technically, Approving and Rejecting Processes are exactly UPDATE process!
+'we can also combine them in one procedure but I don't want because
+'if in future, business demands something more with Approval and Rejection processes then
+'they can get integrate model's data from here and process further!
+'E.g. Like sending emails, sending reports, notify client through SMS etc etc.
+'any thing can integrate from this point
+'----------------------------------------------------------------------------------------
+
+Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+    Call RefreshMainTable
+    Dim response As Variant
+    With PFModel
+    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
+        If response = True Then
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+        Else
+            Call view.ShowWarning(response, TYPE_CRITICAL)
+        End If
+    End With
+End Sub
+
+Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+    Call RefreshMainTable
+    Dim response As Variant
+    With PFModel
+    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
+        If response = True Then
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+        Else
+            Call view.ShowWarning(response, TYPE_CRITICAL)
+        End If
+    End With
 End Sub
 
 '-------------------------------------------------------------------------
@@ -242,7 +380,7 @@ Private Sub OpenLoginForm()
     'Open New Login Form
     If presenterLoginFrame Is Nothing Then Set presenterLoginFrame = New LoginFormPresenter
     'InIt Presenter from here
-    Call presenterLoginFrame.InItLoginForm(view, model.usersTable)
+    Call presenterLoginFrame.InItLoginForm(view)
 End Sub
 
 Private Sub OpenPasswordManager()
@@ -251,7 +389,7 @@ Private Sub OpenPasswordManager()
     'Open Password Manager
     If presenterPasswordManagerFrame Is Nothing Then Set presenterPasswordManagerFrame = New PasswordManagerPresenter
     'InIt Presenter from here
-    Call presenterPasswordManagerFrame.InItPasswordManagerForm(view, model.ActiveUserPassword)
+    Call presenterPasswordManagerFrame.InItPasswordManagerForm(view)
 End Sub
 
 Private Sub OpenUserManager()
@@ -261,7 +399,7 @@ Private Sub OpenUserManager()
     If presenterUserManagerFrame Is Nothing Then Set presenterUserManagerFrame = New UserManagerPresenter
     'InIt Presenter from here
     With model
-        Call presenterUserManagerFrame.InItUserManagerForm(view, .usersTable, .userStatusList, .userTypeList)
+        Call presenterUserManagerFrame.InItUserManagerForm(view)
     End With
 End Sub
 
@@ -272,7 +410,7 @@ Private Sub OpenPriceForm()
     If presenterPriceFormFrame Is Nothing Then Set presenterPriceFormFrame = New PriceFormPresenter
     'InIt Presenter from here
     With model
-        Call presenterPriceFormFrame.InItPriceForm(view, .mainTable)
+        Call presenterPriceFormFrame.InItPriceForm(view)
     End With
 End Sub
 

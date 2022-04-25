@@ -20,11 +20,11 @@ Attribute MainView.VB_VarHelpID = -1
 Public Event OpenPriceForm(ByVal PFModel As PriceFormModel)
 Public Event ClosePriceForm()
 Public Event ResetPriceForm()
-Public Event AddNewUserFromPriceForm(ByVal TypeOfOperation As CRUDOperations)
-Public Event UpdateUserFromPriceForm(ByVal TypeOfOperation As CRUDOperations)
-Public Event DeleteUserFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal index As Long)
-Public Event ApproveUserFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal index As Long)
-Public Event RejectUserFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal index As Long)
+Public Event AddNewRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+Public Event UpdateRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+Public Event DeleteRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+Public Event RejectRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+Public Event ApproveRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
 Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
@@ -49,15 +49,51 @@ End Property
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItPriceForm(ByVal view As PAM, ByVal mainData As Variant)
+Public Sub InItPriceForm(ByVal view As PAM)
     If model Is Nothing Then Set model = New PriceFormModel
     If MainView Is Nothing Then Set MainView = view
-    Call model.InItModel(mainData)
     RaiseEvent OpenPriceForm(model)
+End Sub
+
+'-------------------------------------------------------------------------
+'Events Procedure
+'-------------------------------------------------------------------------
+
+Private Sub MainView_DoCRUDOperationForPriceForm(ByVal TypeOfOperation As CRUDOperations)
+    Dim response As Variant
+    With model
+        'Validation
+        response = .IsEverythingOkayToSaveRecord
+        'Now based on the validation go for the operation
+        If response = True Then
+            Select Case TypeOfOperation
+            
+                Case CRUDOperations.CRUD_OPERATION_ADDNEW
+                    RaiseEvent AddNewRecordFromPriceForm(TypeOfOperation, model)
+                    
+                Case CRUDOperations.CRUD_OPERATION_UPDATE
+                    RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
+                    
+                Case CRUDOperations.CRUD_OPERATION_DELETE
+                    RaiseEvent DeleteRecordFromPriceForm(TypeOfOperation, model)
+                    
+                Case CRUDOperations.CRUD_OPERATION_REJECT
+                    RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
+                    
+                Case CRUDOperations.CRUD_OPERATION_APPROVE
+                    RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
+                    
+            End Select
+        Else
+            RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
+        End If
+    End With
 End Sub
 
 Private Sub MainView_ClosePriceFormFrame()
     RaiseEvent ClosePriceForm
 End Sub
 
-
+Private Sub MainView_ResetPriceFormFrame()
+    RaiseEvent ResetPriceForm
+End Sub

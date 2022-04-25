@@ -15,7 +15,7 @@ Private objRegEx As Object
 'Check if the date is between the start and end range dates or not?
 Public Function IsValidDateInRange(ByVal inputValue As String, startDate As Date, endDate As Date) As Boolean
     Dim TargetDate As Date
-    TargetDate = VBA.CDate(IsValidGermanFormatDate(inputValue))
+    TargetDate = VBA.CDate(GetDateFromGermanDateString(inputValue))
     If TargetDate >= startDate And TargetDate <= endDate Then
         IsValidDateInRange = True
     Else
@@ -102,9 +102,26 @@ Public Function IsNotNullValue(ByVal inputValue As Variant, ByVal inputType As S
     End Select
 End Function
 
+'Check if string has crossed max limit or not?
+Public Function IsValidStringLengthUnderLimit(ByVal inputString As Variant, ByVal maxLength As Byte) As Boolean
+    Dim checklength As Byte
+    checklength = maxLength
+    'Following logic is to pass currency
+    If VBA.IsNumeric(inputString) Then
+        If VBA.InStr(1, inputString, ",") > 0 Then checklength = checklength + 1
+        If VBA.InStr(1, inputString, ".") > 0 Then checklength = checklength + 1
+    End If
+    'Main Logic
+    If VBA.Len(inputString) <= checklength Then
+        IsValidStringLengthUnderLimit = True
+    Else
+        IsValidStringLengthUnderLimit = False
+    End If
+End Function
+
 'Check for the Valid Length
-Public Function IsValidStringLength(ByVal inputstring As Variant, ByVal checkLength As Byte) As Variant
-    If VBA.Len(inputstring) >= checkLength Then
+Public Function IsValidStringLength(ByVal inputString As Variant, ByVal checklength As Byte) As Boolean
+    If VBA.Len(inputString) >= checklength Then
         IsValidStringLength = True
     Else
         IsValidStringLength = False
@@ -215,7 +232,7 @@ End Function
 'Helping Functions
 
 'This will parse the German formatted date string into workable format
-Private Function GetDateFromGermanDateString(ByVal inputValue As String) As String
+Public Function GetDateFromGermanDateString(ByVal inputValue As String) As String
     Dim dayPart As Long
     Dim MonthPart As Long
     Dim YearPart As Long

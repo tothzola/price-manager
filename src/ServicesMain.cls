@@ -82,13 +82,36 @@ Private Function IServices_GetSpecificListOfRecordsFromContextTable(ByVal Column
 End Function
 
 Private Sub IServices_AddNewRecordToContextTable(ParamArray contextLineItems() As Variant)
-    Debug.Print "Not Implemented Yet"
+    Call Repository.AddRecord(ContextTableName, _
+                                contextLineItems(0), _
+                                contextLineItems(1), _
+                                contextLineItems(2), _
+                                contextLineItems(3), _
+                                contextLineItems(4), _
+                                contextLineItems(5), _
+                                contextLineItems(6), _
+                                contextLineItems(7), _
+                                contextLineItems(8), _
+                                contextLineItems(9), _
+                                contextLineItems(10))
 End Sub
 
 Private Sub IServices_UpdateRecordOfContextTable(ByVal index As Long, ParamArray contextLineItems() As Variant)
-    Debug.Print "Not Implemented Yet"
+    Call Repository.UpdateRecord(ContextTableName, _
+                                    index, _
+                                    contextLineItems(0), _
+                                    contextLineItems(1), _
+                                    contextLineItems(2), _
+                                    contextLineItems(3), _
+                                    contextLineItems(4), _
+                                    contextLineItems(5), _
+                                    contextLineItems(6), _
+                                    contextLineItems(7), _
+                                    contextLineItems(8), _
+                                    contextLineItems(9), _
+                                    contextLineItems(10))
 End Sub
 
 Private Sub IServices_DeleteRecordofContextTable(ByVal index As Long)
-    Debug.Print "Not Implemented Yet"
+    Call Repository.DeleteRecord(ContextTableName, index)
 End Sub
