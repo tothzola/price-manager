@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PAM
    ClientHeight    =   6015
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   2535
+   ClientWidth     =   12675
    OleObjectBlob   =   "PAM.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -345,6 +345,13 @@ End Sub
 'Price Form Fields Change Events
 '-------------------------------------------------------------------------
     
+Private Sub txtCustomerID_Change()
+    'Hydrate model property
+    PriceModel.customerID = Me.txtCustomerID.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtCustomerID, PriceModel.IsValidField(MainTableFields.COL_MAIN_customerID), TYPE_CUSTOM, "Need exact 6 char length, range should be between [399999] and [599999]"
+End Sub
+    
 Private Sub txtMaterialID_Change()
     'Hydrate model property
     PriceModel.materialID = Me.txtMaterialID.Value
@@ -585,7 +592,7 @@ Private Sub ResetPriceFormFrame(ByVal PriceFormModel As PriceFormModel, ByVal Op
         'Attach Model
         If PriceModel Is Nothing Then Set PriceModel = PriceFormModel
         'clear values of Price form frame fields
-        Call ExtendedMethods.SetStateofControlsToNullState(.lblMainRecordStatus, .lblCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+        Call ExtendedMethods.SetStateofControlsToNullState(.lblMainRecordStatus, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
         'Repopulate ComboBox And ListBox
         .cmbCurrency.List = PriceModel.curenciesList
         .cmbUnitOfMeasure.List = PriceModel.unitOfMeasuresList
@@ -615,7 +622,7 @@ Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     End If
     'Update Active User Frame
     With LoginModel
-        Call UpdateActiveUserInfomation(.userName, .userType, .userStatus, .userID, .password)
+        Call UpdateActiveUserInfomation(.userName, .userType, .userStatus, .UserID, .password)
     End With
     'Update Welcome Frame with Username
     Call UpdateWelcomeFrame
@@ -742,7 +749,7 @@ Private Sub StateForNewRecordForPriceForm()
         Call PriceModel.SetPropertiesToNewRecordState(MainModel.ActiveUserID)
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
-        .lblCustomerID.Caption = PriceModel.customerID
+        .txtCustomerID.Value = PriceModel.customerID
         .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
         .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons
@@ -764,7 +771,7 @@ Private Sub StateForUpdateRecordForPriceForm()
         Call PriceModel.SetPropertiesToUpdateRecordState
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
-        .lblCustomerID.Caption = PriceModel.customerID
+        .txtCustomerID.Value = PriceModel.customerID
         .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
         .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons & Form Lock Decision
