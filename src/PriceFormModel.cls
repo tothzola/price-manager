@@ -15,7 +15,7 @@ Option Explicit
 Private Type TPriceFormModelComponents
     'Validation Object
     Validator As ValidationServices
-    CheckFields(MainTableFields.COL_MAIN_materialID To MainTableFields.COL_MAIN_validToDate) As Variant
+    CheckFields(MainTableFields.COL_MAIN_customerID To MainTableFields.COL_MAIN_validToDate) As Variant
     'Tables
     mainTable As Variant
     'Single Column List
@@ -24,6 +24,7 @@ Private Type TPriceFormModelComponents
     'Fields
     index As Long
     RecordID As String
+    UserID As String
     recordStatus As String
     statusChangeDate As String
     customerID As String
@@ -96,6 +97,16 @@ End Property
 
 Public Property Let RecordID(ByVal vNewValue As String)
     this.RecordID = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get UserID() As String
+    UserID = this.UserID
+End Property
+
+Public Property Let UserID(ByVal vNewValue As String)
+    this.UserID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -224,7 +235,7 @@ Public Sub SetPropertiesToNewRecordState(ByVal ActiveUserID As String)
     With Me
         .index = 0
         .recordStatus = RECORDSTATUS_PENDING
-        .customerID = ActiveUserID
+        .UserID = ActiveUserID
         .validFromDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
         .validToDate = END_OF_THE_EARTH
     End With
@@ -238,6 +249,7 @@ Public Sub SetPropertiesToUpdateRecordState()
     TargetRow = Me.index
     With Me
         .RecordID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordID)
+        .UserID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_userID)
         .recordStatus = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordStatus)
         .statusChangeDate = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_statusChangeDate)
         .customerID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_customerID)
@@ -254,6 +266,7 @@ End Sub
 Private Sub SetPropertiesToNullState()
     With Me
         .RecordID = vbNullString
+        .UserID = vbNullString
         .recordStatus = vbNullString
         .statusChangeDate = vbNullString
         .customerID = vbNullString
@@ -274,7 +287,7 @@ End Sub
 Public Function IsEverythingOkayToSaveRecord() As Variant
     IsEverythingOkayToSaveRecord = Validator.IsEverythingOkay(this.CheckFields, _
                                                             modDataSources.arrListOfColumns_MAIN_Table, _
-                                                            MainTableFields.COL_MAIN_materialID, _
+                                                            MainTableFields.COL_MAIN_customerID, _
                                                             MainTableFields.COL_MAIN_validToDate)
 End Function
 
@@ -287,6 +300,20 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
     
     'Check the validation of field based on field index
     Select Case FieldIndex
+    
+        Case MainTableFields.COL_MAIN_customerID
+            'Check 1
+            IsValidField = Validator.IsNotNullValue(Me.customerID, VBA.TypeName(Me.customerID))
+            If Not IsValidField = True Then Exit Function
+            'Check 2
+            IsValidField = VBA.IsNumeric(Me.customerID)
+            If Not IsValidField = True Then Exit Function
+            'check 3
+            IsValidField = Validator.IsValidStringLength(Me.customerID, 6)
+            If Not IsValidField = True Then Exit Function
+            'Check 4
+            IsValidField = Validator.IsBetweenNumericalRange(Me.customerID, INDEX_CUSTOMERID_FIRST, INDEX_CUSTOMERID_LAST)
+            If Not IsValidField = True Then Exit Function
          
         Case MainTableFields.COL_MAIN_materialID
             'Check 1

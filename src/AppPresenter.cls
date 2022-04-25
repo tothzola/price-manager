@@ -229,9 +229,9 @@ Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOf
     Call RefreshUsersTable
     Dim response As Variant
     With UMModel
-    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex - 1, .userID)
+    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex - 1, .UserID)
         If response = True Then
-            Call userService.UpdateRecordOfContextTable(.userIndex - 1, .userID, .userStatus, .userType, .userName, .userPassword)
+            Call userService.UpdateRecordOfContextTable(.userIndex - 1, .UserID, .userStatus, .userType, .userName, .userPassword)
             Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
@@ -243,7 +243,7 @@ Private Sub presenterUserManagerFrame_DeleteUserFromUserManagerForm(ByVal TypeOf
     Call RefreshUsersTable
     Dim response As Variant
     With UMModel
-        response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex - 1, .userID)
+        response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex - 1, .UserID)
         If response = True Then
             Call userService.DeleteRecordofContextTable(.userIndex - 1)
             Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
@@ -291,7 +291,7 @@ End Sub
 Private Sub presenterPriceFormFrame_AddNewRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
     Call RefreshMainTable
     With PFModel
-        Call mainService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), .recordStatus, vbNullString, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+        Call mainService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), .UserID, .recordStatus, vbNullString, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
     End With
     Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
 End Sub
@@ -302,7 +302,7 @@ Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .UserID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
             Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
@@ -348,7 +348,7 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .UserID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
             Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
@@ -362,7 +362,7 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .UserID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
             Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
