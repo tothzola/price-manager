@@ -38,11 +38,26 @@ End Function
 Public Function IsBetweenNumericalRange(ByVal inputValue As String, _
                                         ByVal minValue As Long, _
                                         ByVal maxvalue As Long) As Boolean
-    If VBA.CLng(inputValue) >= minValue And VBA.CLng(inputValue) <= maxvalue Then
-        IsBetweenNumericalRange = True
+    Dim result As Boolean
+    
+    On Error GoTo CleanFail
+    
+    'owerflow error is rased if len(inputValue) > len(maxvalue)
+    If VBA.CLng(inputValue) > minValue And VBA.CLng(inputValue) <= maxvalue Then
+        result = True
     Else
-        IsBetweenNumericalRange = False
+        result = False
     End If
+    
+CleanExit:
+    IsBetweenNumericalRange = result
+    Exit Function
+
+CleanFail:
+    MsgBox "ErrNumber:" & Err.Number & " Err.Description: " & Err.Description, vbCritical
+    Resume CleanExit
+    Resume
+    
 End Function
 
 'if All goes well for the form
