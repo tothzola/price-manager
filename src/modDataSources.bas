@@ -26,6 +26,7 @@ End Enum
 Public Enum MainTableFields
     COL_MAIN_INDEX = 1
     COL_MAIN_recordID
+    COL_MAIN_userID
     COL_MAIN_recordStatus
     COL_MAIN_statusChangeDate
     COL_MAIN_customerID
@@ -63,6 +64,7 @@ End Function
 Public Function arrListOfColumns_MAIN_Table() As Variant
     arrListOfColumns_MAIN_Table = Array("index", _
                                         "recordID", _
+                                        "userID", _
                                         "Record Status", _
                                         "Status Change Date", _
                                         "Customer ID", _
