@@ -93,7 +93,8 @@ Private Sub IServices_AddNewRecordToContextTable(ParamArray contextLineItems() A
                                 contextLineItems(7), _
                                 contextLineItems(8), _
                                 contextLineItems(9), _
-                                contextLineItems(10))
+                                contextLineItems(10), _
+                                contextLineItems(11))
 End Sub
 
 Private Sub IServices_UpdateRecordOfContextTable(ByVal index As Long, ParamArray contextLineItems() As Variant)
@@ -109,7 +110,8 @@ Private Sub IServices_UpdateRecordOfContextTable(ByVal index As Long, ParamArray
                                     contextLineItems(7), _
                                     contextLineItems(8), _
                                     contextLineItems(9), _
-                                    contextLineItems(10))
+                                    contextLineItems(10), _
+                                    contextLineItems(11))
 End Sub
 
 Private Sub IServices_DeleteRecordofContextTable(ByVal index As Long)
