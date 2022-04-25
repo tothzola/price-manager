@@ -23,7 +23,7 @@ Private Type TUserManagerFormModelComponents
     userTypesList As Variant
     'Fields
     userIndex As Long
-    userID As String
+    UserID As String
     userStatus As String
     userType As String
     userName As String
@@ -84,12 +84,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get userID() As String
-    userID = this.userID
+Public Property Get UserID() As String
+    UserID = this.UserID
 End Property
 
-Public Property Let userID(ByVal vNewValue As String)
-    this.userID = vNewValue
+Public Property Let UserID(ByVal vNewValue As String)
+    this.UserID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -167,7 +167,7 @@ Public Sub SetPropertiesToUpdateUserState()
     Dim TargetRow As Long
     TargetRow = Me.userIndex
     With Me
-        .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userID)
+        .UserID = Me.usersTable(TargetRow, UsersTableFields.COL_userID)
         .userName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
         .userStatus = Me.usersTable(TargetRow, UsersTableFields.COL_userStatus)
@@ -177,7 +177,7 @@ End Sub
 
 Private Sub SetPropertiesToNullState()
     With Me
-        .userID = vbNullString
+        .UserID = vbNullString
         .userName = vbNullString
         .userPassword = vbNullString
         .userStatus = vbNullString
