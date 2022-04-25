@@ -67,22 +67,16 @@ Private Sub MainView_DoCRUDOperationForPriceForm(ByVal TypeOfOperation As CRUDOp
         'Now based on the validation go for the operation
         If response = True Then
             Select Case TypeOfOperation
-            
                 Case CRUDOperations.CRUD_OPERATION_ADDNEW
                     RaiseEvent AddNewRecordFromPriceForm(TypeOfOperation, model)
-                    
                 Case CRUDOperations.CRUD_OPERATION_UPDATE
                     RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
-                    
                 Case CRUDOperations.CRUD_OPERATION_DELETE
                     RaiseEvent DeleteRecordFromPriceForm(TypeOfOperation, model)
-                    
                 Case CRUDOperations.CRUD_OPERATION_REJECT
                     RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
-                    
                 Case CRUDOperations.CRUD_OPERATION_APPROVE
                     RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
-                    
             End Select
         Else
             RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
