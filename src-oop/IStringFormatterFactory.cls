@@ -12,9 +12,10 @@ Attribute VB_Description = "A factory that creates instances of a particular ISt
 '@Folder("Structure.StringFormating")
 '@Interface
 '@Exposed
+'Copyright (c) 2020 Mathieu Guindon
 Option Explicit
 
 '@Description "Creates a new instance of a string formatter."
 Public Function Create(ByVal FormatString As String) As IStringFormatter
+Attribute Create.VB_Description = "Creates a new instance of a string formatter."
 End Function
-
