@@ -12,6 +12,7 @@ Attribute VB_Description = "Represents an object responsible for managing proper
 '@Folder("Structure.Bindings")
 '@Interface
 '@Exposed
+'Copyright (c) 2020 Mathieu Guindon
 Option Explicit
 
 '@Description "Creates a new property binding for the specified path, source, and target."
@@ -20,23 +21,21 @@ Public Function BindPropertyPath(ByVal Source As Object, ByVal PropertyPath As S
                                  Optional ByVal Mode As BindingMode, _
                                  Optional ByVal UpdateTrigger As BindingUpdateSourceTrigger, _
                                  Optional ByVal StringFormat As String) As IPropertyBinding
+Attribute BindPropertyPath.VB_Description = "Creates a new property binding for the specified path, source, and target."
 
 End Function
 
-'@Description "Gets a reference to an object that creates notification helper object instances."
-Public Property Get NotifierFactory() As INotifierFactory
-End Property
-
 '@Description "Gets a reference to an object that creates string-formatting helper object instances."
 Public Property Get StringFormatterFactory() As IStringFormatterFactory
+Attribute StringFormatterFactory.VB_Description = "Gets a reference to an object that creates string-formatting helper object instances."
 End Property
 
 '@Description "Gets a value indicating whether bindings produce debugger output."
 Public Property Get DebugOutput() As Boolean
+Attribute DebugOutput.VB_Description = "Gets a value indicating whether bindings produce debugger output."
 End Property
 
 '@Description "Applies all property bindings."
 Public Sub Apply(ByVal Context As Object)
+Attribute Apply.VB_Description = "Applies all property bindings."
 End Sub
-
-

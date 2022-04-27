@@ -12,12 +12,14 @@ Attribute VB_Description = "An object responsible for binding a ViewModel proper
 '@Folder("Structure.Bindings")
 '@Interface
 '@Exposed
+'Copyright (c) 2020 Mathieu Guindon
 Option Explicit
 
 Public Enum ApplyResult
     BindingSkipped = 0
-    BindingSuccess = 1
-    BindingFailed = 2
+    BindingSuccess
+    BindingConversionError
+    BindingFailed
 End Enum
 
 Public Enum BindingMode
@@ -29,37 +31,42 @@ End Enum
 
 Public Enum BindingUpdateSourceTrigger
     Never = 0
-    OnPropertyChanged = 1
-    OnEnter = 2
-    OnExit = 3
-    OnChange = 4
+    OnChange = 1
+    OnExit = 2
+    OnKeyPress = 3
 End Enum
 
 '@Description "Gets a value indicating the binding mode/direction."
 Public Property Get Mode() As BindingMode
+Attribute Mode.VB_Description = "Gets a value indicating the binding mode/direction."
 End Property
 
 '@Description "Gets a value indicating the binding update trigger."
 Public Property Get UpdateSourceTrigger() As BindingUpdateSourceTrigger
+Attribute UpdateSourceTrigger.VB_Description = "Gets a value indicating the binding update trigger."
 End Property
 
 '@Description "Gets the binding path resolving to the binding source."
 Public Property Get Source() As IBindingPath
+Attribute Source.VB_Description = "Gets the binding path resolving to the binding source."
 End Property
 
 '@Description "Gets the binding path resolving to the binding target."
 Public Property Get Target() As IBindingPath
+Attribute Target.VB_Description = "Gets the binding path resolving to the binding target."
 End Property
 
 '@Description "Gets the name of the target property implicitly bound for the Target class type."
 Public Property Get DefaultTargetProperty() As String
+Attribute DefaultTargetProperty.VB_Description = "Gets the name of the target property implicitly bound for the Target class type."
 End Property
 
 '@Description "Gets the string formatter (if any) used when applying the binding to the target."
 Public Property Get StringFormat() As IStringFormatter
+Attribute StringFormat.VB_Description = "Gets the string formatter (if any) used when applying the binding to the target."
 End Property
 
 '@Description "Applies the binding."
 Public Sub Apply()
+Attribute Apply.VB_Description = "Applies the binding."
 End Sub
-

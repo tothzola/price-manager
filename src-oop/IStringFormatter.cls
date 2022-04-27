@@ -12,13 +12,15 @@ Attribute VB_Description = "Represents an object with the ability to format a st
 '@Folder("Structure.StringFormating")
 '@Interface
 '@Exposed
+'Copyright (c) 2020 Mathieu Guindon
 Option Explicit
 
 '@Description "Gets the format string used when formatting values."
 Public Property Get FormatString() As String
+Attribute FormatString.VB_Description = "Gets the format string used when formatting values."
 End Property
 
 '@Description "Formats the specified values as per the FormatString."
 Public Function Format(ParamArray Values() As Variant) As String
+Attribute Format.VB_Description = "Formats the specified values as per the FormatString."
 End Function
-
