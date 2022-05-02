@@ -21,12 +21,15 @@ Private Type TAppModelComponents
     unitOfMeasuresList As Variant
     userTypeList As Variant
     userStatusList As Variant
+    recordStatusList As Variant
   'Active User Info
     ActiveUserID As String
     ActiveUserStatus As String
     ActiveUserType As String
     ActiveUserName As String
     ActiveUserPassword As String
+  'Current Parameters
+    CurrentUpdateIndex As Long
 End Type
 
 Private this As TAppModelComponents
@@ -153,6 +156,16 @@ End Property
 
 '-------------------------------------------------------------------------
 
+Public Property Get recordStatusList() As Variant
+    recordStatusList = this.recordStatusList
+End Property
+
+Public Property Let recordStatusList(ByVal vNewValue As Variant)
+    this.recordStatusList = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
 Public Property Get ActiveUserIndex() As Variant
     Dim I As Long
     For I = 1 To UBound(Me.usersTable, 1) Step 1
@@ -164,6 +177,16 @@ Public Property Get ActiveUserIndex() As Variant
 End Property
 
 '-------------------------------------------------------------------------
+
+Public Property Get CurrentUpdateIndex() As Long
+    CurrentUpdateIndex = this.CurrentUpdateIndex
+End Property
+
+Public Property Let CurrentUpdateIndex(ByVal vNewValue As Long)
+    this.CurrentUpdateIndex = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
 'InIt This Model
 '-------------------------------------------------------------------------
 
@@ -172,16 +195,18 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
                     ByVal ListofCurrencies As Variant, _
                     ByVal ListOfUnits As Variant, _
                     ByVal ListofUserTypes As Variant, _
-                    ByVal ListofUserStatus As Variant)
+                    ByVal ListofUserStatus As Variant, _
+                    ByVal ListOfRecordStatus As Variant)
     Set Validator = New ValidationServices
     'Tables of The Applications
-    mainTable = MainTableContent
-    usersTable = UsersTableContent
+    Me.mainTable = MainTableContent
+    Me.usersTable = UsersTableContent
     'Single Column Lists for DropDown/ComboBoxes
-    CurrenciesList = ListofCurrencies
-    unitOfMeasuresList = ListOfUnits
-    userTypeList = ListofUserTypes
-    userStatusList = ListofUserStatus
+    Me.CurrenciesList = ListofCurrencies
+    Me.unitOfMeasuresList = ListOfUnits
+    Me.userTypeList = ListofUserTypes
+    Me.userStatusList = ListofUserStatus
+    Me.recordStatusList = ListOfRecordStatus
 End Sub
 
 '-------------------------------------------------------------------------
@@ -224,6 +249,73 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
                 GetNewID = VBA.CLng(Me.usersTable(UBound(Me.usersTable, 1), 2)) + 1
             End If
     End Select
+End Function
+
+Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal targetColumn As Long) As Variant
+    'Driving Paramters
+    Dim Records()               As String
+    Dim Record                  As Variant
+    Dim tmp                     As Variant
+    Dim MatchedRecords          As String
+    Dim TotalMatchingRows       As Long
+    Dim firstRow                As Long
+    Dim lastRow                 As Long
+    Dim I                       As Long
+    Dim dict                    As Dictionary
+    'Get Driving parameters
+    firstRow = LBound(ContextTable, 1)
+    lastRow = UBound(ContextTable, 1)
+    ReDim tmp(0)
+    'Get matching Rows!
+    MatchedRecords = vbNullString
+    TotalMatchingRows = 0
+    Set dict = New Dictionary
+    For I = firstRow + 1 To lastRow Step 1
+        If Not dict.Exists(ContextTable(I, targetColumn)) Then
+            dict.Add ContextTable(I, targetColumn), ContextTable(I, targetColumn)
+            MatchedRecords = MatchedRecords & I & SEPERATOR_ITEM
+            TotalMatchingRows = TotalMatchingRows + 1
+        End If
+    Next I
+    'remove last seperator from the matchedrecords variable
+    Set dict = Nothing
+    If MatchedRecords = vbNullString Then
+        GetUniqueListFromColumn = tmp
+        Exit Function
+    Else
+        MatchedRecords = VBA.Left(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
+    End If
+    'Redimentioning the tmp array
+    ReDim tmp(TotalMatchingRows)
+    'Transferring Data
+    Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
+    I = 1
+    For Each Record In Records
+        tmp(I) = ContextTable(Record, targetColumn)
+        I = I + 1
+    Next Record
+    'return value
+    GetUniqueListFromColumn = SortOneDimensionalArrayWithNumbers(tmp)
+End Function
+
+Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Variant
+    Dim FirstItemIndex  As Long
+    Dim LastItemIndex   As Long
+    Dim tmp             As Long
+    Dim I               As Long
+    Dim J               As Long
+    FirstItemIndex = LBound(arr)
+    LastItemIndex = UBound(arr)
+    For I = FirstItemIndex To LastItemIndex - 1 Step 1
+        For J = I + 1 To LastItemIndex Step 1
+            If Val(arr(I)) > Val(arr(J)) Then
+                tmp = arr(J)
+                arr(J) = arr(I)
+                arr(I) = tmp
+            End If
+        Next J
+    Next I
+    SortOneDimensionalArrayWithNumbers = arr
 End Function
 
 '-------------------------------------------------------------------------
