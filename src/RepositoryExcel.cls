@@ -15,6 +15,15 @@ Private Function IRepository_GetRecords(ByVal TargetNamedRange As String) As Var
     IRepository_GetRecords = DataBase.Range(TargetNamedRange)
 End Function
 
+Private Function IRepository_GetRecordsByCondition(ByVal TargetNamedRange As String, ByVal columnIndex As Long, ByVal condition As Variant) As Variant
+    Dim TargetRange     As Range
+    Dim TargetTable     As Variant
+    Set TargetRange = DataBase.Range(TargetNamedRange)
+    TargetTable = TargetRange.Value
+    IRepository_GetRecordsByCondition = FilterListWithSingleCondition(TargetTable, columnIndex, condition)
+    Set TargetRange = Nothing
+End Function
+
 Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
@@ -68,7 +77,7 @@ Private Sub IRepository_DeleteRecord(ByVal TargetNamedRange As String, ByVal Tar
     'Variable Declaration
     Dim TargetRange     As Range
     Dim TRow            As Long
-    Dim R               As Range
+    Dim r               As Range
     Dim I               As Long
     
     'error handelling
@@ -83,12 +92,12 @@ Private Sub IRepository_DeleteRecord(ByVal TargetNamedRange As String, ByVal Tar
     
     're-indexing
     I = 1
-    For Each R In TargetRange.Rows
-        If VBA.IsNumeric(R.Cells(1, 1).Value) Then
-            R.Cells(1, 1).Value = I
+    For Each r In TargetRange.Rows
+        If VBA.IsNumeric(r.Cells(1, 1).Value) Then
+            r.Cells(1, 1).Value = I
             I = I + 1
         End If
-    Next R
+    Next r
     
 LeaveThisProcedure:
     
@@ -140,3 +149,59 @@ EhhErr:
          vbNewLine & vbNewLine & Err.Description, vbCritical, "Validator"
     Resume LeaveThisProcedure
 End Sub
+
+'Private helping function
+
+Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByVal columnIndex As Long, ByVal condition As Variant) As Variant
+    'Driving Paramters
+    Const CONSIDERHEADERINDEX   As String = "1" & SEPERATOR_ITEM
+    Dim Records()               As String
+    Dim Record                  As Variant
+    Dim tmp                     As Variant
+    Dim MatchedRecords          As String
+    Dim TotalMatchingRows       As Long
+    Dim firstRow                As Long
+    Dim lastRow                 As Long
+    Dim FirstCol                As Long
+    Dim LastCol                 As Long
+    Dim I                       As Long
+    Dim J                       As Long
+    'Get Driving parameters
+    firstRow = LBound(ContextTable, 1)
+    lastRow = UBound(ContextTable, 1)
+    FirstCol = LBound(ContextTable, 2)
+    LastCol = UBound(ContextTable, 2)
+    ReDim tmp(1 To 1, 1 To LastCol)
+    'Get matching Rows!
+    MatchedRecords = CONSIDERHEADERINDEX
+    TotalMatchingRows = 0
+    For I = firstRow To lastRow Step 1
+        If ContextTable(I, columnIndex) = condition Then
+            MatchedRecords = MatchedRecords & I & SEPERATOR_ITEM
+            TotalMatchingRows = TotalMatchingRows + 1
+        End If
+    Next I
+    'remove last seperator from the matchedrecords variable
+    If MatchedRecords = CONSIDERHEADERINDEX Then
+        For J = FirstCol To LastCol Step 1
+            tmp(1, J) = ContextTable(1, J)
+        Next J
+        FilterListWithSingleCondition = tmp
+        Exit Function
+    Else
+        MatchedRecords = VBA.Left(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
+    End If
+    'Redimentioning the tmp array
+    ReDim tmp(firstRow To TotalMatchingRows + 1, FirstCol To LastCol)
+    'Transferring Data
+    Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
+    J = 1
+    For Each Record In Records
+        For I = FirstCol To LastCol Step 1
+            tmp(J, I) = ContextTable(Record, I)
+        Next I
+        J = J + 1
+    Next Record
+    'return value
+    FilterListWithSingleCondition = tmp
+End Function
