@@ -56,3 +56,12 @@ End Sub
 Private Sub MainView_Login()
     RaiseEvent Login
 End Sub
+
+'-------------------------------------------------------------------------
+'Class Event
+'-------------------------------------------------------------------------
+
+Private Sub Class_Terminate()
+    Set model = Nothing
+    Set MainView = Nothing
+End Sub
