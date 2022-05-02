@@ -77,8 +77,8 @@ Private Function IServices_GetListOfAllRecordsFromContextTable() As Variant
     IServices_GetListOfAllRecordsFromContextTable = tmp
 End Function
 
-Private Function IServices_GetSpecificListOfRecordsFromContextTable(ByVal ColumnReference As String, ByVal SearchCondition As String) As Variant
-    Debug.Print "Not Implemented Yet"
+Private Function IServices_GetSpecificListOfRecordsFromContextTable(ByVal ColumnReference As Long, ByVal SearchCondition As Variant) As Variant
+    IServices_GetSpecificListOfRecordsFromContextTable = Repository.GetRecordsByCondition(ContextTableName, ColumnReference, SearchCondition)
 End Function
 
 Private Sub IServices_AddNewRecordToContextTable(ParamArray contextLineItems() As Variant)

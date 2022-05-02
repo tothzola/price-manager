@@ -76,8 +76,8 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get userType() As String
-    userType = Me.usersData(Me.TargetIndex, UsersTableFields.COL_userType)
+Public Property Get UserType() As String
+    UserType = Me.usersData(Me.TargetIndex, UsersTableFields.COL_userType)
 End Property
 
 '-------------------------------------------------------------------------
@@ -95,8 +95,8 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get UserID() As String
-    UserID = Me.usersData(TargetIndex, UsersTableFields.COL_userID)
+Public Property Get userID() As String
+    userID = Me.usersData(TargetIndex, UsersTableFields.COL_userID)
 End Property
 
 '-------------------------------------------------------------------------

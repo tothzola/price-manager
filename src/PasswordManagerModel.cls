@@ -84,6 +84,9 @@ End Property
 Public Sub InItModel(ByVal ActiveUserPassword As String)
     If Validator Is Nothing Then Set Validator = New ValidationServices
     Me.password = ActiveUserPassword
+    'reset check field array
+    'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
+    Call Validator.ResetSingleDimensionalArray(this.CheckFields)
 End Sub
 
 '-------------------------------------------------------------------------

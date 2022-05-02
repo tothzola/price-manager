@@ -86,3 +86,12 @@ End Sub
 Private Sub MainView_UpdateUserManagerFrameRecord()
     RaiseEvent UpdateUserManagerFormRecord
 End Sub
+
+'-------------------------------------------------------------------------
+'Class Event
+'-------------------------------------------------------------------------
+
+Private Sub Class_Terminate()
+    Set model = Nothing
+    Set MainView = Nothing
+End Sub

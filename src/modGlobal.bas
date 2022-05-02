@@ -4,10 +4,11 @@ Option Explicit
 'SETTINGS
 Public Const SIGN As String = "Demo Project"
 
-'DATE SETTINGS
+'GENERAL SETTINGS
 Public Const DATEFORMAT_BACKEND As String = "DD-MMM-YYYY"
-Public Const DATEFORMAT_FRONTEND As String = "DD.MM.YYYY"
+Public Const DATEFORMAT_FRONTEND As String = "dd.mm.yyyy;@"
 Public Const END_OF_THE_EARTH As String = "31-Dec-9999"
+Public Const START_OF_THE_CENTURY As String = "01-Jan-2000"
 
 'NUMERICAL RANGES
 Public Const INDEX_RECORDID_FIRST As Long = 1000000
@@ -88,6 +89,8 @@ Public Enum ApplicationForms
     FORM_PASSWORDMANAGER
     FORM_USERMANAGER
     FORM_PRICEFORM
+    FORM_DATAFORM
+    FORM_EXPORTUTILITY
 End Enum
 
 Public Enum CRUDOperations
@@ -96,6 +99,22 @@ Public Enum CRUDOperations
     CRUD_OPERATION_DELETE
     CRUD_OPERATION_APPROVE
     CRUD_OPERATION_REJECT
+End Enum
+
+Public Enum DataContainer
+    FOR_CLIENTHISTORY
+    FOR_PENDINGAPPROVALS
+    FOR_ALLHISTORY
+End Enum
+
+Public Enum DataTypes
+    TYPE_DATE
+    TYPE_CURRENCY
+End Enum
+
+Public Enum ValidationCheckTypes
+    TYPE_STRINGMATCH
+    TYPE_DATEBETWEENRANGE
 End Enum
 
 

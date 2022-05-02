@@ -21,7 +21,8 @@ Public Sub MainPAM()
         Call .InItApplicationModel(modDataSources.arrListofCurrencies, _
                                     modDataSources.arrListOfUnitOfMeasure, _
                                     modDataSources.arrListofTypesOfUser, _
-                                    modDataSources.arrListofStatusOfUser)
+                                    modDataSources.arrListofStatusOfUser, _
+                                    modDataSources.arrRecordStatusesList)
                                 
         'Attach and Configure VIEW with Application
         Call .InItApp
@@ -30,5 +31,12 @@ Public Sub MainPAM()
     
     'Exiting from Application!
     Set presenter = Nothing
+    
+End Sub
+
+
+Sub test()
+
+    Debug.Print ThisWorkbook.Worksheets.Count
     
 End Sub

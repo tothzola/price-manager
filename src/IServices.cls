@@ -29,6 +29,9 @@ End Sub
 Public Function GetListOfAllRecordsFromContextTable() As Variant
 End Function
 
+Public Function GetSpecificListOfRecordsFromContextTable(ByVal ColumnReference As Long, ByVal SearchCondition As Variant) As Variant
+End Function
+
 Public Sub AddNewRecordToContextTable(ParamArray contextLineItems() As Variant)
 End Sub
 

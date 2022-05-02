@@ -72,13 +72,15 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Function IServices_GetListOfAllRecordsFromContextTable() As Variant
-    Dim tmp As Variant
-    tmp = Repository.GetRecords(ContextTableName)
-    IServices_GetListOfAllRecordsFromContextTable = tmp
+    IServices_GetListOfAllRecordsFromContextTable = Repository.GetRecords(ContextTableName)
 End Function
 
-Private Function IServices_GetSpecificListOfRecordsFromContextTable(ByVal ColumnReference As String, ByVal SearchCondition As String) As Variant
-    Debug.Print "Not Implemented Yet"
+Private Function IServices_GetSpecificListOfRecordsFromContextTable(ByVal ColumnReference As Long, ByVal SearchCondition As Variant) As Variant
+    If VBA.IsNumeric(SearchCondition) Then
+        IServices_GetSpecificListOfRecordsFromContextTable = Repository.GetRecordsByCondition(ContextTableName, ColumnReference, Val(SearchCondition))
+    Else
+        IServices_GetSpecificListOfRecordsFromContextTable = Repository.GetRecordsByCondition(ContextTableName, ColumnReference, SearchCondition)
+    End If
 End Function
 
 Private Sub IServices_AddNewRecordToContextTable(ParamArray contextLineItems() As Variant)
@@ -117,3 +119,4 @@ End Sub
 Private Sub IServices_DeleteRecordofContextTable(ByVal index As Long)
     Call Repository.DeleteRecord(ContextTableName, index)
 End Sub
+

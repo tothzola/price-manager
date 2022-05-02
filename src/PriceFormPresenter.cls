@@ -17,7 +17,7 @@ Attribute MainView.VB_VarHelpID = -1
 
 '-------------------------------------------------------------------------
 
-Public Event OpenPriceForm(ByVal PFModel As PriceFormModel)
+Public Event OpenPriceForm(ByVal PFModel As PriceFormModel, ByVal operation As FormOperation)
 Public Event ClosePriceForm()
 Public Event ResetPriceForm()
 Public Event AddNewRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
@@ -49,10 +49,10 @@ End Property
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItPriceForm(ByVal view As PAM)
+Public Sub InItPriceForm(ByVal view As PAM, ByVal operation As FormOperation)
     If model Is Nothing Then Set model = New PriceFormModel
     If MainView Is Nothing Then Set MainView = view
-    RaiseEvent OpenPriceForm(model)
+    RaiseEvent OpenPriceForm(model, operation)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -90,4 +90,13 @@ End Sub
 
 Private Sub MainView_ResetPriceFormFrame()
     RaiseEvent ResetPriceForm
+End Sub
+
+'-------------------------------------------------------------------------
+'Class Event
+'-------------------------------------------------------------------------
+
+Private Sub Class_Terminate()
+    Set model = Nothing
+    Set MainView = Nothing
 End Sub
