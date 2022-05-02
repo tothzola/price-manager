@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PAM
    ClientHeight    =   6015
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   12675
+   ClientWidth     =   2535
    OleObjectBlob   =   "PAM.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -23,6 +23,7 @@ Option Explicit
 'Main Frame Events
 Public Event OpenLoginFrame()
 Public Event ExitApp()
+Public Event Logout()
 'Login Frame Events
 Public Event Login()
 Public Event CloseLoginFrame()
@@ -41,9 +42,19 @@ Public Event OpenPriceFormFrame()
 Public Event ClosePriceFormFrame()
 Public Event ResetPriceFormFrame()
 Public Event DoCRUDOperationForPriceForm(ByVal TypeOfOperation As CRUDOperations)
-
+'Data Form Frame Events
+Public Event OpenDataFormFrame(ByVal ContainerIdentifier As DataContainer)
+Public Event CloseDataFormFrame()
+Public Event ResetDataFormFrame(ByVal ContainerIdentifier As DataContainer)
+Public Event EditRecordFromDataFormFrame()
+'Export Form Frame Events
+Public Event OpenExportFormFrame()
+Public Event CloseExportFormFrame()
+Public Event ResetExportFormFrame()
+Public Event ExportReport()
+             
 '-------------------------------------------------------------------------
-'SETTINGS
+'VIEW SETTINGS
 '-------------------------------------------------------------------------
 
 Const MESSAGE_WELCOMESCREEN_LOGOUT_STATE As String = "Welcome to The Price Approval Manager"
@@ -59,6 +70,8 @@ Private Type TViewComponents
     PasswordModel As PasswordManagerModel
     UserModel As UserManagerModel
     PriceModel As PriceFormModel
+    DataModel As DataFormModel
+    ExportModel As ExportFormModel
 End Type
 
 Private this As TViewComponents
@@ -68,9 +81,10 @@ Private this As TViewComponents
 '-------------------------------------------------------------------------
 
 Private ExtendedMethods As MultiFrameViewExtended
+Private EventStop As Boolean
 
 '-------------------------------------------------------------------------
-'Properties
+'Supervised Model Properties
 '-------------------------------------------------------------------------
 
 Private Property Get MainModel() As AppModel
@@ -81,6 +95,8 @@ Private Property Set MainModel(ByVal vNewValue As AppModel)
     Set this.MainModel = vNewValue
 End Property
 
+'-------------------------------------------------------------------------
+
 Private Property Get LoginModel() As LoginFormModel
     Set LoginModel = this.LoginModel
 End Property
@@ -88,6 +104,8 @@ End Property
 Private Property Set LoginModel(ByVal vNewValue As LoginFormModel)
     Set this.LoginModel = vNewValue
 End Property
+
+'-------------------------------------------------------------------------
 
 Private Property Get PasswordModel() As PasswordManagerModel
     Set PasswordModel = this.PasswordModel
@@ -97,6 +115,8 @@ Private Property Set PasswordModel(ByVal vNewValue As PasswordManagerModel)
     Set this.PasswordModel = vNewValue
 End Property
 
+'-------------------------------------------------------------------------
+
 Private Property Get UserModel() As UserManagerModel
     Set UserModel = this.UserModel
 End Property
@@ -104,6 +124,8 @@ End Property
 Private Property Set UserModel(ByVal vNewValue As UserManagerModel)
     Set this.UserModel = vNewValue
 End Property
+
+'-------------------------------------------------------------------------
 
 Private Property Get PriceModel() As PriceFormModel
     Set PriceModel = this.PriceModel
@@ -114,127 +136,43 @@ Private Property Set PriceModel(ByVal vNewValue As PriceFormModel)
 End Property
 
 '-------------------------------------------------------------------------
-'public Methods Called From Presenters
-'-------------------------------------------------------------------------
 
-'This Procedure will clode the current frame
-Public Sub UserWantsToCloseFrame(ByVal FrameIdentifier As ApplicationForms)
-    'open Default Frames
-    Select Case FrameIdentifier
-        Case ApplicationForms.FORM_LOGIN
-            Call ExtendedMethods.ActivateFrames(Me.frameLogin, Me.frameWelcome)
-            Call UpdateWelcomeFrame(FORM_LOGIN)
-        Case ApplicationForms.FORM_PASSWORDMANAGER
-            Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
-            Call UpdateWelcomeFrame
-        Case ApplicationForms.FORM_USERMANAGER
-            Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
-            Call UpdateWelcomeFrame
-        Case ApplicationForms.FORM_PRICEFORM
-            If MainModel.ActiveUserType = USERTYPE_CLIENT Then
-                Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
-            Else
-                Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
-            End If
-            Call UpdateWelcomeFrame
-    End Select
-End Sub
+Private Property Get DataModel() As DataFormModel
+    Set DataModel = this.DataModel
+End Property
 
-Public Sub OnCancel()
-    Me.Hide
-End Sub
+Private Property Set DataModel(ByVal vNewValue As DataFormModel)
+    Set this.DataModel = vNewValue
+End Property
 
 '-------------------------------------------------------------------------
-'Public method to open frames
-'-------------------------------------------------------------------------
 
-Public Sub UserWantsToOpenLoginFrame(ByVal LoginFrameModel As LoginFormModel)
-    'open login interface
-    Call ExtendedMethods.ActivateFrames(Me.frameLogin, Me.frameLoginInterface)
-    'RESET login frame
-    Call ResetLoginFrame(LoginFrameModel)
-End Sub
+Private Property Get ExportModel() As ExportFormModel
+    Set ExportModel = this.ExportModel
+End Property
 
-Public Sub UserWantsToOpenPasswordManagerFrame(ByVal PasswordManagerFormModel As PasswordManagerModel)
-    'open password manager for the client
-    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePasswordManager)
-    'RESET Password manager frame
-    Call ResetPasswordManagerFrame(PasswordManagerFormModel)
-End Sub
-
-Public Sub UserWantsToOpenUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel)
-    'open user manager for the client
-    Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameUserManager)
-    'reset user manager frame
-    Call ResetUserManagerFrame(UserManagerFormModel, OPERATION_NEW)
-End Sub
-
-Public Sub UserWantsToOpenPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel)
-    'open Price Form Interface
-    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
-    'Reset Price Form Frame
-    Call ResetPriceFormFrame(PriceFormFrameModel, OPERATION_NEW)
-End Sub
-
-'------------------------------------------------------------------------
-'Public methods to perfrom operations
-'-------------------------------------------------------------------------
-
-Public Sub UserWantsToUpdateUserManagerRecord()
-    'reset user manager frame
-    Call ResetUserManagerFrame(UserModel, OPERATION_UPDATE)
-End Sub
-
-Public Sub ShowWarning(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call ExtendedMethods.ShowMessage(message, TYPE_CRITICAL)
-End Sub
-
-Public Sub UserWantsToLogin()
-    'Validate Credentials
-    Dim response As Variant
-    response = LoginModel.IsUserAuthorized
-    If response = True Then
-        If LoginModel.userStatus = USERSTATUS_ACTIVE Then
-            Call OpenNextInterfaceAfterSuccessfulLogin
-            Exit Sub
-        Else
-            Call ExtendedMethods.ShowMessage("Not authorized to LOGIN! Please contact business to know more details.", TYPE_CRITICAL)
-        End If
-    Else
-        Call ExtendedMethods.ShowMessage(response, TYPE_CRITICAL)
-    End If
-End Sub
+Private Property Set ExportModel(ByVal vNewValue As ExportFormModel)
+    Set this.ExportModel = vNewValue
+End Property
 
 '-------------------------------------------------------------------------
 'User Form Events
 '-------------------------------------------------------------------------
 
+'Side panel
+
+Private Sub cmdApproverLogout_Click()
+    RaiseEvent Logout
+End Sub
+
+Private Sub cmdClientLogout_Click()
+    RaiseEvent Logout
+End Sub
+
+'login interface!
+
 Private Sub cmdCancelFromLoginInterface_Click()
     RaiseEvent CloseLoginFrame
-End Sub
-
-Private Sub cmdCancelPasswordManager_Click()
-    RaiseEvent ClosePasswordManagerFrame
-End Sub
-
-Private Sub cmdOpenPriceForm_Click()
-    RaiseEvent OpenPriceFormFrame
-End Sub
-
-Private Sub cmdOpenUserManager_Click()
-    RaiseEvent OpenUserManagerFrame
-End Sub
-
-Private Sub cmdResetPriceForm_Click()
-    RaiseEvent ResetPriceFormFrame
-End Sub
-
-Private Sub cmdResetUserManager_Click()
-    RaiseEvent ResetUserManagerFrame
-End Sub
-
-Private Sub cmdUpdatePassword_Click()
-    RaiseEvent ChangePassword
 End Sub
 
 Private Sub cmdExit_Click()
@@ -249,8 +187,28 @@ Private Sub cmdOpenLoginInterface_Click()
     RaiseEvent OpenLoginFrame
 End Sub
 
+'Password Manager
+
 Private Sub cmdOpenPasswordManager_Click()
     RaiseEvent OpenPasswordManagerFrame
+End Sub
+
+Private Sub cmdCancelPasswordManager_Click()
+    RaiseEvent ClosePasswordManagerFrame
+End Sub
+
+Private Sub cmdUpdatePassword_Click()
+    RaiseEvent ChangePassword
+End Sub
+
+'User Manager
+
+Private Sub cmdOpenUserManager_Click()
+    RaiseEvent OpenUserManagerFrame
+End Sub
+
+Private Sub cmdResetUserManager_Click()
+    RaiseEvent ResetUserManagerFrame
 End Sub
 
 Private Sub cmdCancelUserManager_Click()
@@ -269,76 +227,143 @@ Private Sub cmdUpdateUser_Click()
     RaiseEvent DoCRUDOperationForUserManager(CRUD_OPERATION_UPDATE)
 End Sub
 
+'Price Form
+
+Private Sub cmdOpenPriceForm_Click()
+    RaiseEvent OpenPriceFormFrame
+End Sub
+
+Private Sub cmdResetPriceForm_Click()
+    RaiseEvent ResetPriceFormFrame
+End Sub
+
+Private Sub cmdCancelPriceFormInterface_Click()
+    RaiseEvent ClosePriceFormFrame
+End Sub
+
 Private Sub cmdAddNewRecord_Click()
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_ADDNEW)
 End Sub
 
-Private Sub cmdApproverLogout_Click()
-    'Logout State
-    Call ExtendedMethods.ActivateFrames(Me.frameLogin, Me.frameWelcome)
-    Call UpdateWelcomeFrame(FORM_LOGIN)
+Private Sub cmdUpdateRecord_Click()
+    RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_UPDATE)
 End Sub
 
-Private Sub cmdCancelExportUtility_Click()
-    'cancel
-    Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
-    Call UpdateWelcomeFrame
-End Sub
-
-Private Sub cmdCancelPriceFormInterface_Click()
-    'back to the dashboard
-    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
-    Call UpdateWelcomeFrame
-End Sub
-
-Private Sub cmdCancelRecordContainer_Click()
-    'back to the dashboard
-    With ExtendedMethods
-        If Me.lblActiveUserType.Caption = USERTYPE_CLIENT Then
-            Call .ActivateFrames(Me.frameClient, Me.frameWelcome)
-        Else
-            Call .ActivateFrames(Me.frameApprover, Me.frameWelcome)
-        End If
+Private Sub cmdApproveRecord_Click()
+    'Hydrate Model Property
+    With PriceModel
+        .recordStatus = RECORDSTATUS_APPROVED
+        .statusChangeDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
     End With
-    Call UpdateWelcomeFrame
+    RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_APPROVE)
 End Sub
 
-Private Sub cmdClientLogout_Click()
-    'Logout State
-    Call ExtendedMethods.ActivateFrames(Me.frameLogin, Me.frameWelcome)
-    Call UpdateWelcomeFrame(FORM_LOGIN)
-End Sub
-
-Private Sub cmdEditRecord_Click()
-    'show
-    'back to the dashboard
-    With ExtendedMethods
-        If Me.lblActiveUserType.Caption = USERTYPE_CLIENT Then
-            Call .ActivateFrames(Me.frameClient, Me.frameWelcome)
-        Else
-            Call .ActivateFrames(Me.frameApprover, Me.frameWelcome)
-        End If
+Private Sub cmdRejectRecord_Click()
+    'Hydrate Model Property
+    With PriceModel
+        .recordStatus = RECORDSTATUS_REJECTED
+        .statusChangeDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
     End With
+    RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_REJECT)
 End Sub
+
+Private Sub cmdDeleteRecord_Click()
+    RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_DELETE)
+End Sub
+
+'Data Form Frame Events
 
 Private Sub cmdOpenAllHistory_Click()
-    'open client history interface
-    Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
+    RaiseEvent OpenDataFormFrame(FOR_ALLHISTORY)
 End Sub
 
 Private Sub cmdOpenClientHistory_Click()
-    'open client history interface
-    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameRecordsContainer)
-End Sub
-
-Private Sub cmdOpenExportUtility_Click()
-    'open export utility
-    Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameExportUtility)
+    RaiseEvent OpenDataFormFrame(FOR_CLIENTHISTORY)
 End Sub
 
 Private Sub cmdOpenPendingList_Click()
-    'open pending list for approver
-    Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
+    RaiseEvent OpenDataFormFrame(FOR_PENDINGAPPROVALS)
+End Sub
+
+Private Sub cmdEditRecord_Click()
+    RaiseEvent EditRecordFromDataFormFrame
+End Sub
+
+Private Sub cmdCancelRecordContainer_Click()
+    RaiseEvent CloseDataFormFrame
+End Sub
+
+'Export Utility Frame Events
+
+Private Sub cmdOpenExportUtility_Click()
+    RaiseEvent OpenExportFormFrame
+End Sub
+
+Private Sub cmdCancelExportUtility_Click()
+    RaiseEvent CloseExportFormFrame
+End Sub
+
+Private Sub cmdResetExportForm_Click()
+    RaiseEvent ResetExportFormFrame
+End Sub
+
+Private Sub cmdExport_Click()
+    RaiseEvent ExportReport
+End Sub
+
+'------------------------------------------------------------------------------
+'Export Form Fields Change Events
+'------------------------------------------------------------------------------
+
+Private Sub txtDateFrom_Change()
+    'Hydrate model property
+    ExportModel.FromDate = Me.txtDateFrom.Text
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format(VBA.Now, DATEFORMAT_FRONTEND)
+End Sub
+
+Private Sub txtDateTo_Change()
+    'Hydrate model property
+    ExportModel.ToDate = Me.txtDateTo.Text
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format(END_OF_THE_EARTH, DATEFORMAT_FRONTEND)
+End Sub
+
+Private Sub cmbCustomerID_Change()
+    'hydrate model property
+    ExportModel.customerID = Me.cmbCustomerID.Text
+    'Validate field
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbCustomerID, ExportModel.IsValidField(ExportFormFields.FIELD_CUSTOMERID), TYPE_NA
+End Sub
+
+Private Sub cmbUserID_Change()
+    'hydrate model property
+    ExportModel.userID = Me.cmbUserID.Text
+    'Validate field
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbUserID, ExportModel.IsValidField(ExportFormFields.FIELD_USERID), TYPE_NA
+End Sub
+
+Private Sub cmbStatus_Change()
+    'hydrate model property
+    ExportModel.recordStatus = Me.cmbStatus.Text
+    'Validate field
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbStatus, ExportModel.IsValidField(ExportFormFields.FIELD_RECORDSTATUS), TYPE_NA
+End Sub
+
+'------------------------------------------------------------------------------
+'Data Form Fields Change Events
+'------------------------------------------------------------------------------
+
+Private Sub lstRecordsContainer_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+    With Me.lstRecordsContainer
+        'Hydrate model property
+        If .ListIndex > 0 Then
+            DataModel.index = .List(.ListIndex, 0) + 1
+            Me.cmdEditRecord.Enabled = True
+        Else
+            Me.cmdEditRecord.Enabled = False
+        End If
+    End With
 End Sub
 
 '-------------------------------------------------------------------------
@@ -351,7 +376,7 @@ Private Sub txtCustomerID_Change()
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtCustomerID, PriceModel.IsValidField(MainTableFields.COL_MAIN_customerID), TYPE_CUSTOM, "Need exact 6 char length, range should be between [399999] and [599999]"
 End Sub
-    
+
 Private Sub txtMaterialID_Change()
     'Hydrate model property
     PriceModel.materialID = Me.txtMaterialID.Value
@@ -360,10 +385,18 @@ Private Sub txtMaterialID_Change()
 End Sub
 
 Private Sub txtPrice_Change()
-    'Hydrate model property
-    PriceModel.price = Me.txtPrice.Value
-    'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtPrice, PriceModel.IsValidField(MainTableFields.COL_MAIN_price), TYPE_CUSTOM, "maximum 6 char length allowed including decimals!"
+    If EventStop = False Then
+        'Event handle mechanism
+        EventStop = True
+        'Apply formatting
+        Me.txtPrice.Value = ExtendedMethods.ApplyFormat(Me.txtPrice.Text, TYPE_CURRENCY)
+        'Hydrate model property
+        PriceModel.price = Me.txtPrice.Value
+        'Validate Field
+        ExtendedMethods.UpdateControlAfterValidation Me.txtPrice, PriceModel.IsValidField(MainTableFields.COL_MAIN_price), TYPE_CUSTOM, "maximum 6 char length allowed including decimals!"
+        'Event Handle mechanism
+        EventStop = False
+    End If
 End Sub
 
 Private Sub cmbCurrency_Change()
@@ -414,7 +447,7 @@ End Sub
 
 Private Sub cmbUserType_Change()
     'Hydrate model property
-    UserModel.userType = Me.cmbUserType.Value
+    UserModel.UserType = Me.cmbUserType.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserType, UserModel.IsValidField(COL_userType), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
@@ -496,7 +529,7 @@ Private Sub txtUsername_Change()
 End Sub
 
 '-------------------------------------------------------------------------
-'Private methods
+'InIt View Method
 '-------------------------------------------------------------------------
 
 Public Sub InItApplication(ByVal ApplicationModel As AppModel)
@@ -535,8 +568,126 @@ Public Sub InItApplication(ByVal ApplicationModel As AppModel)
 End Sub
 
 '-------------------------------------------------------------------------
-'Frame Reset Methods
+'public Methods Called From Presenters
 '-------------------------------------------------------------------------
+
+Public Sub UserWantsToLogout()
+    'Logout State
+    Call ExtendedMethods.ActivateFrames(Me.frameLogin, Me.frameWelcome)
+    Call UpdateWelcomeFrame(FORM_LOGIN)
+End Sub
+
+'This Procedure will clode the current frame
+Public Sub UserWantsToCloseFrame(ByVal FrameIdentifier As ApplicationForms)
+    'open Default Frames
+    Select Case FrameIdentifier
+    
+        Case ApplicationForms.FORM_LOGIN
+            Call ExtendedMethods.ActivateFrames(Me.frameLogin, Me.frameWelcome)
+            Call UpdateWelcomeFrame(FORM_LOGIN)
+            
+        Case ApplicationForms.FORM_PASSWORDMANAGER
+            Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
+            Call UpdateWelcomeFrame
+            
+        Case ApplicationForms.FORM_USERMANAGER
+            Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+            Call UpdateWelcomeFrame
+            
+        Case ApplicationForms.FORM_PRICEFORM
+            If MainModel.ActiveUserType = USERTYPE_CLIENT Then
+                Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
+            Else
+                Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+            End If
+            Call UpdateWelcomeFrame
+            
+        Case ApplicationForms.FORM_DATAFORM
+            If MainModel.ActiveUserType = USERTYPE_CLIENT Then
+                Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
+            Else
+                Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+            End If
+            Call UpdateWelcomeFrame
+            
+        Case ApplicationForms.FORM_EXPORTUTILITY
+            Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+            Call UpdateWelcomeFrame
+            
+    End Select
+End Sub
+
+Public Sub OnCancel()
+    Me.Hide
+End Sub
+
+'-------------------------------------------------------------------------
+'Public method to open frames
+'-------------------------------------------------------------------------
+
+Public Sub UserWantsToOpenLoginFrame(ByVal LoginFrameModel As LoginFormModel)
+    'open login interface
+    Call ExtendedMethods.ActivateFrames(Me.frameLogin, Me.frameLoginInterface)
+    'RESET login frame
+    Call ResetLoginFrame(LoginFrameModel)
+End Sub
+
+Public Sub UserWantsToOpenPasswordManagerFrame(ByVal PasswordManagerFormModel As PasswordManagerModel)
+    'open password manager for the client
+    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePasswordManager)
+    'RESET Password manager frame
+    Call ResetPasswordManagerFrame(PasswordManagerFormModel)
+End Sub
+
+Public Sub UserWantsToOpenUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel)
+    'open user manager for the client
+    Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameUserManager)
+    'reset user manager frame
+    Call ResetUserManagerFrame(UserManagerFormModel, OPERATION_NEW)
+End Sub
+
+Public Sub UserWantsToOpenPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel, ByVal operation As FormOperation)
+    'open Price Form Interface
+    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
+    'Reset Price Form Frame
+    If operation = OPERATION_NEW Then
+        Call ResetPriceFormFrame(PriceFormFrameModel, OPERATION_NEW)
+    Else
+        Call ResetPriceFormFrame(PriceFormFrameModel, OPERATION_UPDATE)
+    End If
+End Sub
+
+Public Sub UserWantsToOpenExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
+    'open export form interface
+    Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameExportUtility)
+    'Reset Export Form Frame
+    Call ResetExportFormFrame(ExportFormFrameModel)
+End Sub
+
+Public Sub UserWantsToOpenDataFormFrame(ByVal DataFormFrameModel As DataFormModel, ByVal ContainerIdentification As DataContainer)
+    'open price form interface
+    Select Case ContainerIdentification
+    
+        Case DataContainer.FOR_CLIENTHISTORY
+            'open client history interface
+            Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameRecordsContainer)
+            
+        Case DataContainer.FOR_PENDINGAPPROVALS
+            'open pending list for approver
+            Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
+            
+        Case DataContainer.FOR_ALLHISTORY
+            'open client history interface
+            Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
+            
+    End Select
+    'Reset Price Form Frame
+    Call ResetDataFormFrame(DataFormFrameModel)
+End Sub
+
+'------------------------------------------------------------------------
+'Reset Methods
+'------------------------------------------------------------------------
 
 Private Sub ResetLoginFrame(ByVal LoginFrameModel As LoginFormModel)
     With Me
@@ -560,7 +711,7 @@ Private Sub ResetPasswordManagerFrame(ByVal PasswordManagerFormModel As Password
     End With
 End Sub
 
-Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel, ByVal Operation As FormOperation)
+Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel, ByVal operation As FormOperation)
     With Me
         'Attach Model
         If UserModel Is Nothing Then Set UserModel = UserManagerFormModel
@@ -575,7 +726,7 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
             .List = UserModel.usersTable
         End With
         'Put Default Values based on Operation
-        If Operation = OPERATION_NEW Then
+        If operation = OPERATION_NEW Then
             Call StateForNewRecordForUserManager
             'Set focus
             .txtSetUsername.SetFocus
@@ -587,42 +738,123 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
     End With
 End Sub
 
-Private Sub ResetPriceFormFrame(ByVal PriceFormModel As PriceFormModel, ByVal Operation As FormOperation)
+Private Sub ResetPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel, ByVal operation As FormOperation)
     With Me
         'Attach Model
-        If PriceModel Is Nothing Then Set PriceModel = PriceFormModel
+        If PriceModel Is Nothing Then Set PriceModel = PriceFormFrameModel
         'clear values of Price form frame fields
         Call ExtendedMethods.SetStateofControlsToNullState(.lblMainRecordStatus, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
         'Repopulate ComboBox And ListBox
         .cmbCurrency.List = PriceModel.curenciesList
         .cmbUnitOfMeasure.List = PriceModel.unitOfMeasuresList
         'put default values based on operation
-        If Operation = OPERATION_NEW Then
+        If operation = OPERATION_NEW Then
             Call StateForNewRecordForPriceForm
             'Set Focus
-            .txtMaterialID.SetFocus
-        ElseIf Operation = OPERATION_UPDATE Then
+            .txtCustomerID.SetFocus
+        ElseIf operation = OPERATION_UPDATE Then
             Call StateForUpdateRecordForPriceForm
         End If
     End With
 End Sub
 
+Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
+    With Me
+        'Attach Model
+        If DataModel Is Nothing Then Set DataModel = DataFormFrameModel
+        'Clear Data Form Controls
+        Call ExtendedMethods.SetStateofControlsToNullState(.lstRecordsContainer)
+    'Repopulate ListBox and hydrate some of data model properties
+        .lblListType = DataModel.ListTitle
+        'Filling up listbox with criteria
+        With .lstRecordsContainer
+            .ColumnCount = 13
+            .ColumnWidths = "35;65;35"
+            .List = DataModel.dataTable
+        End With
+        'Allow Approver in any case to Approve or Reject Again!
+        If MainModel.ActiveUserType = USERTYPE_APPROVER Then
+            DataModel.IsApprover = True
+        Else
+            DataModel.IsApprover = False
+        End If
+    'reformat Listbox column with appropriete types
+        'Edit Change Date
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_statusChangeDate, TYPE_DATE)
+        'price column
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_price, TYPE_CURRENCY)
+        'From Date Column
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validFromDate, TYPE_DATE)
+        'To Date Column
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validToDate, TYPE_DATE)
+        'State of Controls of Data Form
+        .cmdEditRecord.Enabled = False
+    End With
+End Sub
+
+Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
+    With Me
+        'Attach Model
+        If ExportModel Is Nothing Then Set ExportModel = ExportFormFrameModel
+        'Clear Data Form Controls
+        Call ExtendedMethods.SetStateofControlsToNullState(.txtDateFrom, .txtDateTo, .cmbCustomerID, .cmbUserID, .cmbStatus)
+        'repopulate comboboxes
+        .cmbCustomerID.List = ExportModel.customerIDsList
+        .cmbUserID.List = ExportModel.userIDsList
+        .cmbStatus.List = ExportModel.statusesList
+        'update model
+        Call ExportModel.SetPropertiesToDefaultState
+        'input field state
+        .txtDateFrom.Value = VBA.Format(ExportModel.FromDate, DATEFORMAT_FRONTEND)
+        .txtDateTo.Value = VBA.Format(ExportModel.ToDate, DATEFORMAT_FRONTEND)
+    End With
+End Sub
+
+'------------------------------------------------------------------------
+'Public methods to perfrom operations
+'------------------------------------------------------------------------
+
+Public Sub UserWantsToUpdateUserManagerRecord()
+    'reset user manager frame
+    Call ResetUserManagerFrame(UserModel, OPERATION_UPDATE)
+End Sub
+
+Public Sub ShowWarning(ByVal message As String, ByVal typeOfMessage As messageType)
+    Call ExtendedMethods.ShowMessage(message, typeOfMessage)
+End Sub
+
+Public Sub UserWantsToLogin()
+    'Validate Credentials
+    Dim response As Variant
+    response = LoginModel.IsUserAuthorized
+    If response = True Then
+        If LoginModel.userStatus = USERSTATUS_ACTIVE Then
+            Call OpenNextInterfaceAfterSuccessfulLogin
+            Exit Sub
+        Else
+            Call ExtendedMethods.ShowMessage("Not authorized to LOGIN! Please contact business to know more details.", TYPE_CRITICAL)
+        End If
+    Else
+        Call ExtendedMethods.ShowMessage(response, TYPE_CRITICAL)
+    End If
+End Sub
+
 '-------------------------------------------------------------------------
-'Button Clicked Operations
+'Button Clicked Operations from Main Frame
 '-------------------------------------------------------------------------
 
 'Login Frame
 
 Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     'Open Frame based on client type
-    If LoginModel.userType = USERTYPE_CLIENT Then
+    If LoginModel.UserType = USERTYPE_CLIENT Then
         Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.frameWelcome)
     Else
         Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.frameWelcome)
     End If
     'Update Active User Frame
     With LoginModel
-        Call UpdateActiveUserInfomation(.userName, .userType, .userStatus, .UserID, .password)
+        Call UpdateActiveUserInfomation(.userName, .UserType, .userStatus, .userID, .password)
     End With
     'Update Welcome Frame with Username
     Call UpdateWelcomeFrame
@@ -669,79 +901,41 @@ Public Sub AfterPriceFormCRUDOperation(ByVal TypeOfOperation As CRUDOperations, 
             If IsSuccessfullOperation Then
                 MsgBox "Record has been UPDATED successfully!", vbInformation, SIGN
                 'open list for based on user type
-                'Not yet mentioned
+                RaiseEvent OpenDataFormFrame(DataModel.ActiveDataContainer)
             End If
         Case CRUDOperations.CRUD_OPERATION_DELETE
             If IsSuccessfullOperation Then
                 MsgBox "Record has been DELETED successfully!", vbInformation, SIGN
                 'open list for based on user type
-                'Not yet mentioned
+                RaiseEvent OpenDataFormFrame(DataModel.ActiveDataContainer)
             End If
         Case CRUDOperations.CRUD_OPERATION_APPROVE
             If IsSuccessfullOperation Then
                 MsgBox "Record APPROVED successfully!", vbInformation, SIGN
                 'Write here code for sending email to client to notify them
-                'open list for based on user type
-                'Not yet mentioned
+                'open list form based on user type
+                RaiseEvent OpenDataFormFrame(DataModel.ActiveDataContainer)
             End If
         Case CRUDOperations.CRUD_OPERATION_REJECT
             If IsSuccessfullOperation Then
                 MsgBox "Record REJECTED!", vbInformation, SIGN
                 'write here code for sending email to client tp notify them
-                'open list for based on user type
-                'Not yet mentioned
+                'open list form based on user type
+                RaiseEvent OpenDataFormFrame(DataModel.ActiveDataContainer)
             End If
     End Select
 End Sub
 
+'Export Form Frame
 
-'-------------------------------------------------------------------------
-'Userform Events
-'-------------------------------------------------------------------------
-
-Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
-    If CloseMode = VbQueryClose.vbFormControlMenu Then
-        Cancel = True
-        OnCancel
+Public Sub AfterExportOperation(ByVal IsSuccessfullOperation As Boolean)
+    If IsSuccessfullOperation Then
+        RaiseEvent OpenExportFormFrame
     End If
 End Sub
 
-Private Sub UserForm_Terminate()
-    Set ExtendedMethods = Nothing
-    Set MainModel = Nothing
-    Set LoginModel = Nothing
-    Set UserModel = Nothing
-End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 '-------------------------------------------------------------------------
-'Abstract Methods
+'Methods that helps Reset Procedures!
 '-------------------------------------------------------------------------
 Private Sub StateForNewRecordForPriceForm()
     With Me
@@ -760,6 +954,7 @@ Private Sub StateForNewRecordForPriceForm()
         End If
         'Other Buttons State
         .cmdAddNewRecord.Enabled = True
+        .cmdResetPriceForm.Enabled = True
         .cmdUpdateRecord.Enabled = False
         .cmdDeleteRecord.Enabled = False
     End With
@@ -772,20 +967,31 @@ Private Sub StateForUpdateRecordForPriceForm()
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
         .txtCustomerID.Value = PriceModel.customerID
+        .txtMaterialID.Value = PriceModel.materialID
+        .txtPrice.Value = PriceModel.price
+        .cmbCurrency.Value = PriceModel.currencyType
+        .txtPriceUnit.Value = PriceModel.unitOfPrice
+        .cmbUnitOfMeasure.Value = PriceModel.unitOfMeasure
         .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
         .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
-            Call ExtendedMethods.FormEditingState(True, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(False, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            'Other Buttons State
+            .cmdAddNewRecord.Enabled = False
+            .cmdUpdateRecord.Enabled = False
+            .cmdDeleteRecord.Enabled = False
+            .cmdResetPriceForm.Enabled = False
         Else
             Call ShowApprovalRejectionButtons(False)
-            Call ExtendedMethods.FormEditingState(False, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(True, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            'Other Buttons State
+            .cmdAddNewRecord.Enabled = False
+            .cmdUpdateRecord.Enabled = True
+            .cmdDeleteRecord.Enabled = True
+            .cmdResetPriceForm.Enabled = False
         End If
-        'Other Buttons State
-        .cmdAddNewRecord.Enabled = False
-        .cmdUpdateRecord.Enabled = True
-        .cmdDeleteRecord.Enabled = True
     End With
 End Sub
 
@@ -795,7 +1001,7 @@ Private Sub StateForNewRecordForUserManager()
         Call UserModel.SetPropertiesToNewUserState
         'Input Field State
         .cmbUserStatus.Value = UserModel.userStatus
-        .cmbUserType.Value = UserModel.userType
+        .cmbUserType.Value = UserModel.UserType
         'Buttons State
         .cmdAddNewUser.Enabled = True
         .cmdUpdateUser.Enabled = False
@@ -809,7 +1015,7 @@ Private Sub StateForUpdateRecordForUserManager()
         Call UserModel.SetPropertiesToUpdateUserState
         'input field state
         .cmbUserStatus.Value = UserModel.userStatus
-        .cmbUserType.Value = UserModel.userType
+        .cmbUserType.Value = UserModel.UserType
         .txtSetUsername.Value = UserModel.userName
         .txtSetPassword.Value = UserModel.userPassword
         'Button State
@@ -860,4 +1066,25 @@ Private Sub UpdateActiveUserInfomation(ByVal uName As String, ByVal uType As Str
         .ActiveUserStatus = uStatus
         .ActiveUserType = uType
     End With
+End Sub
+
+'-------------------------------------------------------------------------
+'Userform Events
+'-------------------------------------------------------------------------
+
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+    If CloseMode = VbQueryClose.vbFormControlMenu Then
+        Cancel = True
+        OnCancel
+    End If
+End Sub
+
+Private Sub UserForm_Terminate()
+    Set ExtendedMethods = Nothing
+    Set MainModel = Nothing
+    Set LoginModel = Nothing
+    Set UserModel = Nothing
+    Set PriceModel = Nothing
+    Set DataModel = Nothing
+    Set ExportModel = Nothing
 End Sub
