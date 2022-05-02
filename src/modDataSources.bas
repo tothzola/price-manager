@@ -39,6 +39,14 @@ Public Enum MainTableFields
     COL_MAIN_validToDate
 End Enum
 
+Public Enum ExportFormFields
+    FIELD_FROMDATE = 1
+    FIELD_TODATE
+    FIELD_CUSTOMERID
+    FIELD_USERID
+    FIELD_RECORDSTATUS
+End Enum
+
 'Data Sources Table Name
 
 Public Const USERS_TABLE_NAME As String = "Table_Users"
@@ -63,8 +71,8 @@ End Function
 
 Public Function arrListOfColumns_MAIN_Table() As Variant
     arrListOfColumns_MAIN_Table = Array("index", _
-                                        "recordID", _
-                                        "userID", _
+                                        "Record ID", _
+                                        "User ID", _
                                         "Record Status", _
                                         "Status Change Date", _
                                         "Customer ID", _
@@ -75,6 +83,14 @@ Public Function arrListOfColumns_MAIN_Table() As Variant
                                         "Unit Of Measure", _
                                         "Valid From Date", _
                                         "Valid To Date")
+End Function
+
+Public Function arrListOfFields_EXPORT_Form() As Variant
+    arrListOfFields_EXPORT_Form = Array("Date From", _
+                                        "Date To", _
+                                        "Customer ID", _
+                                        "User ID", _
+                                        "Record Status")
 End Function
 
 'following functions returns array objects that will be used as dataSource for the comboboxes.
@@ -96,4 +112,8 @@ End Function
 
 Public Function arrListofStatusOfUser() As Variant
     arrListofStatusOfUser = Array("ACTIVE", "INACTIVE")
+End Function
+
+Public Function arrRecordStatusesList() As Variant
+    arrRecordStatusesList = Array("", "PENDING", "APPROVED", "REJECTED")
 End Function

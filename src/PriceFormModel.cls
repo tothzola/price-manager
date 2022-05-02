@@ -24,7 +24,7 @@ Private Type TPriceFormModelComponents
     'Fields
     index As Long
     RecordID As String
-    UserID As String
+    userID As String
     recordStatus As String
     statusChangeDate As String
     customerID As String
@@ -35,6 +35,8 @@ Private Type TPriceFormModelComponents
     unitOfMeasure As String
     validFromDate  As String
     validToDate As String
+    'Attribute
+    operation As FormOperation
 End Type
 
 Private this As TPriceFormModelComponents
@@ -101,12 +103,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get UserID() As String
-    UserID = this.UserID
+Public Property Get userID() As String
+    userID = this.userID
 End Property
 
-Public Property Let UserID(ByVal vNewValue As String)
-    this.UserID = vNewValue
+Public Property Let userID(ByVal vNewValue As String)
+    this.userID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -210,19 +212,28 @@ Public Property Let validToDate(ByVal vNewValue As String)
 End Property
 
 '-------------------------------------------------------------------------
+
+Public Property Get operation() As FormOperation
+    operation = this.operation
+End Property
+
+Public Property Let operation(ByVal vNewValue As FormOperation)
+    this.operation = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
 'Init Method
 '-------------------------------------------------------------------------
 
-Public Sub InItModel(ByVal mainData As Variant, ByVal ListofCurrencies As Variant, ByVal ListOfUnits As Variant)
+Public Sub InItModel(ByVal mainData As Variant, ByVal ListofCurrencies As Variant, ByVal ListOfUnits As Variant, Optional TargetIndex As Long = 0)
     If Validator Is Nothing Then Set Validator = New ValidationServices
     Me.mainTable = mainData
     Me.curenciesList = ListofCurrencies
     Me.unitOfMeasuresList = ListOfUnits
+    Me.index = TargetIndex
     'reset check field array
-    Dim CheckField As Variant
-    For Each CheckField In this.CheckFields
-        CheckField = False
-    Next CheckField
+    'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
+    Call Validator.ResetSingleDimensionalArray(this.CheckFields)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -233,9 +244,11 @@ Public Sub SetPropertiesToNewRecordState(ByVal ActiveUserID As String)
     'Flush All the properties before we start operation
     Call SetPropertiesToNullState
     With Me
+        .operation = OPERATION_NEW
         .index = 0
         .recordStatus = RECORDSTATUS_PENDING
-        .UserID = ActiveUserID
+        .userID = ActiveUserID
+        .statusChangeDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
         .validFromDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
         .validToDate = END_OF_THE_EARTH
     End With
@@ -248,8 +261,9 @@ Public Sub SetPropertiesToUpdateRecordState()
     Dim TargetRow As Long
     TargetRow = Me.index
     With Me
+        .operation = OPERATION_UPDATE
         .RecordID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordID)
-        .UserID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_userID)
+        .userID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_userID)
         .recordStatus = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordStatus)
         .statusChangeDate = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_statusChangeDate)
         .customerID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_customerID)
@@ -266,7 +280,7 @@ End Sub
 Private Sub SetPropertiesToNullState()
     With Me
         .RecordID = vbNullString
-        .UserID = vbNullString
+        .userID = vbNullString
         .recordStatus = vbNullString
         .statusChangeDate = vbNullString
         .customerID = vbNullString
@@ -355,6 +369,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             IsValidField = Validator.IsNotNullValue(Me.unitOfPrice, VBA.TypeName(Me.unitOfPrice))
             If IsValidField = False Then
                 IsValidField = True
+                this.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             'Check 2
@@ -379,11 +394,18 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             IsValidField = Validator.IsValidGermanFormatDate(Me.validFromDate)
             If Not IsValidField = True Then Exit Function
             'Check 3
-            startDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
-            endDate = startDate
-            IsValidField = Validator.IsValidDateInRange(Me.validFromDate, startDate, endDate)
-            If Not IsValidField = True Then Exit Function
-            'if everything okay then save date in backedn format
+            'This check confirm that the from date should be current date!
+            'but when user will open the record to update, at that time,
+            'date would be future and hence this validation will failed! so,
+            'to handle that only for the UPDATE operation we are not going to
+            'perform this check!
+            If Me.operation = OPERATION_NEW Then
+                startDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+                endDate = startDate
+                IsValidField = Validator.IsValidDateInRange(Me.validFromDate, startDate, endDate)
+                If Not IsValidField = True Then Exit Function
+            End If
+            'if everything okay then save date in backend format
             Me.validFromDate = Validator.GetDateFromGermanDateString(Me.validFromDate)
             
             
@@ -395,10 +417,12 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             IsValidField = Validator.IsValidGermanFormatDate(Me.validToDate)
             If Not IsValidField = True Then Exit Function
             'Check 3
-            startDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
-            endDate = VBA.CDate(END_OF_THE_EARTH)
-            IsValidField = Validator.IsValidDateInRange(Me.validToDate, startDate, endDate)
-            If Not IsValidField = True Then Exit Function
+            If Me.operation = OPERATION_NEW Then
+                startDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+                endDate = VBA.CDate(END_OF_THE_EARTH)
+                IsValidField = Validator.IsValidDateInRange(Me.validToDate, startDate, endDate)
+                If Not IsValidField = True Then Exit Function
+            End If
             'if everything okay then save date in backedn format
             Me.validToDate = Validator.GetDateFromGermanDateString(Me.validToDate)
             
@@ -409,6 +433,8 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
     
 End Function
 
+'-------------------------------------------------------------------------
+'Class Events
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()

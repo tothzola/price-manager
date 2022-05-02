@@ -23,9 +23,9 @@ Private Type TUserManagerFormModelComponents
     userTypesList As Variant
     'Fields
     userIndex As Long
-    UserID As String
+    userID As String
     userStatus As String
-    userType As String
+    UserType As String
     userName As String
     userPassword As String
 End Type
@@ -84,12 +84,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get UserID() As String
-    UserID = this.UserID
+Public Property Get userID() As String
+    userID = this.userID
 End Property
 
-Public Property Let UserID(ByVal vNewValue As String)
-    this.UserID = vNewValue
+Public Property Let userID(ByVal vNewValue As String)
+    this.userID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -104,12 +104,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get userType() As String
-    userType = this.userType
+Public Property Get UserType() As String
+    UserType = this.UserType
 End Property
 
-Public Property Let userType(ByVal vNewValue As String)
-    this.userType = vNewValue
+Public Property Let UserType(ByVal vNewValue As String)
+    this.UserType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -142,10 +142,8 @@ Public Sub InItModel(ByVal usersData As Variant, ByVal StatusOfUser As Variant, 
     userStatusList = StatusOfUser
     userTypesList = TypesOfUser
     'reset check field array
-    Dim CheckField As Variant
-    For Each CheckField In this.CheckFields
-        CheckField = False
-    Next CheckField
+    'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
+    Call Validator.ResetSingleDimensionalArray(this.CheckFields)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -156,7 +154,7 @@ Public Sub SetPropertiesToNewUserState()
     With Me
         .userIndex = 0
         .userStatus = USERSTATUS_ACTIVE
-        .userType = USERTYPE_CLIENT
+        .UserType = USERTYPE_CLIENT
     End With
 End Sub
 
@@ -167,21 +165,21 @@ Public Sub SetPropertiesToUpdateUserState()
     Dim TargetRow As Long
     TargetRow = Me.userIndex
     With Me
-        .UserID = Me.usersTable(TargetRow, UsersTableFields.COL_userID)
+        .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userID)
         .userName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
         .userStatus = Me.usersTable(TargetRow, UsersTableFields.COL_userStatus)
-        .userType = Me.usersTable(TargetRow, UsersTableFields.COL_userType)
+        .UserType = Me.usersTable(TargetRow, UsersTableFields.COL_userType)
     End With
 End Sub
 
 Private Sub SetPropertiesToNullState()
     With Me
-        .UserID = vbNullString
+        .userID = vbNullString
         .userName = vbNullString
         .userPassword = vbNullString
         .userStatus = vbNullString
-        .userType = vbNullString
+        .UserType = vbNullString
     End With
 End Sub
 
@@ -200,7 +198,7 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             If Not IsValidField = True Then Exit Function
        Case UsersTableFields.COL_userType
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.userType, VBA.TypeName(Me.userType))
+            IsValidField = Validator.IsNotNullValue(Me.UserType, VBA.TypeName(Me.UserType))
             If Not IsValidField = True Then Exit Function
         Case UsersTableFields.COL_userName
             'Check 1

@@ -12,8 +12,49 @@ Option Explicit
 
 Private objRegEx As Object
 
+'Following function is to filter table data by checking with different formats of data!
+'inputValue would be table's Cell Data on which we have test if that cell meets criteria or not
+'checkType would give idea that what kind of checking this is! either we are cheking two numbers, two string or dates?
+'checkValue1 and checkValue2 are criteria values! if only one of them is mentioned then it is simply binary checking
+'if both are mentioned then presently checking if the date is between two mentioned dates or not?
+'the same way this validation can be evolved with multiple check types like, numerical ranges etc.etc.
+
+Public Function IsValidToInclude(ByVal inputValue As Variant, ByVal checkType As ValidationCheckTypes, Optional ByVal checkValue1 As Variant, Optional ByVal checkValue2 As Variant) As Boolean
+    IsValidToInclude = False
+    'Check 1
+    If VBA.IsNumeric(inputValue) Then
+        If inputValue = 0 Then IsValidToInclude = False Else IsValidToInclude = True
+    Else
+        If inputValue = vbNullString Then IsValidToInclude = False Else IsValidToInclude = True
+    End If
+    If IsValidToInclude = False Then Exit Function
+    'Check 2
+    If VBA.IsNumeric(checkValue1) Then
+        If checkValue1 = 0 Then IsValidToInclude = True Else IsValidToInclude = False
+    Else
+        If checkValue1 = vbNullString Then IsValidToInclude = True Else IsValidToInclude = False
+    End If
+    If IsValidToInclude = True Then Exit Function
+    'Check 3
+    Select Case checkType
+        Case ValidationCheckTypes.TYPE_DATEBETWEENRANGE
+            If VBA.CDate(inputValue) >= VBA.CDate(checkValue1) And _
+                VBA.CDate(inputValue) <= VBA.CDate(checkValue2) Then
+                IsValidToInclude = True
+            Else
+                IsValidToInclude = False
+            End If
+        Case ValidationCheckTypes.TYPE_STRINGMATCH
+            If VBA.IsNumeric(checkValue1) Then
+                IsValidToInclude = (Val(inputValue) = Val(checkValue1))
+            Else
+                IsValidToInclude = (inputValue = checkValue1)
+            End If
+    End Select
+End Function
+
 'Check if the date is between the start and end range dates or not?
-Public Function IsValidDateInRange(ByVal inputValue As String, startDate As Date, endDate As Date) As Boolean
+Public Function IsValidDateInRange(ByVal inputValue As String, ByVal startDate As Date, ByVal endDate As Date) As Boolean
     Dim TargetDate As Date
     TargetDate = VBA.CDate(GetDateFromGermanDateString(inputValue))
     If TargetDate >= startDate And TargetDate <= endDate Then
@@ -43,6 +84,7 @@ Public Function IsBetweenNumericalRange(ByVal inputValue As String, _
     On Error GoTo CleanFail
     
     'owerflow error is rased if len(inputValue) > len(maxvalue)
+    result = False 'I have habit of not depending on default value of any type of variables! I explicitly assign value to it!
     If VBA.CLng(inputValue) > minValue And VBA.CLng(inputValue) <= maxvalue Then
         result = True
     Else
@@ -275,6 +317,19 @@ Private Function CleanString(ByVal inputValue As String) As String
         CleanString = .Replace(inputValue, vbNullString)
     End With
 End Function
+
+'This function will reset each items of array to false or reset it
+
+Public Sub ResetSingleDimensionalArray(ByRef arr As Variant, Optional resetValue As Boolean = False)
+    Dim I As Long
+    Dim FirstItem As Long
+    Dim LastItem As Long
+    FirstItem = LBound(arr)
+    LastItem = UBound(arr)
+    For I = FirstItem To LastItem Step 1
+        arr(I) = resetValue
+    Next I
+End Sub
 
 'Class Events
 

@@ -13,6 +13,9 @@ Option Explicit
 Public Function GetRecords(ByVal TargetNamedRange As String) As Variant
 End Function
 
+Public Function GetRecordsByCondition(ByVal TargetNamedRange As String, ByVal columnIndex As Long, ByVal condition As Variant)
+End Function
+
 Public Sub AddRecord(ByVal TargetNamedRange As String, ParamArray LineItems() As Variant)
 End Sub
 
