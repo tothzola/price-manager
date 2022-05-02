@@ -69,3 +69,12 @@ End Sub
 Private Sub MainView_ClosePasswordManagerFrame()
     RaiseEvent CancelPasswordManagerForm
 End Sub
+
+'-------------------------------------------------------------------------
+'Class Event
+'-------------------------------------------------------------------------
+
+Private Sub Class_Terminate()
+    Set model = Nothing
+    Set MainView = Nothing
+End Sub
