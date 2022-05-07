@@ -80,6 +80,7 @@ End Sub
 'Following function will return string in selected format!
 
 Public Function ApplyFormat(ByVal inputValue As String, ByVal formatType As DataTypes) As String
+    If inputValue <> vbNullString Then inputValue = VBA.Trim(inputValue)
     Select Case formatType
         Case DataTypes.TYPE_CURRENCY
             ApplyFormat = FormatStringToCurrency(inputValue)
