@@ -308,7 +308,9 @@ Private Sub cmdResetExportForm_Click()
 End Sub
 
 Private Sub cmdExport_Click()
+    Me.MousePointer = fmMousePointerAppStarting
     RaiseEvent ExportReport
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 '------------------------------------------------------------------------------
@@ -769,7 +771,7 @@ Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
         'Filling up listbox with criteria
         With .lstRecordsContainer
             .ColumnCount = 13
-            .ColumnWidths = "35;65;35"
+            .ColumnWidths = "35;65;50"
             .List = DataModel.dataTable
         End With
         'Allow Approver in any case to Approve or Reject Again!
