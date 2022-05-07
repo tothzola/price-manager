@@ -61,6 +61,7 @@ Public Enum RepositoryType
     TYPE_EXCEL_NAMED_RANGE
     TYPE_SHAREPOINT_LIST
     TYPE_MYSQL
+    TYPE_ACCESS
 End Enum
 
 Public Enum UserApprovalStatus
