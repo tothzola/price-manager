@@ -33,6 +33,7 @@ Attribute presenterExportFormFrame.VB_VarHelpID = -1
 '-------------------------------------------------------------------------
 
 Private Type TAppPresenterComponents
+    databaseConnectionStatus As Boolean
     mainService As IServices
     userService As IServices
     model As AppModel
@@ -43,6 +44,16 @@ Private this As TAppPresenterComponents
 
 '-------------------------------------------------------------------------
 'Private properties
+'-------------------------------------------------------------------------
+
+Public Property Get databaseConnectionStatus() As Boolean
+    databaseConnectionStatus = this.databaseConnectionStatus
+End Property
+
+Public Property Let databaseConnectionStatus(ByVal RHS As Boolean)
+    this.databaseConnectionStatus = RHS
+End Property
+
 '-------------------------------------------------------------------------
 
 Private Property Get model() As AppModel
@@ -88,16 +99,18 @@ End Property
 '-------------------------------------------------------------------------
 
 'InIt Main Services
-Public Sub InItMainService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String)
+Public Sub InItMainService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String, ByVal TableHeaders As Variant)
     Set mainService = New ServicesMain
-    Call mainService.InItService(SelectedRepositoryType, TableName)
+    Call mainService.InItService(SelectedRepositoryType, TableName, TableHeaders)
+    databaseConnectionStatus = mainService.IsEverythingOkayInEngine
 End Sub
 
 'InIt User Services
-Public Sub InItUserService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String)
+Public Sub InItUserService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String, ByVal TableHeaders As Variant)
     
     Set userService = New ServicesUser
-    Call userService.InItService(SelectedRepositoryType, TableName)
+    Call userService.InItService(SelectedRepositoryType, TableName, TableHeaders)
+    databaseConnectionStatus = userService.IsEverythingOkayInEngine
 End Sub
 
 'InIt Model
@@ -207,7 +220,9 @@ Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal newPassword As St
     'index, userID, userStatus, userType, userName, password
     With model
         Call userService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, newPassword)
-        Call view.AfterChangePasswordOperation
+        If userService.IsEverythingOkayInEngine Then
+            Call view.AfterChangePasswordOperation
+        End If
     End With
 End Sub
 
@@ -255,19 +270,23 @@ End Sub
 Private Sub presenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
     Call RefreshUsersTable
     With UMModel
-        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .userName, .userPassword)
+        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.Table_Users), .userStatus, .UserType, .userName, .userPassword)
     End With
-    Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+    If userService.IsEverythingOkayInEngine Then
+        Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+    End If
 End Sub
 
 Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
     Call RefreshUsersTable
     Dim response As Variant
     With UMModel
-    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex - 1, .userID)
+    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.Table_Users, .userIndex - 1, .userID)
         If response = True Then
             Call userService.UpdateRecordOfContextTable(.userIndex - 1, .userID, .userStatus, .UserType, .userName, .userPassword)
-            Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+            If userService.IsEverythingOkayInEngine Then
+                Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+            End If
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
         End If
@@ -278,10 +297,12 @@ Private Sub presenterUserManagerFrame_DeleteUserFromUserManagerForm(ByVal TypeOf
     Call RefreshUsersTable
     Dim response As Variant
     With UMModel
-        response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex - 1, .userID)
+        response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.Table_Users, .userIndex - 1, .userID)
         If response = True Then
             Call userService.DeleteRecordofContextTable(.userIndex - 1)
-            Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+            If userService.IsEverythingOkayInEngine Then
+                Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+            End If
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
         End If
@@ -339,7 +360,9 @@ Private Sub presenterPriceFormFrame_AddNewRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
         Call mainService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), .userID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
     End With
-    Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+    If mainService.IsEverythingOkayInEngine Then
+        Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+    End If
 End Sub
 
 Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
@@ -349,7 +372,9 @@ Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperat
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
             Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
-            Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+            If mainService.IsEverythingOkayInEngine Then
+                Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+            End If
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
         End If
@@ -363,7 +388,9 @@ Private Sub presenterPriceFormFrame_DeleteRecordFromPriceForm(ByVal TypeOfOperat
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
             Call mainService.DeleteRecordofContextTable(.index - 1)
-            Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+            If mainService.IsEverythingOkayInEngine Then
+                Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+            End If
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
         End If
@@ -395,7 +422,9 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
             Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
-            Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+            If mainService.IsEverythingOkayInEngine Then
+                Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+            End If
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
         End If
@@ -409,7 +438,9 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
             Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
-            Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+            If mainService.IsEverythingOkayInEngine Then
+                Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+            End If
         Else
             Call view.ShowWarning(response, TYPE_CRITICAL)
         End If
@@ -433,8 +464,10 @@ Private Sub presenterDataFormFrame_OpenDataForm(ByVal DFModel As DataFormModel, 
         End Select
         DFModel.ActiveDataContainer = ContainerIdentifier
     End With
-    'Call View Method to Open Data Form Frame!
-    Call view.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
+    If mainService.IsEverythingOkayInEngine Then
+        'Call View Method to Open Data Form Frame!
+        Call view.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
+    End If
 End Sub
 
 Private Sub presenterDataFormFrame_EditRecordFromDataForm(ByVal DFModel As DataFormModel)
@@ -504,60 +537,72 @@ End Sub
 Private Sub OpenLoginForm()
     'Refresh Model Data Table with Updated information
     Call RefreshUsersTable '(Only user because Login Mechanism does not required other tables)
-    'Open New Login Form
-    If presenterLoginFrame Is Nothing Then Set presenterLoginFrame = New LoginFormPresenter
-    'InIt Presenter from here
-    Call presenterLoginFrame.InItLoginForm(view)
+    If mainService.IsEverythingOkayInEngine Then
+        'Open New Login Form
+        If presenterLoginFrame Is Nothing Then Set presenterLoginFrame = New LoginFormPresenter
+        'InIt Presenter from here
+        Call presenterLoginFrame.InItLoginForm(view)
+    End If
 End Sub
 
 Private Sub OpenPasswordManager()
     'Refresh Model Data Table with Updated information
     Call RefreshUsersTable '(Only user because password manager does not required other tables)
-    'Open Password Manager
-    If presenterPasswordManagerFrame Is Nothing Then Set presenterPasswordManagerFrame = New PasswordManagerPresenter
-    'InIt Presenter from here
-    Call presenterPasswordManagerFrame.InItPasswordManagerForm(view)
+    If userService.IsEverythingOkayInEngine Then
+        'Open Password Manager
+        If presenterPasswordManagerFrame Is Nothing Then Set presenterPasswordManagerFrame = New PasswordManagerPresenter
+        'InIt Presenter from here
+        Call presenterPasswordManagerFrame.InItPasswordManagerForm(view)
+    End If
 End Sub
 
 Private Sub OpenUserManager()
     'Refresh Model Data Table with Updated information
     Call RefreshUsersTable '(Only user because password manager does not required other tables)
-    'open usermanager
-    If presenterUserManagerFrame Is Nothing Then Set presenterUserManagerFrame = New UserManagerPresenter
-    'InIt Presenter from here
-    Call presenterUserManagerFrame.InItUserManagerForm(view)
+    If userService.IsEverythingOkayInEngine Then
+        'open usermanager
+        If presenterUserManagerFrame Is Nothing Then Set presenterUserManagerFrame = New UserManagerPresenter
+        'InIt Presenter from here
+        Call presenterUserManagerFrame.InItUserManagerForm(view)
+    End If
 End Sub
 
 Private Sub OpenPriceForm(ByVal operation As FormOperation)
     'Refresh Model Data Table with Updated information
     Call RefreshMainTable '(Only user because password manager does not required other tables)
-    'open usermanager
-    If presenterPriceFormFrame Is Nothing Then Set presenterPriceFormFrame = New PriceFormPresenter
-    If operation = OPERATION_NEW Then
-        'InIt Presenter from here
-        Call presenterPriceFormFrame.InItPriceForm(view, OPERATION_NEW)
-    Else
-        'Init Presenter From here for update process
-        Call presenterPriceFormFrame.InItPriceForm(view, OPERATION_UPDATE)
+    If mainService.IsEverythingOkayInEngine Then
+        'open usermanager
+        If presenterPriceFormFrame Is Nothing Then Set presenterPriceFormFrame = New PriceFormPresenter
+        If operation = OPERATION_NEW Then
+            'InIt Presenter from here
+            Call presenterPriceFormFrame.InItPriceForm(view, OPERATION_NEW)
+        Else
+            'Init Presenter From here for update process
+            Call presenterPriceFormFrame.InItPriceForm(view, OPERATION_UPDATE)
+        End If
     End If
 End Sub
 
 Private Sub OpenDataForm(ByVal ContainerIdentification As DataContainer)
     'Refresh model data table with updated information
     Call RefreshMainTable
-    'Open DataForm
-    If presenterDataFormFrame Is Nothing Then Set presenterDataFormFrame = New DataFormPresenter
-    'InIt Presenter from here
-    Call presenterDataFormFrame.InItDataForm(view, ContainerIdentification)
+    If mainService.IsEverythingOkayInEngine Then
+        'Open DataForm
+        If presenterDataFormFrame Is Nothing Then Set presenterDataFormFrame = New DataFormPresenter
+        'InIt Presenter from here
+        Call presenterDataFormFrame.InItDataForm(view, ContainerIdentification)
+    End If
 End Sub
 
 Private Sub OpenExportForm()
     'Refresh Model Data Table with Updated information
     Call RefreshMainTable '(Only user because password manager does not required other tables)
-    'open usermanager
-    If presenterExportFormFrame Is Nothing Then Set presenterExportFormFrame = New ExportFormPresenter
-    'InIt Presenter from here
-    Call presenterExportFormFrame.InItExportForm(view)
+    If mainService.IsEverythingOkayInEngine Then
+        'open usermanager
+        If presenterExportFormFrame Is Nothing Then Set presenterExportFormFrame = New ExportFormPresenter
+        'InIt Presenter from here
+        Call presenterExportFormFrame.InItExportForm(view)
+    End If
 End Sub
 
 Private Sub RefreshMainTable()
