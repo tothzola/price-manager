@@ -9,22 +9,120 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder "Repository"
 Option Explicit
+
 Implements IRepository
 
-Private Function IRepository_GetRecords(ByVal TargetNamedRange As String) As Variant
-    IRepository_GetRecords = DataBase.Range(TargetNamedRange)
+'-------------------------------------------------------------------------
+'Private Type Componenets
+'-------------------------------------------------------------------------
+
+Private Type TExcelRepositoryComponents
+    IsEverythingOkay As Boolean
+    TargetTableName As String
+End Type
+
+Private this As TExcelRepositoryComponents
+
+'-------------------------------------------------------------------------
+'Properties
+'-------------------------------------------------------------------------
+
+Private Property Get IRepository_IsEverythingOkay() As Boolean
+    IRepository_IsEverythingOkay = this.IsEverythingOkay
+End Property
+
+Private Property Let IRepository_IsEverythingOkay(ByVal RHS As Boolean)
+    this.IsEverythingOkay = RHS
+End Property
+
+'-------------------------------------------------------------------------
+
+Private Property Get TargetTableName() As String
+    TargetTableName = this.TargetTableName
+End Property
+
+Private Property Let TargetTableName(ByVal vNewValue As String)
+    this.TargetTableName = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+'InIt Method
+'-------------------------------------------------------------------------
+
+Private Sub IRepository_InItRepository(ByVal ContextTableName As String, Optional ContextConnectionString As String = vbNullString, Optional ContextTableHeaders As Variant = vbNullString)
+    TargetTableName = ContextTableName
+End Sub
+
+'-------------------------------------------------------------------------
+'Methods
+'-------------------------------------------------------------------------
+
+Private Sub IRepository_CheckTableStatus()
+    
+    On Error GoTo EhhErr
+    
+    IRepository_IsEverythingOkay = (DataBase.Range(TargetTableName).Address <> vbNullString)
+    
+CleanExit:
+    Exit Sub
+    
+EhhErr:
+    MsgBox Err.Description, vbCritical, SIGN
+    Err.Clear
+    IRepository_IsEverythingOkay = False
+    Resume CleanExit
+    
+End Sub
+
+'-------------------------------------------------------------------------
+
+Private Function IRepository_GetRecords() As Variant
+    
+    On Error GoTo EhhErr
+    
+    IRepository_GetRecords = DataBase.Range(TargetTableName)
+    
+    'if you are here then operation is successful!
+    IRepository_IsEverythingOkay = True
+    
+CleanExit:
+    Exit Function
+EhhErr:
+    MsgBox Err.Description, vbCritical, SIGN
+    Err.Clear
+    IRepository_IsEverythingOkay = False
+    Resume CleanExit
+    
 End Function
 
-Private Function IRepository_GetRecordsByCondition(ByVal TargetNamedRange As String, ByVal columnIndex As Long, ByVal condition As Variant) As Variant
+'-------------------------------------------------------------------------
+
+Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, ByVal condition As Variant) As Variant
     Dim TargetRange     As Range
     Dim TargetTable     As Variant
-    Set TargetRange = DataBase.Range(TargetNamedRange)
+    Set TargetRange = DataBase.Range(TargetTableName)
     TargetTable = TargetRange.Value
-    IRepository_GetRecordsByCondition = FilterListWithSingleCondition(TargetTable, columnIndex, condition)
+    If VBA.IsNumeric(condition) Then
+        IRepository_GetRecordsByCondition = FilterListWithSingleCondition(TargetTable, columnIndex, Val(condition))
+    Else
+        IRepository_GetRecordsByCondition = FilterListWithSingleCondition(TargetTable, columnIndex, condition)
+    End If
+    'if you are here then operation is successful!
+    IRepository_IsEverythingOkay = True
+    
+CleanExit:
     Set TargetRange = Nothing
+    Exit Function
+EhhErr:
+    MsgBox Err.Description, vbCritical, SIGN
+    Err.Clear
+    IRepository_IsEverythingOkay = False
+    Resume CleanExit
 End Function
 
-Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray LineItems() As Variant)
+'-------------------------------------------------------------------------
+
+Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
     Dim item            As Variant
@@ -38,7 +136,7 @@ Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray L
     
     'Collect & configure some driving parameters
     TotalItems = UBound(LineItems) + 1
-    With DataBase.Range(TargetNamedRange)
+    With DataBase.Range(TargetTableName)
         Set TargetRange = .Resize(.Rows.Count + 1, .Columns.Count)
     End With
     With TargetRange
@@ -60,7 +158,10 @@ Private Sub IRepository_AddRecord(ByVal TargetNamedRange As String, ParamArray L
         I = I + 1
     Next item
     
-LeaveThisProcedure:
+    'if you are here then operation is successful!
+    IRepository_IsEverythingOkay = True
+    
+CleanExit:
     
     'Exit condtion
     Set TargetRange = Nothing
@@ -70,10 +171,14 @@ EhhErr:
     MsgBox "Error during Adding the new record" & _
          vbNewLine & vbNewLine & Err.Number & _
          vbNewLine & vbNewLine & Err.Description, vbCritical, "Validator"
-    Resume LeaveThisProcedure
+    Err.Clear
+    IRepository_IsEverythingOkay = False
+    Resume CleanExit
 End Sub
 
-Private Sub IRepository_DeleteRecord(ByVal TargetNamedRange As String, ByVal TargetIndex As Long)
+'-------------------------------------------------------------------------
+
+Private Sub IRepository_DeleteRecord(ByVal TargetIndex As Long)
     'Variable Declaration
     Dim TargetRange     As Range
     Dim TRow            As Long
@@ -84,7 +189,7 @@ Private Sub IRepository_DeleteRecord(ByVal TargetNamedRange As String, ByVal Tar
     On Error GoTo EhhErr:
     
     'Collect & configure some driving parameters
-    Set TargetRange = DataBase.Range(TargetNamedRange)
+    Set TargetRange = DataBase.Range(TargetTableName)
     TRow = TargetIndex + 1
     
     'delte the row from the target range
@@ -99,7 +204,10 @@ Private Sub IRepository_DeleteRecord(ByVal TargetNamedRange As String, ByVal Tar
         End If
     Next r
     
-LeaveThisProcedure:
+    'if you are here then operation is successful!
+    IRepository_IsEverythingOkay = True
+    
+CleanExit:
     
     'Exit condtion
     Set TargetRange = Nothing
@@ -109,10 +217,14 @@ EhhErr:
     MsgBox "Error during Deleting the record" & _
          vbNewLine & vbNewLine & Err.Number & _
          vbNewLine & vbNewLine & Err.Description, vbCritical, "Validator"
-    Resume LeaveThisProcedure
+    Err.Clear
+    IRepository_IsEverythingOkay = False
+    Resume CleanExit
 End Sub
 
-Private Sub IRepository_UpdateRecord(ByVal TargetNamedRange As String, ByVal TargetIndex As Long, ParamArray LineItems() As Variant)
+'-------------------------------------------------------------------------
+
+Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
     Dim item            As Variant
@@ -125,7 +237,7 @@ Private Sub IRepository_UpdateRecord(ByVal TargetNamedRange As String, ByVal Tar
     
     'Collect & configure some driving parameters
     TotalItems = UBound(LineItems) + 1
-    Set TargetRange = DataBase.Range(TargetNamedRange)
+    Set TargetRange = DataBase.Range(TargetTableName)
     TRow = TargetIndex + 1
     
     'init loop paramters
@@ -137,7 +249,10 @@ Private Sub IRepository_UpdateRecord(ByVal TargetNamedRange As String, ByVal Tar
         I = I + 1
     Next item
     
-LeaveThisProcedure:
+    'if you are here then operation is successful!
+    IRepository_IsEverythingOkay = True
+    
+CleanExit:
     
     'Exit condtion
     Set TargetRange = Nothing
@@ -147,7 +262,10 @@ EhhErr:
     MsgBox "Error during Updating the record" & _
          vbNewLine & vbNewLine & Err.Number & _
          vbNewLine & vbNewLine & Err.Description, vbCritical, "Validator"
-    Resume LeaveThisProcedure
+    Err.Clear
+    IRepository_IsEverythingOkay = False
+    Resume CleanExit
+    
 End Sub
 
 'Private helping function
