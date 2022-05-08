@@ -10,6 +10,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 '-------------------------------------------------------------------------
+'Private Type Componenets / Enums
+'-------------------------------------------------------------------------
 
 Private Type TAppModelComponents
   'Validation Services
@@ -34,6 +36,8 @@ End Type
 
 Private this As TAppModelComponents
 
+'-------------------------------------------------------------------------
+'Properties
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserPassword() As String
@@ -220,7 +224,7 @@ Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplicati
     Select Case TABLE
         Case TablesOfThisApplication.TABLE_MAINRECORDS
             ID = Me.mainTable(TRow, 2)
-        Case TablesOfThisApplication.TABLE_USERS
+        Case TablesOfThisApplication.Table_Users
             ID = Me.usersTable(TRow, 2)
     End Select
     If ID = RecordID Then
@@ -234,6 +238,9 @@ End Function
 'Public Methods and Functions
 '-------------------------------------------------------------------------
 
+'Following function will get new ID for the Table's new record which is _
+incrementing and unique as well
+
 Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
     Select Case TABLE
         Case TablesOfThisApplication.TABLE_MAINRECORDS
@@ -242,7 +249,7 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
             Else
                 GetNewID = VBA.CLng(Me.mainTable(UBound(Me.mainTable, 1), 2)) + 1
             End If
-        Case TablesOfThisApplication.TABLE_USERS
+        Case TablesOfThisApplication.Table_Users
             If UBound(Me.usersTable, 1) = 1 Then
                 GetNewID = INDEX_USERID_FIRST
             Else
@@ -251,6 +258,7 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
     End Select
 End Function
 
+'Following function will pick unique list from the list!
 Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal targetColumn As Long) As Variant
     'Driving Paramters
     Dim Records()               As String
@@ -298,6 +306,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
     GetUniqueListFromColumn = SortOneDimensionalArrayWithNumbers(tmp)
 End Function
 
+'Following function will Sort One Dimensional Array in Ascending Order !
 Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Variant
     Dim FirstItemIndex  As Long
     Dim LastItemIndex   As Long
@@ -323,5 +332,3 @@ End Function
 Private Sub Class_Terminate()
     Set Validator = Nothing
 End Sub
-
-'-------------------------------------------------------------------------

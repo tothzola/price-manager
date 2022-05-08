@@ -234,6 +234,8 @@ Public Sub InItModel(ByVal mainData As Variant, ByVal ListofCurrencies As Varian
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
     Call Validator.ResetSingleDimensionalArray(this.CheckFields)
+    'Keep Not-Mendatory Field Always True!
+    this.CheckFields(10) = True 'Unit of Price!
 End Sub
 
 '-------------------------------------------------------------------------

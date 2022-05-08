@@ -12,10 +12,19 @@ Option Explicit
 
 'public properties
 
+Public Property Get IsEverythingOkayInEngine() As Boolean
+End Property
+
+Public Property Let IsEverythingOkayInEngine(ByVal vNewValue As Boolean)
+End Property
+
 Public Property Set Repository(ByVal vNewValue As IRepository)
 End Property
 
 Public Property Let ContextTableName(ByVal vNewValue As String)
+End Property
+
+Public Property Let ContextTableHeaders(ByVal vNewValue As Variant)
 End Property
 
 Public Property Let contextLineItems(ByVal vNewValue As Variant)
@@ -23,7 +32,7 @@ End Property
 
 'public methods for communication
 
-Public Sub InItService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String)
+Public Sub InItService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String, ByVal TableHeaders As Variant)
 End Sub
 
 Public Function GetListOfAllRecordsFromContextTable() As Variant
@@ -40,6 +49,4 @@ End Sub
 
 Public Sub DeleteRecordofContextTable(ByVal index As Long)
 End Sub
-
-
 

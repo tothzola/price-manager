@@ -5,7 +5,7 @@ Option Explicit
 
 Public Enum TablesOfThisApplication
     TABLE_MAINRECORDS
-    TABLE_USERS
+    Table_Users
 End Enum
 
 Public Enum PasswordManagerFields
@@ -52,6 +52,19 @@ End Enum
 Public Const USERS_TABLE_NAME As String = "Table_Users"
 Public Const MAIN_TABLE_NAME As String = "Table_Main"
 
+'Connection Strings
+
+'ACCESS
+
+Public Function DatabaseFilePath_Access() As String
+    DatabaseFilePath_Access = ThisWorkbook.Path & Application.PathSeparator & "DatabaseAccess" _
+                    & Application.PathSeparator & "PriceApprovalDatabase.accdb"
+End Function
+
+Public Function ConnectionString_ACCESS() As String
+    ConnectionString_ACCESS = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & DatabaseFilePath_Access & ";Persist Security Info=False;"
+End Function
+
 'Elements of The Table
 
 Public Function arrListOfFields_PASSWORD_MANAGER() As Variant
@@ -61,28 +74,28 @@ Public Function arrListOfFields_PASSWORD_MANAGER() As Variant
 End Function
 
 Public Function arrListOfColumns_USERS_TABLE() As Variant
-    arrListOfColumns_USERS_TABLE = Array("index", _
-                                        "User ID", _
-                                        "User Status", _
-                                        "User Type", _
+    arrListOfColumns_USERS_TABLE = Array("Index", _
+                                        "User_ID", _
+                                        "User_Status", _
+                                        "User_Type", _
                                         "Username", _
                                         "Password")
 End Function
 
 Public Function arrListOfColumns_MAIN_Table() As Variant
-    arrListOfColumns_MAIN_Table = Array("index", _
-                                        "Record ID", _
-                                        "User ID", _
-                                        "Record Status", _
-                                        "Status Change Date", _
-                                        "Customer ID", _
-                                        "Material ID", _
+    arrListOfColumns_MAIN_Table = Array("Index", _
+                                        "Record_ID", _
+                                        "User_ID", _
+                                        "Record_Status", _
+                                        "Status_Change_Date", _
+                                        "Customer_ID", _
+                                        "Material_ID", _
                                         "Price", _
-                                        "Currency", _
-                                        "Unit Of Price", _
-                                        "Unit Of Measure", _
-                                        "Valid From Date", _
-                                        "Valid To Date")
+                                        "CurrencyField", _
+                                        "Unit_Of_Price", _
+                                        "Unit_Of_Measure", _
+                                        "Valid_From_Date", _
+                                        "Valid_To_Date")
 End Function
 
 Public Function arrListOfFields_EXPORT_Form() As Variant
