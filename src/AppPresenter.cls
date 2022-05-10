@@ -99,17 +99,22 @@ End Property
 '-------------------------------------------------------------------------
 
 'InIt Main Services
-Public Sub InItMainService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String, ByVal TableHeaders As Variant)
+Public Sub InItMainService(ByVal SelectedRepositoryType As RepositoryType, _
+                            ByVal TableName As String, _
+                            ByVal TableHeaders As Variant, _
+                            ByVal ConnectionString As String)
     Set mainService = New ServicesMain
-    Call mainService.InItService(SelectedRepositoryType, TableName, TableHeaders)
+    Call mainService.InItService(SelectedRepositoryType, TableName, TableHeaders, ConnectionString)
     databaseConnectionStatus = mainService.IsEverythingOkayInEngine
 End Sub
 
 'InIt User Services
-Public Sub InItUserService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String, ByVal TableHeaders As Variant)
-    
+Public Sub InItUserService(ByVal SelectedRepositoryType As RepositoryType, _
+                            ByVal TableName As String, _
+                            ByVal TableHeaders As Variant, _
+                            ByVal ConnectionString As String)
     Set userService = New ServicesUser
-    Call userService.InItService(SelectedRepositoryType, TableName, TableHeaders)
+    Call userService.InItService(SelectedRepositoryType, TableName, TableHeaders, ConnectionString)
     databaseConnectionStatus = userService.IsEverythingOkayInEngine
 End Sub
 
@@ -505,7 +510,7 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
     With report
         'Configure Report!
         .CurrencyColumns = Array(MainTableFields.COL_MAIN_price)
-        .CURRENCYFORMAT = "#" & Application.ThousandsSeparator & "##0" & Application.DecimalSeparator & "00"
+        .CURRENCYFORMAT = "#" & Application.International(xlThousandsSeparator) & "##0" & Application.International(xlDecimalSeparator) & "00"
         .DateColumns = Array(MainTableFields.COL_MAIN_statusChangeDate, MainTableFields.COL_MAIN_validFromDate, MainTableFields.COL_MAIN_validToDate)
         .DateFormat = DATEFORMAT_FRONTEND
         .LoadData = EFModel.exportTable

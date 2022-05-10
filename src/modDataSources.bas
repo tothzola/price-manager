@@ -61,8 +61,17 @@ Public Function DatabaseFilePath_Access() As String
                     & Application.PathSeparator & "PriceApprovalDatabase.accdb"
 End Function
 
-Public Function ConnectionString_ACCESS() As String
-    ConnectionString_ACCESS = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & DatabaseFilePath_Access & ";Persist Security Info=False;"
+Public Function GetConnectionString(ByVal TypeOfRepository As RepositoryType) As String
+    Select Case TypeOfRepository
+        Case RepositoryType.TYPE_EXCEL_NAMED_RANGE
+            GetConnectionString = vbNullString
+        Case RepositoryType.TYPE_ACCESS
+            GetConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & DatabaseFilePath_Access & ";Persist Security Info=False;"
+        Case RepositoryType.TYPE_MYSQL
+            GetConnectionString = vbNullString
+        Case RepositoryType.TYPE_SHAREPOINT_LIST
+            GetConnectionString = vbNullString
+    End Select
 End Function
 
 'Elements of The Table
@@ -128,5 +137,6 @@ Public Function arrListofStatusOfUser() As Variant
 End Function
 
 Public Function arrRecordStatusesList() As Variant
-    arrRecordStatusesList = Array("", "PENDING", "APPROVED", "REJECTED")
+    arrRecordStatusesList = Array(vbNullString, "PENDING", "APPROVED", "REJECTED")
 End Function
+

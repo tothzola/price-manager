@@ -13,7 +13,7 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 Private Type TPriceFormModelComponents
-    'Validation Object
+    'Validation Objects
     Validator As ValidationServices
     CheckFields(MainTableFields.COL_MAIN_customerID To MainTableFields.COL_MAIN_validToDate) As Variant
     'Tables
@@ -235,7 +235,7 @@ Public Sub InItModel(ByVal mainData As Variant, ByVal ListofCurrencies As Varian
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
     Call Validator.ResetSingleDimensionalArray(this.CheckFields)
     'Keep Not-Mendatory Field Always True!
-    this.CheckFields(10) = True 'Unit of Price!
+    this.CheckFields(MainTableFields.COL_MAIN_unitOfPrice) = True 'Unit of Price!
 End Sub
 
 '-------------------------------------------------------------------------
@@ -250,8 +250,8 @@ Public Sub SetPropertiesToNewRecordState(ByVal ActiveUserID As String)
         .index = 0
         .recordStatus = RECORDSTATUS_PENDING
         .userID = ActiveUserID
-        .statusChangeDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
-        .validFromDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+        .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
+        .validFromDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
         .validToDate = END_OF_THE_EARTH
     End With
 End Sub
@@ -402,7 +402,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             'to handle that only for the UPDATE operation we are not going to
             'perform this check!
             If Me.operation = OPERATION_NEW Then
-                startDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+                startDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
                 endDate = startDate
                 IsValidField = Validator.IsValidDateInRange(Me.validFromDate, startDate, endDate)
                 If Not IsValidField = True Then Exit Function
@@ -420,7 +420,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             If Not IsValidField = True Then Exit Function
             'Check 3
             If Me.operation = OPERATION_NEW Then
-                startDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+                startDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
                 endDate = VBA.CDate(END_OF_THE_EARTH)
                 IsValidField = Validator.IsValidDateInRange(Me.validToDate, startDate, endDate)
                 If Not IsValidField = True Then Exit Function
@@ -442,4 +442,5 @@ End Function
 Private Sub Class_Terminate()
     Set Validator = Nothing
 End Sub
+
 

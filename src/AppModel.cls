@@ -172,7 +172,7 @@ End Property
 
 Public Property Get ActiveUserIndex() As Variant
     Dim I As Long
-    For I = 1 To UBound(Me.usersTable, 1) Step 1
+    For I = 1 To UBound(Me.usersTable, 1)
         If Me.usersTable(I, UsersTableFields.COL_userName) = Me.ActiveUserName Then
             ActiveUserIndex = Me.usersTable(I, UsersTableFields.COL_INDEX)
             Exit Property
@@ -263,12 +263,12 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
     'Driving Paramters
     Dim Records()               As String
     Dim Record                  As Variant
-    Dim tmp                     As Variant
     Dim MatchedRecords          As String
     Dim TotalMatchingRows       As Long
     Dim firstRow                As Long
     Dim lastRow                 As Long
     Dim I                       As Long
+    Dim tmp                     As Variant
     Dim dict                    As Dictionary
     'Get Driving parameters
     firstRow = LBound(ContextTable, 1)
@@ -278,7 +278,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
     MatchedRecords = vbNullString
     TotalMatchingRows = 0
     Set dict = New Dictionary
-    For I = firstRow + 1 To lastRow Step 1
+    For I = firstRow + 1 To lastRow
         If Not dict.Exists(ContextTable(I, targetColumn)) Then
             dict.Add ContextTable(I, targetColumn), ContextTable(I, targetColumn)
             MatchedRecords = MatchedRecords & I & SEPERATOR_ITEM
@@ -291,7 +291,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
         GetUniqueListFromColumn = tmp
         Exit Function
     Else
-        MatchedRecords = VBA.Left(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
+        MatchedRecords = VBA.Left$(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
     End If
     'Redimentioning the tmp array
     ReDim tmp(TotalMatchingRows)
@@ -315,8 +315,8 @@ Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Var
     Dim J               As Long
     FirstItemIndex = LBound(arr)
     LastItemIndex = UBound(arr)
-    For I = FirstItemIndex To LastItemIndex - 1 Step 1
-        For J = I + 1 To LastItemIndex Step 1
+    For I = FirstItemIndex To LastItemIndex - 1
+        For J = I + 1 To LastItemIndex
             If Val(arr(I)) > Val(arr(J)) Then
                 tmp = arr(J)
                 arr(J) = arr(I)
@@ -332,3 +332,5 @@ End Function
 Private Sub Class_Terminate()
     Set Validator = Nothing
 End Sub
+
+

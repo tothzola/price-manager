@@ -188,18 +188,18 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
         'INSERT INTO table_name ([column1], [column2], [column3], ...)
         'VALUES (value1, value2, value3, ...);
         this.SQLQuery = "INSERT INTO " & TargetTableName & " ("
-        For I = 2 To UBound(TargetTableHeaders, 2) Step 1
+        For I = 2 To UBound(TargetTableHeaders, 2)
             HeadersString = HeadersString & "[" & TargetTableHeaders(1, I) & "], "
             If VBA.IsDate(LineItems(I - 2)) Then
-                ValuesString = ValuesString & "'" & VBA.Format(LineItems(I - 2), DATEFORMAT_BACKEND) & "', "
+                ValuesString = ValuesString & "'" & VBA.Format$(LineItems(I - 2), DATEFORMAT_BACKEND) & "', "
             ElseIf VBA.IsEmpty(LineItems(I - 2)) Then
                 ValuesString = ValuesString & "'', "
             Else
                 ValuesString = ValuesString & "'" & LineItems(I - 2) & "', "
             End If
         Next I
-        HeadersString = VBA.Left(HeadersString, VBA.Len(HeadersString) - 2)
-        ValuesString = VBA.Left(ValuesString, VBA.Len(ValuesString) - 2)
+        HeadersString = VBA.Left$(HeadersString, VBA.Len(HeadersString) - 2)
+        ValuesString = VBA.Left$(ValuesString, VBA.Len(ValuesString) - 2)
         this.SQLQuery = this.SQLQuery & HeadersString & ") VALUES (" & ValuesString & ");"
         'Executing Query
         recordset.Open this.SQLQuery, connection, adOpenDynamic, adLockOptimistic
@@ -239,16 +239,16 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
         'WHERE columnX = valueX;
         tmp = vbNullString
         this.SQLQuery = " UPDATE " & TargetTableName & " SET "
-        For I = 2 To UBound(TargetTableHeaders, 2) Step 1
+        For I = 2 To UBound(TargetTableHeaders, 2)
             If VBA.IsDate(LineItems(I - 2)) Then
-                tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '" & VBA.Format(LineItems(I - 2), DATEFORMAT_BACKEND) & "', "
+                tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '" & VBA.Format$(LineItems(I - 2), DATEFORMAT_BACKEND) & "', "
             ElseIf VBA.IsEmpty(LineItems(I - 2)) Then
                 tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '', "
             Else
                 tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '" & LineItems(I - 2) & "', "
             End If
         Next I
-        tmp = VBA.Left(tmp, VBA.Len(tmp) - 2)
+        tmp = VBA.Left$(tmp, VBA.Len(tmp) - 2)
         this.SQLQuery = this.SQLQuery & tmp & " WHERE [Index] = " & TargetIndex & ";"
         'Executing Query
         recordset.Open this.SQLQuery, connection, adOpenDynamic, adLockOptimistic
@@ -360,7 +360,7 @@ Private Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As
     If NumberOfArrayDimensions(Table2) = 1 Then
         Dim tmp As Variant
         ReDim tmp(1 To 1, 1 To UBound(Table1, 2))
-        For I = 1 To UBound(Table1, 2) Step 1
+        For I = 1 To UBound(Table1, 2)
             tmp(1, I) = Table2(I)
         Next I
         Table2 = tmp
@@ -377,8 +377,8 @@ Private Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As
     FinalTableRows = TotalRowsTable1 + TotalRowsTable2
     FinalTableColumns = TotalColumnsTable1
     ReDim FinalTable(1 To FinalTableRows, 1 To FinalTableColumns)
-    For I = 1 To FinalTableRows Step 1
-        For J = 1 To FinalTableColumns Step 1
+    For I = 1 To FinalTableRows
+        For J = 1 To FinalTableColumns
             If I <= TotalRowsTable1 Then
                 FinalTable(I, J) = Table1(I, J)
             Else
@@ -421,3 +421,5 @@ Private Sub Class_Terminate()
     Set connection = Nothing
     Set recordset = Nothing
 End Sub
+
+

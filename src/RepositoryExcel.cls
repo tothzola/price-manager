@@ -293,7 +293,7 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     'Get matching Rows!
     MatchedRecords = CONSIDERHEADERINDEX
     TotalMatchingRows = 0
-    For I = firstRow To lastRow Step 1
+    For I = firstRow To lastRow
         If ContextTable(I, columnIndex) = condition Then
             MatchedRecords = MatchedRecords & I & SEPERATOR_ITEM
             TotalMatchingRows = TotalMatchingRows + 1
@@ -301,13 +301,13 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     Next I
     'remove last seperator from the matchedrecords variable
     If MatchedRecords = CONSIDERHEADERINDEX Then
-        For J = FirstCol To LastCol Step 1
+        For J = FirstCol To LastCol
             tmp(1, J) = ContextTable(1, J)
         Next J
         FilterListWithSingleCondition = tmp
         Exit Function
     Else
-        MatchedRecords = VBA.Left(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
+        MatchedRecords = VBA.Left$(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
     End If
     'Redimentioning the tmp array
     ReDim tmp(firstRow To TotalMatchingRows + 1, FirstCol To LastCol)
@@ -315,7 +315,7 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
     J = 1
     For Each Record In Records
-        For I = FirstCol To LastCol Step 1
+        For I = FirstCol To LastCol
             tmp(J, I) = ContextTable(Record, I)
         Next I
         J = J + 1
@@ -323,3 +323,5 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     'return value
     FilterListWithSingleCondition = tmp
 End Function
+
+

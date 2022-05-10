@@ -244,7 +244,7 @@ Public Function IsValidRecordToEdit() As Variant
     firstRow = LBound(Me.dataTable, 1)
     lastRow = UBound(Me.dataTable, 1)
     'Finding Status!
-    For I = firstRow + 1 To lastRow Step 1
+    For I = firstRow + 1 To lastRow
         If Me.dataTable(I, MainTableFields.COL_MAIN_INDEX) = TargetIndex Then
             recordStatus = Me.dataTable(I, MainTableFields.COL_MAIN_recordStatus)
             Exit For
