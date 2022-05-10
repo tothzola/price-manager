@@ -253,7 +253,7 @@ Private Sub cmdApproveRecord_Click()
     'Hydrate Model Property
     With PriceModel
         .recordStatus = RECORDSTATUS_APPROVED
-        .statusChangeDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+        .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
     End With
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_APPROVE)
 End Sub
@@ -262,7 +262,7 @@ Private Sub cmdRejectRecord_Click()
     'Hydrate Model Property
     With PriceModel
         .recordStatus = RECORDSTATUS_REJECTED
-        .statusChangeDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+        .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
     End With
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_REJECT)
 End Sub
@@ -321,14 +321,14 @@ Private Sub txtDateFrom_Change()
     'Hydrate model property
     ExportModel.FromDate = Me.txtDateFrom.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format(VBA.Now, DATEFORMAT_FRONTEND)
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
 End Sub
 
 Private Sub txtDateTo_Change()
     'Hydrate model property
     ExportModel.ToDate = Me.txtDateTo.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format(END_OF_THE_EARTH, DATEFORMAT_FRONTEND)
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
 End Sub
 
 Private Sub cmbCustomerID_Change()
@@ -650,7 +650,11 @@ End Sub
 
 Public Sub UserWantsToOpenPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel, ByVal operation As FormOperation)
     'open Price Form Interface
-    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
+    If MainModel.ActiveUserType = USERTYPE_CLIENT Then
+        Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
+    Else
+        Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.framePriceForm)
+    End If
     'Reset Price Form Frame
     If operation = OPERATION_NEW Then
         Call ResetPriceFormFrame(PriceFormFrameModel, OPERATION_NEW)
@@ -807,8 +811,8 @@ Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
         'update model
         Call ExportModel.SetPropertiesToDefaultState
         'input field state
-        .txtDateFrom.Value = VBA.Format(ExportModel.FromDate, DATEFORMAT_FRONTEND)
-        .txtDateTo.Value = VBA.Format(ExportModel.ToDate, DATEFORMAT_FRONTEND)
+        .txtDateFrom.Value = VBA.Format$(ExportModel.FromDate, DATEFORMAT_FRONTEND)
+        .txtDateTo.Value = VBA.Format$(ExportModel.ToDate, DATEFORMAT_FRONTEND)
     End With
 End Sub
 
@@ -945,9 +949,8 @@ Private Sub StateForNewRecordForPriceForm()
         Call PriceModel.SetPropertiesToNewRecordState(MainModel.ActiveUserID)
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
-        .txtCustomerID.Value = PriceModel.customerID
-        .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
-        .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
+        .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
+        .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
@@ -974,8 +977,8 @@ Private Sub StateForUpdateRecordForPriceForm()
         .cmbCurrency.Value = PriceModel.currencyType
         .txtPriceUnit.Value = PriceModel.unitOfPrice
         .cmbUnitOfMeasure.Value = PriceModel.unitOfMeasure
-        .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
-        .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
+        .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
+        .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
