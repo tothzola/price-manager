@@ -10,11 +10,15 @@ Attribute VB_Exposed = False
 '@Folder "Repository"
 Option Explicit
 
+'public properties
+
 Public Property Get IsEverythingOkay() As Boolean
 End Property
 
 Public Property Let IsEverythingOkay(ByVal vNewValue As Boolean)
 End Property
+
+'public methods
 
 Public Sub InItRepository(ByVal ContextTableName As String, _
                             Optional ContextConnectionString As String = vbNullString, _
