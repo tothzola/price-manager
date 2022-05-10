@@ -123,22 +123,22 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get ToDate() As String
-    ToDate = this.ToDate
-End Property
-
-Public Property Let ToDate(ByVal vNewValue As String)
-    this.ToDate = vNewValue
-End Property
-
-'-------------------------------------------------------------------------
-
 Public Property Get FromDate() As String
     FromDate = this.FromDate
 End Property
 
 Public Property Let FromDate(ByVal vNewValue As String)
     this.FromDate = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get ToDate() As String
+    ToDate = this.ToDate
+End Property
+
+Public Property Let ToDate(ByVal vNewValue As String)
+    this.ToDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -168,8 +168,8 @@ Public Sub SetPropertiesToDefaultState()
     'Flush All the properties before we start operation
     Call SetPropertiesToNullState
     With Me
-        .FromDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
-        .ToDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+        .FromDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
+        .ToDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
     End With
 End Sub
 
@@ -225,8 +225,8 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = Validator.IsValidGermanFormatDate(Me.FromDate)
             If Not IsValidField = True Then Exit Function
             'Check 3
-            startDate = VBA.Format(START_OF_THE_CENTURY, DATEFORMAT_BACKEND)
-            endDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+            startDate = VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_BACKEND)
+            endDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
             IsValidField = Validator.IsValidDateInRange(Me.FromDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
             'if everything okay then save date in backend format
@@ -244,8 +244,8 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = Validator.IsValidGermanFormatDate(Me.ToDate)
             If Not IsValidField = True Then Exit Function
             'Check 3
-            startDate = VBA.Format(START_OF_THE_CENTURY, DATEFORMAT_BACKEND)
-            endDate = VBA.Format(END_OF_THE_EARTH, DATEFORMAT_BACKEND)
+            startDate = VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_BACKEND)
+            endDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
             IsValidField = Validator.IsValidDateInRange(Me.ToDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
             'if everything okay then save date in backend format
@@ -329,7 +329,7 @@ Public Sub GenerateExportData()
     
     'Getting Matching Indexes
     
-    For I = firstRowIndex + 1 To lastRowIndex Step 1
+    For I = firstRowIndex + 1 To lastRowIndex
         
     'Filter Layer 1 : Date Filter
         'Checking First condition : Edit Date
@@ -364,7 +364,7 @@ IgnoreThisRow:
     Next I
     
     'Remove Last Seperator Characters
-    MatchingIndexes = VBA.Left(MatchingIndexes, VBA.Len(MatchingIndexes) - VBA.Len(SEPERATOR_ITEM))
+    MatchingIndexes = VBA.Left$(MatchingIndexes, VBA.Len(MatchingIndexes) - VBA.Len(SEPERATOR_ITEM))
     
     'Generate Array of all matching indexes
     Records = VBA.Split(MatchingIndexes, SEPERATOR_ITEM)
@@ -375,7 +375,7 @@ IgnoreThisRow:
     'Create Export Table
     I = 1
     For Each Record In Records
-        For J = firstColumnIndex To lastColumnIndex Step 1
+        For J = firstColumnIndex To lastColumnIndex
             tmp(I, J) = Me.dataTable(Record, J)
         Next J
         I = I + 1
@@ -393,3 +393,5 @@ End Sub
 Private Sub Class_Terminate()
     Set Validator = Nothing
 End Sub
+
+
