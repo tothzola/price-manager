@@ -113,7 +113,7 @@ Public Function IsEverythingOkay(ByVal ArrayOfCheckFieldsStatus As Variant, _
     flag = False
     tmp = vbNullString
     'Checking each properties validation state
-    For I = FirstColIndex To LastColIndex Step 1
+    For I = FirstColIndex To LastColIndex
         If ArrayOfCheckFieldsStatus(I) = False Then
             flag = False
             Exit For
@@ -126,7 +126,7 @@ Public Function IsEverythingOkay(ByVal ArrayOfCheckFieldsStatus As Variant, _
         IsEverythingOkay = True
     Else
         'Checking each properties validation state
-        For I = FirstColIndex To LastColIndex Step 1
+        For I = FirstColIndex To LastColIndex
             If ArrayOfCheckFieldsStatus(I) = False Then
                 tmp = tmp & BULLET_LISTITEM & ArrayOfTableFields(I - 1) & vbNewLine
             End If
@@ -204,7 +204,7 @@ Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal userName As S
         Exit Function
     End If
     'if validation check confirm then go for the next process
-    For I = 1 To UBound(dataTable, 1) Step 1
+    For I = 1 To UBound(dataTable, 1)
         If dataTable(I, userCol) = userName Then
         userFlag = True
             If dataTable(I, passCol) = password Then
@@ -254,7 +254,7 @@ Public Function IsValidPasswordString(ByVal passwordString As String) As Boolean
     End If
     'Get characters in array
     txt = VBA.StrConv(passwordString, vbUnicode)
-    passwordCharacters = VBA.Split(VBA.Left(txt, Len(txt) - 1), VBA.Chr$(0))
+    passwordCharacters = VBA.Split(VBA.Left$(txt, Len(txt) - 1), VBA.Chr$(0))
     'Get testified
     'Criterias of checking
         'Minimum 8 characters of Length
@@ -300,10 +300,10 @@ Public Function GetDateFromGermanDateString(ByVal inputValue As String) As Strin
     'check for [10022009]DDMMYYYY
     If VBA.Len(inputValue) = 8 And VBA.IsNumeric(inputValue) Then
         'you are here because inputValue has right 8 characters that suits to DDMMYYYY
-        dayPart = VBA.CLng(VBA.Left(inputValue, 2))
-        YearPart = VBA.CLng(VBA.Right(inputValue, 4))
-        MonthPart = VBA.CLng(VBA.Mid(inputValue, 3, 2))
-        GetDateFromGermanDateString = VBA.Format(VBA.DateSerial(YearPart, MonthPart, dayPart), DATEFORMAT_BACKEND)
+        dayPart = VBA.CLng(VBA.Left$(inputValue, 2))
+        YearPart = VBA.CLng(VBA.Right$(inputValue, 4))
+        MonthPart = VBA.CLng(VBA.Mid$(inputValue, 3, 2))
+        GetDateFromGermanDateString = VBA.Format$(VBA.DateSerial(YearPart, MonthPart, dayPart), DATEFORMAT_BACKEND)
     Else
         GetDateFromGermanDateString = vbNullString
     End If
@@ -326,7 +326,7 @@ Public Sub ResetSingleDimensionalArray(ByRef arr As Variant, Optional resetValue
     Dim LastItem As Long
     FirstItem = LBound(arr)
     LastItem = UBound(arr)
-    For I = FirstItem To LastItem Step 1
+    For I = FirstItem To LastItem
         arr(I) = resetValue
     Next I
 End Sub
@@ -340,3 +340,5 @@ End Sub
 Private Sub Class_Terminate()
     Set objRegEx = Nothing
 End Sub
+
+
