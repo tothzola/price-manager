@@ -190,9 +190,7 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
         this.SQLQuery = "INSERT INTO " & TargetTableName & " ("
         For I = 2 To UBound(TargetTableHeaders, 2)
             HeadersString = HeadersString & "[" & TargetTableHeaders(1, I) & "], "
-            If VBA.IsDate(LineItems(I - 2)) Then
-                ValuesString = ValuesString & "'" & VBA.Format$(LineItems(I - 2), DATEFORMAT_BACKEND) & "', "
-            ElseIf VBA.IsEmpty(LineItems(I - 2)) Then
+            If VBA.IsEmpty(LineItems(I - 2)) Then
                 ValuesString = ValuesString & "'', "
             Else
                 ValuesString = ValuesString & "'" & LineItems(I - 2) & "', "
@@ -240,9 +238,7 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
         tmp = vbNullString
         this.SQLQuery = " UPDATE " & TargetTableName & " SET "
         For I = 2 To UBound(TargetTableHeaders, 2)
-            If VBA.IsDate(LineItems(I - 2)) Then
-                tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '" & VBA.Format$(LineItems(I - 2), DATEFORMAT_BACKEND) & "', "
-            ElseIf VBA.IsEmpty(LineItems(I - 2)) Then
+            If VBA.IsEmpty(LineItems(I - 2)) Then
                 tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '', "
             Else
                 tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '" & LineItems(I - 2) & "', "
