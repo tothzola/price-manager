@@ -5,10 +5,10 @@ Option Explicit
 Public Const SIGN As String = "Demo Project"
 
 'GENERAL SETTINGS
-Public Const DATEFORMAT_BACKEND As String = "DD-MMM-YYYY"
+Public Const DATEFORMAT_BACKEND As String = "yyyy-mm-dd;@"
 Public Const DATEFORMAT_FRONTEND As String = "dd.mm.yyyy;@"
-Public Const END_OF_THE_EARTH As String = "31-Dec-9999"
-Public Const START_OF_THE_CENTURY As String = "01-Jan-2000"
+Public Const END_OF_THE_EARTH As String = "9999-12-31"
+Public Const START_OF_THE_CENTURY As String = "2000-01-01"
 
 'NUMERICAL RANGES
 Public Const INDEX_RECORDID_FIRST As Long = 1000000
