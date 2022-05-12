@@ -954,8 +954,10 @@ Private Sub StateForNewRecordForPriceForm()
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
+            Call ExtendedMethods.FormEditingState(False, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
         Else
             Call ShowApprovalRejectionButtons(False)
+            Call ExtendedMethods.FormEditingState(True, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
         End If
         'Other Buttons State
         .cmdAddNewRecord.Enabled = True
