@@ -510,7 +510,7 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
     With report
         'Configure Report!
         .CurrencyColumns = Array(MainTableFields.COL_MAIN_price)
-        .CURRENCYFORMAT = "#" & Application.International(xlThousandsSeparator) & "##0" & Application.International(xlDecimalSeparator) & "00"
+        .CURRENCYFORMAT = modGlobal.EXPORTREPORT_CURRENCYFORMAT
         .DateColumns = Array(MainTableFields.COL_MAIN_statusChangeDate, MainTableFields.COL_MAIN_validFromDate, MainTableFields.COL_MAIN_validToDate)
         .DateFormat = DATEFORMAT_FRONTEND
         .LoadData = EFModel.exportTable
