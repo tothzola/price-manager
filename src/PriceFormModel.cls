@@ -251,6 +251,7 @@ Public Sub SetPropertiesToNewRecordState(ByVal ActiveUserID As String)
         .recordStatus = RECORDSTATUS_PENDING
         .userID = ActiveUserID
         .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
+        .unitOfPrice = 1
         .validFromDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
         .validToDate = END_OF_THE_EARTH
     End With
