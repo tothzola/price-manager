@@ -949,6 +949,7 @@ Private Sub StateForNewRecordForPriceForm()
         Call PriceModel.SetPropertiesToNewRecordState(MainModel.ActiveUserID)
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
+        .txtPriceUnit.Value = PriceModel.unitOfPrice
         .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
         .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons
