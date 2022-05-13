@@ -118,4 +118,14 @@ Public Enum ValidationCheckTypes
     TYPE_DATEBETWEENRANGE
 End Enum
 
+Public Function EXPORTREPORT_CURRENCYFORMAT() As String
+    'New Currency Format = "_(* #,##0.00_);_(* (#,##0.00);_(* '-'??_);_(@_)"
+    EXPORTREPORT_CURRENCYFORMAT = "_(* #" & Application.International(xlThousandsSeparator) & "##0" & _
+                                            Application.International(xlDecimalSeparator) & "00_);_(* (#" & _
+                                            Application.International(xlThousandsSeparator) & "##0" & _
+                                            Application.International(xlDecimalSeparator) & _
+                                            "00);_(* '-'??_);_(@_)"
+End Function
+
+
 
