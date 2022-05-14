@@ -123,7 +123,9 @@ Public Sub InItApplicationModel(ByVal ListofCurrencies As Variant, _
                                 ByVal ListOfUnits As Variant, _
                                 ByVal TypesOfUser As Variant, _
                                 ByVal StatusOfUser As Variant, _
-                                ByVal StatusOfRecord As Variant)
+                                ByVal StatusOfRecord As Variant, _
+                                ByVal ListOfSalesOrganizations As Variant, _
+                                ByVal ListofDistrobutionChannels As Variant)
     Set model = New AppModel
     Call model.InItModel(mainService.GetListOfAllRecordsFromContextTable, _
                         userService.GetListOfAllRecordsFromContextTable, _
@@ -131,7 +133,9 @@ Public Sub InItApplicationModel(ByVal ListofCurrencies As Variant, _
                         ListOfUnits, _
                         TypesOfUser, _
                         StatusOfUser, _
-                        StatusOfRecord)
+                        StatusOfRecord, _
+                        ListOfSalesOrganizations, _
+                        ListofDistrobutionChannels)
 End Sub
 
 'InIt Main View / This step will open Main Interface
@@ -326,13 +330,13 @@ Private Sub presenterPriceFormFrame_OpenPriceForm(ByVal PFModel As PriceFormMode
     If operation = OPERATION_NEW Then
         'Hydrate Model property
         With model
-            Call PFModel.InItModel(.mainTable, .CurrenciesList, .unitOfMeasuresList)
+            Call PFModel.InItModel(.mainTable, .CurrenciesList, .unitOfMeasuresList, .salesOrganizationList, .distributionChannelsList)
         End With
         'Open PriceForm Frame
         Call view.UserWantsToOpenPriceFormFrame(PFModel, OPERATION_NEW)
     Else
         With model
-            Call PFModel.InItModel(.mainTable, .CurrenciesList, .unitOfMeasuresList, .CurrentUpdateIndex)
+            Call PFModel.InItModel(.mainTable, .CurrenciesList, .unitOfMeasuresList, .salesOrganizationList, .distributionChannelsList, .CurrentUpdateIndex)
         End With
         'Open PriceForm Frame
         Call view.UserWantsToOpenPriceFormFrame(PFModel, OPERATION_UPDATE)
@@ -363,7 +367,7 @@ Private Sub presenterPriceFormFrame_AddNewRecordFromPriceForm(ByVal TypeOfOperat
     Call RefreshMainTable
     'I added here StatusChangeDate, because, While filtering the date it is causing an issue! Consider this statusChangeDate field as record added/update date!
     With PFModel
-        Call mainService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), .userID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+        Call mainService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), .userID, .recordStatus, .statusChangeDate, .conditionType, .salesOrganization, .distributionChannel, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
     End With
     If mainService.IsEverythingOkayInEngine Then
         Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
@@ -376,7 +380,7 @@ Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .conditionType, .salesOrganization, .distributionChannel, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
             If mainService.IsEverythingOkayInEngine Then
                 Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
@@ -426,7 +430,7 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .conditionType, .salesOrganization, .distributionChannel, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
             If mainService.IsEverythingOkayInEngine Then
                 Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
@@ -442,7 +446,7 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index - 1, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index - 1, .RecordID, .userID, .recordStatus, .statusChangeDate, .conditionType, .salesOrganization, .distributionChannel, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
             If mainService.IsEverythingOkayInEngine Then
                 Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
@@ -511,7 +515,9 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
         'Configure Report!
         .CurrencyColumns = Array(MainTableFields.COL_MAIN_price)
         .CURRENCYFORMAT = modGlobal.EXPORTREPORT_CURRENCYFORMAT
-        .DateColumns = Array(MainTableFields.COL_MAIN_statusChangeDate, MainTableFields.COL_MAIN_validFromDate, MainTableFields.COL_MAIN_validToDate)
+        .DateColumns = Array(MainTableFields.COL_MAIN_statusChangeDate, _
+                             MainTableFields.COL_MAIN_validFromDate, _
+                             MainTableFields.COL_MAIN_validToDate)
         .DateFormat = DATEFORMAT_FRONTEND
         .LoadData = EFModel.exportTable
         .Headers = modDataSources.arrListOfColumns_MAIN_Table
