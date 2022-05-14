@@ -29,6 +29,9 @@ Public Enum MainTableFields
     COL_MAIN_userID
     COL_MAIN_recordStatus
     COL_MAIN_statusChangeDate
+    COL_MAIN_ConditionType
+    COL_MAIN_SalesOrganization
+    Col_Main_DistributionChannel
     COL_MAIN_customerID
     COL_MAIN_materialID
     COL_MAIN_price
@@ -97,6 +100,9 @@ Public Function arrListOfColumns_MAIN_Table() As Variant
                                         "User_ID", _
                                         "Record_Status", _
                                         "Status_Change_Date", _
+                                        "Condition_Type", _
+                                        "Sales_Organization", _
+                                        "Distribution_Channel", _
                                         "Customer_ID", _
                                         "Material_ID", _
                                         "Price", _
@@ -140,3 +146,10 @@ Public Function arrRecordStatusesList() As Variant
     arrRecordStatusesList = Array(vbNullString, "PENDING", "APPROVED", "REJECTED")
 End Function
 
+Public Function arrSalesOrganizationsList() As Variant
+    arrSalesOrganizationsList = Array("2961")
+End Function
+
+Public Function arrDistributionChannelsList() As Variant
+    arrDistributionChannelsList = Array("01", "GY", "HD")
+End Function

@@ -21,6 +21,9 @@ Private Type TDataFormModelComponents
     userID As String
     recordStatus As String
     statusChangeDate As String
+    conditionType As String
+    salesOrganization As String
+    distributionChannel As String
     customerID As String
     materialID As String
     price As String
@@ -104,6 +107,36 @@ End Property
 
 Public Property Let statusChangeDate(ByVal vNewValue As String)
     this.statusChangeDate = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get distributionChannel() As String
+    distributionChannel = this.distributionChannel
+End Property
+
+Public Property Let distributionChannel(ByVal vNewValue As String)
+    this.distributionChannel = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get salesOrganization() As String
+    salesOrganization = this.salesOrganization
+End Property
+
+Public Property Let salesOrganization(ByVal vNewValue As String)
+    this.salesOrganization = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get conditionType() As String
+    conditionType = this.conditionType
+End Property
+
+Public Property Let conditionType(ByVal vNewValue As String)
+    this.conditionType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------

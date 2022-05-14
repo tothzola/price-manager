@@ -15,18 +15,23 @@ Option Explicit
 Private Type TPriceFormModelComponents
     'Validation Objects
     Validator As ValidationServices
-    CheckFields(MainTableFields.COL_MAIN_customerID To MainTableFields.COL_MAIN_validToDate) As Variant
+    CheckFields(MainTableFields.COL_MAIN_ConditionType To MainTableFields.COL_MAIN_validToDate) As Variant
     'Tables
     mainTable As Variant
     'Single Column List
     curenciesList As Variant
     unitOfMeasuresList As Variant
+    salesOrganizationList As Variant
+    distributionChannelList As Variant
     'Fields
     index As Long
     RecordID As String
     userID As String
     recordStatus As String
     statusChangeDate As String
+    conditionType As String
+    salesOrganization As String
+    distributionChannel As String
     customerID As String
     materialID As String
     price As String
@@ -81,6 +86,27 @@ Public Property Let unitOfMeasuresList(ByVal vNewValue As Variant)
     this.unitOfMeasuresList = vNewValue
 End Property
 
+
+'-------------------------------------------------------------------------
+
+Public Property Get distributionChannelList() As Variant
+    distributionChannelList = this.distributionChannelList
+End Property
+
+Public Property Let distributionChannelList(ByVal vNewValue As Variant)
+    this.distributionChannelList = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get salesOrganizationList() As Variant
+    salesOrganizationList = this.salesOrganizationList
+End Property
+
+Public Property Let salesOrganizationList(ByVal vNewValue As Variant)
+    this.salesOrganizationList = vNewValue
+End Property
+
 '-------------------------------------------------------------------------
 
 Public Property Get index() As Long
@@ -129,6 +155,36 @@ End Property
 
 Public Property Let statusChangeDate(ByVal vNewValue As String)
     this.statusChangeDate = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get distributionChannel() As String
+    distributionChannel = this.distributionChannel
+End Property
+
+Public Property Let distributionChannel(ByVal vNewValue As String)
+    this.distributionChannel = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get salesOrganization() As String
+    salesOrganization = this.salesOrganization
+End Property
+
+Public Property Let salesOrganization(ByVal vNewValue As String)
+    this.salesOrganization = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get conditionType() As String
+    conditionType = this.conditionType
+End Property
+
+Public Property Let conditionType(ByVal vNewValue As String)
+    this.conditionType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -225,11 +281,18 @@ End Property
 'Init Method
 '-------------------------------------------------------------------------
 
-Public Sub InItModel(ByVal mainData As Variant, ByVal ListofCurrencies As Variant, ByVal ListOfUnits As Variant, Optional TargetIndex As Long = 0)
+Public Sub InItModel(ByVal mainData As Variant, _
+                     ByVal ListofCurrencies As Variant, _
+                     ByVal ListOfUnits As Variant, _
+                     ByVal ListOfSalesOrganizations As Variant, _
+                     ByVal ListOfDistributionChannels As Variant, _
+                     Optional TargetIndex As Long = 0)
     If Validator Is Nothing Then Set Validator = New ValidationServices
     Me.mainTable = mainData
     Me.curenciesList = ListofCurrencies
     Me.unitOfMeasuresList = ListOfUnits
+    Me.salesOrganizationList = ListOfSalesOrganizations
+    Me.distributionChannelList = ListOfDistributionChannels
     Me.index = TargetIndex
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
@@ -251,6 +314,8 @@ Public Sub SetPropertiesToNewRecordState(ByVal ActiveUserID As String)
         .recordStatus = RECORDSTATUS_PENDING
         .userID = ActiveUserID
         .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
+        .conditionType = "Y0PR"
+        .salesOrganization = "2961"
         .unitOfPrice = 1
         .validFromDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
         .validToDate = END_OF_THE_EARTH
@@ -269,6 +334,9 @@ Public Sub SetPropertiesToUpdateRecordState()
         .userID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_userID)
         .recordStatus = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordStatus)
         .statusChangeDate = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_statusChangeDate)
+        .conditionType = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_ConditionType)
+        .salesOrganization = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_SalesOrganization)
+        .distributionChannel = Me.mainTable(TargetRow, MainTableFields.Col_Main_DistributionChannel)
         .customerID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_customerID)
         .materialID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_materialID)
         .price = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_price)
@@ -286,6 +354,9 @@ Private Sub SetPropertiesToNullState()
         .userID = vbNullString
         .recordStatus = vbNullString
         .statusChangeDate = vbNullString
+        .conditionType = vbNullString
+        .salesOrganization = vbNullString
+        .distributionChannel = vbNullString
         .customerID = vbNullString
         .materialID = vbNullString
         .price = vbNullString
@@ -304,7 +375,7 @@ End Sub
 Public Function IsEverythingOkayToSaveRecord() As Variant
     IsEverythingOkayToSaveRecord = Validator.IsEverythingOkay(this.CheckFields, _
                                                             modDataSources.arrListOfColumns_MAIN_Table, _
-                                                            MainTableFields.COL_MAIN_customerID, _
+                                                            MainTableFields.COL_MAIN_ConditionType, _
                                                             MainTableFields.COL_MAIN_validToDate)
 End Function
 
@@ -317,7 +388,25 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
     
     'Check the validation of field based on field index
     Select Case FieldIndex
-    
+        
+        Case MainTableFields.COL_MAIN_ConditionType
+            'Check 1
+            IsValidField = Validator.IsNotNullValue(Me.conditionType, VBA.TypeName(Me.conditionType))
+            If Not IsValidField = True Then Exit Function
+            'check 2
+            IsValidField = Validator.IsValidStringLength(Me.conditionType, 4)
+            If Not IsValidField = True Then Exit Function
+            
+        Case MainTableFields.COL_MAIN_SalesOrganization
+            'Check 1
+            IsValidField = Validator.IsNotNullValue(Me.salesOrganization, VBA.TypeName(Me.salesOrganization))
+            If Not IsValidField = True Then Exit Function
+            
+        Case MainTableFields.Col_Main_DistributionChannel
+            'Check 1
+            IsValidField = Validator.IsNotNullValue(Me.distributionChannel, VBA.TypeName(Me.distributionChannel))
+            If Not IsValidField = True Then Exit Function
+        
         Case MainTableFields.COL_MAIN_customerID
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.customerID, VBA.TypeName(Me.customerID))

@@ -80,7 +80,7 @@ End Property
 Private Property Get ContextTableHeaders() As Variant
     Dim tmp As Variant
     Dim I As Long
-    ReDim tmp(1 To 1, 1 To 13)
+    ReDim tmp(1 To 1, 1 To 16)
     For I = 1 To UBound(tmp, 2)
         tmp(1, I) = this.ContextTableHeaders(I - 1)
     Next I
@@ -152,7 +152,10 @@ Private Sub IServices_AddNewRecordToContextTable(ParamArray ContextLineItems() A
                               ContextLineItems(8), _
                               ContextLineItems(9), _
                               ContextLineItems(10), _
-                              ContextLineItems(11))
+                              ContextLineItems(11), _
+                              ContextLineItems(12), _
+                              ContextLineItems(13), _
+                              ContextLineItems(14))
     IServices_IsEverythingOkayInEngine = Repository.IsEverythingOkay
 End Sub
 
@@ -169,7 +172,10 @@ Private Sub IServices_UpdateRecordOfContextTable(ByVal index As Long, ParamArray
                                  ContextLineItems(8), _
                                  ContextLineItems(9), _
                                  ContextLineItems(10), _
-                                 ContextLineItems(11))
+                                 ContextLineItems(11), _
+                                 ContextLineItems(12), _
+                                 ContextLineItems(13), _
+                                 ContextLineItems(14))
     IServices_IsEverythingOkayInEngine = Repository.IsEverythingOkay
 End Sub
 

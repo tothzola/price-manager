@@ -24,6 +24,8 @@ Private Type TAppModelComponents
     userTypeList As Variant
     userStatusList As Variant
     recordStatusList As Variant
+    salesOrganizationList As Variant
+    distributionChannelsList As Variant
   'Active User Info
     ActiveUserID As String
     ActiveUserStatus As String
@@ -170,6 +172,26 @@ End Property
 
 '-------------------------------------------------------------------------
 
+Public Property Get distributionChannelsList() As Variant
+    distributionChannelsList = this.distributionChannelsList
+End Property
+
+Public Property Let distributionChannelsList(ByVal vNewValue As Variant)
+    this.distributionChannelsList = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get salesOrganizationList() As Variant
+    salesOrganizationList = this.salesOrganizationList
+End Property
+
+Public Property Let salesOrganizationList(ByVal vNewValue As Variant)
+    this.salesOrganizationList = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
 Public Property Get ActiveUserIndex() As Variant
     Dim I As Long
     For I = 1 To UBound(Me.usersTable, 1)
@@ -200,7 +222,9 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
                     ByVal ListOfUnits As Variant, _
                     ByVal ListofUserTypes As Variant, _
                     ByVal ListofUserStatus As Variant, _
-                    ByVal ListOfRecordStatus As Variant)
+                    ByVal ListOfRecordStatus As Variant, _
+                    ByVal ListOfSalesOrganizations As Variant, _
+                    ByVal ListOfDistributionChannels As Variant)
     Set Validator = New ValidationServices
     'Tables of The Applications
     Me.mainTable = MainTableContent
@@ -211,6 +235,8 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
     Me.userTypeList = ListofUserTypes
     Me.userStatusList = ListofUserStatus
     Me.recordStatusList = ListOfRecordStatus
+    Me.salesOrganizationList = ListOfSalesOrganizations
+    Me.distributionChannelsList = ListOfDistributionChannels
 End Sub
 
 '-------------------------------------------------------------------------
@@ -259,7 +285,7 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
 End Function
 
 'Following function will pick unique list from the list!
-Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal targetColumn As Long) As Variant
+Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal TargetColumn As Long) As Variant
     'Driving Paramters
     Dim Records()               As String
     Dim Record                  As Variant
@@ -279,8 +305,8 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
     TotalMatchingRows = 0
     Set dict = New Dictionary
     For I = firstRow + 1 To lastRow
-        If Not dict.Exists(ContextTable(I, targetColumn)) Then
-            dict.Add ContextTable(I, targetColumn), ContextTable(I, targetColumn)
+        If Not dict.Exists(ContextTable(I, TargetColumn)) Then
+            dict.Add ContextTable(I, TargetColumn), ContextTable(I, TargetColumn)
             MatchedRecords = MatchedRecords & I & SEPERATOR_ITEM
             TotalMatchingRows = TotalMatchingRows + 1
         End If
@@ -299,7 +325,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
     Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
     I = 1
     For Each Record In Records
-        tmp(I) = ContextTable(Record, targetColumn)
+        tmp(I) = ContextTable(Record, TargetColumn)
         I = I + 1
     Next Record
     'return value
