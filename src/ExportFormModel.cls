@@ -376,7 +376,11 @@ IgnoreThisRow:
     I = 1
     For Each Record In Records
         For J = firstColumnIndex To lastColumnIndex
-            tmp(I, J) = Me.dataTable(Record, J)
+            If VBA.IsNumeric(Me.dataTable(Record, J)) Then
+                tmp(I, J) = "'" & Me.dataTable(Record, J)
+            Else
+                tmp(I, J) = Me.dataTable(Record, J)
+            End If
         Next J
         I = I + 1
     Next Record
