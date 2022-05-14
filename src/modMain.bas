@@ -35,7 +35,9 @@ Public Sub MainPAM()
                                     modDataSources.arrListOfUnitOfMeasure, _
                                     modDataSources.arrListofTypesOfUser, _
                                     modDataSources.arrListofStatusOfUser, _
-                                    modDataSources.arrRecordStatusesList)
+                                    modDataSources.arrRecordStatusesList, _
+                                    modDataSources.arrSalesOrganizationsList, _
+                                    modDataSources.arrDistributionChannelsList)
                               
         'Attach and Configure VIEW with Application
         Call .InItApp
