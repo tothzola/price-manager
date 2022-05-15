@@ -121,6 +121,25 @@ Public Function arrListOfFields_EXPORT_Form() As Variant
                                         "Record Status")
 End Function
 
+Public Function arrHeaders_Export_Report() As Variant
+    arrHeaders_Export_Report = Array("Index", _
+                                        "Record ID", _
+                                        "User", _
+                                        "Record Status", _
+                                        "Status Change Date", _
+                                        "Condition Type", _
+                                        "Sales Organization", _
+                                        "Distribution Channel", _
+                                        "Customer ID", _
+                                        "Material ID", _
+                                        "Price", _
+                                        "CurrencyField", _
+                                        "Unit Of Price", _
+                                        "Unit Of Measure", _
+                                        "Valid From Date", _
+                                        "Valid To Date")
+End Function
+
 'following functions returns array objects that will be used as dataSource for the comboboxes.
 'If the combobox uses dynamic data then ofcourse it can be managed from the database application
 'but generally, some lists never evolve with the time and if situation occures then
