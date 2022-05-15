@@ -502,9 +502,10 @@ Private Sub presenterExportFormFrame_OpenExportForm(ByVal EFModel As ExportFormM
     'Hydrate Export Frame Model Properties
     With model
         EFModel.InItModel .mainTable, _
-                            .GetUniqueListFromColumn(.mainTable, MainTableFields.COL_MAIN_customerID), _
-                            .GetUniqueListFromColumn(.mainTable, MainTableFields.COL_MAIN_userID), _
-                            .recordStatusList
+                          .usersTable, _
+                          .GetUniqueListFromColumn(.mainTable, MainTableFields.COL_MAIN_customerID), _
+                          .GetUniqueListFromColumn(.usersTable, UsersTableFields.COL_userName), _
+                          .recordStatusList
     End With
     'Open Export Form Frame
     Call view.UserWantsToOpenExportFormFrame(EFModel)
@@ -520,7 +521,7 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
                              MainTableFields.COL_MAIN_validToDate)
         .DateFormat = DATEFORMAT_FRONTEND
         .LoadData = EFModel.exportTable
-        .Headers = modDataSources.arrListOfColumns_MAIN_Table
+        .Headers = modDataSources.arrHeaders_Export_Report
         .GenerateReport
         'After Report Generation process
         If .IsReportGeneratedSuccessfully Then
