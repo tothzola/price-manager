@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PAM 
    Caption         =   "Price Approval Manager V1.0"
-   ClientHeight    =   6015
+   ClientHeight    =   6030
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   2535
@@ -253,7 +253,7 @@ Private Sub cmdApproveRecord_Click()
     'Hydrate Model Property
     With PriceModel
         .recordStatus = RECORDSTATUS_APPROVED
-        .statusChangeDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+        .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
     End With
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_APPROVE)
 End Sub
@@ -262,7 +262,7 @@ Private Sub cmdRejectRecord_Click()
     'Hydrate Model Property
     With PriceModel
         .recordStatus = RECORDSTATUS_REJECTED
-        .statusChangeDate = VBA.Format(VBA.Now, DATEFORMAT_BACKEND)
+        .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
     End With
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_REJECT)
 End Sub
@@ -308,7 +308,9 @@ Private Sub cmdResetExportForm_Click()
 End Sub
 
 Private Sub cmdExport_Click()
+    Me.MousePointer = fmMousePointerAppStarting
     RaiseEvent ExportReport
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 '------------------------------------------------------------------------------
@@ -319,14 +321,14 @@ Private Sub txtDateFrom_Change()
     'Hydrate model property
     ExportModel.FromDate = Me.txtDateFrom.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format(VBA.Now, DATEFORMAT_FRONTEND)
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
 End Sub
 
 Private Sub txtDateTo_Change()
     'Hydrate model property
     ExportModel.ToDate = Me.txtDateTo.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format(END_OF_THE_EARTH, DATEFORMAT_FRONTEND)
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
 End Sub
 
 Private Sub cmbCustomerID_Change()
@@ -369,6 +371,27 @@ End Sub
 '-------------------------------------------------------------------------
 'Price Form Fields Change Events
 '-------------------------------------------------------------------------
+    
+Private Sub txtConditionType_Change()
+    'Hydrate Model Property
+    PriceModel.conditionType = Me.txtConditionType.Value
+    'Validate field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtConditionType, PriceModel.IsValidField(MainTableFields.COL_MAIN_ConditionType), TYPE_FIXEDLENGTHSTRING, 4
+End Sub
+
+Private Sub cmbSalesOrganization_Change()
+    'Hydrate model property
+    PriceModel.salesOrganization = Me.cmbSalesOrganization.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbSalesOrganization, PriceModel.IsValidField(MainTableFields.COL_MAIN_SalesOrganization), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
+End Sub
+
+Private Sub cmbDistributionChannel_Change()
+    'Hydrate model property
+    PriceModel.distributionChannel = Me.cmbDistributionChannel.Value
+    'Validate Field
+    ExtendedMethods.UpdateControlAfterValidation Me.cmbDistributionChannel, PriceModel.IsValidField(MainTableFields.Col_Main_DistributionChannel), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
+End Sub
     
 Private Sub txtCustomerID_Change()
     'Hydrate model property
@@ -540,7 +563,7 @@ Public Sub InItApplication(ByVal ApplicationModel As AppModel)
         'Re-Dimension UserForm
         Set .TargetForm = Me
         .formWidth = 600
-        .formHeight = 360
+        .formHeight = 400
         Call .ReDimensionForm
         'Always On Frame Properties
         Set .frameAlwaysOn = Me.frameInfo
@@ -552,12 +575,12 @@ Public Sub InItApplication(ByVal ApplicationModel As AppModel)
         .sideFrameTop = 90
         .sideFrameLeft = 6
         .sideFrameWidth = 140
-        .sideFrameHeight = 234
+        .sideFrameHeight = 274
         'Main Panel Frames Properties
         .mainFrameTop = 6
         .mainFrameLeft = 152
         .mainFrameWidth = 430
-        .mainFrameHeight = 318
+        .mainFrameHeight = 358
         'plug static data sources to the relative comboboxes
         Call .HydrateComboBox(Me.cmbCurrency, modDataSources.arrListofCurrencies)
         Call .HydrateComboBox(Me.cmbUnitOfMeasure, modDataSources.arrListOfUnitOfMeasure)
@@ -648,7 +671,11 @@ End Sub
 
 Public Sub UserWantsToOpenPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel, ByVal operation As FormOperation)
     'open Price Form Interface
-    Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
+    If MainModel.ActiveUserType = USERTYPE_CLIENT Then
+        Call ExtendedMethods.ActivateFrames(Me.frameClient, Me.framePriceForm)
+    Else
+        Call ExtendedMethods.ActivateFrames(Me.frameApprover, Me.framePriceForm)
+    End If
     'Reset Price Form Frame
     If operation = OPERATION_NEW Then
         Call ResetPriceFormFrame(PriceFormFrameModel, OPERATION_NEW)
@@ -743,15 +770,17 @@ Private Sub ResetPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel, ByV
         'Attach Model
         If PriceModel Is Nothing Then Set PriceModel = PriceFormFrameModel
         'clear values of Price form frame fields
-        Call ExtendedMethods.SetStateofControlsToNullState(.lblMainRecordStatus, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+        Call ExtendedMethods.SetStateofControlsToNullState(.lblMainRecordStatus, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
         'Repopulate ComboBox And ListBox
         .cmbCurrency.List = PriceModel.curenciesList
         .cmbUnitOfMeasure.List = PriceModel.unitOfMeasuresList
+        .cmbSalesOrganization.List = PriceModel.salesOrganizationList
+        .cmbDistributionChannel.List = PriceModel.distributionChannelList
         'put default values based on operation
         If operation = OPERATION_NEW Then
             Call StateForNewRecordForPriceForm
             'Set Focus
-            .txtCustomerID.SetFocus
+            .cmbDistributionChannel.SetFocus
         ElseIf operation = OPERATION_UPDATE Then
             Call StateForUpdateRecordForPriceForm
         End If
@@ -768,8 +797,8 @@ Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
         .lblListType = DataModel.ListTitle
         'Filling up listbox with criteria
         With .lstRecordsContainer
-            .ColumnCount = 13
-            .ColumnWidths = "35;65;35"
+            .ColumnCount = 16
+            .ColumnWidths = "35;65;50"
             .List = DataModel.dataTable
         End With
         'Allow Approver in any case to Approve or Reject Again!
@@ -805,8 +834,8 @@ Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
         'update model
         Call ExportModel.SetPropertiesToDefaultState
         'input field state
-        .txtDateFrom.Value = VBA.Format(ExportModel.FromDate, DATEFORMAT_FRONTEND)
-        .txtDateTo.Value = VBA.Format(ExportModel.ToDate, DATEFORMAT_FRONTEND)
+        .txtDateFrom.Value = VBA.Format$(ExportModel.FromDate, DATEFORMAT_FRONTEND)
+        .txtDateTo.Value = VBA.Format$(ExportModel.ToDate, DATEFORMAT_FRONTEND)
     End With
 End Sub
 
@@ -943,14 +972,18 @@ Private Sub StateForNewRecordForPriceForm()
         Call PriceModel.SetPropertiesToNewRecordState(MainModel.ActiveUserID)
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
-        .txtCustomerID.Value = PriceModel.customerID
-        .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
-        .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
+        .txtConditionType.Value = PriceModel.conditionType
+        .cmbSalesOrganization.Value = PriceModel.salesOrganization
+        .txtPriceUnit.Value = PriceModel.unitOfPrice
+        .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
+        .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
+            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
         Else
             Call ShowApprovalRejectionButtons(False)
+            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
         End If
         'Other Buttons State
         .cmdAddNewRecord.Enabled = True
@@ -966,18 +999,21 @@ Private Sub StateForUpdateRecordForPriceForm()
         Call PriceModel.SetPropertiesToUpdateRecordState
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
+        .txtConditionType.Value = PriceModel.conditionType
+        .cmbSalesOrganization.Value = PriceModel.salesOrganization
+        .cmbDistributionChannel.Value = PriceModel.distributionChannel
         .txtCustomerID.Value = PriceModel.customerID
         .txtMaterialID.Value = PriceModel.materialID
         .txtPrice.Value = PriceModel.price
         .cmbCurrency.Value = PriceModel.currencyType
         .txtPriceUnit.Value = PriceModel.unitOfPrice
         .cmbUnitOfMeasure.Value = PriceModel.unitOfMeasure
-        .txtValidFrom.Value = VBA.Format(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
-        .txtValidTo.Value = VBA.Format(PriceModel.validToDate, DATEFORMAT_FRONTEND)
+        .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
+        .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
-            Call ExtendedMethods.FormEditingState(False, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
             'Other Buttons State
             .cmdAddNewRecord.Enabled = False
             .cmdUpdateRecord.Enabled = False
@@ -985,7 +1021,7 @@ Private Sub StateForUpdateRecordForPriceForm()
             .cmdResetPriceForm.Enabled = False
         Else
             Call ShowApprovalRejectionButtons(False)
-            Call ExtendedMethods.FormEditingState(True, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
             'Other Buttons State
             .cmdAddNewRecord.Enabled = False
             .cmdUpdateRecord.Enabled = True

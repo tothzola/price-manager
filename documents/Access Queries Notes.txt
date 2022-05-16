@@ -1,3 +1,6 @@
+Private Const CONNECTION_STRING As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & DatabasePath & ";Persist Security Info=False;"
+
+
 > Get all the table data 
 	
 	SELECT * FROM table_name;

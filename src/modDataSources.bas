@@ -5,7 +5,7 @@ Option Explicit
 
 Public Enum TablesOfThisApplication
     TABLE_MAINRECORDS
-    TABLE_USERS
+    Table_Users
 End Enum
 
 Public Enum PasswordManagerFields
@@ -29,6 +29,9 @@ Public Enum MainTableFields
     COL_MAIN_userID
     COL_MAIN_recordStatus
     COL_MAIN_statusChangeDate
+    COL_MAIN_ConditionType
+    COL_MAIN_SalesOrganization
+    Col_Main_DistributionChannel
     COL_MAIN_customerID
     COL_MAIN_materialID
     COL_MAIN_price
@@ -52,6 +55,28 @@ End Enum
 Public Const USERS_TABLE_NAME As String = "Table_Users"
 Public Const MAIN_TABLE_NAME As String = "Table_Main"
 
+'Connection Strings
+
+'ACCESS
+
+Public Function DatabaseFilePath_Access() As String
+    DatabaseFilePath_Access = ThisWorkbook.Path & Application.PathSeparator & "DatabaseAccess" _
+                    & Application.PathSeparator & "PriceApprovalDatabase.accdb"
+End Function
+
+Public Function GetConnectionString(ByVal TypeOfRepository As RepositoryType) As String
+    Select Case TypeOfRepository
+        Case RepositoryType.TYPE_EXCEL_NAMED_RANGE
+            GetConnectionString = vbNullString
+        Case RepositoryType.TYPE_ACCESS
+            GetConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & DatabaseFilePath_Access & ";Persist Security Info=False;"
+        Case RepositoryType.TYPE_MYSQL
+            GetConnectionString = vbNullString
+        Case RepositoryType.TYPE_SHAREPOINT_LIST
+            GetConnectionString = vbNullString
+    End Select
+End Function
+
 'Elements of The Table
 
 Public Function arrListOfFields_PASSWORD_MANAGER() As Variant
@@ -61,28 +86,31 @@ Public Function arrListOfFields_PASSWORD_MANAGER() As Variant
 End Function
 
 Public Function arrListOfColumns_USERS_TABLE() As Variant
-    arrListOfColumns_USERS_TABLE = Array("index", _
-                                        "User ID", _
-                                        "User Status", _
-                                        "User Type", _
+    arrListOfColumns_USERS_TABLE = Array("Index", _
+                                        "User_ID", _
+                                        "User_Status", _
+                                        "User_Type", _
                                         "Username", _
                                         "Password")
 End Function
 
 Public Function arrListOfColumns_MAIN_Table() As Variant
-    arrListOfColumns_MAIN_Table = Array("index", _
-                                        "Record ID", _
-                                        "User ID", _
-                                        "Record Status", _
-                                        "Status Change Date", _
-                                        "Customer ID", _
-                                        "Material ID", _
+    arrListOfColumns_MAIN_Table = Array("Index", _
+                                        "Record_ID", _
+                                        "User_ID", _
+                                        "Record_Status", _
+                                        "Status_Change_Date", _
+                                        "Condition_Type", _
+                                        "Sales_Organization", _
+                                        "Distribution_Channel", _
+                                        "Customer_ID", _
+                                        "Material_ID", _
                                         "Price", _
-                                        "Currency", _
-                                        "Unit Of Price", _
-                                        "Unit Of Measure", _
-                                        "Valid From Date", _
-                                        "Valid To Date")
+                                        "CurrencyField", _
+                                        "Unit_Of_Price", _
+                                        "Unit_Of_Measure", _
+                                        "Valid_From_Date", _
+                                        "Valid_To_Date")
 End Function
 
 Public Function arrListOfFields_EXPORT_Form() As Variant
@@ -91,6 +119,25 @@ Public Function arrListOfFields_EXPORT_Form() As Variant
                                         "Customer ID", _
                                         "User ID", _
                                         "Record Status")
+End Function
+
+Public Function arrHeaders_Export_Report() As Variant
+    arrHeaders_Export_Report = Array("Index", _
+                                        "Record ID", _
+                                        "User", _
+                                        "Record Status", _
+                                        "Status Change Date", _
+                                        "Condition Type", _
+                                        "Sales Organization", _
+                                        "Distribution Channel", _
+                                        "Customer ID", _
+                                        "Material ID", _
+                                        "Price", _
+                                        "CurrencyField", _
+                                        "Unit Of Price", _
+                                        "Unit Of Measure", _
+                                        "Valid From Date", _
+                                        "Valid To Date")
 End Function
 
 'following functions returns array objects that will be used as dataSource for the comboboxes.
@@ -115,5 +162,13 @@ Public Function arrListofStatusOfUser() As Variant
 End Function
 
 Public Function arrRecordStatusesList() As Variant
-    arrRecordStatusesList = Array("", "PENDING", "APPROVED", "REJECTED")
+    arrRecordStatusesList = Array(vbNullString, "PENDING", "APPROVED", "REJECTED")
+End Function
+
+Public Function arrSalesOrganizationsList() As Variant
+    arrSalesOrganizationsList = Array("2961")
+End Function
+
+Public Function arrDistributionChannelsList() As Variant
+    arrDistributionChannelsList = Array("01", "GY", "HD")
 End Function

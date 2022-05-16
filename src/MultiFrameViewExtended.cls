@@ -71,7 +71,7 @@ Public mainFrameHeight As Integer
 Public Sub ReformatListBoxColumns(ByVal ctrl As MSForms.ListBox, ByVal columnIndex As Long, ByVal formatType As DataTypes)
     Dim I As Long
     With ctrl
-        For I = 1 To .ListCount - 1 Step 1
+        For I = 1 To .ListCount - 1
             .List(I, columnIndex - 1) = ApplyFormat(.List(I, columnIndex - 1), formatType)
         Next I
     End With
@@ -80,11 +80,12 @@ End Sub
 'Following function will return string in selected format!
 
 Public Function ApplyFormat(ByVal inputValue As String, ByVal formatType As DataTypes) As String
+    If inputValue <> vbNullString Then inputValue = VBA.Trim$(inputValue)
     Select Case formatType
         Case DataTypes.TYPE_CURRENCY
             ApplyFormat = FormatStringToCurrency(inputValue)
         Case DataTypes.TYPE_DATE
-            ApplyFormat = Format(inputValue, DATEFORMAT_FRONTEND)
+            ApplyFormat = Format$(inputValue, DATEFORMAT_FRONTEND)
     End Select
 End Function
 
@@ -382,8 +383,8 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
         End If
         
     'Get Sepearator String
-    ThousandSeperator = Application.ThousandsSeparator
-    DecimalSeperator = Application.DecimalSeparator
+    ThousandSeperator = Application.International(xlThousandsSeparator)
+    DecimalSeperator = Application.International(xlDecimalSeparator)
     
     'check if decimal seperator has been used or not ?
     If VBA.InStr(1, inputValue, DecimalSeperator) > 0 Then
@@ -395,11 +396,11 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
             DecimalPart = ArrDecimalNumber(1)
         ElseIf LenDecimalPart = 3 Then
             If ArrDecimalNumber(0) = 0 Then
-                WholeNumberPart = VBA.Left(ArrDecimalNumber(1), 1)
+                WholeNumberPart = VBA.Left$(ArrDecimalNumber(1), 1)
             Else
-                WholeNumberPart = ArrDecimalNumber(0) & VBA.Left(ArrDecimalNumber(1), 1)
+                WholeNumberPart = ArrDecimalNumber(0) & VBA.Left$(ArrDecimalNumber(1), 1)
             End If
-            DecimalPart = VBA.Right(ArrDecimalNumber(1), 2)
+            DecimalPart = VBA.Right$(ArrDecimalNumber(1), 2)
         ElseIf LenDecimalPart = 1 Then
             FormatStringToCurrency = vbNullString
             GoTo CleanExit
@@ -411,11 +412,11 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
         If LenInputValue <= 2 Then
             WholeNumberPart = 0
         Else
-            WholeNumberPart = VBA.Left(inputValue, LenInputValue - 2)
+            WholeNumberPart = VBA.Left$(inputValue, LenInputValue - 2)
         End If
         'get decimal number part
         If LenInputValue > 1 Then
-            DecimalPart = VBA.Right(inputValue, 2)
+            DecimalPart = VBA.Right$(inputValue, 2)
         Else
             DecimalPart = "0" & inputValue
         End If
@@ -436,17 +437,17 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
         J = 1
         For I = VBA.Len(WholeNumberPart) To 1 Step -1
             If J = 3 Then
-                tmp = ThousandSeperator & VBA.Mid(WholeNumberPart, I, 1) & tmp
+                tmp = ThousandSeperator & VBA.Mid$(WholeNumberPart, I, 1) & tmp
                 J = 0
             Else
-                tmp = VBA.Mid(WholeNumberPart, I, 1) & tmp
+                tmp = VBA.Mid$(WholeNumberPart, I, 1) & tmp
             End If
             J = J + 1
         Next I
         'Clean whole number part
-        If VBA.Left(tmp, 1) = ThousandSeperator Then
-            tmp = VBA.Right(tmp, VBA.Len(tmp) - 1)
-            tmp = VBA.Trim(tmp)
+        If VBA.Left$(tmp, 1) = ThousandSeperator Then
+            tmp = VBA.Right$(tmp, VBA.Len(tmp) - 1)
+            tmp = VBA.Trim$(tmp)
         End If
         'Submission!
         WholeNumberPart = tmp
@@ -470,3 +471,5 @@ EhhErr:
     Resume CleanExit
     
 End Function
+
+

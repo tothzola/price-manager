@@ -5,10 +5,10 @@ Option Explicit
 Public Const SIGN As String = "Demo Project"
 
 'GENERAL SETTINGS
-Public Const DATEFORMAT_BACKEND As String = "DD-MMM-YYYY"
+Public Const DATEFORMAT_BACKEND As String = "yyyy-mm-dd;@"
 Public Const DATEFORMAT_FRONTEND As String = "dd.mm.yyyy;@"
-Public Const END_OF_THE_EARTH As String = "31-Dec-9999"
-Public Const START_OF_THE_CENTURY As String = "01-Jan-2000"
+Public Const END_OF_THE_EARTH As String = "9999-12-31"
+Public Const START_OF_THE_CENTURY As String = "2000-01-01"
 
 'NUMERICAL RANGES
 Public Const INDEX_RECORDID_FIRST As Long = 1000000
@@ -61,6 +61,7 @@ Public Enum RepositoryType
     TYPE_EXCEL_NAMED_RANGE
     TYPE_SHAREPOINT_LIST
     TYPE_MYSQL
+    TYPE_ACCESS
 End Enum
 
 Public Enum UserApprovalStatus
@@ -116,5 +117,15 @@ Public Enum ValidationCheckTypes
     TYPE_STRINGMATCH
     TYPE_DATEBETWEENRANGE
 End Enum
+
+Public Function EXPORTREPORT_CURRENCYFORMAT() As String
+    'New Currency Format = "_(* #,##0.00_);_(* (#,##0.00);_(* '-'??_);_(@_)"
+    EXPORTREPORT_CURRENCYFORMAT = "_(* #" & Application.International(xlThousandsSeparator) & "##0" & _
+                                            Application.International(xlDecimalSeparator) & "00_);_(* (#" & _
+                                            Application.International(xlThousandsSeparator) & "##0" & _
+                                            Application.International(xlDecimalSeparator) & _
+                                            "00);_(* '-'??_);_(@_)"
+End Function
+
 
 

@@ -10,17 +10,37 @@ Attribute VB_Exposed = False
 '@Folder "Repository"
 Option Explicit
 
-Public Function GetRecords(ByVal TargetNamedRange As String) As Variant
+'public properties
+
+Public Property Get IsEverythingOkay() As Boolean
+End Property
+
+Public Property Let IsEverythingOkay(ByVal vNewValue As Boolean)
+End Property
+
+'public methods
+
+Public Sub InItRepository(ByVal ContextTableName As String, _
+                            Optional ContextConnectionString As String = vbNullString, _
+                            Optional ContextTableHeaders As Variant = vbNullString)
+End Sub
+
+Public Sub CheckTableStatus()
+End Sub
+
+Public Function GetRecords() As Variant
 End Function
 
-Public Function GetRecordsByCondition(ByVal TargetNamedRange As String, ByVal columnIndex As Long, ByVal condition As Variant)
+Public Function GetRecordsByCondition(ByVal columnIndex As Long, ByVal condition As Variant)
 End Function
 
-Public Sub AddRecord(ByVal TargetNamedRange As String, ParamArray LineItems() As Variant)
+Public Sub AddRecord(ParamArray LineItems() As Variant)
 End Sub
 
-Public Sub UpdateRecord(ByVal TargetNamedRange As String, ByVal TargetIndex As Long, ParamArray LineItems() As Variant)
+Public Sub UpdateRecord(ByVal TargetIndex As Long, ParamArray LineItems() As Variant)
 End Sub
 
-Public Sub DeleteRecord(ByVal TargetNamedRange As String, ByVal TargetIndex As Long)
+Public Sub DeleteRecord(ByVal TargetIndex As Long)
 End Sub
+
+

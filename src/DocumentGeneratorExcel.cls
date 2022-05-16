@@ -183,12 +183,6 @@ End Sub
 Private Sub ApplyCurrencyFormatToColumns()
     Dim col As Variant
     For Each col In Me.CurrencyColumns
-        With TargetSheet.Columns(col)
-            .NumberFormat = Me.CURRENCYFORMAT
-            .HorizontalAlignment = xlRight
-            .Cells(1, 1).HorizontalAlignment = xlCenter
-        End With
+        TargetSheet.Columns(col).NumberFormat = Me.CURRENCYFORMAT
     Next col
 End Sub
-
-

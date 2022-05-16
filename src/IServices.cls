@@ -11,19 +11,17 @@ Attribute VB_Exposed = False
 Option Explicit
 
 'public properties
-
-Public Property Set Repository(ByVal vNewValue As IRepository)
+Public Property Get IsEverythingOkayInEngine() As Boolean
 End Property
 
-Public Property Let ContextTableName(ByVal vNewValue As String)
-End Property
-
-Public Property Let contextLineItems(ByVal vNewValue As Variant)
+Public Property Let IsEverythingOkayInEngine(ByVal vNewValue As Boolean)
 End Property
 
 'public methods for communication
-
-Public Sub InItService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String)
+Public Sub InItService(ByVal SelectedRepositoryType As RepositoryType, _
+                        ByVal TableName As String, _
+                        ByVal TableHeaders As Variant, _
+                        Optional ByVal ContextConnectionString As String = vbNullString)
 End Sub
 
 Public Function GetListOfAllRecordsFromContextTable() As Variant
@@ -32,14 +30,12 @@ End Function
 Public Function GetSpecificListOfRecordsFromContextTable(ByVal ColumnReference As Long, ByVal SearchCondition As Variant) As Variant
 End Function
 
-Public Sub AddNewRecordToContextTable(ParamArray contextLineItems() As Variant)
+Public Sub AddNewRecordToContextTable(ParamArray ContextLineItems() As Variant)
 End Sub
 
-Public Sub UpdateRecordOfContextTable(ByVal index As Long, ParamArray contextLineItems() As Variant)
+Public Sub UpdateRecordOfContextTable(ByVal index As Long, ParamArray ContextLineItems() As Variant)
 End Sub
 
 Public Sub DeleteRecordofContextTable(ByVal index As Long)
 End Sub
-
-
 

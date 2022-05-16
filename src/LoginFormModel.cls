@@ -84,7 +84,7 @@ End Property
 
 Public Property Get userStatus() As String
     Dim I As Long
-    For I = 1 To UBound(Me.usersData, 1) Step 1
+    For I = 1 To UBound(Me.usersData, 1)
         If Me.usersData(I, UsersTableFields.COL_userName) = Me.userName Then
             Me.TargetIndex = I
             userStatus = Me.usersData(I, UsersTableFields.COL_userStatus)

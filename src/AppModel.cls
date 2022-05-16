@@ -10,6 +10,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 '-------------------------------------------------------------------------
+'Private Type Componenets / Enums
+'-------------------------------------------------------------------------
 
 Private Type TAppModelComponents
   'Validation Services
@@ -22,6 +24,8 @@ Private Type TAppModelComponents
     userTypeList As Variant
     userStatusList As Variant
     recordStatusList As Variant
+    salesOrganizationList As Variant
+    distributionChannelsList As Variant
   'Active User Info
     ActiveUserID As String
     ActiveUserStatus As String
@@ -34,6 +38,8 @@ End Type
 
 Private this As TAppModelComponents
 
+'-------------------------------------------------------------------------
+'Properties
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserPassword() As String
@@ -166,9 +172,29 @@ End Property
 
 '-------------------------------------------------------------------------
 
+Public Property Get distributionChannelsList() As Variant
+    distributionChannelsList = this.distributionChannelsList
+End Property
+
+Public Property Let distributionChannelsList(ByVal vNewValue As Variant)
+    this.distributionChannelsList = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get salesOrganizationList() As Variant
+    salesOrganizationList = this.salesOrganizationList
+End Property
+
+Public Property Let salesOrganizationList(ByVal vNewValue As Variant)
+    this.salesOrganizationList = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
 Public Property Get ActiveUserIndex() As Variant
     Dim I As Long
-    For I = 1 To UBound(Me.usersTable, 1) Step 1
+    For I = 1 To UBound(Me.usersTable, 1)
         If Me.usersTable(I, UsersTableFields.COL_userName) = Me.ActiveUserName Then
             ActiveUserIndex = Me.usersTable(I, UsersTableFields.COL_INDEX)
             Exit Property
@@ -196,7 +222,9 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
                     ByVal ListOfUnits As Variant, _
                     ByVal ListofUserTypes As Variant, _
                     ByVal ListofUserStatus As Variant, _
-                    ByVal ListOfRecordStatus As Variant)
+                    ByVal ListOfRecordStatus As Variant, _
+                    ByVal ListOfSalesOrganizations As Variant, _
+                    ByVal ListOfDistributionChannels As Variant)
     Set Validator = New ValidationServices
     'Tables of The Applications
     Me.mainTable = MainTableContent
@@ -207,6 +235,8 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
     Me.userTypeList = ListofUserTypes
     Me.userStatusList = ListofUserStatus
     Me.recordStatusList = ListOfRecordStatus
+    Me.salesOrganizationList = ListOfSalesOrganizations
+    Me.distributionChannelsList = ListOfDistributionChannels
 End Sub
 
 '-------------------------------------------------------------------------
@@ -220,7 +250,7 @@ Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplicati
     Select Case TABLE
         Case TablesOfThisApplication.TABLE_MAINRECORDS
             ID = Me.mainTable(TRow, 2)
-        Case TablesOfThisApplication.TABLE_USERS
+        Case TablesOfThisApplication.Table_Users
             ID = Me.usersTable(TRow, 2)
     End Select
     If ID = RecordID Then
@@ -234,6 +264,9 @@ End Function
 'Public Methods and Functions
 '-------------------------------------------------------------------------
 
+'Following function will get new ID for the Table's new record which is _
+incrementing and unique as well
+
 Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
     Select Case TABLE
         Case TablesOfThisApplication.TABLE_MAINRECORDS
@@ -242,7 +275,7 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
             Else
                 GetNewID = VBA.CLng(Me.mainTable(UBound(Me.mainTable, 1), 2)) + 1
             End If
-        Case TablesOfThisApplication.TABLE_USERS
+        Case TablesOfThisApplication.Table_Users
             If UBound(Me.usersTable, 1) = 1 Then
                 GetNewID = INDEX_USERID_FIRST
             Else
@@ -251,16 +284,17 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
     End Select
 End Function
 
-Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal targetColumn As Long) As Variant
+'Following function will pick unique list from the list!
+Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal TargetColumn As Long) As Variant
     'Driving Paramters
     Dim Records()               As String
     Dim Record                  As Variant
-    Dim tmp                     As Variant
     Dim MatchedRecords          As String
     Dim TotalMatchingRows       As Long
     Dim firstRow                As Long
     Dim lastRow                 As Long
     Dim I                       As Long
+    Dim tmp                     As Variant
     Dim dict                    As Dictionary
     'Get Driving parameters
     firstRow = LBound(ContextTable, 1)
@@ -270,9 +304,9 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
     MatchedRecords = vbNullString
     TotalMatchingRows = 0
     Set dict = New Dictionary
-    For I = firstRow + 1 To lastRow Step 1
-        If Not dict.Exists(ContextTable(I, targetColumn)) Then
-            dict.Add ContextTable(I, targetColumn), ContextTable(I, targetColumn)
+    For I = firstRow + 1 To lastRow
+        If Not dict.Exists(ContextTable(I, TargetColumn)) Then
+            dict.Add ContextTable(I, TargetColumn), ContextTable(I, TargetColumn)
             MatchedRecords = MatchedRecords & I & SEPERATOR_ITEM
             TotalMatchingRows = TotalMatchingRows + 1
         End If
@@ -283,7 +317,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
         GetUniqueListFromColumn = tmp
         Exit Function
     Else
-        MatchedRecords = VBA.Left(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
+        MatchedRecords = VBA.Left$(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
     End If
     'Redimentioning the tmp array
     ReDim tmp(TotalMatchingRows)
@@ -291,13 +325,14 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal tar
     Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
     I = 1
     For Each Record In Records
-        tmp(I) = ContextTable(Record, targetColumn)
+        tmp(I) = ContextTable(Record, TargetColumn)
         I = I + 1
     Next Record
     'return value
     GetUniqueListFromColumn = SortOneDimensionalArrayWithNumbers(tmp)
 End Function
 
+'Following function will Sort One Dimensional Array in Ascending Order !
 Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Variant
     Dim FirstItemIndex  As Long
     Dim LastItemIndex   As Long
@@ -306,8 +341,8 @@ Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Var
     Dim J               As Long
     FirstItemIndex = LBound(arr)
     LastItemIndex = UBound(arr)
-    For I = FirstItemIndex To LastItemIndex - 1 Step 1
-        For J = I + 1 To LastItemIndex Step 1
+    For I = FirstItemIndex To LastItemIndex - 1
+        For J = I + 1 To LastItemIndex
             If Val(arr(I)) > Val(arr(J)) Then
                 tmp = arr(J)
                 arr(J) = arr(I)
@@ -324,4 +359,4 @@ Private Sub Class_Terminate()
     Set Validator = Nothing
 End Sub
 
-'-------------------------------------------------------------------------
+
