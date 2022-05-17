@@ -9,7 +9,7 @@ Datamanagement System
 - Users Table (Client, Approver, Manager, Developer)
 
 # Workflow
-![Price Manager](https://user-images.githubusercontent.com/25910991/161135720-d12bbedf-0cf3-46b2-9185-fa6526c7a771.png)
+![Price Manager](https://github.com/tothzola/price-manager/blob/main/pictures/WorkFlow_PriceApprovalManager.jpg)
 
 # I. Client opens application:
 - Complets form data
