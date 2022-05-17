@@ -26,6 +26,18 @@ Datamanagement System
 # Application Form Context:	
 ## Client Fields (features and validation)
 
+### Condition Type
+
+**Feature:** entry is required, default value "Y0PR", prefilled.
+
+### Sales Organization
+
+**Feature:** entry is required, selection value "2961", prefilled.
+
+### Distribution Channel
+
+**Feature:** entry is required, selection values "01", "HD", "GY"
+
 ### Customer
 
 **Feature:** entry is required, numeric filed (format: "######")
@@ -90,7 +102,7 @@ Datamanagement System
 
 ### Price Unit
 
-**Feature:** no entry is required, numeric field (format: "####") 
+**Feature:** no entry is required, numeric field (format: "####"), prefilled value is "1"
 
 **Validation:** maximal 4 char length
 
