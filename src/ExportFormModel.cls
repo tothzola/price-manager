@@ -320,16 +320,6 @@ Public Sub GenerateExportData()
     Dim J                   As Long
     Dim IsValidRow          As Boolean
     
-    'If every criteria field is empty then simply every row of the main data has to be exported!
-    If Me.FromDate = vbNullString And _
-        Me.ToDate = vbNullString And _
-        Me.customerID = vbNullString And _
-        Me.userID = vbNullString And _
-        Me.recordStatus = vbNullString Then
-        Me.exportTable = Me.dataTable
-        Exit Sub
-    End If
-    
     'you are here because user has set some criteria!
     firstRowIndex = LBound(Me.dataTable, 1)
     lastRowIndex = UBound(Me.dataTable, 1)
