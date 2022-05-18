@@ -5,8 +5,9 @@ Application User Interface
 - 
 
 Datamanagement System
-- ex.: Access 
-- Users Table (Client, Approver, Manager, Developer)
+- MS Excel Tables
+- MS Access
+- PostgreSQL (https://heroku.com)
 
 # Workflow
 ![Price Manager](https://github.com/tothzola/price-manager/blob/main/pictures/WorkFlow_PriceApprovalManager.jpg)
