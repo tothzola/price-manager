@@ -59,9 +59,9 @@ Public Const MAIN_TABLE_NAME As String = "Table_Main"
 
 'ACCESS
 
-Public Function DatabaseFilePath_Access() As String
+Private Function DatabaseFilePath_Access() As String
     DatabaseFilePath_Access = ThisWorkbook.Path & Application.PathSeparator & "DatabaseAccess" _
-                    & Application.PathSeparator & "PriceApprovalDatabase.accdb"
+                              & Application.PathSeparator & "PriceApprovalDatabase.accdb"
 End Function
 
 Public Function GetConnectionString(ByVal TypeOfRepository As RepositoryType) As String
@@ -70,8 +70,21 @@ Public Function GetConnectionString(ByVal TypeOfRepository As RepositoryType) As
             GetConnectionString = vbNullString
         Case RepositoryType.TYPE_ACCESS
             GetConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & DatabaseFilePath_Access & ";Persist Security Info=False;"
-        Case RepositoryType.TYPE_MYSQL
-            GetConnectionString = vbNullString
+        Case RepositoryType.TYPE_POSTGRESQL
+            'Attributes of PostgreSQL Connection String
+            Const ServerAddress As String = "ec2-54-164-40-66.compute-1.amazonaws.com"
+            Const PortNumber As Integer = 5432
+            Const DatabaseName As String = "d34l6r35cqkfjd"
+            Const UserName As String = "lxfsytloshyamh"
+            Const Password As String = "6501b05101dba6b4ac0b2f32bbc18b81096f716bfc92343856d01cab6078153f"
+            'Assembling attributes of PostgreSQL to form a ConnectionString
+            GetConnectionString = "Driver={PostgreSQL ANSI}" & _
+                                  ";Server=" & ServerAddress & _
+                                  ";Port=" & PortNumber & _
+                                  ";Database=" & DatabaseName & _
+                                  ";Uid=" & UserName & _
+                                  ";Pwd=" & Password & _
+                                  ";sslmode=require;"
         Case RepositoryType.TYPE_SHAREPOINT_LIST
             GetConnectionString = vbNullString
     End Select
@@ -81,17 +94,17 @@ End Function
 
 Public Function arrListOfFields_PASSWORD_MANAGER() As Variant
     arrListOfFields_PASSWORD_MANAGER = Array("Current Password", _
-                                            "New Password", _
-                                            "Confirm New Password")
+                                             "New Password", _
+                                             "Confirm New Password")
 End Function
 
 Public Function arrListOfColumns_USERS_TABLE() As Variant
     arrListOfColumns_USERS_TABLE = Array("Index", _
-                                        "User_ID", _
-                                        "User_Status", _
-                                        "User_Type", _
-                                        "Username", _
-                                        "Password")
+                                         "User_ID", _
+                                         "User_Status", _
+                                         "User_Type", _
+                                         "Username", _
+                                         "Password")
 End Function
 
 Public Function arrListOfColumns_MAIN_Table() As Variant
@@ -123,21 +136,21 @@ End Function
 
 Public Function arrHeaders_Export_Report() As Variant
     arrHeaders_Export_Report = Array("Index", _
-                                        "Record ID", _
-                                        "User", _
-                                        "Record Status", _
-                                        "Status Change Date", _
-                                        "Condition Type", _
-                                        "Sales Organization", _
-                                        "Distribution Channel", _
-                                        "Customer ID", _
-                                        "Material ID", _
-                                        "Price", _
-                                        "CurrencyField", _
-                                        "Unit Of Price", _
-                                        "Unit Of Measure", _
-                                        "Valid From Date", _
-                                        "Valid To Date")
+                                     "Record ID", _
+                                     "User", _
+                                     "Record Status", _
+                                     "Status Change Date", _
+                                     "Condition Type", _
+                                     "Sales Organization", _
+                                     "Distribution Channel", _
+                                     "Customer ID", _
+                                     "Material ID", _
+                                     "Price", _
+                                     "CurrencyField", _
+                                     "Unit Of Price", _
+                                     "Unit Of Measure", _
+                                     "Valid From Date", _
+                                     "Valid To Date")
 End Function
 
 'following functions returns array objects that will be used as dataSource for the comboboxes.
