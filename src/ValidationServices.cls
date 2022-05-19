@@ -12,6 +12,19 @@ Option Explicit
 
 Private objRegEx As Object
 
+Public Function IsUnique(ByVal TargetTable As Variant, ByVal TargetValue As String, ByVal TargetColumn As Long) As Boolean
+    Dim I As Long
+    Dim flag As Boolean
+    flag = True
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1) Step 1
+        If UCase(TargetTable(I, TargetColumn)) = UCase(TargetValue) Then
+            flag = False
+            Exit For
+        End If
+    Next I
+    IsUnique = flag
+End Function
+
 'Following function is to filter table data by checking with different formats of data!
 'inputValue would be table's Cell Data on which we have test if that cell meets criteria or not
 'checkType would give idea that what kind of checking this is! either we are cheking two numbers, two string or dates?
@@ -205,7 +218,7 @@ Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As S
     End If
     'if validation check confirm then go for the next process
     For I = 1 To UBound(dataTable, 1)
-        If dataTable(I, userCol) = UserName Then
+        If UCase(dataTable(I, userCol)) = UCase(UserName) Then
         userFlag = True
             If dataTable(I, passCol) = Password Then
                 passFlag = True
