@@ -250,8 +250,8 @@ Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplicati
         Case TablesOfThisApplication.TABLE_MAINRECORDS
             TRow = GetTargetRowIndex(Me.mainTable, index, MainTableFields.COL_MAIN_INDEX)
             ID = Me.mainTable(TRow, 2)
-        Case TablesOfThisApplication.Table_Users
-            TRow = GetTargetRowIndex(Me.usersTable, index, MainTableFields.COL_MAIN_INDEX)
+        Case TablesOfThisApplication.TABLE_USERS
+            TRow = GetTargetRowIndex(Me.usersTable, index, UsersTableFields.COL_INDEX)
             ID = Me.usersTable(TRow, 2)
     End Select
     If ID = RecordID Then
@@ -276,7 +276,7 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
             Else
                 GetNewID = VBA.CLng(Me.mainTable(UBound(Me.mainTable, 1), 2)) + 1
             End If
-        Case TablesOfThisApplication.Table_Users
+        Case TablesOfThisApplication.TABLE_USERS
             If UBound(Me.usersTable, 1) = 1 Then
                 GetNewID = INDEX_USERID_FIRST
             Else
