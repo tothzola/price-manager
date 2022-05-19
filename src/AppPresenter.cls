@@ -279,7 +279,7 @@ End Sub
 Private Sub presenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
     Call RefreshUsersTable
     With UMModel
-        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.Table_Users), .userStatus, .UserType, .UserName, .userPassword)
+        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .UserName, .userPassword)
     End With
     If userService.IsEverythingOkayInEngine Then
         Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
@@ -290,7 +290,7 @@ Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOf
     Call RefreshUsersTable
     Dim response As Variant
     With UMModel
-    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.Table_Users, .userIndex, .userID)
+    response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex, .userID)
         If response = True Then
             Call userService.UpdateRecordOfContextTable(.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword)
             If userService.IsEverythingOkayInEngine Then
@@ -306,7 +306,7 @@ Private Sub presenterUserManagerFrame_DeleteUserFromUserManagerForm(ByVal TypeOf
     Call RefreshUsersTable
     Dim response As Variant
     With UMModel
-        response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.Table_Users, .userIndex, .userID)
+        response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex, .userID)
         If response = True Then
             Call userService.DeleteRecordofContextTable(.userIndex)
             If userService.IsEverythingOkayInEngine Then
@@ -367,7 +367,21 @@ Private Sub presenterPriceFormFrame_AddNewRecordFromPriceForm(ByVal TypeOfOperat
     Call RefreshMainTable
     'I added here StatusChangeDate, because, While filtering the date it is causing an issue! Consider this statusChangeDate field as record added/update date!
     With PFModel
-        Call mainService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), .userID, .recordStatus, .statusChangeDate, .conditionType, .salesOrganization, .distributionChannel, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+        Call mainService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), _
+                                                    .userID, _
+                                                    .recordStatus, _
+                                                    VBA.Format$(.statusChangeDate, DATEFORMAT_BACKEND), _
+                                                    .conditionType, _
+                                                    .salesOrganization, _
+                                                    .distributionChannel, _
+                                                    .customerID, _
+                                                    .materialID, _
+                                                    .price, _
+                                                    .currencyType, _
+                                                    .unitOfPrice, _
+                                                    .unitOfMeasure, _
+                                                    VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
+                                                    VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
     End With
     If mainService.IsEverythingOkayInEngine Then
         Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
@@ -380,7 +394,22 @@ Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index, .RecordID, .userID, .recordStatus, .statusChangeDate, .conditionType, .salesOrganization, .distributionChannel, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index, _
+                                                        .RecordID, _
+                                                        .userID, _
+                                                        .recordStatus, _
+                                                        VBA.Format$(.statusChangeDate, DATEFORMAT_BACKEND), _
+                                                        .conditionType, _
+                                                        .salesOrganization, _
+                                                        .distributionChannel, _
+                                                        .customerID, _
+                                                        .materialID, _
+                                                        .price, _
+                                                        .currencyType, _
+                                                        .unitOfPrice, _
+                                                        .unitOfMeasure, _
+                                                        VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
+                                                        VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
             If mainService.IsEverythingOkayInEngine Then
                 Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
@@ -430,7 +459,22 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index, .RecordID, .userID, .recordStatus, .statusChangeDate, .conditionType, .salesOrganization, .distributionChannel, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index, , _
+                                                        .RecordID, _
+                                                        .userID, _
+                                                        .recordStatus, _
+                                                        VBA.Format$(.statusChangeDate, DATEFORMAT_BACKEND), _
+                                                        .conditionType, _
+                                                        .salesOrganization, _
+                                                        .distributionChannel, _
+                                                        .customerID, _
+                                                        .materialID, _
+                                                        .price, _
+                                                        .currencyType, _
+                                                        .unitOfPrice, _
+                                                        .unitOfMeasure, _
+                                                        VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
+                                                        VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
             If mainService.IsEverythingOkayInEngine Then
                 Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
@@ -446,7 +490,22 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index, .RecordID, .userID, .recordStatus, .statusChangeDate, .conditionType, .salesOrganization, .distributionChannel, .customerID, .materialID, .price, .currencyType, .unitOfPrice, .unitOfMeasure, .validFromDate, .validToDate)
+            Call mainService.UpdateRecordOfContextTable(.index, , _
+                                                        .RecordID, _
+                                                        .userID, _
+                                                        .recordStatus, _
+                                                        VBA.Format$(.statusChangeDate, DATEFORMAT_BACKEND), _
+                                                        .conditionType, _
+                                                        .salesOrganization, _
+                                                        .distributionChannel, _
+                                                        .customerID, _
+                                                        .materialID, _
+                                                        .price, _
+                                                        .currencyType, _
+                                                        .unitOfPrice, _
+                                                        .unitOfMeasure, _
+                                                        VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
+                                                        VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
             If mainService.IsEverythingOkayInEngine Then
                 Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If

@@ -5,7 +5,7 @@ Option Explicit
 
 Public Enum TablesOfThisApplication
     TABLE_MAINRECORDS
-    Table_Users
+    TABLE_USERS
 End Enum
 
 Public Enum PasswordManagerFields
