@@ -573,7 +573,7 @@ Private Sub txtSetUsername_Change()
     'Hydrate model property
     UserModel.UserName = Me.txtSetUsername.Value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_FIXEDLENGTHSTRING, 6
+    ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_CUSTOM, "Username should have minimum 6 characters and it shold be UNIQUE as well."
 End Sub
 
 Private Sub txtSetPassword_Change()
