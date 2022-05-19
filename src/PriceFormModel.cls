@@ -150,7 +150,7 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get statusChangeDate() As String
-    statusChangeDate = VBA.Format$(this.statusChangeDate, DATEFORMAT_BACKEND)
+    statusChangeDate = this.statusChangeDate
 End Property
 
 Public Property Let statusChangeDate(ByVal vNewValue As String)
@@ -250,7 +250,7 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get validFromDate() As String
-    validFromDate = VBA.Format$(this.validFromDate, DATEFORMAT_BACKEND)
+    validFromDate = this.validFromDate
 End Property
 
 Public Property Let validFromDate(ByVal vNewValue As String)
@@ -260,7 +260,7 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get validToDate() As String
-    validToDate = VBA.Format$(this.validToDate, DATEFORMAT_BACKEND)
+    validToDate = this.validToDate
 End Property
 
 Public Property Let validToDate(ByVal vNewValue As String)
