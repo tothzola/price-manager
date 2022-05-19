@@ -236,7 +236,7 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
         'SET column1 = value1, column2 = value2, ...
         'WHERE columnX = valueX;
         tmp = vbNullString
-        this.SQLQuery = " UPDATE " & TargetTableName & " SET "
+        this.SQLQuery = "UPDATE " & TargetTableName & " SET "
         For I = 2 To UBound(TargetTableHeaders, 2)
             If VBA.IsEmpty(LineItems(I - 2)) Then
                 tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '', "
@@ -386,7 +386,7 @@ Private Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As
 End Function
 
 'Copy Right @ Chip Pearson
-Public Function NumberOfArrayDimensions(arr As Variant) As Integer
+Private Function NumberOfArrayDimensions(arr As Variant) As Integer
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     ' NumberOfArrayDimensions
     ' This function returns the number of dimensions of an array. An unallocated dynamic array
