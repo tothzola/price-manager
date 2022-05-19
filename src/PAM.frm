@@ -162,153 +162,247 @@ End Property
 'Side panel
 
 Private Sub cmdApproverLogout_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent Logout
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdClientLogout_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent Logout
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 'login interface!
 
 Private Sub cmdCancelFromLoginInterface_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent CloseLoginFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdExit_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent ExitApp
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdLogin_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent Login
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdOpenLoginInterface_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent OpenLoginFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 'Password Manager
 
 Private Sub cmdOpenPasswordManager_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent OpenPasswordManagerFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdCancelPasswordManager_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent ClosePasswordManagerFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdUpdatePassword_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent ChangePassword
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 'User Manager
 
 Private Sub cmdOpenUserManager_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent OpenUserManagerFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdResetUserManager_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent ResetUserManagerFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdCancelUserManager_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent CloseUserManagerFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdAddNewUser_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent DoCRUDOperationForUserManager(CRUD_OPERATION_ADDNEW)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdDeleteUser_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent DoCRUDOperationForUserManager(CRUD_OPERATION_DELETE)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdUpdateUser_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent DoCRUDOperationForUserManager(CRUD_OPERATION_UPDATE)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 'Price Form
 
 Private Sub cmdOpenPriceForm_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent OpenPriceFormFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdResetPriceForm_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent ResetPriceFormFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdCancelPriceFormInterface_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent ClosePriceFormFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdAddNewRecord_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_ADDNEW)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdUpdateRecord_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_UPDATE)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdApproveRecord_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     'Hydrate Model Property
     With PriceModel
         .recordStatus = RECORDSTATUS_APPROVED
         .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
     End With
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_APPROVE)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdRejectRecord_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     'Hydrate Model Property
     With PriceModel
         .recordStatus = RECORDSTATUS_REJECTED
         .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
     End With
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_REJECT)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdDeleteRecord_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_DELETE)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 'Data Form Frame Events
 
 Private Sub cmdOpenAllHistory_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent OpenDataFormFrame(FOR_ALLHISTORY)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdOpenClientHistory_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent OpenDataFormFrame(FOR_CLIENTHISTORY)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdOpenPendingList_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent OpenDataFormFrame(FOR_PENDINGAPPROVALS)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdEditRecord_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent EditRecordFromDataFormFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdCancelRecordContainer_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent CloseDataFormFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 'Export Utility Frame Events
 
 Private Sub cmdOpenExportUtility_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent OpenExportFormFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdCancelExportUtility_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent CloseExportFormFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdResetExportForm_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent ResetExportFormFrame
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 Private Sub cmdExport_Click()
     Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
     RaiseEvent ExportReport
     Me.MousePointer = fmMousePointerDefault
 End Sub
@@ -356,11 +450,11 @@ End Sub
 'Data Form Fields Change Events
 '------------------------------------------------------------------------------
 
-Private Sub lstRecordsContainer_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+Private Sub lstRecordsContainer_Click()
     With Me.lstRecordsContainer
         'Hydrate model property
         If .ListIndex > 0 Then
-            DataModel.index = .List(.ListIndex, 0) + 1
+            DataModel.index = .List(.ListIndex, 0)
             Me.cmdEditRecord.Enabled = True
         Else
             Me.cmdEditRecord.Enabled = False
@@ -477,7 +571,7 @@ End Sub
 
 Private Sub txtSetUsername_Change()
     'Hydrate model property
-    UserModel.userName = Me.txtSetUsername.Value
+    UserModel.UserName = Me.txtSetUsername.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_FIXEDLENGTHSTRING, 6
 End Sub
@@ -494,7 +588,7 @@ Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
         If .ListIndex > 0 Then
             If .ListIndex > 2 Then
                 'hydrate model property
-                UserModel.userIndex = .List(.ListIndex, 0) + 1
+                UserModel.userIndex = .List(.ListIndex, 0)
                 'Update Record
                 RaiseEvent UpdateUserManagerFrameRecord
             Else
@@ -539,14 +633,14 @@ End Sub
 
 Private Sub txtPassword_Change()
     'Hydrate model property
-    LoginModel.password = Me.txtPassword.Text
+    LoginModel.Password = Me.txtPassword.Text
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtPassword, LoginModel.IsValidPassword, TYPE_NA
 End Sub
 
 Private Sub txtUsername_Change()
     'hydrate model property
-    LoginModel.userName = Me.txtUsername.Text
+    LoginModel.UserName = Me.txtUsername.Text
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtUsername, LoginModel.IsValidUsername, TYPE_NA
 End Sub
@@ -883,7 +977,7 @@ Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     End If
     'Update Active User Frame
     With LoginModel
-        Call UpdateActiveUserInfomation(.userName, .UserType, .userStatus, .userID, .password)
+        Call UpdateActiveUserInfomation(.UserName, .UserType, .userStatus, .userID, .Password)
     End With
     'Update Welcome Frame with Username
     Call UpdateWelcomeFrame
@@ -1052,7 +1146,7 @@ Private Sub StateForUpdateRecordForUserManager()
         'input field state
         .cmbUserStatus.Value = UserModel.userStatus
         .cmbUserType.Value = UserModel.UserType
-        .txtSetUsername.Value = UserModel.userName
+        .txtSetUsername.Value = UserModel.UserName
         .txtSetPassword.Value = UserModel.userPassword
         'Button State
         .cmdAddNewUser.Enabled = False

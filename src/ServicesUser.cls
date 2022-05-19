@@ -112,8 +112,8 @@ Private Sub IServices_InItService(ByVal SelectedRepositoryType As RepositoryType
         Case RepositoryType.TYPE_SHAREPOINT_LIST
             If Repository Is Nothing Then Set Repository = New RepositorySharePoint
             Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
-        Case RepositoryType.TYPE_MYSQL
-            If Repository Is Nothing Then Set Repository = New RepositoryMySQL
+        Case RepositoryType.TYPE_POSTGRESQL
+            If Repository Is Nothing Then Set Repository = New RepositoryPostgreSQL
             Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
         Case RepositoryType.TYPE_ACCESS
             If Repository Is Nothing Then Set Repository = New RepositoryACCESS

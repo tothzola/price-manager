@@ -246,11 +246,12 @@ End Sub
 Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplication, ByVal index As Long, ByVal RecordID As String) As Variant
     Dim TRow As Long
     Dim ID As String
-    TRow = index + 1
     Select Case TABLE
         Case TablesOfThisApplication.TABLE_MAINRECORDS
+            TRow = GetTargetRowIndex(Me.mainTable, index, MainTableFields.COL_MAIN_INDEX)
             ID = Me.mainTable(TRow, 2)
         Case TablesOfThisApplication.Table_Users
+            TRow = GetTargetRowIndex(Me.usersTable, index, MainTableFields.COL_MAIN_INDEX)
             ID = Me.usersTable(TRow, 2)
     End Select
     If ID = RecordID Then
@@ -351,6 +352,16 @@ Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Var
         Next J
     Next I
     SortOneDimensionalArrayWithNumbers = arr
+End Function
+
+Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
+    Dim I As Long
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(I, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = I
+            Exit Function
+        End If
+    Next I
 End Function
 
 '-------------------------------------------------------------------------

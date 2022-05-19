@@ -140,8 +140,8 @@ End Sub
 
 'Hydrate Comboboxes
 
-Public Sub HydrateComboBox(ByVal cmb As MSForms.ComboBox, ByVal data As Variant)
-    cmb.List = data
+Public Sub HydrateComboBox(ByVal cmb As MSForms.ComboBox, ByVal Data As Variant)
+    cmb.List = Data
 End Sub
 
 'Change Control's Value and Font Color
@@ -385,6 +385,7 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
     'Get Sepearator String
     ThousandSeperator = Application.International(xlThousandsSeparator)
     DecimalSeperator = Application.International(xlDecimalSeparator)
+    inputValue = TransformToAPPCompatibleCurrency(inputValue)
     
     'check if decimal seperator has been used or not ?
     If VBA.InStr(1, inputValue, DecimalSeperator) > 0 Then
@@ -470,6 +471,20 @@ EhhErr:
     Err.Clear
     Resume CleanExit
     
+End Function
+
+'Following function will convert currency to Application Compatible currency format! _
+this is very interesting because, We should always keep database column format in _
+single culture format. Like, en_US format, and we always get data from the database _
+in decimal seperator dot format. So if in case our user is german, than that currency will _
+be invalid string and hence, we have to make few changes by replacing dot with comma to make _
+it compitable with App format. Rest of the work will be carried by then FormatStringToCurrency Function.
+
+Private Function TransformToAPPCompatibleCurrency(ByVal inputValue As String) As String
+    If Application.International(xlDecimalSeparator) = "," Then
+        inputValue = VBA.Replace(inputValue, ".", ",")
+    End If
+    TransformToAPPCompatibleCurrency = inputValue
 End Function
 
 

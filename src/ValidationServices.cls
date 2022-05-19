@@ -186,28 +186,28 @@ Public Function IsValidStringLength(ByVal inputString As Variant, ByVal checklen
 End Function
 
 'check if the user is authorized or not?
-Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal userName As String, ByVal password As String, ByVal userCol As Long, ByVal passCol As Long) As Variant
+Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As String, ByVal Password As String, ByVal userCol As Long, ByVal passCol As Long) As Variant
     Dim I As Long
     Dim userFlag As Boolean
     Dim passFlag As Boolean
     userFlag = False
     passFlag = False
     'validation for initial check
-    If userName = vbNullString And password = vbNullString Then
+    If UserName = vbNullString And Password = vbNullString Then
         IsUserAuthorized = "Username and Passwrod fields are empty! Kindly fill in to Login"
         Exit Function
-    ElseIf userName = vbNullString And password <> vbNullString Then
+    ElseIf UserName = vbNullString And Password <> vbNullString Then
         IsUserAuthorized = "Username field is empty! Kindly fill in to Login."
         Exit Function
-    ElseIf userName <> vbNullString And password = vbNullString Then
+    ElseIf UserName <> vbNullString And Password = vbNullString Then
         IsUserAuthorized = "Password field is empty! Kindly fill in to Login."
         Exit Function
     End If
     'if validation check confirm then go for the next process
     For I = 1 To UBound(dataTable, 1)
-        If dataTable(I, userCol) = userName Then
+        If dataTable(I, userCol) = UserName Then
         userFlag = True
-            If dataTable(I, passCol) = password Then
+            If dataTable(I, passCol) = Password Then
                 passFlag = True
             End If
         End If

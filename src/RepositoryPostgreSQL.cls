@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "RepositoryACCESS"
+Attribute VB_Name = "RepositoryPostgreSQL"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -16,7 +16,7 @@ Implements IRepository
 'Private Type Componenets / Enums
 '-------------------------------------------------------------------------
 
-Private Type TAccessRepositoryComponents
+Private Type TPostgreSQlRepositoryComponents
     IsEverythingOkay As Boolean
     TargetTableName As String
     TargetTableHeaders As Variant
@@ -26,7 +26,7 @@ Private Type TAccessRepositoryComponents
     SQLQuery As String
 End Type
 
-Private this As TAccessRepositoryComponents
+Private this As TPostgreSQlRepositoryComponents
 
 '-------------------------------------------------------------------------
 'Public/Private Properties
@@ -144,11 +144,8 @@ Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, By
     If IRepository_IsEverythingOkay Then
         On Error GoTo EhhErr
     'Building SQL Qyery String!
-        If VBA.IsNumeric(condition) Then
-            this.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, columnIndex) & "] = " & condition & ";"
-        Else
-            this.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, columnIndex) & "] = '" & condition & "';"
-        End If
+        this.SQLQuery = "SELECT * FROM " & TargetTableName & " " & _
+                        "WHERE " & TargetTableHeaders(1, columnIndex) & " = '" & condition & "';"
         'Executing Query
         recordset.Open this.SQLQuery, connection, adOpenForwardOnly, adLockReadOnly
         'Return Table!
@@ -185,13 +182,15 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
         On Error GoTo EhhErr
     'Building SQL Qyery String!
         'Syntax
-        'INSERT INTO table_name ([column1], [column2], [column3], ...)
+        'INSERT INTO table_name (column1, column2, column3, ...)
         'VALUES (value1, value2, value3, ...);
         this.SQLQuery = "INSERT INTO " & TargetTableName & " ("
         For I = 2 To UBound(TargetTableHeaders, 2)
-            HeadersString = HeadersString & "[" & TargetTableHeaders(1, I) & "], "
+            HeadersString = HeadersString & "" & TargetTableHeaders(1, I) & ", "
             If VBA.IsEmpty(LineItems(I - 2)) Then
-                ValuesString = ValuesString & "'', "
+                ValuesString = ValuesString & "NULL, "
+            ElseIf IsCurrency(LineItems(I - 2)) Then
+                ValuesString = ValuesString & TransformToDBCompatibleCurrency(LineItems(I - 2)) & ", "
             Else
                 ValuesString = ValuesString & "'" & LineItems(I - 2) & "', "
             End If
@@ -239,13 +238,15 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
         this.SQLQuery = "UPDATE " & TargetTableName & " SET "
         For I = 2 To UBound(TargetTableHeaders, 2)
             If VBA.IsEmpty(LineItems(I - 2)) Then
-                tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '', "
+                tmp = tmp & TargetTableHeaders(1, I) & " = NULL, "
+            ElseIf IsCurrency(LineItems(I - 2)) Then
+                tmp = tmp & TargetTableHeaders(1, I) & " = " & TransformToDBCompatibleCurrency(LineItems(I - 2)) & ", "
             Else
-                tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '" & LineItems(I - 2) & "', "
+                tmp = tmp & TargetTableHeaders(1, I) & " = '" & LineItems(I - 2) & "', "
             End If
         Next I
         tmp = VBA.Left$(tmp, VBA.Len(tmp) - 2)
-        this.SQLQuery = this.SQLQuery & tmp & " WHERE [Index] = " & TargetIndex & ";"
+        this.SQLQuery = this.SQLQuery & tmp & " WHERE Index = " & TargetIndex & ";"
         'Executing Query
         recordset.Open this.SQLQuery, connection, adOpenDynamic, adLockOptimistic
     End If
@@ -275,7 +276,7 @@ Private Sub IRepository_DeleteRecord(ByVal TargetIndex As Long)
     If IRepository_IsEverythingOkay Then
         On Error GoTo EhhErr
         'Building SQL Qyery String!
-        this.SQLQuery = "DELETE FROM " & TargetTableName & " WHERE [Index] = " & TargetIndex & ";"
+        this.SQLQuery = "DELETE FROM " & TargetTableName & " WHERE Index = " & TargetIndex & ";"
         'Executing Query
         recordset.Open this.SQLQuery, connection, adOpenDynamic, adLockOptimistic
     End If
@@ -406,6 +407,32 @@ Private Function NumberOfArrayDimensions(arr As Variant) As Integer
     NumberOfArrayDimensions = Ndx - 1
 End Function
 
+'Following function will tell if the string is currency or not?
+
+Private Function IsCurrency(ByVal inputValue As String) As Boolean
+    If VBA.Left(VBA.Right(inputValue, 3), 1) = Application.International(xlDecimalSeparator) Then
+        IsCurrency = True
+    Else
+        IsCurrency = False
+    End If
+End Function
+
+'Following function will convert currency to DB Compatible currency format! _
+this is very interesting because, We should always keep database column format in _
+single culture format. Like, en_US format, so decimal input will be always seperated with _
+dot! so, and why we need this? because german inputs considers comma as decimal seperator, _
+so we have to transform the currency string into the DB compitable string and then we can only _
+make it workable.
+
+Private Function TransformToDBCompatibleCurrency(ByVal inputValue As String) As String
+    If Application.International(xlDecimalSeparator) = "." Then
+        inputValue = VBA.Replace(inputValue, ",", "")
+    Else
+        inputValue = VBA.Replace(VBA.Replace(VBA.Replace(inputValue, ",", "#"), ".", ""), "#", ".")
+    End If
+    TransformToDBCompatibleCurrency = inputValue
+End Function
+
 '-------------------------------------------------------------------------
 'Class Events
 '-------------------------------------------------------------------------
@@ -417,5 +444,3 @@ Private Sub Class_Terminate()
     Set connection = Nothing
     Set recordset = Nothing
 End Sub
-
-

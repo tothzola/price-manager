@@ -3,14 +3,25 @@ Option Explicit
 
 Public Sub MainPAM()
     
+    Dim SplashScreen As SPLASH
     Dim RepositoryInUse As RepositoryType
     Dim Presenter As AppPresenter
     
+    Set SplashScreen = New SPLASH
     Set Presenter = New AppPresenter
-    RepositoryInUse = TYPE_ACCESS 'Switch Database type from here
+    
+    SplashScreen.Show vbModeless
+    SplashScreen.lblMessage.Caption = "Loading Repository..."
+    Call WaitForOneSecond
+    
+    'Switch Database type from here
+    RepositoryInUse = TYPE_POSTGRESQL
     
     'Configure Presenter and Attach Important Datasets with Application Components
     With Presenter
+    
+        SplashScreen.lblMessage.Caption = "Validating Data Sources..."
+        Call WaitForOneSecond
         
         'Attach main table of the database with Application and configure Related Services Object
         Call .InItMainService(RepositoryInUse, _
@@ -29,7 +40,10 @@ Public Sub MainPAM()
              
         'Check if Database is connected or not? if not then do not open app!
         If .databaseConnectionStatus = False Then GoTo CleanExit
-                
+        
+        SplashScreen.lblMessage.Caption = "Loading Data..."
+        Call WaitForOneSecond
+        
         'Configure Application Model with Important DataSet
         Call .InItApplicationModel(modDataSources.arrListofCurrencies, _
                                     modDataSources.arrListOfUnitOfMeasure, _
@@ -38,7 +52,14 @@ Public Sub MainPAM()
                                     modDataSources.arrRecordStatusesList, _
                                     modDataSources.arrSalesOrganizationsList, _
                                     modDataSources.arrDistributionChannelsList)
-                              
+        
+        SplashScreen.lblMessage.Caption = "Opening App..."
+        Call WaitForOneSecond
+        Call WaitForOneSecond
+        
+        SplashScreen.Hide
+        Set SplashScreen = Nothing
+        
         'Attach and Configure VIEW with Application
         Call .InItApp
         

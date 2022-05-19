@@ -26,7 +26,7 @@ Private Type TUserManagerFormModelComponents
     userID As String
     userStatus As String
     UserType As String
-    userName As String
+    UserName As String
     userPassword As String
 End Type
 
@@ -114,12 +114,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get userName() As String
-    userName = this.userName
+Public Property Get UserName() As String
+    UserName = this.UserName
 End Property
 
-Public Property Let userName(ByVal vNewValue As String)
-    this.userName = vNewValue
+Public Property Let UserName(ByVal vNewValue As String)
+    this.UserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -163,10 +163,10 @@ Public Sub SetPropertiesToUpdateUserState()
     Call SetPropertiesToNullState
     'update operation begins
     Dim TargetRow As Long
-    TargetRow = Me.userIndex
+    TargetRow = GetTargetRowIndex(Me.usersTable, Me.userIndex, UsersTableFields.COL_INDEX)
     With Me
         .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userID)
-        .userName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
+        .UserName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
         .userStatus = Me.usersTable(TargetRow, UsersTableFields.COL_userStatus)
         .UserType = Me.usersTable(TargetRow, UsersTableFields.COL_userType)
@@ -176,7 +176,7 @@ End Sub
 Private Sub SetPropertiesToNullState()
     With Me
         .userID = vbNullString
-        .userName = vbNullString
+        .UserName = vbNullString
         .userPassword = vbNullString
         .userStatus = vbNullString
         .UserType = vbNullString
@@ -202,10 +202,10 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             If Not IsValidField = True Then Exit Function
         Case UsersTableFields.COL_userName
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.userName, VBA.TypeName(Me.userName))
+            IsValidField = Validator.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidStringLength(Me.userName, 6)
+            IsValidField = Validator.IsValidStringLength(Me.UserName, 6)
             If Not IsValidField = True Then Exit Function
         Case UsersTableFields.COL_password
             'Check 1
@@ -224,6 +224,16 @@ Public Function IsEverythingOkayToSaveUser() As Variant
                                                             modDataSources.arrListOfColumns_USERS_TABLE, _
                                                             UsersTableFields.COL_userStatus, _
                                                             UsersTableFields.COL_password)
+End Function
+
+Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
+    Dim I As Long
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(I, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = I
+            Exit Function
+        End If
+    Next I
 End Function
 
 '-------------------------------------------------------------------------
