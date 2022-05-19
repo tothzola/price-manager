@@ -273,12 +273,12 @@ Public Function IsValidRecordToEdit() As Variant
     Dim lastRow         As Long
     Dim I               As Long
     'Calculate driving paramters
-    TargetIndex = Me.index - 1
+    TargetIndex = GetTargetRowIndex(Me.dataTable, Me.index, MainTableFields.COL_MAIN_INDEX)
     firstRow = LBound(Me.dataTable, 1)
     lastRow = UBound(Me.dataTable, 1)
     'Finding Status!
     For I = firstRow + 1 To lastRow
-        If Me.dataTable(I, MainTableFields.COL_MAIN_INDEX) = TargetIndex Then
+        If I = TargetIndex Then
             recordStatus = Me.dataTable(I, MainTableFields.COL_MAIN_recordStatus)
             Exit For
         End If
@@ -294,6 +294,16 @@ Public Function IsValidRecordToEdit() As Variant
     End Select
     'Overriding
     If IsApprover Then IsValidRecordToEdit = True
+End Function
+
+Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
+    Dim I As Long
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(I, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = I
+            Exit Function
+        End If
+    Next I
 End Function
 
 '-------------------------------------------------------------------------
