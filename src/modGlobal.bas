@@ -124,5 +124,5 @@ End Function
 
 Public Sub WaitForOneSecond()
     VBA.DoEvents
-    Call Application.Wait(Now + TimeValue("00:00:01"))
+    Call Excel.Application.Wait(Now + TimeValue("00:00:01"))
 End Sub
