@@ -28,9 +28,9 @@ Const CONTROL_NAME_OK As String = "OK"
 Const Error_NonNumericalInput As Long = 1
 
 'Colors
-Const INVALID_FIELD_BACKCOLOR As Long = COLOR_OF_NOT_OKAY
-Const INVALID_FIELD_FONTCOLOR As Long = vbWhite
-Const VALID_FIELD_BACKCOLOR As Long = vbWhite
+Const INVALID_FIELD_BORDERCOLOR As Long = COLOR_OF_NOT_OKAY
+Const INVALID_FIELD_FONTCOLOR As Long = COLOR_OF_NOT_OKAY
+Const VALID_FIELD_BORDERCOLOR As Long = &HC0C0C0
 Const VALID_FIELD_FONTCOLOR As Long = vbBlack
 
 '-----------------------------------------------------------------------
@@ -117,13 +117,17 @@ Public Sub UpdateControlAfterValidation(ByVal ctrl As MSForms.Control, ByVal val
         Select Case VBA.TypeName(ctrl)
             Case "TextBox", "ComboBox"
                 If valid Then
-                    .BackColor = VALID_FIELD_BACKCOLOR
+                    .BorderColor = VALID_FIELD_BORDERCOLOR
                     .ForeColor = VALID_FIELD_FONTCOLOR
                     Call RemoveWarningLabel(ctrl, warning)
                 Else
-                    .BackColor = INVALID_FIELD_BACKCOLOR
+                    .BorderColor = INVALID_FIELD_BORDERCOLOR
                     .ForeColor = INVALID_FIELD_FONTCOLOR
-                    Call InsertWarningLabel(ctrl, warning, warningMessage)
+                    If ctrl.Value <> vbNullString Then
+                        Call InsertWarningLabel(ctrl, warning, warningMessage)
+                    Else
+                        Call RemoveWarningLabel(ctrl, warning)
+                    End If
                 End If
         End Select
     End With
@@ -241,29 +245,26 @@ End Sub
 
 Private Sub RemoveWarningLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As String)
     Select Case ctrlName
+        Case WarningType.TYPE_NA
+            Exit Sub
         Case WarningType.TYPE_NUMBERSONLY
             HidingLabel ctrl, "TYPE_NUMBERSONLY"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_STRINGSNOTMATCHED
             HidingLabel ctrl, "TYPE_STRINGSNOTMATCHED"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_WRONGPASSWORDPATTERN
             HidingLabel ctrl, "TYPE_WRONGPASSWORDPATTERN"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_FIXEDLENGTHSTRING
             HidingLabel ctrl, "TYPE_FIXEDLENGTHSTRING"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_CUSTOM
             HidingLabel ctrl, "TYPE_CUSTOM"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied
             HidingLabel ctrl, "TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied"
-            If ctrl.Value <> vbNullString Then
-                InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
-            Else
-                HidingLabel ctrl, CONTROL_NAME_OK
-            End If
     End Select
+    If ctrl.Value <> vbNullString Then
+        InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+    Else
+        HidingLabel ctrl, CONTROL_NAME_OK
+    End If
 End Sub
 
 'Inserting Warning Label
