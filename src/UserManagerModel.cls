@@ -28,6 +28,8 @@ Private Type TUserManagerFormModelComponents
     UserType As String
     UserName As String
     userPassword As String
+    'Attribute
+    operation As FormOperation
 End Type
 
 Private this As TUserManagerFormModelComponents
@@ -133,6 +135,16 @@ Public Property Let userPassword(ByVal vNewValue As String)
 End Property
 
 '-------------------------------------------------------------------------
+
+Public Property Get operation() As FormOperation
+    operation = this.operation
+End Property
+
+Public Property Let operation(ByVal vNewValue As FormOperation)
+    this.operation = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
 'InIt this model
 '-------------------------------------------------------------------------
 
@@ -152,6 +164,7 @@ Public Sub SetPropertiesToNewUserState()
     'Flush All the properties before we start operation
     Call SetPropertiesToNullState
     With Me
+        .operation = OPERATION_NEW
         .userIndex = 0
         .userStatus = USERSTATUS_ACTIVE
         .UserType = USERTYPE_CLIENT
@@ -165,6 +178,7 @@ Public Sub SetPropertiesToUpdateUserState()
     Dim TargetRow As Long
     TargetRow = GetTargetRowIndex(Me.usersTable, Me.userIndex, UsersTableFields.COL_INDEX)
     With Me
+        .operation = OPERATION_UPDATE
         .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userID)
         .UserName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
@@ -208,8 +222,10 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             IsValidField = Validator.IsValidStringLength(Me.UserName, 6)
             If Not IsValidField = True Then Exit Function
             'Check 3
-            IsValidField = Validator.IsUnique(Me.usersTable, Me.UserName, UsersTableFields.COL_userName)
-            If Not IsValidField = True Then Exit Function
+            If Me.operation = OPERATION_NEW Then
+                IsValidField = Validator.IsUnique(Me.usersTable, Me.UserName, UsersTableFields.COL_userName)
+                If Not IsValidField = True Then Exit Function
+            End If
         Case UsersTableFields.COL_password
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userPassword, VBA.TypeName(Me.userPassword))
