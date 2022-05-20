@@ -274,13 +274,13 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
             If UBound(Me.mainTable, 1) = 1 Then
                 GetNewID = INDEX_RECORDID_FIRST
             Else
-                GetNewID = VBA.CLng(Me.mainTable(UBound(Me.mainTable, 1), 2)) + 1
+                GetNewID = VBA.CLng(GetMax(Me.mainTable, MainTableFields.COL_MAIN_recordID)) + 1
             End If
         Case TablesOfThisApplication.TABLE_USERS
             If UBound(Me.usersTable, 1) = 1 Then
                 GetNewID = INDEX_USERID_FIRST
             Else
-                GetNewID = VBA.CLng(Me.usersTable(UBound(Me.usersTable, 1), 2)) + 1
+                GetNewID = VBA.CLng(GetMax(Me.usersTable, UsersTableFields.COL_userID)) + 1
             End If
     End Select
 End Function
@@ -362,6 +362,22 @@ Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetInd
             Exit Function
         End If
     Next I
+End Function
+
+Private Function GetMax(ByVal TargetTable As Variant, ByVal TargetColumn As Long) As Long
+    Dim I       As Long
+    Dim LB      As Long
+    Dim UB      As Long
+    Dim tmp     As Long
+    LB = LBound(TargetTable, 1)
+    UB = UBound(TargetTable, 1)
+    tmp = 0
+    For I = LB + 1 To UB Step 1
+        If TargetTable(I, TargetColumn) > tmp Then
+            tmp = TargetTable(I, TargetColumn)
+        End If
+    Next I
+    GetMax = tmp
 End Function
 
 '-------------------------------------------------------------------------
