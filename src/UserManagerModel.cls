@@ -207,6 +207,9 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             'Check 2
             IsValidField = Validator.IsValidStringLength(Me.UserName, 6)
             If Not IsValidField = True Then Exit Function
+            'Check 3
+            IsValidField = Validator.IsUnique(Me.usersTable, Me.UserName, UsersTableFields.COL_userName)
+            If Not IsValidField = True Then Exit Function
         Case UsersTableFields.COL_password
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userPassword, VBA.TypeName(Me.userPassword))
