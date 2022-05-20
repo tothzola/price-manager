@@ -86,6 +86,7 @@ Public Property Get userStatus() As String
     Dim I As Long
     For I = 1 To UBound(Me.usersData, 1)
         If UCase(Me.usersData(I, UsersTableFields.COL_userName)) = UCase(Me.UserName) Then
+            Me.UserName = Me.usersData(I, UsersTableFields.COL_userName)
             Me.TargetIndex = I
             userStatus = Me.usersData(I, UsersTableFields.COL_userStatus)
             Exit Property
