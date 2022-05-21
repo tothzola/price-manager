@@ -290,7 +290,7 @@ Public Function IsValidRecordToEdit() As Variant
         Case RECORDSTATUS_APPROVED
             IsValidRecordToEdit = "Your record has been already Approved! You have no permission to edit it further!"
         Case RECORDSTATUS_REJECTED
-            IsValidRecordToEdit = "Your record has been already Rejected! Kindly submit new record for Approval!"
+            IsValidRecordToEdit = True 'We are allowing client to edit Rejected records!
     End Select
     'Overriding
     If IsApprover Then IsValidRecordToEdit = True
