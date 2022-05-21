@@ -305,6 +305,11 @@ End Sub
 Private Sub cmdUpdateRecord_Click()
     Me.MousePointer = fmMousePointerAppStarting
     VBA.DoEvents
+    'Hydrate Model Property
+    With PriceModel
+        .recordStatus = RECORDSTATUS_PENDING
+        .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
+    End With
     RaiseEvent DoCRUDOperationForPriceForm(CRUD_OPERATION_UPDATE)
     Me.MousePointer = fmMousePointerDefault
 End Sub
