@@ -97,7 +97,8 @@ Public Function IsBetweenNumericalRange(ByVal inputValue As String, _
     On Error GoTo CleanFail
     
     'owerflow error is rased if len(inputValue) > len(maxvalue)
-    result = False 'I have habit of not depending on default value of any type of variables! I explicitly assign value to it!
+    result = False 'I have habit of not depending on default value of any type of variables_
+                    '! I explicitly assign value to it!
     If VBA.CDbl(inputValue) > minValue And VBA.CDbl(inputValue) <= maxvalue Then
         result = True
     Else
