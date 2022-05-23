@@ -97,7 +97,7 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get userID() As String
-    userID = Me.usersData(TargetIndex, UsersTableFields.COL_userID)
+    userID = Me.usersData(TargetIndex, UsersTableFields.COL_userId)
 End Property
 
 '-------------------------------------------------------------------------
