@@ -11,10 +11,9 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type TDataFormModelComponents
-    'Validation Object
-    Validator As ValidationServices
     'Tables
     dataTable As Variant
+    usersTable As Variant
     'Fields
     index As Long
     RecordID As String
@@ -41,22 +40,22 @@ Private this As TDataFormModelComponents
 
 '-------------------------------------------------------------------------
 
-Private Property Get Validator() As ValidationServices
-    Set Validator = this.Validator
-End Property
-
-Private Property Set Validator(ByVal vNewValue As ValidationServices)
-    Set this.Validator = vNewValue
-End Property
-
-'-------------------------------------------------------------------------
-
 Public Property Get dataTable() As Variant
     dataTable = this.dataTable
 End Property
 
 Public Property Let dataTable(ByVal vNewValue As Variant)
     this.dataTable = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get usersTable() As Variant
+    usersTable = this.usersTable
+End Property
+
+Public Property Let usersTable(ByVal vNewValue As Variant)
+    this.usersTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -253,15 +252,6 @@ Public Property Let IsApprover(ByVal vNewValue As Boolean)
 End Property
 
 '-------------------------------------------------------------------------
-'Init Method
-'-------------------------------------------------------------------------
-
-Public Sub InItModel(ByVal mainData As Variant)
-    If Validator Is Nothing Then Set Validator = New ValidationServices
-    Me.dataTable = mainData
-End Sub
-
-'-------------------------------------------------------------------------
 'Validations
 '-------------------------------------------------------------------------
 
@@ -296,6 +286,61 @@ Public Function IsValidRecordToEdit() As Variant
     If IsApprover Then IsValidRecordToEdit = True
 End Function
 
+Public Function GetDataForRecordsList() As Variant
+    Dim I       As Long
+    Dim J       As Long
+    Dim K       As Long
+    Dim UB1     As Long
+    Dim UB2     As Long
+    Dim tmp     As Variant
+    Dim uname   As String
+    UB1 = UBound(Me.dataTable, 1)
+    UB2 = UBound(Me.dataTable, 2)
+    ReDim tmp(1 To UB1, 1 To UB2)
+    K = 1
+    For I = 1 To UB1
+        uname = GetLookupValue(Me.usersTable, Me.dataTable(I, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        If uname <> vbNullString Then
+            For J = 1 To UB2
+                If I = 1 Then
+                    If J = MainTableFields.COL_MAIN_userID Then
+                        tmp(K, J) = "User_Name"
+                    Else
+                        tmp(K, J) = Me.dataTable(I, J)
+                    End If
+                Else
+                    If J = MainTableFields.COL_MAIN_userID Then
+                        tmp(K, J) = uname
+                    Else
+                        tmp(K, J) = Me.dataTable(I, J)
+                    End If
+                End If
+            Next J
+            K = K + 1
+        End If
+    Next I
+    GetDataForRecordsList = tmp
+End Function
+
+'following function act as Vlookup
+
+Private Function GetLookupValue(ByVal TargetTable As Variant, _
+                                ByVal LookupValue As Variant, _
+                                ByVal LookupIndex As Long, _
+                                ByVal TargetIndex As Long) As String
+    Dim I   As Long
+    Dim LB  As Long
+    Dim UB  As Long
+    LB = LBound(TargetTable, 1)
+    UB = UBound(TargetTable, 1)
+    For I = LB To UB
+        If TargetTable(I, LookupIndex) = LookupValue Then
+            GetLookupValue = TargetTable(I, TargetIndex)
+            Exit Function
+        End If
+    Next I
+End Function
+
 Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
     Dim I As Long
     For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
@@ -305,11 +350,3 @@ Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetInd
         End If
     Next I
 End Function
-
-'-------------------------------------------------------------------------
-'Class Event
-'-------------------------------------------------------------------------
-
-Private Sub Class_Terminate()
-    Set Validator = Nothing
-End Sub
