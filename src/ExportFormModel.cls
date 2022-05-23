@@ -319,6 +319,7 @@ Public Sub GenerateExportData()
     Dim I                   As Long
     Dim J                   As Long
     Dim IsValidRow          As Boolean
+    Dim uname               As String
     
     'you are here because user has set some criteria!
     firstRowIndex = LBound(Me.dataTable, 1)
@@ -347,7 +348,7 @@ Public Sub GenerateExportData()
         
     'Filter Layer 3 : String/Number Matching
         'Check Third condition : User ID
-        IsValidRow = Validator.IsValidToInclude(GetLookupValue(Me.userTable, Me.dataTable(I, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userID, UsersTableFields.COL_userName), TYPE_STRINGMATCH, Me.userID)
+        IsValidRow = Validator.IsValidToInclude(GetLookupValue(Me.userTable, Me.dataTable(I, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName), TYPE_STRINGMATCH, Me.userID)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Filter Layer 4 : String/Number Matching
@@ -378,24 +379,27 @@ IgnoreThisRow:
     'Create Export Table
     I = 1
     For Each Record In Records
-        For J = firstColumnIndex To lastColumnIndex
-            'GUARD CLAUSE : For preventing excel's automatic conversion of cell values from specific value to _
-                            numerical whole number due
-            If J = MainTableFields.Col_Main_DistributionChannel And VBA.IsNumeric(Me.dataTable(Record, J)) Then
-                tmp(I, J) = "'" & Me.dataTable(Record, J)
-                GoTo NextIteration
-            End If
-            'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
-                            looking up relative values from the another table!
-            If J = MainTableFields.COL_MAIN_userID Then
-                tmp(I, J) = GetLookupValue(Me.userTable, Me.dataTable(Record, J), UsersTableFields.COL_userID, UsersTableFields.COL_userName)
-                GoTo NextIteration
-            End If
-            'NO GUARD CLAUSE : For Rest of the cells
-            tmp(I, J) = Me.dataTable(Record, J)
+        uname = GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        If uname <> vbNullString Then
+            For J = firstColumnIndex To lastColumnIndex
+                'GUARD CLAUSE : For preventing excel's automatic conversion of cell values from specific value to _
+                                numerical whole number due
+                If J = MainTableFields.Col_Main_DistributionChannel And VBA.IsNumeric(Me.dataTable(Record, J)) Then
+                    tmp(I, J) = "'" & Me.dataTable(Record, J)
+                    GoTo NextIteration
+                End If
+                'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
+                                looking up relative values from the another table!
+                If J = MainTableFields.COL_MAIN_userID Then
+                    tmp(I, J) = uname
+                    GoTo NextIteration
+                End If
+                'NO GUARD CLAUSE : For Rest of the cells
+                tmp(I, J) = Me.dataTable(Record, J)
 NextIteration:
-        Next J
-        I = I + 1
+            Next J
+            I = I + 1
+        End If
     Next Record
 
     'Submit value to Export Data Array
