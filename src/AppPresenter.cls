@@ -530,7 +530,8 @@ Private Sub presenterDataFormFrame_OpenDataForm(ByVal DFModel As DataFormModel, 
             Case DataContainer.FOR_ALLHISTORY
                 .dataTable = model.mainTable
         End Select
-        DFModel.ActiveDataContainer = ContainerIdentifier
+        .usersTable = model.usersTable
+        .ActiveDataContainer = ContainerIdentifier
     End With
     If mainService.IsEverythingOkayInEngine Then
         'Call View Method to Open Data Form Frame!
