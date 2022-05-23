@@ -280,7 +280,7 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
             If UBound(Me.usersTable, 1) = 1 Then
                 GetNewID = INDEX_USERID_FIRST
             Else
-                GetNewID = VBA.CLng(GetMax(Me.usersTable, UsersTableFields.COL_userID)) + 1
+                GetNewID = VBA.CLng(GetMax(Me.usersTable, UsersTableFields.COL_userId)) + 1
             End If
     End Select
 End Function
