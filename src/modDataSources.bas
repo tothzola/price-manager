@@ -16,7 +16,7 @@ End Enum
 
 Public Enum UsersTableFields
     COL_INDEX = 1
-    COL_userID
+    COL_userId
     COL_userStatus
     COL_userType
     COL_userName
