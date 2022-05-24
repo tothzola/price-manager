@@ -179,7 +179,7 @@ Public Sub SetPropertiesToUpdateUserState()
     TargetRow = GetTargetRowIndex(Me.usersTable, Me.userIndex, UsersTableFields.COL_INDEX)
     With Me
         .operation = OPERATION_UPDATE
-        .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userID)
+        .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userId)
         .UserName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
         .userStatus = Me.usersTable(TargetRow, UsersTableFields.COL_userStatus)

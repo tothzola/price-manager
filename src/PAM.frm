@@ -460,7 +460,11 @@ Private Sub lstRecordsContainer_Click()
         'Hydrate model property
         If .ListIndex > 0 Then
             DataModel.index = .List(.ListIndex, 0)
-            Me.cmdEditRecord.Enabled = True
+            If .List(.ListIndex, 0) = Empty Then
+                Me.cmdEditRecord.Enabled = False
+            Else
+                Me.cmdEditRecord.Enabled = True
+            End If
         Else
             Me.cmdEditRecord.Enabled = False
         End If
@@ -591,14 +595,15 @@ End Sub
 Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     With Me.lstUsers
         If .ListIndex > 0 Then
-            If .ListIndex > 2 Then
+            If .List(.ListIndex, UsersTableFields.COL_userId - 1) = 100 Or _
+                .List(.ListIndex, UsersTableFields.COL_userId - 1) = 101 Then
+                'Just for the safetly that they couldn't be able to edit dev's information
+                Call ExtendedMethods.ShowMessage("You are not allowed to Update them!", TYPE_INFORMATION)
+            Else
                 'hydrate model property
                 UserModel.userIndex = .List(.ListIndex, 0)
                 'Update Record
                 RaiseEvent UpdateUserManagerFrameRecord
-            Else
-                'Just for the safetly that they couldn't be able to edit dev's information
-                Call ExtendedMethods.ShowMessage("You are not allowed to Update them!", TYPE_INFORMATION)
             End If
         End If
     End With
@@ -848,7 +853,7 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
         .cmbUserType.List = UserModel.userTypesList
         With .lstUsers
             .ColumnCount = 6
-            .ColumnWidths = "35;45;60"
+            .ColumnWidths = "0;45;60"
             .List = UserModel.usersTable
         End With
         'Put Default Values based on Operation
@@ -897,8 +902,8 @@ Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
         'Filling up listbox with criteria
         With .lstRecordsContainer
             .ColumnCount = 16
-            .ColumnWidths = "35;65;50"
-            .List = DataModel.dataTable
+            .ColumnWidths = "0;0;;;;0;0;0;;;;;0;0;0;0;"
+            .List = DataModel.GetDataForRecordsList
         End With
         'Allow Approver in any case to Approve or Reject Again!
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
@@ -1180,10 +1185,10 @@ Private Sub UpdateWelcomeFrame(Optional FrameIdentifier As ApplicationForms = 0)
     End If
 End Sub
 
-Private Sub UpdateActiveUserInfomation(ByVal uName As String, ByVal uType As String, ByVal uStatus As String, ByVal uID As String, ByVal uPassword As String)
+Private Sub UpdateActiveUserInfomation(ByVal uname As String, ByVal uType As String, ByVal uStatus As String, ByVal uID As String, ByVal uPassword As String)
     'Show Active user info on Always On Frame
     With ExtendedMethods
-        Call .ChangeControlProperties(Me.lblActiveUsername, uName)
+        Call .ChangeControlProperties(Me.lblActiveUsername, uname)
         Call .ChangeControlProperties(Me.lblActiveUserType, uType)
         Call .ChangeControlProperties(Me.lblActiveUserID, uID)
         Call .ChangeControlProperties(Me.lblActiveUserPassword, uPassword)
@@ -1196,7 +1201,7 @@ Private Sub UpdateActiveUserInfomation(ByVal uName As String, ByVal uType As Str
     'Update Active user information in Main Model
     With MainModel
         .ActiveUserID = uID
-        .ActiveUserName = uName
+        .ActiveUserName = uname
         .ActiveUserPassword = uPassword
         .ActiveUserStatus = uStatus
         .ActiveUserType = uType

@@ -89,7 +89,8 @@ Public Function ApplyFormat(ByVal inputValue As String, ByVal formatType As Data
     End Select
 End Function
 
-'For approver, we do not want him to edit the record so by using this function we can enabled disabled the controls based on user type
+'For approver, we do not want him to edit the record so by using this function we can _
+enabled disabled the controls based on user type
 
 Public Sub FormEditingState(ByVal LockState As Boolean, ParamArray ctrls() As Variant)
     Dim ctrl As Variant
