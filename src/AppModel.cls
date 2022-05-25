@@ -287,6 +287,7 @@ End Function
 
 'Following function will pick unique list from the list!
 Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal TargetColumn As Long) As Variant
+    
     'Driving Paramters
     Dim Records()               As String
     Dim Record                  As Variant
@@ -297,10 +298,13 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     Dim I                       As Long
     Dim tmp                     As Variant
     Dim dict                    As Dictionary
+    Dim uname                   As String
+    
     'Get Driving parameters
     firstRow = LBound(ContextTable, 1)
     lastRow = UBound(ContextTable, 1)
     ReDim tmp(0)
+    
     'Get matching Rows!
     MatchedRecords = vbNullString
     TotalMatchingRows = 0
@@ -312,6 +316,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
             TotalMatchingRows = TotalMatchingRows + 1
         End If
     Next I
+    
     'remove last seperator from the matchedrecords variable
     Set dict = Nothing
     If MatchedRecords = vbNullString Then
@@ -320,24 +325,59 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     Else
         MatchedRecords = VBA.Left$(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
     End If
+    
     'Redimentioning the tmp array
     ReDim tmp(TotalMatchingRows)
+    
     'Transferring Data
     Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
     I = 1
     For Each Record In Records
-        tmp(I) = ContextTable(Record, TargetColumn)
+        If TargetColumn = MainTableFields.COL_MAIN_userID Then
+            uname = GetLookupValue(Me.usersTable, ContextTable(Record, TargetColumn), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+            If uname <> vbNullString Then
+                tmp(I) = uname
+            Else
+                ReDim Preserve tmp(TotalMatchingRows - 1)
+            End If
+        Else
+            If VBA.IsNumeric(ContextTable(Record, TargetColumn)) Then
+                tmp(I) = VBA.CDbl(ContextTable(Record, TargetColumn))
+            Else
+                tmp(I) = ContextTable(Record, TargetColumn)
+            End If
+        End If
         I = I + 1
     Next Record
+    
     'return value
     GetUniqueListFromColumn = SortOneDimensionalArrayWithNumbers(tmp)
+End Function
+
+'following function act as Vlookup
+
+Private Function GetLookupValue(ByVal TargetTable As Variant, _
+                                ByVal LookupValue As Variant, _
+                                ByVal LookupIndex As Long, _
+                                ByVal TargetIndex As Long) As String
+    Dim I   As Long
+    Dim LB  As Long
+    Dim UB  As Long
+    LB = LBound(TargetTable, 1)
+    UB = UBound(TargetTable, 1)
+    For I = LB To UB
+        If TargetTable(I, LookupIndex) = LookupValue Then
+            GetLookupValue = TargetTable(I, TargetIndex)
+            Exit Function
+        End If
+    Next I
 End Function
 
 'Following function will Sort One Dimensional Array in Ascending Order !
 Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Variant
     Dim FirstItemIndex  As Long
     Dim LastItemIndex   As Long
-    Dim tmp             As Long
+    Dim tmp             As Double
     Dim I               As Long
     Dim J               As Long
     FirstItemIndex = LBound(arr)
