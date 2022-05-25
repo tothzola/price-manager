@@ -21,7 +21,9 @@ Public Event OpenDataForm(ByVal DFModel As DataFormModel, ByVal ContainerIdentif
 Public Event CloseDataForm()
 Public Event EditRecordFromDataForm(ByVal DFModel As DataFormModel)
 Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-
+Public Event FilterAndSortDataFormList()
+Public Event PopulateValuesComboBox(ByVal DFModel As DataFormModel, ByVal TargetColumnIndex As Long)
+Public Event ResetDataForm(ByVal DFModel As DataFormModel, ByVal ContainerIdentifier As DataContainer)
 '-------------------------------------------------------------------------
 
 Private Type TDataFormComponents
@@ -68,8 +70,20 @@ Private Sub MainView_EditRecordFromDataFormFrame()
     End If
 End Sub
 
+Private Sub MainView_FilterAndSortListFromDataFormFrame()
+    RaiseEvent FilterAndSortDataFormList
+End Sub
+
 Private Sub MainView_OpenDataFormFrame(ByVal ContainerIdentifier As DataContainer)
     RaiseEvent OpenDataForm(model, ContainerIdentifier)
+End Sub
+
+Private Sub MainView_PopulateValuesList(ByVal TargetColumn As String)
+    RaiseEvent PopulateValuesComboBox(model, model.GetTargetColumnIndex(TargetColumn))
+End Sub
+
+Private Sub MainView_ResetDataFormFrame(ByVal ContainerIdentifier As DataContainer)
+    RaiseEvent ResetDataForm(model, ContainerIdentifier)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -80,3 +94,4 @@ Private Sub Class_Terminate()
     Set model = Nothing
     Set MainView = Nothing
 End Sub
+

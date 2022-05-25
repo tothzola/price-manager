@@ -153,6 +153,38 @@ Public Function arrHeaders_Export_Report() As Variant
                                      "Valid To Date")
 End Function
 
+Public Function arrListOfColumnsMainTable() As Variant
+    arrListOfColumnsMainTable = Array("", _
+                                    "User_Name", _
+                                    "Record_Status", _
+                                    "Status_Change_Date", _
+                                    "Customer_ID", _
+                                    "Material_ID", _
+                                    "Price", _
+                                    "CurrencyField", _
+                                    "Unit_Of_Price")
+End Function
+
+Public Function arrListOfColumnsMainTableFull() As Variant
+    arrListOfColumnsMainTableFull = Array("", _
+                                    "Index", _
+                                    "Record_ID", _
+                                    "User_Name", _
+                                    "Record_Status", _
+                                    "Status_Change_Date", _
+                                    "Condition_Type", _
+                                    "Sales_Organization", _
+                                    "Distribution_Channel", _
+                                    "Customer_ID", _
+                                    "Material_ID", _
+                                    "Price", _
+                                    "CurrencyField", _
+                                    "Unit_Of_Price", _
+                                    "Unit_Of_Measure", _
+                                    "Valid_From_Date", _
+                                    "Valid_To_Date")
+End Function
+
 'following functions returns array objects that will be used as dataSource for the comboboxes.
 'If the combobox uses dynamic data then ofcourse it can be managed from the database application
 'but generally, some lists never evolve with the time and if situation occures then

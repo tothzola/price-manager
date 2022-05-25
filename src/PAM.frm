@@ -47,6 +47,8 @@ Public Event OpenDataFormFrame(ByVal ContainerIdentifier As DataContainer)
 Public Event CloseDataFormFrame()
 Public Event ResetDataFormFrame(ByVal ContainerIdentifier As DataContainer)
 Public Event EditRecordFromDataFormFrame()
+Public Event FilterAndSortListFromDataFormFrame()
+Public Event PopulateValuesList(ByVal TargetColumn As String)
 'Export Form Frame Events
 Public Event OpenExportFormFrame()
 Public Event CloseExportFormFrame()
@@ -469,6 +471,28 @@ Private Sub lstRecordsContainer_Click()
             Me.cmdEditRecord.Enabled = False
         End If
     End With
+End Sub
+
+Private Sub cmdFilterAndSort_Click()
+    With Me
+        DataModel.selectedColumn = DataModel.GetTargetColumnIndex(.cmbColumns.Value)
+        DataModel.selectedValue = .cmbValues.Value
+    End With
+    RaiseEvent FilterAndSortListFromDataFormFrame
+End Sub
+
+Private Sub cmbColumns_Change()
+    If Me.cmbColumns.ListIndex > 0 Then
+        Me.cmbValues.Value = vbNullString
+        RaiseEvent PopulateValuesList(Me.cmbColumns.Value)
+    End If
+End Sub
+
+Private Sub cmdResetDataForm_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
+    RaiseEvent ResetDataFormFrame(DataModel.ActiveDataContainer)
+    Me.MousePointer = fmMousePointerDefault
 End Sub
 
 '-------------------------------------------------------------------------
@@ -896,7 +920,7 @@ Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
         'Attach Model
         If DataModel Is Nothing Then Set DataModel = DataFormFrameModel
         'Clear Data Form Controls
-        Call ExtendedMethods.SetStateofControlsToNullState(.lstRecordsContainer)
+        Call ExtendedMethods.SetStateofControlsToNullState(.lstRecordsContainer, .cmbColumns, .cmbValues)
     'Repopulate ListBox and hydrate some of data model properties
         .lblListType = DataModel.ListTitle
         'Filling up listbox with criteria
@@ -905,6 +929,7 @@ Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
             .ColumnWidths = "0;0;;;;0;0;0;;;;;0;0;0;0;"
             .List = DataModel.GetDataForRecordsList
         End With
+        .cmbColumns.List = DataModel.DataColumnsList
         'Allow Approver in any case to Approve or Reject Again!
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             DataModel.IsApprover = True
@@ -970,6 +995,28 @@ Public Sub UserWantsToLogin()
     Else
         Call ExtendedMethods.ShowMessage(response, TYPE_CRITICAL)
     End If
+End Sub
+
+Public Sub ApplicationWantsToUpdateValueListComboBox()
+    Me.cmbValues.List = DataModel.ValuesList
+    Me.cmbValues.SetFocus
+End Sub
+
+Public Sub UserWantsToFilterAndSortDataFormList()
+    With Me
+        'Clear Data Form Controls
+        Call ExtendedMethods.SetStateofControlsToNullState(.lstRecordsContainer)
+        'Update Listbox
+        With .lstRecordsContainer
+            .ColumnCount = 16
+            .ColumnWidths = "0;0;;;;0;0;0;;;;;0;0;0;0;"
+        End With
+        If .cmbColumns.Value = vbNullString And .cmbValues.Value = vbNullString Then
+            Me.lstRecordsContainer.List = DataModel.GetDataForRecordsList
+        Else
+            Me.lstRecordsContainer.List = DataModel.GetFilteredAndSortedList
+        End If
+    End With
 End Sub
 
 '-------------------------------------------------------------------------

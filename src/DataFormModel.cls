@@ -11,9 +11,17 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type TDataFormModelComponents
+    'Validation Components
+    Validator As ValidationServices
     'Tables
     dataTable As Variant
     usersTable As Variant
+    'List Single Columns
+    DataColumnsList As Variant
+    ValuesList As Variant
+    'Input fields
+    selectedColumn As Long
+    selectedValue As Variant
     'Fields
     index As Long
     RecordID As String
@@ -40,6 +48,16 @@ Private this As TDataFormModelComponents
 
 '-------------------------------------------------------------------------
 
+Public Property Get Validator() As ValidationServices
+    Set Validator = this.Validator
+End Property
+
+Public Property Set Validator(ByVal vNewValue As ValidationServices)
+    Set this.Validator = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
 Public Property Get dataTable() As Variant
     dataTable = this.dataTable
 End Property
@@ -56,6 +74,46 @@ End Property
 
 Public Property Let usersTable(ByVal vNewValue As Variant)
     this.usersTable = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get DataColumnsList() As Variant
+    DataColumnsList = this.DataColumnsList
+End Property
+
+Public Property Let DataColumnsList(ByVal vNewValue As Variant)
+    this.DataColumnsList = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get ValuesList() As Variant
+    ValuesList = this.ValuesList
+End Property
+
+Public Property Let ValuesList(ByVal vNewValue As Variant)
+    this.ValuesList = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get selectedValue() As Variant
+    selectedValue = this.selectedValue
+End Property
+
+Public Property Let selectedValue(ByVal vNewValue As Variant)
+    this.selectedValue = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get selectedColumn() As Long
+    selectedColumn = this.selectedColumn
+End Property
+
+Public Property Let selectedColumn(ByVal vNewValue As Long)
+    this.selectedColumn = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -322,6 +380,112 @@ Public Function GetDataForRecordsList() As Variant
     GetDataForRecordsList = tmp
 End Function
 
+Public Function GetFilteredAndSortedList() As Variant
+    
+    'Variables Declaration
+    Dim firstRowIndex       As Long
+    Dim lastRowIndex        As Long
+    Dim firstColumnIndex    As Long
+    Dim lastColumnIndex     As Long
+    Dim TotalMatchingRows   As Long
+    Dim MatchingIndexes     As String
+    Dim Records()           As String
+    Dim Record              As Variant
+    Dim tmp                 As Variant
+    Dim I                   As Long
+    Dim J                   As Long
+    Dim IsValidRow          As Boolean
+    Dim uname               As String
+    
+    'you are here because user has set some criteria!
+    firstRowIndex = LBound(Me.dataTable, 1)
+    lastRowIndex = UBound(Me.dataTable, 1)
+    firstColumnIndex = LBound(Me.dataTable, 2)
+    lastColumnIndex = UBound(Me.dataTable, 2)
+    
+    'if Selected Column is User_Name then
+    If Me.selectedColumn = 3 Then
+        Me.selectedValue = GetLookupValue(Me.usersTable, Me.selectedValue, UsersTableFields.COL_userName, UsersTableFields.COL_userId)
+    End If
+    
+    'Init Parameters
+    TotalMatchingRows = 1
+    MatchingIndexes = 1 & SEPERATOR_ITEM
+    
+    'Getting Matching Indexes
+    
+    For I = firstRowIndex + 1 To lastRowIndex
+        
+        Select Case Me.selectedColumn
+                
+            Case MainTableFields.COL_MAIN_statusChangeDate
+                
+                IsValidRow = Me.Validator.IsValidToInclude(Me.dataTable(I, Me.selectedColumn), TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
+                If Not IsValidRow Then GoTo IgnoreThisRow
+            
+            Case Else
+            
+                IsValidRow = Me.Validator.IsValidToInclude(Me.dataTable(I, Me.selectedColumn), TYPE_STRINGMATCH, Me.selectedValue)
+                If Not IsValidRow Then GoTo IgnoreThisRow
+                
+        End Select
+        
+        'if you are here means, the row meets all criterias and happy to include!
+        If IsValidRow Then
+            TotalMatchingRows = TotalMatchingRows + 1
+            MatchingIndexes = MatchingIndexes & I & SEPERATOR_ITEM
+        End If
+        
+IgnoreThisRow:
+    Next I
+    
+    'Remove Last Seperator Characters
+    MatchingIndexes = VBA.Left$(MatchingIndexes, VBA.Len(MatchingIndexes) - VBA.Len(SEPERATOR_ITEM))
+    
+    'Generate Array of all matching indexes
+    Records = VBA.Split(MatchingIndexes, SEPERATOR_ITEM)
+    
+    'Redim Tmp Array
+    ReDim tmp(firstRowIndex To TotalMatchingRows, firstColumnIndex To lastColumnIndex)
+    
+    'Create Export Table
+    I = 1
+    For Each Record In Records
+        uname = GetLookupValue(Me.usersTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        If uname <> vbNullString Then
+            For J = firstColumnIndex To lastColumnIndex
+                'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
+                                looking up relative values from the another table!
+                If J = MainTableFields.COL_MAIN_userID Then
+                    tmp(I, J) = uname
+                    GoTo NextIteration
+                End If
+                'NO GUARD CLAUSE : For Rest of the cells
+                tmp(I, J) = Me.dataTable(Record, J)
+NextIteration:
+            Next J
+            I = I + 1
+        End If
+    Next Record
+
+    'Submit value to Export Data Array
+    GetFilteredAndSortedList = tmp
+    
+End Function
+
+Public Function GetTargetColumnIndex(ByVal TargetColumn As String) As Long
+    Dim Header As Variant
+    Dim I As Long
+    I = 0
+    For Each Header In modDataSources.arrListOfColumnsMainTableFull
+        If Header = TargetColumn Then
+            GetTargetColumnIndex = I
+            Exit Function
+        End If
+        I = I + 1
+    Next Header
+End Function
+
 'following function act as Vlookup
 
 Private Function GetLookupValue(ByVal TargetTable As Variant, _
@@ -350,3 +514,12 @@ Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetInd
         End If
     Next I
 End Function
+
+'-------------------------------------------------------------------------
+'Class Events
+'-------------------------------------------------------------------------
+
+Private Sub Class_Terminate()
+    Set Validator = Nothing
+End Sub
+

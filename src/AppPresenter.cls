@@ -532,11 +532,44 @@ Private Sub presenterDataFormFrame_OpenDataForm(ByVal DFModel As DataFormModel, 
         End Select
         .usersTable = model.usersTable
         .ActiveDataContainer = ContainerIdentifier
+        .DataColumnsList = modDataSources.arrListOfColumnsMainTable
+        If .Validator Is Nothing Then Set .Validator = New ValidationServices
     End With
     If mainService.IsEverythingOkayInEngine Then
         'Call View Method to Open Data Form Frame!
         Call view.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
     End If
+End Sub
+
+Private Sub presenterDataFormFrame_ResetDataForm(ByVal DFModel As DataFormModel, ByVal ContainerIdentifier As DataContainer)
+    'Hydrate Model Properties!
+    With DFModel
+        Select Case ContainerIdentifier
+            Case DataContainer.FOR_CLIENTHISTORY
+                .dataTable = mainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_userID, model.ActiveUserID)
+            Case DataContainer.FOR_PENDINGAPPROVALS
+                .dataTable = mainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_recordStatus, "PENDING")
+            Case DataContainer.FOR_ALLHISTORY
+                .dataTable = model.mainTable
+        End Select
+        .usersTable = model.usersTable
+        .ActiveDataContainer = ContainerIdentifier
+        .DataColumnsList = modDataSources.arrListOfColumnsMainTable
+        If .Validator Is Nothing Then Set .Validator = New ValidationServices
+    End With
+    If mainService.IsEverythingOkayInEngine Then
+        'Call View Method to Open Data Form Frame!
+        Call view.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
+    End If
+End Sub
+
+Private Sub presenterDataFormFrame_FilterAndSortDataFormList()
+    Call view.UserWantsToFilterAndSortDataFormList
+End Sub
+
+Private Sub presenterDataFormFrame_PopulateValuesComboBox(ByVal DFModel As DataFormModel, ByVal TargetColumnIndex As Long)
+    DFModel.ValuesList = model.GetUniqueListFromColumn(DFModel.dataTable, TargetColumnIndex)
+    Call view.ApplicationWantsToUpdateValueListComboBox
 End Sub
 
 Private Sub presenterDataFormFrame_EditRecordFromDataForm(ByVal DFModel As DataFormModel)
