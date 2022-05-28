@@ -274,12 +274,13 @@ End Sub
     '3. userType
     '4. userName
     '5. password
+    '6. Email
 'index will be alloted automatically so we should start from 1 to 5
 
 Private Sub presenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
     Call RefreshUsersTable
     With UMModel
-        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .UserName, .userPassword)
+        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .UserName, .userPassword, .userEmail)
     End With
     If userService.IsEverythingOkayInEngine Then
         Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
@@ -292,7 +293,7 @@ Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOf
     With UMModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex, .userID)
         If response = True Then
-            Call userService.UpdateRecordOfContextTable(.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword)
+            Call userService.UpdateRecordOfContextTable(.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword, .userEmail)
             If userService.IsEverythingOkayInEngine Then
                 Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
             End If
