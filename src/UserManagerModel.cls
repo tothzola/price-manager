@@ -15,7 +15,7 @@ Option Explicit
 Private Type TUserManagerFormModelComponents
     'Validation Objects
     Validator As ValidationServices
-    CheckFields(UsersTableFields.COL_userStatus To UsersTableFields.COL_password) As Variant
+    CheckFields(UsersTableFields.COL_userStatus To UsersTableFields.COL_email) As Variant
     'Table
     usersTable As Variant
     'single column lists
@@ -28,6 +28,7 @@ Private Type TUserManagerFormModelComponents
     UserType As String
     UserName As String
     userPassword As String
+    userEmail As String
     'Attribute
     operation As FormOperation
 End Type
@@ -136,6 +137,16 @@ End Property
 
 '-------------------------------------------------------------------------
 
+Public Property Get userEmail() As String
+    userEmail = this.userEmail
+End Property
+
+Public Property Let userEmail(ByVal vNewValue As String)
+    this.userEmail = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
 Public Property Get operation() As FormOperation
     operation = this.operation
 End Property
@@ -182,6 +193,7 @@ Public Sub SetPropertiesToUpdateUserState()
         .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userId)
         .UserName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
+        .userEmail = Me.usersTable(TargetRow, UsersTableFields.COL_email)
         .userStatus = Me.usersTable(TargetRow, UsersTableFields.COL_userStatus)
         .UserType = Me.usersTable(TargetRow, UsersTableFields.COL_userType)
     End With
@@ -194,6 +206,7 @@ Private Sub SetPropertiesToNullState()
         .userPassword = vbNullString
         .userStatus = vbNullString
         .UserType = vbNullString
+        .userEmail = vbNullString
     End With
 End Sub
 
@@ -232,6 +245,13 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = Validator.IsValidPasswordString(Me.userPassword)
+            If Not IsValidField = True Then Exit Function
+        Case UsersTableFields.COL_email
+            'Check 1
+            IsValidField = Validator.IsNotNullValue(Me.userEmail, VBA.TypeName(Me.userEmail))
+            If Not IsValidField = True Then Exit Function
+            'Check 2
+            IsValidField = Validator.IsValidEmailAddress(Me.userEmail)
             If Not IsValidField = True Then Exit Function
     End Select
     'If All Goes Well!

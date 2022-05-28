@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PAM 
    Caption         =   "Price Approval Manager V1.0"
-   ClientHeight    =   5895
+   ClientHeight    =   6015
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   2535
+   ClientWidth     =   2550
    OleObjectBlob   =   "PAM.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -616,6 +616,13 @@ Private Sub txtSetPassword_Change()
     ExtendedMethods.UpdateControlAfterValidation Me.txtSetPassword, UserModel.IsValidField(COL_password), TYPE_WRONGPASSWORDPATTERN
 End Sub
 
+Private Sub txtUserEmail_Change()
+    'hydrate model property
+    UserModel.userEmail = Me.txtUserEmail.Value
+    'validate field
+    ExtendedMethods.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. username@hostname.domain"
+End Sub
+
 Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     With Me.lstUsers
         If .ListIndex > 0 Then
@@ -871,12 +878,12 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
         'Attach Model
         If UserModel Is Nothing Then Set UserModel = UserManagerFormModel
         'clear values of user manager frame fields
-        Call ExtendedMethods.SetStateofControlsToNullState(.txtSetUsername, .txtSetPassword, .cmbUserStatus, .cmbUserType, lstUsers)
+        Call ExtendedMethods.SetStateofControlsToNullState(.txtSetUsername, .txtSetPassword, .cmbUserStatus, .cmbUserType, .txtUserEmail, lstUsers)
         'Repopulate ComboBoxes and Listbox
         .cmbUserStatus.List = UserModel.userStatusList
         .cmbUserType.List = UserModel.userTypesList
         With .lstUsers
-            .ColumnCount = 6
+            .ColumnCount = 7
             .ColumnWidths = "0;45;60"
             .List = UserModel.usersTable
         End With
@@ -1205,6 +1212,7 @@ Private Sub StateForUpdateRecordForUserManager()
         .cmbUserType.Value = UserModel.UserType
         .txtSetUsername.Value = UserModel.UserName
         .txtSetPassword.Value = UserModel.userPassword
+        .txtUserEmail.Value = UserModel.userEmail
         'Button State
         .cmdAddNewUser.Enabled = False
         .cmdUpdateUser.Enabled = True

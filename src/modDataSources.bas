@@ -21,6 +21,7 @@ Public Enum UsersTableFields
     COL_userType
     COL_userName
     COL_password
+    COL_email
 End Enum
 
 Public Enum MainTableFields
@@ -104,7 +105,8 @@ Public Function arrListOfColumns_USERS_TABLE() As Variant
                                          "User_Status", _
                                          "User_Type", _
                                          "Username", _
-                                         "Password")
+                                         "Password", _
+                                         "Email")
 End Function
 
 Public Function arrListOfColumns_MAIN_Table() As Variant
