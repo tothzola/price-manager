@@ -12,6 +12,42 @@ Option Explicit
 
 Private objRegEx As Object
 
+Public Function IsValidEmailAddress(ByVal inputValue As Variant) As Boolean
+    
+    Dim AtSymbolPlace   As Long
+    Dim DoSymbolPlace   As Long
+    
+    'Email              : username@hostname.domainname
+    'Email Elements     : [username][AtSymbol][hostname][DotSymbol][DomainName]
+    
+    'Check 1            : if value has @ or not
+    AtSymbolPlace = VBA.InStr(1, inputValue, "@")
+    IsValidEmailAddress = (AtSymbolPlace > 0)
+    If IsValidEmailAddress = False Then Exit Function
+    
+    'Check 2            : if value has . or not
+    DoSymbolPlace = VBA.InStrRev(inputValue, ".")
+    IsValidEmailAddress = (DoSymbolPlace > 0)
+    If IsValidEmailAddress = False Then Exit Function
+    
+    'Check 3            : if @ and . is placed in proper order or not?
+    IsValidEmailAddress = (DoSymbolPlace > AtSymbolPlace)
+    If IsValidEmailAddress = False Then Exit Function
+    
+    'Check 4            : If username is there or not?
+    IsValidEmailAddress = (AtSymbolPlace > 1)
+    If IsValidEmailAddress = False Then Exit Function
+    
+    'Check 5            : If hostname is there or not?
+    IsValidEmailAddress = (DoSymbolPlace > AtSymbolPlace)
+    If IsValidEmailAddress = False Then Exit Function
+    
+    'Check 6            : if Domainname is there or not?
+    IsValidEmailAddress = (DoSymbolPlace < VBA.Len(inputValue))
+    If IsValidEmailAddress = False Then Exit Function
+    
+End Function
+
 Public Function IsUnique(ByVal TargetTable As Variant, ByVal TargetValue As String, ByVal TargetColumn As Long) As Boolean
     Dim I As Long
     Dim flag As Boolean
