@@ -262,7 +262,7 @@ Public Function IsEverythingOkayToSaveUser() As Variant
     IsEverythingOkayToSaveUser = Validator.IsEverythingOkay(this.CheckFields, _
                                                             modDataSources.arrListOfColumns_USERS_TABLE, _
                                                             UsersTableFields.COL_userStatus, _
-                                                            UsersTableFields.COL_password)
+                                                            UsersTableFields.COL_email)
 End Function
 
 Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
