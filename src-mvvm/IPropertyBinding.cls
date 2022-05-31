@@ -18,22 +18,21 @@ Option Explicit
 Public Enum ApplyResult
     BindingSkipped = 0
     BindingSuccess
-    BindingConversionError
     BindingFailed
 End Enum
 
 Public Enum BindingMode
     TwoWayBinding = 0
-    OneWayBinding = 1
-    OneWayToSource = 2
-    OneTimeBinding = 3
+    OneWayBinding
+    OneWayToSource
+    OneTimeBinding
 End Enum
 
 Public Enum BindingUpdateSourceTrigger
     Never = 0
-    OnChange = 1
-    OnExit = 2
-    OnKeyPress = 3
+    OnChange
+    OnExit
+    OnKeyPress
 End Enum
 
 '@Description "Gets a value indicating the binding mode/direction."
