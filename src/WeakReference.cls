@@ -42,7 +42,7 @@ Public Function Create(ByVal instance As Object) As IWeakReference
 Attribute Create.VB_Description = "Default instance factory method."
 
     With New WeakReference
-        .WorkbookPointer.Add name:="PRICEAPPROVAL_RIBBONPOINTER", RefersTo:=VBA.ObjPtr(instance)
+        .WorkbookPointer.Add Name:="PRICEAPPROVAL_RIBBONPOINTER", RefersTo:=VBA.ObjPtr(instance)
         
         ThisWorkbook.Saved = True
 

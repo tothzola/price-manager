@@ -60,7 +60,7 @@ End Enum
 Public Enum RepositoryType
     TYPE_EXCEL_NAMED_RANGE
     TYPE_SHAREPOINT_LIST
-    TYPE_MYSQL
+    TYPE_POSTGRESQL
     TYPE_ACCESS
 End Enum
 
@@ -119,13 +119,10 @@ Public Enum ValidationCheckTypes
 End Enum
 
 Public Function EXPORTREPORT_CURRENCYFORMAT() As String
-    'New Currency Format = "_(* #,##0.00_);_(* (#,##0.00);_(* '-'??_);_(@_)"
-    EXPORTREPORT_CURRENCYFORMAT = "_(* #" & Application.International(xlThousandsSeparator) & "##0" & _
-                                            Application.International(xlDecimalSeparator) & "00_);_(* (#" & _
-                                            Application.International(xlThousandsSeparator) & "##0" & _
-                                            Application.International(xlDecimalSeparator) & _
-                                            "00);_(* '-'??_);_(@_)"
+    EXPORTREPORT_CURRENCYFORMAT = "Comma"
 End Function
 
-
-
+Public Sub WaitForOneSecond()
+    VBA.DoEvents
+    Call Excel.Application.Wait(Now + TimeValue("00:00:01"))
+End Sub

@@ -12,6 +12,29 @@ Option Explicit
 
 Private objRegEx As Object
 
+Public Function IsValidEmailAddress(ByVal inputValue As Variant) As Boolean
+
+    If Not objRegEx Is Nothing Then
+        objRegEx.Global = True
+        objRegEx.Pattern = "^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,6}))*$"
+        IsValidEmailAddress = objRegEx.Test(inputValue)
+    End If
+    
+End Function
+
+Public Function IsUnique(ByVal TargetTable As Variant, ByVal TargetValue As String, ByVal TargetColumn As Long) As Boolean
+    Dim I As Long
+    Dim flag As Boolean
+    flag = True
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1) Step 1
+        If UCase(TargetTable(I, TargetColumn)) = UCase(TargetValue) Then
+            flag = False
+            Exit For
+        End If
+    Next I
+    IsUnique = flag
+End Function
+
 'Following function is to filter table data by checking with different formats of data!
 'inputValue would be table's Cell Data on which we have test if that cell meets criteria or not
 'checkType would give idea that what kind of checking this is! either we are cheking two numbers, two string or dates?
@@ -84,7 +107,8 @@ Public Function IsBetweenNumericalRange(ByVal inputValue As String, _
     On Error GoTo CleanFail
     
     'owerflow error is rased if len(inputValue) > len(maxvalue)
-    result = False 'I have habit of not depending on default value of any type of variables! I explicitly assign value to it!
+    result = False 'I have habit of not depending on default value of any type of variables_
+                    '! I explicitly assign value to it!
     If VBA.CDbl(inputValue) > minValue And VBA.CDbl(inputValue) <= maxvalue Then
         result = True
     Else
@@ -186,28 +210,28 @@ Public Function IsValidStringLength(ByVal inputString As Variant, ByVal checklen
 End Function
 
 'check if the user is authorized or not?
-Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal userName As String, ByVal password As String, ByVal userCol As Long, ByVal passCol As Long) As Variant
+Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As String, ByVal Password As String, ByVal userCol As Long, ByVal passCol As Long) As Variant
     Dim I As Long
     Dim userFlag As Boolean
     Dim passFlag As Boolean
     userFlag = False
     passFlag = False
     'validation for initial check
-    If userName = vbNullString And password = vbNullString Then
+    If UserName = vbNullString And Password = vbNullString Then
         IsUserAuthorized = "Username and Passwrod fields are empty! Kindly fill in to Login"
         Exit Function
-    ElseIf userName = vbNullString And password <> vbNullString Then
+    ElseIf UserName = vbNullString And Password <> vbNullString Then
         IsUserAuthorized = "Username field is empty! Kindly fill in to Login."
         Exit Function
-    ElseIf userName <> vbNullString And password = vbNullString Then
+    ElseIf UserName <> vbNullString And Password = vbNullString Then
         IsUserAuthorized = "Password field is empty! Kindly fill in to Login."
         Exit Function
     End If
     'if validation check confirm then go for the next process
     For I = 1 To UBound(dataTable, 1)
-        If dataTable(I, userCol) = userName Then
+        If UCase(dataTable(I, userCol)) = UCase(UserName) Then
         userFlag = True
-            If dataTable(I, passCol) = password Then
+            If dataTable(I, passCol) = Password Then
                 passFlag = True
             End If
         End If

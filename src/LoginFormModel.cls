@@ -15,8 +15,8 @@ Option Explicit
 Private Type TLoginFormModelComponents
     Validator As ValidationServices
     usersData As Variant
-    userName As String
-    password As String
+    UserName As String
+    Password As String
     TargetIndex As Long
 End Type
 
@@ -46,22 +46,22 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get userName() As String
-    userName = this.userName
+Public Property Get UserName() As String
+    UserName = this.UserName
 End Property
 
-Public Property Let userName(ByVal vNewValue As String)
-    this.userName = vNewValue
+Public Property Let UserName(ByVal vNewValue As String)
+    this.UserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get password() As String
-    password = this.password
+Public Property Get Password() As String
+    Password = this.Password
 End Property
 
-Public Property Let password(ByVal vNewValue As String)
-    this.password = vNewValue
+Public Property Let Password(ByVal vNewValue As String)
+    this.Password = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -85,7 +85,8 @@ End Property
 Public Property Get userStatus() As String
     Dim I As Long
     For I = 1 To UBound(Me.usersData, 1)
-        If Me.usersData(I, UsersTableFields.COL_userName) = Me.userName Then
+        If UCase(Me.usersData(I, UsersTableFields.COL_userName)) = UCase(Me.UserName) Then
+            Me.UserName = Me.usersData(I, UsersTableFields.COL_userName)
             Me.TargetIndex = I
             userStatus = Me.usersData(I, UsersTableFields.COL_userStatus)
             Exit Property
@@ -96,7 +97,7 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get userID() As String
-    userID = Me.usersData(TargetIndex, UsersTableFields.COL_userID)
+    userID = Me.usersData(TargetIndex, UsersTableFields.COL_userId)
 End Property
 
 '-------------------------------------------------------------------------
@@ -113,15 +114,15 @@ End Sub
 '-------------------------------------------------------------------------
 
 Public Function IsValidUsername() As Boolean
-    IsValidUsername = Validator.IsNotNullValue(Me.userName, VBA.TypeName(Me.userName))
+    IsValidUsername = Validator.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
 End Function
 
 Public Function IsValidPassword() As Boolean
-    IsValidPassword = Validator.IsNotNullValue(Me.password, VBA.TypeName(Me.password))
+    IsValidPassword = Validator.IsNotNullValue(Me.Password, VBA.TypeName(Me.Password))
 End Function
 
 Public Function IsUserAuthorized() As Variant
-    IsUserAuthorized = Validator.IsUserAuthorized(Me.usersData, Me.userName, Me.password, UsersTableFields.COL_userName, UsersTableFields.COL_password)
+    IsUserAuthorized = Validator.IsUserAuthorized(Me.usersData, Me.UserName, Me.Password, UsersTableFields.COL_userName, UsersTableFields.COL_password)
 End Function
 
 '-------------------------------------------------------------------------

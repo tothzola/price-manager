@@ -28,9 +28,9 @@ Const CONTROL_NAME_OK As String = "OK"
 Const Error_NonNumericalInput As Long = 1
 
 'Colors
-Const INVALID_FIELD_BACKCOLOR As Long = COLOR_OF_NOT_OKAY
-Const INVALID_FIELD_FONTCOLOR As Long = vbWhite
-Const VALID_FIELD_BACKCOLOR As Long = vbWhite
+Const INVALID_FIELD_BORDERCOLOR As Long = COLOR_OF_NOT_OKAY
+Const INVALID_FIELD_FONTCOLOR As Long = COLOR_OF_NOT_OKAY
+Const VALID_FIELD_BORDERCOLOR As Long = &HC0C0C0
 Const VALID_FIELD_FONTCOLOR As Long = vbBlack
 
 '-----------------------------------------------------------------------
@@ -89,7 +89,8 @@ Public Function ApplyFormat(ByVal inputValue As String, ByVal formatType As Data
     End Select
 End Function
 
-'For approver, we do not want him to edit the record so by using this function we can enabled disabled the controls based on user type
+'For approver, we do not want him to edit the record so by using this function we can _
+enabled disabled the controls based on user type
 
 Public Sub FormEditingState(ByVal LockState As Boolean, ParamArray ctrls() As Variant)
     Dim ctrl As Variant
@@ -117,13 +118,17 @@ Public Sub UpdateControlAfterValidation(ByVal ctrl As MSForms.Control, ByVal val
         Select Case VBA.TypeName(ctrl)
             Case "TextBox", "ComboBox"
                 If valid Then
-                    .BackColor = VALID_FIELD_BACKCOLOR
+                    .BorderColor = VALID_FIELD_BORDERCOLOR
                     .ForeColor = VALID_FIELD_FONTCOLOR
                     Call RemoveWarningLabel(ctrl, warning)
                 Else
-                    .BackColor = INVALID_FIELD_BACKCOLOR
+                    .BorderColor = INVALID_FIELD_BORDERCOLOR
                     .ForeColor = INVALID_FIELD_FONTCOLOR
-                    Call InsertWarningLabel(ctrl, warning, warningMessage)
+                    If ctrl.Value <> vbNullString Then
+                        Call InsertWarningLabel(ctrl, warning, warningMessage)
+                    Else
+                        Call RemoveWarningLabel(ctrl, warning)
+                    End If
                 End If
         End Select
     End With
@@ -140,8 +145,8 @@ End Sub
 
 'Hydrate Comboboxes
 
-Public Sub HydrateComboBox(ByVal cmb As MSForms.ComboBox, ByVal data As Variant)
-    cmb.List = data
+Public Sub HydrateComboBox(ByVal cmb As MSForms.ComboBox, ByVal Data As Variant)
+    cmb.List = Data
 End Sub
 
 'Change Control's Value and Font Color
@@ -241,29 +246,26 @@ End Sub
 
 Private Sub RemoveWarningLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As String)
     Select Case ctrlName
+        Case WarningType.TYPE_NA
+            Exit Sub
         Case WarningType.TYPE_NUMBERSONLY
             HidingLabel ctrl, "TYPE_NUMBERSONLY"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_STRINGSNOTMATCHED
             HidingLabel ctrl, "TYPE_STRINGSNOTMATCHED"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_WRONGPASSWORDPATTERN
             HidingLabel ctrl, "TYPE_WRONGPASSWORDPATTERN"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_FIXEDLENGTHSTRING
             HidingLabel ctrl, "TYPE_FIXEDLENGTHSTRING"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_CUSTOM
             HidingLabel ctrl, "TYPE_CUSTOM"
-            InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
         Case WarningType.TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied
             HidingLabel ctrl, "TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied"
-            If ctrl.Value <> vbNullString Then
-                InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
-            Else
-                HidingLabel ctrl, CONTROL_NAME_OK
-            End If
     End Select
+    If ctrl.Value <> vbNullString Then
+        InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
+    Else
+        HidingLabel ctrl, CONTROL_NAME_OK
+    End If
 End Sub
 
 'Inserting Warning Label
@@ -385,6 +387,7 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
     'Get Sepearator String
     ThousandSeperator = Application.International(xlThousandsSeparator)
     DecimalSeperator = Application.International(xlDecimalSeparator)
+    inputValue = TransformToAPPCompatibleCurrency(inputValue)
     
     'check if decimal seperator has been used or not ?
     If VBA.InStr(1, inputValue, DecimalSeperator) > 0 Then
@@ -470,6 +473,20 @@ EhhErr:
     Err.Clear
     Resume CleanExit
     
+End Function
+
+'Following function will convert currency to Application Compatible currency format! _
+this is very interesting because, We should always keep database column format in _
+single culture format. Like, en_US format, and we always get data from the database _
+in decimal seperator dot format. So if in case our user is german, than that currency will _
+be invalid string and hence, we have to make few changes by replacing dot with comma to make _
+it compitable with App format. Rest of the work will be carried by then FormatStringToCurrency Function.
+
+Private Function TransformToAPPCompatibleCurrency(ByVal inputValue As String) As String
+    If Application.International(xlDecimalSeparator) = "," Then
+        inputValue = VBA.Replace(inputValue, ".", ",")
+    End If
+    TransformToAPPCompatibleCurrency = inputValue
 End Function
 
 

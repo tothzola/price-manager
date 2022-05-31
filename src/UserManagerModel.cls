@@ -15,7 +15,7 @@ Option Explicit
 Private Type TUserManagerFormModelComponents
     'Validation Objects
     Validator As ValidationServices
-    CheckFields(UsersTableFields.COL_userStatus To UsersTableFields.COL_password) As Variant
+    CheckFields(UsersTableFields.COL_userStatus To UsersTableFields.COL_email) As Variant
     'Table
     usersTable As Variant
     'single column lists
@@ -26,8 +26,11 @@ Private Type TUserManagerFormModelComponents
     userID As String
     userStatus As String
     UserType As String
-    userName As String
+    UserName As String
     userPassword As String
+    userEmail As String
+    'Attribute
+    operation As FormOperation
 End Type
 
 Private this As TUserManagerFormModelComponents
@@ -114,12 +117,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get userName() As String
-    userName = this.userName
+Public Property Get UserName() As String
+    UserName = this.UserName
 End Property
 
-Public Property Let userName(ByVal vNewValue As String)
-    this.userName = vNewValue
+Public Property Let UserName(ByVal vNewValue As String)
+    this.UserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -130,6 +133,26 @@ End Property
 
 Public Property Let userPassword(ByVal vNewValue As String)
     this.userPassword = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get userEmail() As String
+    userEmail = this.userEmail
+End Property
+
+Public Property Let userEmail(ByVal vNewValue As String)
+    this.userEmail = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get operation() As FormOperation
+    operation = this.operation
+End Property
+
+Public Property Let operation(ByVal vNewValue As FormOperation)
+    this.operation = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -152,6 +175,7 @@ Public Sub SetPropertiesToNewUserState()
     'Flush All the properties before we start operation
     Call SetPropertiesToNullState
     With Me
+        .operation = OPERATION_NEW
         .userIndex = 0
         .userStatus = USERSTATUS_ACTIVE
         .UserType = USERTYPE_CLIENT
@@ -163,11 +187,13 @@ Public Sub SetPropertiesToUpdateUserState()
     Call SetPropertiesToNullState
     'update operation begins
     Dim TargetRow As Long
-    TargetRow = Me.userIndex
+    TargetRow = GetTargetRowIndex(Me.usersTable, Me.userIndex, UsersTableFields.COL_INDEX)
     With Me
-        .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userID)
-        .userName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
+        .operation = OPERATION_UPDATE
+        .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userId)
+        .UserName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
+        .userEmail = Me.usersTable(TargetRow, UsersTableFields.COL_email)
         .userStatus = Me.usersTable(TargetRow, UsersTableFields.COL_userStatus)
         .UserType = Me.usersTable(TargetRow, UsersTableFields.COL_userType)
     End With
@@ -176,10 +202,11 @@ End Sub
 Private Sub SetPropertiesToNullState()
     With Me
         .userID = vbNullString
-        .userName = vbNullString
+        .UserName = vbNullString
         .userPassword = vbNullString
         .userStatus = vbNullString
         .UserType = vbNullString
+        .userEmail = vbNullString
     End With
 End Sub
 
@@ -202,17 +229,29 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             If Not IsValidField = True Then Exit Function
         Case UsersTableFields.COL_userName
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.userName, VBA.TypeName(Me.userName))
+            IsValidField = Validator.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidStringLength(Me.userName, 6)
+            IsValidField = Validator.IsValidStringLength(Me.UserName, 6)
             If Not IsValidField = True Then Exit Function
+            'Check 3
+            If Me.operation = OPERATION_NEW Then
+                IsValidField = Validator.IsUnique(Me.usersTable, Me.UserName, UsersTableFields.COL_userName)
+                If Not IsValidField = True Then Exit Function
+            End If
         Case UsersTableFields.COL_password
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userPassword, VBA.TypeName(Me.userPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = Validator.IsValidPasswordString(Me.userPassword)
+            If Not IsValidField = True Then Exit Function
+        Case UsersTableFields.COL_email
+            'Check 1
+            IsValidField = Validator.IsNotNullValue(Me.userEmail, VBA.TypeName(Me.userEmail))
+            If Not IsValidField = True Then Exit Function
+            'Check 2
+            IsValidField = Validator.IsValidEmailAddress(Me.userEmail)
             If Not IsValidField = True Then Exit Function
     End Select
     'If All Goes Well!
@@ -223,7 +262,17 @@ Public Function IsEverythingOkayToSaveUser() As Variant
     IsEverythingOkayToSaveUser = Validator.IsEverythingOkay(this.CheckFields, _
                                                             modDataSources.arrListOfColumns_USERS_TABLE, _
                                                             UsersTableFields.COL_userStatus, _
-                                                            UsersTableFields.COL_password)
+                                                            UsersTableFields.COL_email)
+End Function
+
+Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
+    Dim I As Long
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(I, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = I
+            Exit Function
+        End If
+    Next I
 End Function
 
 '-------------------------------------------------------------------------

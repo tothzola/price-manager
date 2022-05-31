@@ -327,7 +327,7 @@ Public Sub SetPropertiesToUpdateRecordState()
     Call SetPropertiesToNullState
     'update operation begins
     Dim TargetRow As Long
-    TargetRow = Me.index
+    TargetRow = GetTargetRowIndex(Me.mainTable, Me.index, MainTableFields.COL_MAIN_INDEX)
     With Me
         .operation = OPERATION_UPDATE
         .RecordID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordID)
@@ -523,6 +523,16 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
     'If All Goes Well!
     this.CheckFields(FieldIndex) = True
     
+End Function
+
+Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
+    Dim I As Long
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(I, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = I
+            Exit Function
+        End If
+    Next I
 End Function
 
 '-------------------------------------------------------------------------

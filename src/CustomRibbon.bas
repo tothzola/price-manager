@@ -30,7 +30,7 @@ CleanFail:
     Err.Raise VBA.vbObjectError + 1091&, ModuleName & ".PriceApprovalRibbon", "Ribbon Load Failed"
     Resume CleanExit
     Resume
-    
+
 End Sub
 
 '@EntryPoint

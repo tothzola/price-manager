@@ -17,7 +17,7 @@ Private Type TPasswordManagerFormModelComponents
     Validator As ValidationServices
     CheckFields(PasswordManagerFields.PM_CURRENT_PASSWORD To PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD) As Variant
     'field Properties
-    password As String
+    Password As String
     insertedPassword As String
     newPassword As String
     confirmNewPassword As String
@@ -69,12 +69,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get password() As String
-    password = this.password
+Public Property Get Password() As String
+    Password = this.Password
 End Property
 
-Public Property Let password(ByVal vNewValue As String)
-    this.password = vNewValue
+Public Property Let Password(ByVal vNewValue As String)
+    this.Password = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -83,7 +83,7 @@ End Property
 
 Public Sub InItModel(ByVal ActiveUserPassword As String)
     If Validator Is Nothing Then Set Validator = New ValidationServices
-    Me.password = ActiveUserPassword
+    Me.Password = ActiveUserPassword
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
     Call Validator.ResetSingleDimensionalArray(this.CheckFields)
@@ -110,7 +110,7 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
             IsValidField = Validator.IsNotNullValue(Me.insertedPassword, VBA.TypeName(Me.insertedPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.ComapreTwoStrings(Me.insertedPassword, Me.password)
+            IsValidField = Validator.ComapreTwoStrings(Me.insertedPassword, Me.Password)
             If Not IsValidField = True Then Exit Function
         Case PasswordManagerFields.PM_NEW_PASSWORD
             'Check 1

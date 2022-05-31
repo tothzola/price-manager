@@ -5,11 +5,12 @@ Application User Interface
 - 
 
 Datamanagement System
-- ex.: Access 
-- Users Table (Client, Approver, Manager, Developer)
+- MS Excel Tables
+- MS Access
+- PostgreSQL (https://heroku.com)
 
 # Workflow
-![Price Manager](https://user-images.githubusercontent.com/25910991/161135720-d12bbedf-0cf3-46b2-9185-fa6526c7a771.png)
+![Price Manager](https://github.com/tothzola/price-manager/blob/main/pictures/WorkFlow_PriceApprovalManager.jpg)
 
 # I. Client opens application:
 - Complets form data
@@ -25,6 +26,18 @@ Datamanagement System
 
 # Application Form Context:	
 ## Client Fields (features and validation)
+
+### Condition Type
+
+**Feature:** entry is required, default value "Y0PR", prefilled.
+
+### Sales Organization
+
+**Feature:** entry is required, selection value "2961", prefilled.
+
+### Distribution Channel
+
+**Feature:** entry is required, selection values "01", "HD", "GY"
 
 ### Customer
 
@@ -90,7 +103,7 @@ Datamanagement System
 
 ### Price Unit
 
-**Feature:** no entry is required, numeric field (format: "####") 
+**Feature:** no entry is required, numeric field (format: "####"), prefilled value is "1"
 
 **Validation:** maximal 4 char length
 
