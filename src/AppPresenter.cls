@@ -13,18 +13,25 @@ Option Explicit
 'Event handllers
 '-------------------------------------------------------------------------
 
+'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents view As PAM
 Attribute view.VB_VarHelpID = -1
+'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterLoginFrame As LoginFormPresenter
 Attribute presenterLoginFrame.VB_VarHelpID = -1
+'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterPasswordManagerFrame As PasswordManagerPresenter
 Attribute presenterPasswordManagerFrame.VB_VarHelpID = -1
+'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterUserManagerFrame As UserManagerPresenter
 Attribute presenterUserManagerFrame.VB_VarHelpID = -1
+'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterPriceFormFrame As PriceFormPresenter
 Attribute presenterPriceFormFrame.VB_VarHelpID = -1
+'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterDataFormFrame As DataFormPresenter
 Attribute presenterDataFormFrame.VB_VarHelpID = -1
+'@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterExportFormFrame As ExportFormPresenter
 Attribute presenterExportFormFrame.VB_VarHelpID = -1
 
@@ -740,6 +747,5 @@ Private Sub Class_Terminate()
     Set mainService = Nothing
     Set report = Nothing
 End Sub
-
 
 
