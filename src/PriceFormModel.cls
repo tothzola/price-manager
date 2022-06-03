@@ -526,13 +526,13 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
 End Function
 
 Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
-    Dim I As Long
-    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
-        If TargetTable(I, TargetColumn) = TargetIndex Then
-            GetTargetRowIndex = I
+    Dim i As Long
+    For i = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(i, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = i
             Exit Function
         End If
-    Next I
+    Next i
 End Function
 
 '-------------------------------------------------------------------------

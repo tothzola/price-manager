@@ -193,13 +193,13 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserIndex() As Variant
-    Dim I As Long
-    For I = 1 To UBound(Me.usersTable, 1)
-        If Me.usersTable(I, UsersTableFields.COL_userName) = Me.ActiveUserName Then
-            ActiveUserIndex = Me.usersTable(I, UsersTableFields.COL_INDEX)
+    Dim i As Long
+    For i = 1 To UBound(Me.usersTable, 1)
+        If Me.usersTable(i, UsersTableFields.COL_userName) = Me.ActiveUserName Then
+            ActiveUserIndex = Me.usersTable(i, UsersTableFields.COL_INDEX)
             Exit Property
         End If
-    Next I
+    Next i
 End Property
 
 '-------------------------------------------------------------------------
@@ -295,7 +295,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     Dim TotalMatchingRows       As Long
     Dim firstRow                As Long
     Dim lastRow                 As Long
-    Dim I                       As Long
+    Dim i                       As Long
     Dim tmp                     As Variant
     Dim dict                    As Dictionary
     Dim uname                   As String
@@ -309,13 +309,13 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     MatchedRecords = vbNullString
     TotalMatchingRows = 0
     Set dict = New Dictionary
-    For I = firstRow + 1 To lastRow
-        If Not dict.Exists(ContextTable(I, TargetColumn)) Then
-            dict.Add ContextTable(I, TargetColumn), ContextTable(I, TargetColumn)
-            MatchedRecords = MatchedRecords & I & SEPERATOR_ITEM
+    For i = firstRow + 1 To lastRow
+        If Not dict.Exists(ContextTable(i, TargetColumn)) Then
+            dict.Add ContextTable(i, TargetColumn), ContextTable(i, TargetColumn)
+            MatchedRecords = MatchedRecords & i & SEPERATOR_ITEM
             TotalMatchingRows = TotalMatchingRows + 1
         End If
-    Next I
+    Next i
     
     'remove last seperator from the matchedrecords variable
     Set dict = Nothing
@@ -331,23 +331,23 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     
     'Transferring Data
     Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
-    I = 1
+    i = 1
     For Each Record In Records
         If TargetColumn = MainTableFields.COL_MAIN_userID Then
             uname = GetLookupValue(Me.usersTable, ContextTable(Record, TargetColumn), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
             If uname <> vbNullString Then
-                tmp(I) = uname
+                tmp(i) = uname
             Else
                 ReDim Preserve tmp(TotalMatchingRows - 1)
             End If
         Else
             If VBA.IsNumeric(ContextTable(Record, TargetColumn)) Then
-                tmp(I) = VBA.CDbl(ContextTable(Record, TargetColumn))
+                tmp(i) = VBA.CDbl(ContextTable(Record, TargetColumn))
             Else
-                tmp(I) = ContextTable(Record, TargetColumn)
+                tmp(i) = ContextTable(Record, TargetColumn)
             End If
         End If
-        I = I + 1
+        i = i + 1
     Next Record
     
     'return value
@@ -360,17 +360,17 @@ Private Function GetLookupValue(ByVal TargetTable As Variant, _
                                 ByVal LookupValue As Variant, _
                                 ByVal LookupIndex As Long, _
                                 ByVal TargetIndex As Long) As String
-    Dim I   As Long
+    Dim i   As Long
     Dim LB  As Long
     Dim UB  As Long
     LB = LBound(TargetTable, 1)
     UB = UBound(TargetTable, 1)
-    For I = LB To UB
-        If TargetTable(I, LookupIndex) = LookupValue Then
-            GetLookupValue = TargetTable(I, TargetIndex)
+    For i = LB To UB
+        If TargetTable(i, LookupIndex) = LookupValue Then
+            GetLookupValue = TargetTable(i, TargetIndex)
             Exit Function
         End If
-    Next I
+    Next i
 End Function
 
 'Following function will Sort One Dimensional Array in Ascending Order !
@@ -378,45 +378,45 @@ Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Var
     Dim FirstItemIndex  As Long
     Dim LastItemIndex   As Long
     Dim tmp             As Double
-    Dim I               As Long
+    Dim i               As Long
     Dim J               As Long
     FirstItemIndex = LBound(arr)
     LastItemIndex = UBound(arr)
-    For I = FirstItemIndex To LastItemIndex - 1
-        For J = I + 1 To LastItemIndex
-            If Val(arr(I)) > Val(arr(J)) Then
+    For i = FirstItemIndex To LastItemIndex - 1
+        For J = i + 1 To LastItemIndex
+            If Val(arr(i)) > Val(arr(J)) Then
                 tmp = arr(J)
-                arr(J) = arr(I)
-                arr(I) = tmp
+                arr(J) = arr(i)
+                arr(i) = tmp
             End If
         Next J
-    Next I
+    Next i
     SortOneDimensionalArrayWithNumbers = arr
 End Function
 
 Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
-    Dim I As Long
-    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
-        If TargetTable(I, TargetColumn) = TargetIndex Then
-            GetTargetRowIndex = I
+    Dim i As Long
+    For i = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(i, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = i
             Exit Function
         End If
-    Next I
+    Next i
 End Function
 
 Private Function GetMax(ByVal TargetTable As Variant, ByVal TargetColumn As Long) As Long
-    Dim I       As Long
+    Dim i       As Long
     Dim LB      As Long
     Dim UB      As Long
     Dim tmp     As Long
     LB = LBound(TargetTable, 1)
     UB = UBound(TargetTable, 1)
     tmp = 0
-    For I = LB + 1 To UB Step 1
-        If TargetTable(I, TargetColumn) > tmp Then
-            tmp = TargetTable(I, TargetColumn)
+    For i = LB + 1 To UB Step 1
+        If TargetTable(i, TargetColumn) > tmp Then
+            tmp = TargetTable(i, TargetColumn)
         End If
-    Next I
+    Next i
     GetMax = tmp
 End Function
 

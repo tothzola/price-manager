@@ -69,11 +69,11 @@ Public mainFrameHeight As Integer
 'Data feed into listbox will be in raw format, so we change then format a column by using this method
 
 Public Sub ReformatListBoxColumns(ByVal ctrl As MSForms.ListBox, ByVal columnIndex As Long, ByVal formatType As DataTypes)
-    Dim I As Long
+    Dim i As Long
     With ctrl
-        For I = 1 To .ListCount - 1
-            .List(I, columnIndex - 1) = ApplyFormat(.List(I, columnIndex - 1), formatType)
-        Next I
+        For i = 1 To .ListCount - 1
+            .List(i, columnIndex - 1) = ApplyFormat(.List(i, columnIndex - 1), formatType)
+        Next i
     End With
 End Sub
 
@@ -124,7 +124,7 @@ Public Sub UpdateControlAfterValidation(ByVal ctrl As MSForms.Control, ByVal val
                 Else
                     .BorderColor = INVALID_FIELD_BORDERCOLOR
                     .ForeColor = INVALID_FIELD_FONTCOLOR
-                    If ctrl.Value <> vbNullString Then
+                    If ctrl.value <> vbNullString Then
                         Call InsertWarningLabel(ctrl, warning, warningMessage)
                     Else
                         Call RemoveWarningLabel(ctrl, warning)
@@ -155,7 +155,7 @@ Public Sub ChangeControlProperties(ByVal ctrl As MSForms.Control, ByVal ctrlValu
     With ctrl
         Select Case VBA.TypeName(ctrl)
             Case CONTROL_TYPE_TEXTBOX, CONTROL_TYPE_COMBOBOX
-                .Value = ctrlValue
+                .value = ctrlValue
             Case CONTROL_TYPE_LABEL
                 .Caption = ctrlValue
         End Select
@@ -171,12 +171,12 @@ Public Sub SetStateofControlsToNullState(ParamArray ctrls() As Variant)
     For Each ctrl In ctrls
         Select Case VBA.TypeName(ctrl)
             Case CONTROL_TYPE_TEXTBOX
-                ctrl.Value = vbNullString
+                ctrl.value = vbNullString
             Case CONTROL_TYPE_LABEL
                 ctrl.Caption = vbNullString
             Case CONTROL_TYPE_COMBOBOX
                 ctrl.Clear
-                ctrl.Value = vbNullString
+                ctrl.value = vbNullString
                 ctrl.Style = 2
             Case CONTROL_TYPE_LISTBOX
                 ctrl.Clear
@@ -261,7 +261,7 @@ Private Sub RemoveWarningLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As 
         Case WarningType.TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied
             HidingLabel ctrl, "TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied"
     End Select
-    If ctrl.Value <> vbNullString Then
+    If ctrl.value <> vbNullString Then
         InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
     Else
         HidingLabel ctrl, CONTROL_NAME_OK
@@ -363,7 +363,7 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
     Dim tmp                     As String
     Dim LenInputValue           As Long
     Dim LenDecimalPart          As Long
-    Dim I                       As Long
+    Dim i                       As Long
     Dim J                       As Long
         
     'error handeling
@@ -438,15 +438,15 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
     tmp = vbNullString
     If VBA.Len(WholeNumberPart) > 3 Then
         J = 1
-        For I = VBA.Len(WholeNumberPart) To 1 Step -1
+        For i = VBA.Len(WholeNumberPart) To 1 Step -1
             If J = 3 Then
-                tmp = ThousandSeperator & VBA.Mid$(WholeNumberPart, I, 1) & tmp
+                tmp = ThousandSeperator & VBA.Mid$(WholeNumberPart, i, 1) & tmp
                 J = 0
             Else
-                tmp = VBA.Mid$(WholeNumberPart, I, 1) & tmp
+                tmp = VBA.Mid$(WholeNumberPart, i, 1) & tmp
             End If
             J = J + 1
-        Next I
+        Next i
         'Clean whole number part
         If VBA.Left$(tmp, 1) = ThousandSeperator Then
             tmp = VBA.Right$(tmp, VBA.Len(tmp) - 1)

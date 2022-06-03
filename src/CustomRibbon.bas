@@ -67,11 +67,10 @@ Private Sub DebugOutput(ByVal message As String)
 
     #If LateBind Then
         DebugToImmediate = True
-    #Else
-        DebugToImmediate = False
     #End If
-
-    If DebugToImmediate Then Debug.Print message & " Run: CustomRibbon.PriceApprovalInvalidateRibbon"
+    
+    CustomRibbon.PriceApprovalInvalidateRibbon
+    If DebugToImmediate Then Debug.Print message & "Ribbon was invalidated"
     
 End Sub
 
