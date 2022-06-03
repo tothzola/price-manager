@@ -112,6 +112,7 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
             'Check 2
             IsValidField = Validator.ComapreTwoStrings(Me.insertedPassword, Me.Password)
             If Not IsValidField = True Then Exit Function
+            
         Case PasswordManagerFields.PM_NEW_PASSWORD
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.newPassword, VBA.TypeName(Me.newPassword))
@@ -119,6 +120,7 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
             'Check 2
             IsValidField = Validator.IsValidPasswordString(Me.newPassword)
             If Not IsValidField = True Then Exit Function
+            
         Case PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.confirmNewPassword, VBA.TypeName(Me.confirmNewPassword))
@@ -126,6 +128,7 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
             'Check 2
             IsValidField = Validator.ComapreTwoStrings(Me.newPassword, Me.confirmNewPassword)
             If Not IsValidField = True Then Exit Function
+            
     End Select
     'If All Goes Well!
     this.CheckFields(FieldIndex) = True
