@@ -223,12 +223,10 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userStatus, VBA.TypeName(Me.userStatus))
             If Not IsValidField = True Then Exit Function
-            
        Case UsersTableFields.COL_userType
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.UserType, VBA.TypeName(Me.UserType))
             If Not IsValidField = True Then Exit Function
-            
         Case UsersTableFields.COL_userName
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
@@ -241,7 +239,6 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
                 IsValidField = Validator.IsUnique(Me.usersTable, Me.UserName, UsersTableFields.COL_userName)
                 If Not IsValidField = True Then Exit Function
             End If
-            
         Case UsersTableFields.COL_password
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userPassword, VBA.TypeName(Me.userPassword))
@@ -249,7 +246,6 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             'Check 2
             IsValidField = Validator.IsValidPasswordString(Me.userPassword)
             If Not IsValidField = True Then Exit Function
-            
         Case UsersTableFields.COL_email
             'Check 1
             IsValidField = Validator.IsNotNullValue(Me.userEmail, VBA.TypeName(Me.userEmail))
@@ -257,7 +253,6 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             'Check 2
             IsValidField = Validator.IsValidEmailAddress(Me.userEmail)
             If Not IsValidField = True Then Exit Function
-            
     End Select
     'If All Goes Well!
     this.CheckFields(FieldIndex) = True
@@ -271,13 +266,13 @@ Public Function IsEverythingOkayToSaveUser() As Variant
 End Function
 
 Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
-    Dim i As Long
-    For i = LBound(TargetTable, 1) To UBound(TargetTable, 1)
-        If TargetTable(i, TargetColumn) = TargetIndex Then
-            GetTargetRowIndex = i
+    Dim I As Long
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(I, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = I
             Exit Function
         End If
-    Next i
+    Next I
 End Function
 
 '-------------------------------------------------------------------------

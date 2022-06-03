@@ -101,7 +101,7 @@ Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, By
     Dim TargetRange     As Range
     Dim TargetTable     As Variant
     Set TargetRange = DataBase.Range(TargetTableName)
-    TargetTable = TargetRange.value
+    TargetTable = TargetRange.Value
     If VBA.IsNumeric(condition) Then
         IRepository_GetRecordsByCondition = FilterListWithSingleCondition(TargetTable, columnIndex, Val(condition))
     Else
@@ -129,7 +129,7 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
     Dim TotalItems      As Long
     Dim TRow            As Long
     Dim index           As Long
-    Dim i               As Long
+    Dim I               As Long
     
     'error handelling
     On Error GoTo EhhErr:
@@ -147,15 +147,15 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
     index = TRow - 1
     
     'place index
-    TargetRange.Cells(TRow, 1).value = index
+    TargetRange.Cells(TRow, 1).Value = index
     
     'init loop paramters
-    i = 2
+    I = 2
     
     'Insert mechanism
     For Each Item In LineItems
-        TargetRange.Cells(TRow, i).value = Item
-        i = i + 1
+        TargetRange.Cells(TRow, I).Value = Item
+        I = I + 1
     Next Item
     
     'if you are here then operation is successful!
@@ -183,7 +183,7 @@ Private Sub IRepository_DeleteRecord(ByVal TargetIndex As Long)
     Dim TargetRange     As Range
     Dim TRow            As Long
     Dim r               As Range
-    Dim i               As Long
+    Dim I               As Long
     
     'error handelling
     On Error GoTo EhhErr:
@@ -196,11 +196,11 @@ Private Sub IRepository_DeleteRecord(ByVal TargetIndex As Long)
     TargetRange.Rows(TRow).Delete xlShiftUp
     
     're-indexing
-    i = 1
+    I = 1
     For Each r In TargetRange.Rows
-        If VBA.IsNumeric(r.Cells(1, 1).value) Then
-            r.Cells(1, 1).value = i
-            i = i + 1
+        If VBA.IsNumeric(r.Cells(1, 1).Value) Then
+            r.Cells(1, 1).Value = I
+            I = I + 1
         End If
     Next r
     
@@ -230,7 +230,7 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
     Dim Item            As Variant
     Dim TotalItems      As Long
     Dim TRow            As Long
-    Dim i               As Long
+    Dim I               As Long
     
     'error handelling
     On Error GoTo EhhErr:
@@ -241,12 +241,12 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
     TRow = TargetIndex + 1
     
     'init loop paramters
-    i = 2
+    I = 2
     
     'Insert mechanism
     For Each Item In LineItems
-        TargetRange.Cells(TRow, i).value = Item
-        i = i + 1
+        TargetRange.Cells(TRow, I).Value = Item
+        I = I + 1
     Next Item
     
     'if you are here then operation is successful!
@@ -282,7 +282,7 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     Dim lastRow                 As Long
     Dim FirstCol                As Long
     Dim LastCol                 As Long
-    Dim i                       As Long
+    Dim I                       As Long
     Dim J                       As Long
     'Get Driving parameters
     firstRow = LBound(ContextTable, 1)
@@ -293,12 +293,12 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     'Get matching Rows!
     MatchedRecords = CONSIDERHEADERINDEX
     TotalMatchingRows = 0
-    For i = firstRow To lastRow
-        If ContextTable(i, columnIndex) = condition Then
-            MatchedRecords = MatchedRecords & i & SEPERATOR_ITEM
+    For I = firstRow To lastRow
+        If ContextTable(I, columnIndex) = condition Then
+            MatchedRecords = MatchedRecords & I & SEPERATOR_ITEM
             TotalMatchingRows = TotalMatchingRows + 1
         End If
-    Next i
+    Next I
     'remove last seperator from the matchedrecords variable
     If MatchedRecords = CONSIDERHEADERINDEX Then
         For J = FirstCol To LastCol
@@ -315,9 +315,9 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
     J = 1
     For Each Record In Records
-        For i = FirstCol To LastCol
-            tmp(J, i) = ContextTable(Record, i)
-        Next i
+        For I = FirstCol To LastCol
+            tmp(J, I) = ContextTable(Record, I)
+        Next I
         J = J + 1
     Next Record
     'return value

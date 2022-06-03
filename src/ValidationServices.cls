@@ -11,7 +11,6 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private objRegEx As Object
-Private Algo As PAMXLAM.IHashAlgorithm
 
 Public Function IsValidEmailAddress(ByVal inputValue As Variant) As Boolean
 
@@ -24,15 +23,15 @@ Public Function IsValidEmailAddress(ByVal inputValue As Variant) As Boolean
 End Function
 
 Public Function IsUnique(ByVal TargetTable As Variant, ByVal TargetValue As String, ByVal TargetColumn As Long) As Boolean
-    Dim i As Long
+    Dim I As Long
     Dim flag As Boolean
     flag = True
-    For i = LBound(TargetTable, 1) To UBound(TargetTable, 1) Step 1
-        If UCase(TargetTable(i, TargetColumn)) = UCase(TargetValue) Then
+    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1) Step 1
+        If UCase(TargetTable(I, TargetColumn)) = UCase(TargetValue) Then
             flag = False
             Exit For
         End If
-    Next i
+    Next I
     IsUnique = flag
 End Function
 
@@ -42,6 +41,7 @@ End Function
 'checkValue1 and checkValue2 are criteria values! if only one of them is mentioned then it is simply binary checking
 'if both are mentioned then presently checking if the date is between two mentioned dates or not?
 'the same way this validation can be evolved with multiple check types like, numerical ranges etc.etc.
+
 Public Function IsValidToInclude(ByVal inputValue As Variant, ByVal checkType As ValidationCheckTypes, Optional ByVal checkValue1 As Variant, Optional ByVal checkValue2 As Variant) As Boolean
     IsValidToInclude = False
     'Check 1
@@ -133,28 +133,28 @@ Public Function IsEverythingOkay(ByVal ArrayOfCheckFieldsStatus As Variant, _
                                 ByVal LastColIndex As Long) As Variant
     Dim flag As Boolean
     Dim tmp As String
-    Dim i As Long
+    Dim I As Long
     flag = False
     tmp = vbNullString
     'Checking each properties validation state
-    For i = FirstColIndex To LastColIndex
-        If ArrayOfCheckFieldsStatus(i) = False Then
+    For I = FirstColIndex To LastColIndex
+        If ArrayOfCheckFieldsStatus(I) = False Then
             flag = False
             Exit For
         Else
             flag = True
         End If
-    Next i
+    Next I
     'Moment of Truth
     If flag = True Then
         IsEverythingOkay = True
     Else
         'Checking each properties validation state
-        For i = FirstColIndex To LastColIndex
-            If ArrayOfCheckFieldsStatus(i) = False Then
-                tmp = tmp & BULLET_LISTITEM & ArrayOfTableFields(i - 1) & vbNewLine
+        For I = FirstColIndex To LastColIndex
+            If ArrayOfCheckFieldsStatus(I) = False Then
+                tmp = tmp & BULLET_LISTITEM & ArrayOfTableFields(I - 1) & vbNewLine
             End If
-        Next i
+        Next I
         IsEverythingOkay = "Kindly fill the following fields(s) properly to proceed further!" & vbNewLine & vbNewLine & tmp
     End If
 End Function
@@ -211,7 +211,7 @@ End Function
 
 'check if the user is authorized or not?
 Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As String, ByVal Password As String, ByVal userCol As Long, ByVal passCol As Long) As Variant
-    Dim i As Long
+    Dim I As Long
     Dim userFlag As Boolean
     Dim passFlag As Boolean
     userFlag = False
@@ -228,23 +228,14 @@ Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As S
         Exit Function
     End If
     'if validation check confirm then go for the next process
-    For i = 1 To UBound(dataTable, 1)
-        If UCase(dataTable(i, userCol)) = UCase(UserName) Then
+    For I = 1 To UBound(dataTable, 1)
+        If UCase(dataTable(I, userCol)) = UCase(UserName) Then
         userFlag = True
-        
-        If userFlag Then
-            'cript password
-            Dim criptedPassword As String
-            criptedPassword = CryptString(Password)
-            
-        End If
-        
-            If dataTable(i, passCol) = criptedPassword Then
+            If dataTable(I, passCol) = Password Then
                 passFlag = True
             End If
-            
         End If
-    Next i
+    Next I
     'conclusion
     If userFlag = False Then
         IsUserAuthorized = "Invalid Username!"
@@ -258,6 +249,7 @@ Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As S
 End Function
 
 'following function will compare the strings
+
 Public Function ComapreTwoStrings(ByVal String1 As String, ByVal String2 As String) As Boolean
     If String1 = String2 Then
         ComapreTwoStrings = True
@@ -267,6 +259,7 @@ Public Function ComapreTwoStrings(ByVal String1 As String, ByVal String2 As Stri
 End Function
 
 'Following function will verify if the password string contains following characters or not?
+
 Public Function IsValidPasswordString(ByVal passwordString As String) As Boolean
     'Variable declarations
     Dim txt                     As String
@@ -315,7 +308,6 @@ Public Function IsValidPasswordString(ByVal passwordString As String) As Boolean
     Else
         IsValidPasswordString = False
     End If
-
 End Function
 
 'Helping Functions
@@ -351,37 +343,26 @@ Private Function CleanString(ByVal inputValue As String) As String
 End Function
 
 'This function will reset each items of array to false or reset it
+
 Public Sub ResetSingleDimensionalArray(ByRef arr As Variant, Optional resetValue As Boolean = False)
-    Dim i As Long
+    Dim I As Long
     Dim FirstItem As Long
     Dim LastItem As Long
     FirstItem = LBound(arr)
     LastItem = UBound(arr)
-    For i = FirstItem To LastItem
-        arr(i) = resetValue
-    Next i
+    For I = FirstItem To LastItem
+        arr(I) = resetValue
+    Next I
 End Sub
 
-'This function will crypt the string value
-Public Function CryptString(ByVal inputValue As String) As String
-    
-    'cript password
-    Dim cryptedString As String
-    If Not Algo Is Nothing Then cryptedString = Algo.ComputeHash(inputValue)
-    
-    CryptString = cryptedString
-    
-End Function
-
 'Class Events
+
 Private Sub Class_Initialize()
     Set objRegEx = CreateObject("vbscript.regexp")
-    Set Algo = PAMXLAM.SHA256Managed.Create()
 End Sub
 
 Private Sub Class_Terminate()
     Set objRegEx = Nothing
-    Set Algo = Nothing
 End Sub
 
 

@@ -79,11 +79,11 @@ End Property
 
 Private Property Get ContextTableHeaders() As Variant
     Dim tmp As Variant
-    Dim i As Long
+    Dim I As Long
     ReDim tmp(1 To 1, 1 To 16)
-    For i = 1 To UBound(tmp, 2)
-        tmp(1, i) = this.ContextTableHeaders(i - 1)
-    Next i
+    For I = 1 To UBound(tmp, 2)
+        tmp(1, I) = this.ContextTableHeaders(I - 1)
+    Next I
     ContextTableHeaders = tmp
 End Property
 
