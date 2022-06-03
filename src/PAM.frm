@@ -475,16 +475,16 @@ End Sub
 
 Private Sub cmdFilterAndSort_Click()
     With Me
-        DataModel.selectedColumn = DataModel.GetTargetColumnIndex(.cmbColumns.Value)
-        DataModel.selectedValue = .cmbValues.Value
+        DataModel.selectedColumn = DataModel.GetTargetColumnIndex(.cmbColumns.value)
+        DataModel.selectedValue = .cmbValues.value
     End With
     RaiseEvent FilterAndSortListFromDataFormFrame
 End Sub
 
 Private Sub cmbColumns_Change()
     If Me.cmbColumns.ListIndex > 0 Then
-        Me.cmbValues.Value = vbNullString
-        RaiseEvent PopulateValuesList(Me.cmbColumns.Value)
+        Me.cmbValues.value = vbNullString
+        RaiseEvent PopulateValuesList(Me.cmbColumns.value)
     End If
 End Sub
 
@@ -501,35 +501,35 @@ End Sub
     
 Private Sub txtConditionType_Change()
     'Hydrate Model Property
-    PriceModel.conditionType = Me.txtConditionType.Value
+    PriceModel.conditionType = Me.txtConditionType.value
     'Validate field
     ExtendedMethods.UpdateControlAfterValidation Me.txtConditionType, PriceModel.IsValidField(MainTableFields.COL_MAIN_ConditionType), TYPE_FIXEDLENGTHSTRING, 4
 End Sub
 
 Private Sub cmbSalesOrganization_Change()
     'Hydrate model property
-    PriceModel.salesOrganization = Me.cmbSalesOrganization.Value
+    PriceModel.salesOrganization = Me.cmbSalesOrganization.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbSalesOrganization, PriceModel.IsValidField(MainTableFields.COL_MAIN_SalesOrganization), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub cmbDistributionChannel_Change()
     'Hydrate model property
-    PriceModel.distributionChannel = Me.cmbDistributionChannel.Value
+    PriceModel.distributionChannel = Me.cmbDistributionChannel.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbDistributionChannel, PriceModel.IsValidField(MainTableFields.Col_Main_DistributionChannel), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
     
 Private Sub txtCustomerID_Change()
     'Hydrate model property
-    PriceModel.customerID = Me.txtCustomerID.Value
+    PriceModel.customerID = Me.txtCustomerID.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtCustomerID, PriceModel.IsValidField(MainTableFields.COL_MAIN_customerID), TYPE_CUSTOM, "Need exact 6 char length, range should be between [399999] and [599999]"
 End Sub
 
 Private Sub txtMaterialID_Change()
     'Hydrate model property
-    PriceModel.materialID = Me.txtMaterialID.Value
+    PriceModel.materialID = Me.txtMaterialID.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtMaterialID, PriceModel.IsValidField(MainTableFields.COL_MAIN_materialID), TYPE_CUSTOM, "Need exact 8 char length, range should be between [49999999] and [59999999]"
 End Sub
@@ -539,9 +539,9 @@ Private Sub txtPrice_Change()
         'Event handle mechanism
         EventStop = True
         'Apply formatting
-        Me.txtPrice.Value = ExtendedMethods.ApplyFormat(Me.txtPrice.Text, TYPE_CURRENCY)
+        Me.txtPrice.value = ExtendedMethods.ApplyFormat(Me.txtPrice.Text, TYPE_CURRENCY)
         'Hydrate model property
-        PriceModel.price = Me.txtPrice.Value
+        PriceModel.price = Me.txtPrice.value
         'Validate Field
         ExtendedMethods.UpdateControlAfterValidation Me.txtPrice, PriceModel.IsValidField(MainTableFields.COL_MAIN_price), TYPE_CUSTOM, "maximum 6 char length allowed including decimals!"
         'Event Handle mechanism
@@ -551,35 +551,35 @@ End Sub
 
 Private Sub cmbCurrency_Change()
     'Hydrate model property
-    PriceModel.currencyType = Me.cmbCurrency.Value
+    PriceModel.currencyType = Me.cmbCurrency.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbCurrency, PriceModel.IsValidField(MainTableFields.COL_MAIN_currency), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub cmbUnitOfMeasure_Change()
     'Hydrate model property
-    PriceModel.unitOfMeasure = Me.cmbUnitOfMeasure.Value
+    PriceModel.unitOfMeasure = Me.cmbUnitOfMeasure.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUnitOfMeasure, PriceModel.IsValidField(MainTableFields.COL_MAIN_unitOfMeasure), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub txtPriceUnit_Change()
     'Hydrate model property
-    PriceModel.unitOfPrice = Me.txtPriceUnit.Value
+    PriceModel.unitOfPrice = Me.txtPriceUnit.value
     'validate field
     ExtendedMethods.UpdateControlAfterValidation Me.txtPriceUnit, PriceModel.IsValidField(MainTableFields.COL_MAIN_unitOfPrice), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "maximal 4 numerical char length"
 End Sub
 
 Private Sub txtValidFrom_Change()
     'Hydrate model property
-    PriceModel.validFromDate = Me.txtValidFrom.Value
+    PriceModel.validFromDate = Me.txtValidFrom.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtValidFrom, PriceModel.IsValidField(MainTableFields.COL_MAIN_validFromDate), TYPE_CUSTOM, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and it should be today's date only!"
 End Sub
 
 Private Sub txtValidTo_Change()
     'Hydrate model property
-    PriceModel.validToDate = Me.txtValidTo.Value
+    PriceModel.validToDate = Me.txtValidTo.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtValidTo, PriceModel.IsValidField(MainTableFields.COL_MAIN_validToDate), TYPE_CUSTOM, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and it should be future date!"
 End Sub
@@ -590,35 +590,35 @@ End Sub
 
 Private Sub cmbUserStatus_Change()
     'Hydrate model property
-    UserModel.userStatus = Me.cmbUserStatus.Value
+    UserModel.userStatus = Me.cmbUserStatus.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserStatus, UserModel.IsValidField(COL_userStatus), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub cmbUserType_Change()
     'Hydrate model property
-    UserModel.UserType = Me.cmbUserType.Value
+    UserModel.UserType = Me.cmbUserType.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserType, UserModel.IsValidField(COL_userType), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub txtSetUsername_Change()
     'Hydrate model property
-    UserModel.UserName = Me.txtSetUsername.Value
+    UserModel.UserName = Me.txtSetUsername.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_CUSTOM, "Username should have minimum 6 characters and it shold be UNIQUE as well."
 End Sub
 
 Private Sub txtSetPassword_Change()
     'hydrate model property
-    UserModel.userPassword = Me.txtSetPassword.Value
+    UserModel.userPassword = Me.txtSetPassword.value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtSetPassword, UserModel.IsValidField(COL_password), TYPE_WRONGPASSWORDPATTERN
 End Sub
 
 Private Sub txtUserEmail_Change()
     'hydrate model property
-    UserModel.userEmail = Me.txtUserEmail.Value
+    UserModel.userEmail = Me.txtUserEmail.value
     'validate field
     ExtendedMethods.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. username@hostname.domain"
 End Sub
@@ -655,7 +655,7 @@ Private Sub txtNewPassword_Change()
     'Hydrate model properties
     PasswordModel.newPassword = Me.txtNewPassword.Text
     'On Every change, of New Password TextBox, We have to reset Confirm Password Field
-    Me.txtConfirmNewPassword.Value = vbNullString
+    Me.txtConfirmNewPassword.value = vbNullString
     PasswordModel.confirmNewPassword = Me.txtConfirmNewPassword.Text
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtNewPassword, PasswordModel.IsValidField(2), TYPE_WRONGPASSWORDPATTERN
@@ -970,8 +970,8 @@ Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
         'update model
         Call ExportModel.SetPropertiesToDefaultState
         'input field state
-        .txtDateFrom.Value = VBA.Format$(ExportModel.FromDate, DATEFORMAT_FRONTEND)
-        .txtDateTo.Value = VBA.Format$(ExportModel.ToDate, DATEFORMAT_FRONTEND)
+        .txtDateFrom.value = VBA.Format$(ExportModel.FromDate, DATEFORMAT_FRONTEND)
+        .txtDateTo.value = VBA.Format$(ExportModel.ToDate, DATEFORMAT_FRONTEND)
     End With
 End Sub
 
@@ -1018,7 +1018,7 @@ Public Sub UserWantsToFilterAndSortDataFormList()
             .ColumnCount = 16
             .ColumnWidths = "0;0;;;;0;0;0;;;;;0;0;0;0;"
         End With
-        If .cmbColumns.Value = vbNullString And .cmbValues.Value = vbNullString Then
+        If .cmbColumns.value = vbNullString And .cmbValues.value = vbNullString Then
             Me.lstRecordsContainer.List = DataModel.GetDataForRecordsList
         Else
             Me.lstRecordsContainer.List = DataModel.GetFilteredAndSortedList
@@ -1130,11 +1130,11 @@ Private Sub StateForNewRecordForPriceForm()
         Call PriceModel.SetPropertiesToNewRecordState(MainModel.ActiveUserID)
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
-        .txtConditionType.Value = PriceModel.conditionType
-        .cmbSalesOrganization.Value = PriceModel.salesOrganization
-        .txtPriceUnit.Value = PriceModel.unitOfPrice
-        .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
-        .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
+        .txtConditionType.value = PriceModel.conditionType
+        .cmbSalesOrganization.value = PriceModel.salesOrganization
+        .txtPriceUnit.value = PriceModel.unitOfPrice
+        .txtValidFrom.value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
+        .txtValidTo.value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
@@ -1157,17 +1157,17 @@ Private Sub StateForUpdateRecordForPriceForm()
         Call PriceModel.SetPropertiesToUpdateRecordState
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
-        .txtConditionType.Value = PriceModel.conditionType
-        .cmbSalesOrganization.Value = PriceModel.salesOrganization
-        .cmbDistributionChannel.Value = PriceModel.distributionChannel
-        .txtCustomerID.Value = PriceModel.customerID
-        .txtMaterialID.Value = PriceModel.materialID
-        .txtPrice.Value = PriceModel.price
-        .cmbCurrency.Value = PriceModel.currencyType
-        .txtPriceUnit.Value = PriceModel.unitOfPrice
-        .cmbUnitOfMeasure.Value = PriceModel.unitOfMeasure
-        .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
-        .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
+        .txtConditionType.value = PriceModel.conditionType
+        .cmbSalesOrganization.value = PriceModel.salesOrganization
+        .cmbDistributionChannel.value = PriceModel.distributionChannel
+        .txtCustomerID.value = PriceModel.customerID
+        .txtMaterialID.value = PriceModel.materialID
+        .txtPrice.value = PriceModel.price
+        .cmbCurrency.value = PriceModel.currencyType
+        .txtPriceUnit.value = PriceModel.unitOfPrice
+        .cmbUnitOfMeasure.value = PriceModel.unitOfMeasure
+        .txtValidFrom.value = VBA.Format$(PriceModel.validFromDate, DATEFORMAT_FRONTEND)
+        .txtValidTo.value = VBA.Format$(PriceModel.validToDate, DATEFORMAT_FRONTEND)
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
@@ -1194,8 +1194,8 @@ Private Sub StateForNewRecordForUserManager()
         'Update Model
         Call UserModel.SetPropertiesToNewUserState
         'Input Field State
-        .cmbUserStatus.Value = UserModel.userStatus
-        .cmbUserType.Value = UserModel.UserType
+        .cmbUserStatus.value = UserModel.userStatus
+        .cmbUserType.value = UserModel.UserType
         'Buttons State
         .cmdAddNewUser.Enabled = True
         .cmdUpdateUser.Enabled = False
@@ -1208,11 +1208,11 @@ Private Sub StateForUpdateRecordForUserManager()
         'Field State
         Call UserModel.SetPropertiesToUpdateUserState
         'input field state
-        .cmbUserStatus.Value = UserModel.userStatus
-        .cmbUserType.Value = UserModel.UserType
-        .txtSetUsername.Value = UserModel.UserName
-        .txtSetPassword.Value = UserModel.userPassword
-        .txtUserEmail.Value = UserModel.userEmail
+        .cmbUserStatus.value = UserModel.userStatus
+        .cmbUserType.value = UserModel.UserType
+        .txtSetUsername.value = UserModel.UserName
+        .txtSetPassword.value = UserModel.userPassword
+        .txtUserEmail.value = UserModel.userEmail
         'Button State
         .cmdAddNewUser.Enabled = False
         .cmdUpdateUser.Enabled = True
