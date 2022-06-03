@@ -316,7 +316,7 @@ Public Sub GenerateExportData()
     Dim Records()           As String
     Dim Record              As Variant
     Dim tmp                 As Variant
-    Dim I                   As Long
+    Dim i                   As Long
     Dim J                   As Long
     Dim IsValidRow          As Boolean
     Dim uname               As String
@@ -333,27 +333,27 @@ Public Sub GenerateExportData()
     
     'Getting Matching Indexes
     
-    For I = firstRowIndex + 1 To lastRowIndex
+    For i = firstRowIndex + 1 To lastRowIndex
         
     'Filter Layer 1 : Date Filter
         'Checking First condition : Edit Date
         
-        IsValidRow = Validator.IsValidToInclude(Me.dataTable(I, MainTableFields.COL_MAIN_statusChangeDate), TYPE_DATEBETWEENRANGE, Me.FromDate, Me.ToDate)
+        IsValidRow = Validator.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_statusChangeDate), TYPE_DATEBETWEENRANGE, Me.FromDate, Me.ToDate)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Filter Layer 2 : String/Number Matching
         'Check Second condition : Customer ID
-        IsValidRow = Validator.IsValidToInclude(Me.dataTable(I, MainTableFields.COL_MAIN_customerID), TYPE_STRINGMATCH, Me.customerID)
+        IsValidRow = Validator.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_customerID), TYPE_STRINGMATCH, Me.customerID)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Filter Layer 3 : String/Number Matching
         'Check Third condition : User ID
-        IsValidRow = Validator.IsValidToInclude(GetLookupValue(Me.userTable, Me.dataTable(I, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName), TYPE_STRINGMATCH, Me.userID)
+        IsValidRow = Validator.IsValidToInclude(GetLookupValue(Me.userTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName), TYPE_STRINGMATCH, Me.userID)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Filter Layer 4 : String/Number Matching
         'Check Fourth condition : Record Status
-        IsValidRow = Validator.IsValidToInclude(Me.dataTable(I, MainTableFields.COL_MAIN_recordStatus), TYPE_STRINGMATCH, Me.recordStatus)
+        IsValidRow = Validator.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_recordStatus), TYPE_STRINGMATCH, Me.recordStatus)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Keep adding here filters!
@@ -361,11 +361,11 @@ Public Sub GenerateExportData()
         'if you are here means, the row meets all criterias and happy to include!
         If IsValidRow Then
             TotalMatchingRows = TotalMatchingRows + 1
-            MatchingIndexes = MatchingIndexes & I & SEPERATOR_ITEM
+            MatchingIndexes = MatchingIndexes & i & SEPERATOR_ITEM
         End If
         
 IgnoreThisRow:
-    Next I
+    Next i
     
     'Remove Last Seperator Characters
     MatchingIndexes = VBA.Left$(MatchingIndexes, VBA.Len(MatchingIndexes) - VBA.Len(SEPERATOR_ITEM))
@@ -377,7 +377,7 @@ IgnoreThisRow:
     ReDim tmp(firstRowIndex To TotalMatchingRows, firstColumnIndex To lastColumnIndex)
     
     'Create Export Table
-    I = 1
+    i = 1
     For Each Record In Records
         uname = GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         If uname <> vbNullString Then
@@ -385,20 +385,20 @@ IgnoreThisRow:
                 'GUARD CLAUSE : For preventing excel's automatic conversion of cell values from specific value to _
                                 numerical whole number due
                 If J = MainTableFields.Col_Main_DistributionChannel And VBA.IsNumeric(Me.dataTable(Record, J)) Then
-                    tmp(I, J) = "'" & Me.dataTable(Record, J)
+                    tmp(i, J) = "'" & Me.dataTable(Record, J)
                     GoTo NextIteration
                 End If
                 'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
                                 looking up relative values from the another table!
                 If J = MainTableFields.COL_MAIN_userID Then
-                    tmp(I, J) = uname
+                    tmp(i, J) = uname
                     GoTo NextIteration
                 End If
                 'NO GUARD CLAUSE : For Rest of the cells
-                tmp(I, J) = Me.dataTable(Record, J)
+                tmp(i, J) = Me.dataTable(Record, J)
 NextIteration:
             Next J
-            I = I + 1
+            i = i + 1
         End If
     Next Record
 
@@ -413,17 +413,17 @@ Private Function GetLookupValue(ByVal TargetTable As Variant, _
                                 ByVal LookupValue As Variant, _
                                 ByVal LookupIndex As Long, _
                                 ByVal TargetIndex As Long) As String
-    Dim I   As Long
+    Dim i   As Long
     Dim LB  As Long
     Dim UB  As Long
     LB = LBound(TargetTable, 1)
     UB = UBound(TargetTable, 1)
-    For I = LB To UB
-        If TargetTable(I, LookupIndex) = LookupValue Then
-            GetLookupValue = TargetTable(I, TargetIndex)
+    For i = LB To UB
+        If TargetTable(i, LookupIndex) = LookupValue Then
+            GetLookupValue = TargetTable(i, TargetIndex)
             Exit Function
         End If
-    Next I
+    Next i
 End Function
 
 '-------------------------------------------------------------------------
