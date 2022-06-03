@@ -175,7 +175,7 @@ End Function
 
 Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
     
-    Dim I As Long
+    Dim i As Long
     Dim HeadersString As String
     Dim ValuesString As String
     
@@ -188,14 +188,14 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
         'INSERT INTO table_name ([column1], [column2], [column3], ...)
         'VALUES (value1, value2, value3, ...);
         this.SQLQuery = "INSERT INTO " & TargetTableName & " ("
-        For I = 2 To UBound(TargetTableHeaders, 2)
-            HeadersString = HeadersString & "[" & TargetTableHeaders(1, I) & "], "
-            If VBA.IsEmpty(LineItems(I - 2)) Then
+        For i = 2 To UBound(TargetTableHeaders, 2)
+            HeadersString = HeadersString & "[" & TargetTableHeaders(1, i) & "], "
+            If VBA.IsEmpty(LineItems(i - 2)) Then
                 ValuesString = ValuesString & "'', "
             Else
-                ValuesString = ValuesString & "'" & LineItems(I - 2) & "', "
+                ValuesString = ValuesString & "'" & LineItems(i - 2) & "', "
             End If
-        Next I
+        Next i
         HeadersString = VBA.Left$(HeadersString, VBA.Len(HeadersString) - 2)
         ValuesString = VBA.Left$(ValuesString, VBA.Len(ValuesString) - 2)
         this.SQLQuery = this.SQLQuery & HeadersString & ") VALUES (" & ValuesString & ");"
@@ -223,7 +223,7 @@ End Sub
 
 Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineItems() As Variant)
     
-    Dim I As Long
+    Dim i As Long
     Dim tmp As String
     
     Call OpenConnection
@@ -237,13 +237,13 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
         'WHERE columnX = valueX;
         tmp = vbNullString
         this.SQLQuery = "UPDATE " & TargetTableName & " SET "
-        For I = 2 To UBound(TargetTableHeaders, 2)
-            If VBA.IsEmpty(LineItems(I - 2)) Then
-                tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '', "
+        For i = 2 To UBound(TargetTableHeaders, 2)
+            If VBA.IsEmpty(LineItems(i - 2)) Then
+                tmp = tmp & "[" & TargetTableHeaders(1, i) & "] = '', "
             Else
-                tmp = tmp & "[" & TargetTableHeaders(1, I) & "] = '" & LineItems(I - 2) & "', "
+                tmp = tmp & "[" & TargetTableHeaders(1, i) & "] = '" & LineItems(i - 2) & "', "
             End If
-        Next I
+        Next i
         tmp = VBA.Left$(tmp, VBA.Len(tmp) - 2)
         this.SQLQuery = this.SQLQuery & tmp & " WHERE [Index] = " & TargetIndex & ";"
         'Executing Query
@@ -348,7 +348,7 @@ Private Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As
     Dim TotalColumnsTable2  As Long
     Dim FinalTableRows      As Long
     Dim FinalTableColumns   As Long
-    Dim I                   As Long
+    Dim i                   As Long
     Dim J                   As Long
     Dim FinalTable          As Variant
     'Check if the table2 is Double dimensional or not?
@@ -356,9 +356,9 @@ Private Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As
     If NumberOfArrayDimensions(Table2) = 1 Then
         Dim tmp As Variant
         ReDim tmp(1 To 1, 1 To UBound(Table1, 2))
-        For I = 1 To UBound(Table1, 2)
-            tmp(1, I) = Table2(I)
-        Next I
+        For i = 1 To UBound(Table1, 2)
+            tmp(1, i) = Table2(i)
+        Next i
         Table2 = tmp
     End If
     'Everything is clear!
@@ -373,15 +373,15 @@ Private Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As
     FinalTableRows = TotalRowsTable1 + TotalRowsTable2
     FinalTableColumns = TotalColumnsTable1
     ReDim FinalTable(1 To FinalTableRows, 1 To FinalTableColumns)
-    For I = 1 To FinalTableRows
+    For i = 1 To FinalTableRows
         For J = 1 To FinalTableColumns
-            If I <= TotalRowsTable1 Then
-                FinalTable(I, J) = Table1(I, J)
+            If i <= TotalRowsTable1 Then
+                FinalTable(i, J) = Table1(i, J)
             Else
-                FinalTable(I, J) = Table2(I - TotalRowsTable1, J)
+                FinalTable(i, J) = Table2(i - TotalRowsTable1, J)
             End If
         Next J
-    Next I
+    Next i
     JoinTables = FinalTable
 End Function
 
