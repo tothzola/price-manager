@@ -319,18 +319,18 @@ Public Function IsValidRecordToEdit() As Variant
     Dim TargetIndex     As Long
     Dim firstRow        As Long
     Dim lastRow         As Long
-    Dim I               As Long
+    Dim i               As Long
     'Calculate driving paramters
     TargetIndex = GetTargetRowIndex(Me.dataTable, Me.index, MainTableFields.COL_MAIN_INDEX)
     firstRow = LBound(Me.dataTable, 1)
     lastRow = UBound(Me.dataTable, 1)
     'Finding Status!
-    For I = firstRow + 1 To lastRow
-        If I = TargetIndex Then
-            recordStatus = Me.dataTable(I, MainTableFields.COL_MAIN_recordStatus)
+    For i = firstRow + 1 To lastRow
+        If i = TargetIndex Then
+            recordStatus = Me.dataTable(i, MainTableFields.COL_MAIN_recordStatus)
             Exit For
         End If
-    Next I
+    Next i
     'Decision
     Select Case recordStatus
         Case RECORDSTATUS_PENDING
@@ -345,7 +345,7 @@ Public Function IsValidRecordToEdit() As Variant
 End Function
 
 Public Function GetDataForRecordsList() As Variant
-    Dim I       As Long
+    Dim i       As Long
     Dim J       As Long
     Dim K       As Long
     Dim UB1     As Long
@@ -356,27 +356,27 @@ Public Function GetDataForRecordsList() As Variant
     UB2 = UBound(Me.dataTable, 2)
     ReDim tmp(1 To UB1, 1 To UB2)
     K = 1
-    For I = 1 To UB1
-        uname = GetLookupValue(Me.usersTable, Me.dataTable(I, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+    For i = 1 To UB1
+        uname = GetLookupValue(Me.usersTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         If uname <> vbNullString Then
             For J = 1 To UB2
-                If I = 1 Then
+                If i = 1 Then
                     If J = MainTableFields.COL_MAIN_userID Then
                         tmp(K, J) = "User_Name"
                     Else
-                        tmp(K, J) = Me.dataTable(I, J)
+                        tmp(K, J) = Me.dataTable(i, J)
                     End If
                 Else
                     If J = MainTableFields.COL_MAIN_userID Then
                         tmp(K, J) = uname
                     Else
-                        tmp(K, J) = Me.dataTable(I, J)
+                        tmp(K, J) = Me.dataTable(i, J)
                     End If
                 End If
             Next J
             K = K + 1
         End If
-    Next I
+    Next i
     GetDataForRecordsList = tmp
 End Function
 
@@ -392,7 +392,7 @@ Public Function GetFilteredAndSortedList() As Variant
     Dim Records()           As String
     Dim Record              As Variant
     Dim tmp                 As Variant
-    Dim I                   As Long
+    Dim i                   As Long
     Dim J                   As Long
     Dim IsValidRow          As Boolean
     Dim uname               As String
@@ -414,18 +414,18 @@ Public Function GetFilteredAndSortedList() As Variant
     
     'Getting Matching Indexes
     
-    For I = firstRowIndex + 1 To lastRowIndex
+    For i = firstRowIndex + 1 To lastRowIndex
         
         Select Case Me.selectedColumn
                 
             Case MainTableFields.COL_MAIN_statusChangeDate
                 
-                IsValidRow = Me.Validator.IsValidToInclude(Me.dataTable(I, Me.selectedColumn), TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
+                IsValidRow = Me.Validator.IsValidToInclude(Me.dataTable(i, Me.selectedColumn), TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
                 If Not IsValidRow Then GoTo IgnoreThisRow
             
             Case Else
             
-                IsValidRow = Me.Validator.IsValidToInclude(Me.dataTable(I, Me.selectedColumn), TYPE_STRINGMATCH, Me.selectedValue)
+                IsValidRow = Me.Validator.IsValidToInclude(Me.dataTable(i, Me.selectedColumn), TYPE_STRINGMATCH, Me.selectedValue)
                 If Not IsValidRow Then GoTo IgnoreThisRow
                 
         End Select
@@ -433,11 +433,11 @@ Public Function GetFilteredAndSortedList() As Variant
         'if you are here means, the row meets all criterias and happy to include!
         If IsValidRow Then
             TotalMatchingRows = TotalMatchingRows + 1
-            MatchingIndexes = MatchingIndexes & I & SEPERATOR_ITEM
+            MatchingIndexes = MatchingIndexes & i & SEPERATOR_ITEM
         End If
         
 IgnoreThisRow:
-    Next I
+    Next i
     
     'Remove Last Seperator Characters
     MatchingIndexes = VBA.Left$(MatchingIndexes, VBA.Len(MatchingIndexes) - VBA.Len(SEPERATOR_ITEM))
@@ -449,7 +449,7 @@ IgnoreThisRow:
     ReDim tmp(firstRowIndex To TotalMatchingRows, firstColumnIndex To lastColumnIndex)
     
     'Create Export Table
-    I = 1
+    i = 1
     For Each Record In Records
         uname = GetLookupValue(Me.usersTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         If uname <> vbNullString Then
@@ -457,14 +457,14 @@ IgnoreThisRow:
                 'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
                                 looking up relative values from the another table!
                 If J = MainTableFields.COL_MAIN_userID Then
-                    tmp(I, J) = uname
+                    tmp(i, J) = uname
                     GoTo NextIteration
                 End If
                 'NO GUARD CLAUSE : For Rest of the cells
-                tmp(I, J) = Me.dataTable(Record, J)
+                tmp(i, J) = Me.dataTable(Record, J)
 NextIteration:
             Next J
-            I = I + 1
+            i = i + 1
         End If
     Next Record
 
@@ -475,14 +475,14 @@ End Function
 
 Public Function GetTargetColumnIndex(ByVal TargetColumn As String) As Long
     Dim Header As Variant
-    Dim I As Long
-    I = 0
+    Dim i As Long
+    i = 0
     For Each Header In modDataSources.arrListOfColumnsMainTableFull
         If Header = TargetColumn Then
-            GetTargetColumnIndex = I
+            GetTargetColumnIndex = i
             Exit Function
         End If
-        I = I + 1
+        i = i + 1
     Next Header
 End Function
 
@@ -492,27 +492,27 @@ Private Function GetLookupValue(ByVal TargetTable As Variant, _
                                 ByVal LookupValue As Variant, _
                                 ByVal LookupIndex As Long, _
                                 ByVal TargetIndex As Long) As String
-    Dim I   As Long
+    Dim i   As Long
     Dim LB  As Long
     Dim UB  As Long
     LB = LBound(TargetTable, 1)
     UB = UBound(TargetTable, 1)
-    For I = LB To UB
-        If TargetTable(I, LookupIndex) = LookupValue Then
-            GetLookupValue = TargetTable(I, TargetIndex)
+    For i = LB To UB
+        If TargetTable(i, LookupIndex) = LookupValue Then
+            GetLookupValue = TargetTable(i, TargetIndex)
             Exit Function
         End If
-    Next I
+    Next i
 End Function
 
 Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
-    Dim I As Long
-    For I = LBound(TargetTable, 1) To UBound(TargetTable, 1)
-        If TargetTable(I, TargetColumn) = TargetIndex Then
-            GetTargetRowIndex = I
+    Dim i As Long
+    For i = LBound(TargetTable, 1) To UBound(TargetTable, 1)
+        If TargetTable(i, TargetColumn) = TargetIndex Then
+            GetTargetRowIndex = i
             Exit Function
         End If
-    Next I
+    Next i
 End Function
 
 '-------------------------------------------------------------------------
