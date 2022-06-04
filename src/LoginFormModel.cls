@@ -13,10 +13,14 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 Private Type TLoginFormModelComponents
+    'Validation object
     Validator As ValidationServices
+    'Table
     usersData As Variant
+    'Fields
     UserName As String
     Password As String
+    'Attributes
     TargetIndex As Long
 End Type
 
@@ -89,6 +93,20 @@ Public Property Get userStatus() As String
             Me.UserName = Me.usersData(i, UsersTableFields.COL_userName)
             Me.TargetIndex = i
             userStatus = Me.usersData(i, UsersTableFields.COL_userStatus)
+            Exit Property
+        End If
+    Next i
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get userEmail() As String
+    Dim i As Long
+    For i = 1 To UBound(Me.usersData, 1)
+        If UCase(Me.usersData(i, UsersTableFields.COL_userName)) = UCase(Me.UserName) Then
+            Me.UserName = Me.usersData(i, UsersTableFields.COL_userName)
+            Me.TargetIndex = i
+            userEmail = Me.usersData(i, UsersTableFields.COL_email)
             Exit Property
         End If
     Next i
