@@ -63,16 +63,23 @@ Private Sub MainView_DoCRUDOperationForUserManager(ByVal TypeOfOperation As CRUD
     Dim response As Variant
     With model
         'Validation
-        response = .IsEverythingOkayToSaveUser
+        Select Case TypeOfOperation
+        Case CRUDOperations.CRUD_OPERATION_ADDNEW
+            response = .IsEverythingOkayToSaveUser(OPERATION_NEW)
+        Case CRUDOperations.CRUD_OPERATION_UPDATE
+            response = .IsEverythingOkayToSaveUser(OPERATION_UPDATE)
+        Case CRUDOperations.CRUD_OPERATION_DELETE
+            response = .IsEverythingOkayToSaveUser(OPERATION_DELETE)
+        End Select
         'Now based on the validation go for the operation
         If response = True Then
             Select Case TypeOfOperation
-                Case CRUDOperations.CRUD_OPERATION_ADDNEW
-                    RaiseEvent AddNewUserFromUserManagerForm(TypeOfOperation, model)
-                Case CRUDOperations.CRUD_OPERATION_UPDATE
-                    RaiseEvent UpdateUserFromUserManagerForm(TypeOfOperation, model)
-                Case CRUDOperations.CRUD_OPERATION_DELETE
-                    RaiseEvent DeleteUserFromUserManagerForm(TypeOfOperation, model)
+            Case CRUDOperations.CRUD_OPERATION_ADDNEW
+                RaiseEvent AddNewUserFromUserManagerForm(TypeOfOperation, model)
+            Case CRUDOperations.CRUD_OPERATION_UPDATE
+                RaiseEvent UpdateUserFromUserManagerForm(TypeOfOperation, model)
+            Case CRUDOperations.CRUD_OPERATION_DELETE
+                RaiseEvent DeleteUserFromUserManagerForm(TypeOfOperation, model)
             End Select
         Else
             RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
