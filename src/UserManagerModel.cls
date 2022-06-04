@@ -263,7 +263,14 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
     this.CheckFields(FieldIndex) = True
 End Function
 
-Public Function IsEverythingOkayToSaveUser() As Variant
+Public Function IsEverythingOkayToSaveUser(ByVal currentOperation As FormOperation) As Variant
+    
+    'Bypass Field checking for Deletion Process
+    If currentOperation = OPERATION_DELETE Then
+        this.CheckFields(UsersTableFields.COL_password) = True
+    End If
+
+    'Check Everything
     IsEverythingOkayToSaveUser = Validator.IsEverythingOkay(this.CheckFields, _
                                                             modDataSources.arrListOfColumns_USERS_TABLE, _
                                                             UsersTableFields.COL_userStatus, _
