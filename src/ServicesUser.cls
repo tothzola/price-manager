@@ -17,8 +17,8 @@ Private Type TUserServicesComponents
     IsEverythingOkayInEngine As Boolean
     'Private properties
     Algo As PAMXLAM.IHashAlgorithm
-    Repository As IRepository
-    RepositoryTypes As RepositoryType
+    Repository As PAMXLAM.IRepository
+    RepositoryTypes As PAMXLAM.RepositoryType
     ContextTableName As String
     ConnectionString As String
     ContextTableHeaders As Variant
