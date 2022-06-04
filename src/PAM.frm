@@ -884,7 +884,7 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
         .cmbUserType.List = UserModel.userTypesList
         With .lstUsers
             .ColumnCount = 7
-            .ColumnWidths = "0;45;60"
+            .ColumnWidths = "0;0;75;75;75;0;"
             .List = UserModel.usersTable
         End With
         'Put Default Values based on Operation
@@ -1041,7 +1041,7 @@ Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     End If
     'Update Active User Frame
     With LoginModel
-        Call UpdateActiveUserInfomation(.UserName, .UserType, .userStatus, .userID, .Password)
+        Call UpdateActiveUserInfomation(.UserName, .UserType, .userStatus, .userID, .Password, .userEmail)
     End With
     'Update Welcome Frame with Username
     Call UpdateWelcomeFrame
@@ -1211,7 +1211,6 @@ Private Sub StateForUpdateRecordForUserManager()
         .cmbUserStatus.value = UserModel.userStatus
         .cmbUserType.value = UserModel.UserType
         .txtSetUsername.value = UserModel.UserName
-        .txtSetPassword.value = UserModel.userPassword
         .txtUserEmail.value = UserModel.userEmail
         'Button State
         .cmdAddNewUser.Enabled = False
@@ -1240,7 +1239,7 @@ Private Sub UpdateWelcomeFrame(Optional FrameIdentifier As ApplicationForms = 0)
     End If
 End Sub
 
-Private Sub UpdateActiveUserInfomation(ByVal uname As String, ByVal uType As String, ByVal uStatus As String, ByVal uID As String, ByVal uPassword As String)
+Private Sub UpdateActiveUserInfomation(ByVal uname As String, ByVal uType As String, ByVal uStatus As String, ByVal uID As String, ByVal uPassword As String, ByVal uEmail As String)
     'Show Active user info on Always On Frame
     With ExtendedMethods
         Call .ChangeControlProperties(Me.lblActiveUsername, uname)
@@ -1260,6 +1259,7 @@ Private Sub UpdateActiveUserInfomation(ByVal uname As String, ByVal uType As Str
         .ActiveUserPassword = uPassword
         .ActiveUserStatus = uStatus
         .ActiveUserType = uType
+        .ActiveUserEmail = uEmail
     End With
 End Sub
 
