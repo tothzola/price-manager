@@ -55,6 +55,7 @@ Public Const BULLET_LISTITEM As String = ">>  "
 Public Enum FormOperation
     OPERATION_NEW
     OPERATION_UPDATE
+    OPERATION_DELETE
 End Enum
 
 Public Enum RepositoryType

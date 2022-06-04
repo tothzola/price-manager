@@ -32,6 +32,7 @@ Private Type TAppModelComponents
     ActiveUserType As String
     ActiveUserName As String
     ActiveUserPassword As String
+    ActiveUserEmail As String
   'Current Parameters
     CurrentUpdateIndex As Long
 End Type
@@ -40,6 +41,16 @@ Private this As TAppModelComponents
 
 '-------------------------------------------------------------------------
 'Properties
+'-------------------------------------------------------------------------
+
+Public Property Get ActiveUserEmail() As String
+    ActiveUserEmail = this.ActiveUserEmail
+End Property
+
+Public Property Let ActiveUserEmail(ByVal vNewValue As String)
+    this.ActiveUserEmail = vNewValue
+End Property
+
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserPassword() As String
