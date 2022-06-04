@@ -235,7 +235,7 @@ End Sub
 Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal newPassword As String)
     'index, userID, userStatus, userType, userName, password
     With model
-        Call userService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, newPassword)
+        Call userService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, newPassword, .ActiveUserEmail)
         If userService.IsEverythingOkayInEngine Then
             Call view.AfterChangePasswordOperation
         End If
