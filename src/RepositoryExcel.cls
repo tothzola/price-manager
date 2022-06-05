@@ -103,9 +103,9 @@ Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, By
     Set TargetRange = DataBase.Range(TargetTableName)
     TargetTable = TargetRange.value
     If VBA.IsNumeric(condition) Then
-        IRepository_GetRecordsByCondition = FilterListWithSingleCondition(TargetTable, columnIndex, Val(condition))
+        IRepository_GetRecordsByCondition = GetMethod.FilterListWithSingleCondition(TargetTable, columnIndex, Val(condition))
     Else
-        IRepository_GetRecordsByCondition = FilterListWithSingleCondition(TargetTable, columnIndex, condition)
+        IRepository_GetRecordsByCondition = GetMethod.FilterListWithSingleCondition(TargetTable, columnIndex, condition)
     End If
     'if you are here then operation is successful!
     IRepository_IsEverythingOkay = True
@@ -113,11 +113,13 @@ Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, By
 CleanExit:
     Set TargetRange = Nothing
     Exit Function
+    
 EhhErr:
     MsgBox Err.Description, vbCritical, SIGN
     Err.Clear
     IRepository_IsEverythingOkay = False
     Resume CleanExit
+    
 End Function
 
 '-------------------------------------------------------------------------
@@ -125,7 +127,7 @@ End Function
 Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
-    Dim Item            As Variant
+    Dim item            As Variant
     Dim TotalItems      As Long
     Dim TRow            As Long
     Dim index           As Long
@@ -153,10 +155,10 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
     i = 2
     
     'Insert mechanism
-    For Each Item In LineItems
-        TargetRange.Cells(TRow, i).value = Item
+    For Each item In LineItems
+        TargetRange.Cells(TRow, i).value = item
         i = i + 1
-    Next Item
+    Next item
     
     'if you are here then operation is successful!
     IRepository_IsEverythingOkay = True
@@ -227,7 +229,7 @@ End Sub
 Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineItems() As Variant)
     'Variable Declaration
     Dim TargetRange     As Range
-    Dim Item            As Variant
+    Dim item            As Variant
     Dim TotalItems      As Long
     Dim TRow            As Long
     Dim i               As Long
@@ -244,10 +246,10 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
     i = 2
     
     'Insert mechanism
-    For Each Item In LineItems
-        TargetRange.Cells(TRow, i).value = Item
+    For Each item In LineItems
+        TargetRange.Cells(TRow, i).value = item
         i = i + 1
-    Next Item
+    Next item
     
     'if you are here then operation is successful!
     IRepository_IsEverythingOkay = True
@@ -267,61 +269,4 @@ EhhErr:
     Resume CleanExit
     
 End Sub
-
-'Private helping function
-
-Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByVal columnIndex As Long, ByVal condition As Variant) As Variant
-    'Driving Paramters
-    Const CONSIDERHEADERINDEX   As String = "1" & SEPERATOR_ITEM
-    Dim Records()               As String
-    Dim Record                  As Variant
-    Dim tmp                     As Variant
-    Dim MatchedRecords          As String
-    Dim TotalMatchingRows       As Long
-    Dim firstRow                As Long
-    Dim lastRow                 As Long
-    Dim FirstCol                As Long
-    Dim LastCol                 As Long
-    Dim i                       As Long
-    Dim J                       As Long
-    'Get Driving parameters
-    firstRow = LBound(ContextTable, 1)
-    lastRow = UBound(ContextTable, 1)
-    FirstCol = LBound(ContextTable, 2)
-    LastCol = UBound(ContextTable, 2)
-    ReDim tmp(1 To 1, 1 To LastCol)
-    'Get matching Rows!
-    MatchedRecords = CONSIDERHEADERINDEX
-    TotalMatchingRows = 0
-    For i = firstRow To lastRow
-        If ContextTable(i, columnIndex) = condition Then
-            MatchedRecords = MatchedRecords & i & SEPERATOR_ITEM
-            TotalMatchingRows = TotalMatchingRows + 1
-        End If
-    Next i
-    'remove last seperator from the matchedrecords variable
-    If MatchedRecords = CONSIDERHEADERINDEX Then
-        For J = FirstCol To LastCol
-            tmp(1, J) = ContextTable(1, J)
-        Next J
-        FilterListWithSingleCondition = tmp
-        Exit Function
-    Else
-        MatchedRecords = VBA.Left$(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
-    End If
-    'Redimentioning the tmp array
-    ReDim tmp(firstRow To TotalMatchingRows + 1, FirstCol To LastCol)
-    'Transferring Data
-    Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
-    J = 1
-    For Each Record In Records
-        For i = FirstCol To LastCol
-            tmp(J, i) = ContextTable(Record, i)
-        Next i
-        J = J + 1
-    Next Record
-    'return value
-    FilterListWithSingleCondition = tmp
-End Function
-
 

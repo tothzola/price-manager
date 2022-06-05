@@ -1,4 +1,5 @@
 Attribute VB_Name = "modDataSources"
+'@Folder("GlobalEntities")
 Option Explicit
 
 'Data Tables Structure

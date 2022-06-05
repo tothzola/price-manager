@@ -10,15 +10,12 @@ Attribute VB_Exposed = False
 '@Folder "Services"
 Option Explicit
 
-Private objRegEx As Object
-Private Algo As PAMXLAM.IHashAlgorithm
-
 Public Function IsValidEmailAddress(ByVal inputValue As Variant) As Boolean
 
-    If Not objRegEx Is Nothing Then
-        objRegEx.Global = True
-        objRegEx.Pattern = "^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,6}))*$"
-        IsValidEmailAddress = objRegEx.Test(inputValue)
+    If Not GetMethod.objRegEx Is Nothing Then
+        GetMethod.objRegEx.Global = True
+        GetMethod.objRegEx.Pattern = "^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,6}))*$"
+        IsValidEmailAddress = GetMethod.objRegEx.Test(inputValue)
     End If
     
 End Function
@@ -42,6 +39,7 @@ End Function
 'checkValue1 and checkValue2 are criteria values! if only one of them is mentioned then it is simply binary checking
 'if both are mentioned then presently checking if the date is between two mentioned dates or not?
 'the same way this validation can be evolved with multiple check types like, numerical ranges etc.etc.
+
 Public Function IsValidToInclude(ByVal inputValue As Variant, ByVal checkType As ValidationCheckTypes, Optional ByVal checkValue1 As Variant, Optional ByVal checkValue2 As Variant) As Boolean
     IsValidToInclude = False
     'Check 1
@@ -79,7 +77,7 @@ End Function
 'Check if the date is between the start and end range dates or not?
 Public Function IsValidDateInRange(ByVal inputValue As String, ByVal startDate As Date, ByVal endDate As Date) As Boolean
     Dim TargetDate As Date
-    TargetDate = VBA.CDate(GetDateFromGermanDateString(inputValue))
+    TargetDate = VBA.CDate(GetMethod.GetDateFromGermanDateString(inputValue))
     If TargetDate >= startDate And TargetDate <= endDate Then
         IsValidDateInRange = True
     Else
@@ -91,7 +89,7 @@ End Function
 '[10.02.2009] [10022009] [31.12.2022]
 Public Function IsValidGermanFormatDate(ByVal inputValue As String) As Boolean
     'use part strings to get if the string is date or not?
-    If GetDateFromGermanDateString(inputValue) <> vbNullString Then
+    If GetMethod.GetDateFromGermanDateString(inputValue) <> vbNullString Then
         IsValidGermanFormatDate = True
     Else
         IsValidGermanFormatDate = False
@@ -235,7 +233,7 @@ Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As S
         If userFlag Then
             'cript password
             Dim criptedPassword As String
-            criptedPassword = CryptString(Password)
+            criptedPassword = GetMethod.CryptString(Password)
             
         End If
         
@@ -317,71 +315,3 @@ Public Function IsValidPasswordString(ByVal passwordString As String) As Boolean
     End If
 
 End Function
-
-'Helping Functions
-
-'This will parse the German formatted date string into workable format
-Public Function GetDateFromGermanDateString(ByVal inputValue As String) As String
-    Dim dayPart As Long
-    Dim MonthPart As Long
-    Dim YearPart As Long
-    Dim tmp As String
-    'clean input string so we only left with 8 characters long length numerical value
-    tmp = CleanString(inputValue)
-    inputValue = tmp
-    'check for [10022009]DDMMYYYY
-    If VBA.Len(inputValue) = 8 And VBA.IsNumeric(inputValue) Then
-        'you are here because inputValue has right 8 characters that suits to DDMMYYYY
-        dayPart = VBA.CLng(VBA.Left$(inputValue, 2))
-        YearPart = VBA.CLng(VBA.Right$(inputValue, 4))
-        MonthPart = VBA.CLng(VBA.Mid$(inputValue, 3, 2))
-        GetDateFromGermanDateString = VBA.Format$(VBA.DateSerial(YearPart, MonthPart, dayPart), DATEFORMAT_BACKEND)
-    Else
-        GetDateFromGermanDateString = vbNullString
-    End If
-End Function
-
-'this function uses regexp library to remove unwanted characters from the string and it only keeps numericals!
-Private Function CleanString(ByVal inputValue As String) As String
-    With objRegEx
-        .Global = True
-        .Pattern = "[^\d]+"
-        CleanString = .Replace(inputValue, vbNullString)
-    End With
-End Function
-
-'This function will reset each items of array to false or reset it
-Public Sub ResetSingleDimensionalArray(ByRef arr As Variant, Optional resetValue As Boolean = False)
-    Dim i As Long
-    Dim FirstItem As Long
-    Dim LastItem As Long
-    FirstItem = LBound(arr)
-    LastItem = UBound(arr)
-    For i = FirstItem To LastItem
-        arr(i) = resetValue
-    Next i
-End Sub
-
-'This function will crypt the string value
-Public Function CryptString(ByVal inputValue As String) As String
-    
-    'cript password
-    Dim cryptedString As String
-    If Not Algo Is Nothing Then cryptedString = Algo.ComputeHash(inputValue)
-    
-    CryptString = cryptedString
-    
-End Function
-
-'Class Events
-Private Sub Class_Initialize()
-    Set objRegEx = CreateObject("vbscript.regexp")
-    Set Algo = PAMXLAM.SHA256Managed.Create()
-End Sub
-
-Private Sub Class_Terminate()
-    Set objRegEx = Nothing
-    Set Algo = Nothing
-End Sub
-
-

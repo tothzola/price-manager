@@ -170,7 +170,7 @@ Public Sub InItModel(ByVal mainData As Variant, _
     Me.userIDsList = listOfUserIDs
     Me.statusesList = listOfRecordStatuses
     'reset check field array
-    Call Validator.ResetSingleDimensionalArray(this.CheckFields, True)
+    Call GetMethod.ResetSingleDimensionalArray(this.CheckFields, True)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -243,7 +243,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = Validator.IsValidDateInRange(Me.FromDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
             'if everything okay then save date in backend format
-            Me.FromDate = Validator.GetDateFromGermanDateString(Me.FromDate)
+            Me.FromDate = GetMethod.GetDateFromGermanDateString(Me.FromDate)
             
         Case ExportFormFields.FIELD_TODATE
             'Check 1
@@ -262,7 +262,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = Validator.IsValidDateInRange(Me.ToDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
             'if everything okay then save date in backend format
-            Me.ToDate = Validator.GetDateFromGermanDateString(Me.ToDate)
+            Me.ToDate = GetMethod.GetDateFromGermanDateString(Me.ToDate)
         
         Case ExportFormFields.FIELD_CUSTOMERID
             'Check 1
@@ -317,7 +317,7 @@ Public Sub GenerateExportData()
     Dim Record              As Variant
     Dim tmp                 As Variant
     Dim i                   As Long
-    Dim J                   As Long
+    Dim j                   As Long
     Dim IsValidRow          As Boolean
     Dim uname               As String
     
@@ -348,7 +348,7 @@ Public Sub GenerateExportData()
         
     'Filter Layer 3 : String/Number Matching
         'Check Third condition : User ID
-        IsValidRow = Validator.IsValidToInclude(GetLookupValue(Me.userTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName), TYPE_STRINGMATCH, Me.userID)
+        IsValidRow = Validator.IsValidToInclude(GetMethod.GetLookupValue(Me.userTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName), TYPE_STRINGMATCH, Me.userID)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Filter Layer 4 : String/Number Matching
@@ -379,25 +379,25 @@ IgnoreThisRow:
     'Create Export Table
     i = 1
     For Each Record In Records
-        uname = GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        uname = GetMethod.GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         If uname <> vbNullString Then
-            For J = firstColumnIndex To lastColumnIndex
+            For j = firstColumnIndex To lastColumnIndex
                 'GUARD CLAUSE : For preventing excel's automatic conversion of cell values from specific value to _
                                 numerical whole number due
-                If J = MainTableFields.Col_Main_DistributionChannel And VBA.IsNumeric(Me.dataTable(Record, J)) Then
-                    tmp(i, J) = "'" & Me.dataTable(Record, J)
+                If j = MainTableFields.Col_Main_DistributionChannel And VBA.IsNumeric(Me.dataTable(Record, j)) Then
+                    tmp(i, j) = "'" & Me.dataTable(Record, j)
                     GoTo NextIteration
                 End If
                 'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
                                 looking up relative values from the another table!
-                If J = MainTableFields.COL_MAIN_userID Then
-                    tmp(i, J) = uname
+                If j = MainTableFields.COL_MAIN_userID Then
+                    tmp(i, j) = uname
                     GoTo NextIteration
                 End If
                 'NO GUARD CLAUSE : For Rest of the cells
-                tmp(i, J) = Me.dataTable(Record, J)
+                tmp(i, j) = Me.dataTable(Record, j)
 NextIteration:
-            Next J
+            Next j
             i = i + 1
         End If
     Next Record
@@ -406,25 +406,6 @@ NextIteration:
     Me.exportTable = tmp
     
 End Sub
-
-'following function act as Vlookup
-
-Private Function GetLookupValue(ByVal TargetTable As Variant, _
-                                ByVal LookupValue As Variant, _
-                                ByVal LookupIndex As Long, _
-                                ByVal TargetIndex As Long) As String
-    Dim i   As Long
-    Dim LB  As Long
-    Dim UB  As Long
-    LB = LBound(TargetTable, 1)
-    UB = UBound(TargetTable, 1)
-    For i = LB To UB
-        If TargetTable(i, LookupIndex) = LookupValue Then
-            GetLookupValue = TargetTable(i, TargetIndex)
-            Exit Function
-        End If
-    Next i
-End Function
 
 '-------------------------------------------------------------------------
 'Class Events

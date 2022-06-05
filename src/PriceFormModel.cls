@@ -296,7 +296,7 @@ Public Sub InItModel(ByVal mainData As Variant, _
     Me.index = TargetIndex
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
-    Call Validator.ResetSingleDimensionalArray(this.CheckFields)
+    Call GetMethod.ResetSingleDimensionalArray(this.CheckFields)
     'Keep Not-Mendatory Field Always True!
     this.CheckFields(MainTableFields.COL_MAIN_unitOfPrice) = True 'Unit of Price!
 End Sub
@@ -327,7 +327,7 @@ Public Sub SetPropertiesToUpdateRecordState()
     Call SetPropertiesToNullState
     'update operation begins
     Dim TargetRow As Long
-    TargetRow = GetTargetRowIndex(Me.mainTable, Me.index, MainTableFields.COL_MAIN_INDEX)
+    TargetRow = GetMethod.GetTargetRowIndex(Me.mainTable, Me.index, MainTableFields.COL_MAIN_INDEX)
     With Me
         .operation = OPERATION_UPDATE
         .RecordID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordID)
@@ -374,9 +374,9 @@ End Sub
 
 Public Function IsEverythingOkayToSaveRecord() As Variant
     IsEverythingOkayToSaveRecord = Validator.IsEverythingOkay(this.CheckFields, _
-                                                            modDataSources.arrListOfColumns_MAIN_Table, _
-                                                            MainTableFields.COL_MAIN_ConditionType, _
-                                                            MainTableFields.COL_MAIN_validToDate)
+                                                              modDataSources.arrListOfColumns_MAIN_Table, _
+                                                              MainTableFields.COL_MAIN_ConditionType, _
+                                                              MainTableFields.COL_MAIN_validToDate)
 End Function
 
 Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
@@ -498,7 +498,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
                 If Not IsValidField = True Then Exit Function
             End If
             'if everything okay then save date in backend format
-            Me.validFromDate = Validator.GetDateFromGermanDateString(Me.validFromDate)
+            Me.validFromDate = GetMethod.GetDateFromGermanDateString(Me.validFromDate)
             
             
         Case MainTableFields.COL_MAIN_validToDate
@@ -516,23 +516,13 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
                 If Not IsValidField = True Then Exit Function
             End If
             'if everything okay then save date in backedn format
-            Me.validToDate = Validator.GetDateFromGermanDateString(Me.validToDate)
+            Me.validToDate = GetMethod.GetDateFromGermanDateString(Me.validToDate)
             
     End Select
     
     'If All Goes Well!
     this.CheckFields(FieldIndex) = True
     
-End Function
-
-Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
-    Dim i As Long
-    For i = LBound(TargetTable, 1) To UBound(TargetTable, 1)
-        If TargetTable(i, TargetColumn) = TargetIndex Then
-            GetTargetRowIndex = i
-            Exit Function
-        End If
-    Next i
 End Function
 
 '-------------------------------------------------------------------------

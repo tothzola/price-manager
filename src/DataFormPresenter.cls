@@ -79,8 +79,8 @@ Private Sub MainView_OpenDataFormFrame(ByVal ContainerIdentifier As DataContaine
     RaiseEvent OpenDataForm(model, ContainerIdentifier)
 End Sub
 
-Private Sub MainView_PopulateValuesList(ByVal TargetColumn As String)
-    RaiseEvent PopulateValuesComboBox(model, model.GetTargetColumnIndex(TargetColumn))
+Private Sub MainView_PopulateValuesList()
+    RaiseEvent PopulateValuesComboBox(model, model.selectedColumn)
 End Sub
 
 Private Sub MainView_ResetDataFormFrame(ByVal ContainerIdentifier As DataContainer)

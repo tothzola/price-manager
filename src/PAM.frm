@@ -48,7 +48,7 @@ Public Event CloseDataFormFrame()
 Public Event ResetDataFormFrame(ByVal ContainerIdentifier As DataContainer)
 Public Event EditRecordFromDataFormFrame()
 Public Event FilterAndSortListFromDataFormFrame()
-Public Event PopulateValuesList(ByVal TargetColumn As String)
+Public Event PopulateValuesList()
 'Export Form Frame Events
 Public Event OpenExportFormFrame()
 Public Event CloseExportFormFrame()
@@ -475,7 +475,7 @@ End Sub
 
 Private Sub cmdFilterAndSort_Click()
     With Me
-        DataModel.selectedColumn = DataModel.GetTargetColumnIndex(.cmbColumns.value)
+        DataModel.selectedColumn = .cmbColumns.value
         DataModel.selectedValue = .cmbValues.value
     End With
     RaiseEvent FilterAndSortListFromDataFormFrame
@@ -483,8 +483,13 @@ End Sub
 
 Private Sub cmbColumns_Change()
     If Me.cmbColumns.ListIndex > 0 Then
-        Me.cmbValues.value = vbNullString
-        RaiseEvent PopulateValuesList(Me.cmbColumns.value)
+        'Reset Values Combobox Because Columns Combobox has been changed!
+        ExtendedMethods.SetStateofControlsToNullState Me.cmbValues
+        'Rehydrate Properties
+        DataModel.selectedColumn = Me.cmbColumns.value
+        DataModel.selectedValue = Me.cmbValues.value
+        'Raise Event
+        RaiseEvent PopulateValuesList
     End If
 End Sub
 

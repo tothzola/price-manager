@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'@Folder "AppObjects"
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -259,10 +260,10 @@ Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplicati
     Dim ID As String
     Select Case TABLE
         Case TablesOfThisApplication.TABLE_MAINRECORDS
-            TRow = GetTargetRowIndex(Me.mainTable, index, MainTableFields.COL_MAIN_INDEX)
+            TRow = GetMethod.GetTargetRowIndex(Me.mainTable, index, MainTableFields.COL_MAIN_INDEX)
             ID = Me.mainTable(TRow, 2)
         Case TablesOfThisApplication.TABLE_USERS
-            TRow = GetTargetRowIndex(Me.usersTable, index, UsersTableFields.COL_INDEX)
+            TRow = GetMethod.GetTargetRowIndex(Me.usersTable, index, UsersTableFields.COL_INDEX)
             ID = Me.usersTable(TRow, 2)
     End Select
     If ID = RecordID Then
@@ -285,150 +286,65 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
             If UBound(Me.mainTable, 1) = 1 Then
                 GetNewID = INDEX_RECORDID_FIRST
             Else
-                GetNewID = VBA.CLng(GetMax(Me.mainTable, MainTableFields.COL_MAIN_recordID)) + 1
+                GetNewID = VBA.CLng(GetMethod.GetMax(Me.mainTable, MainTableFields.COL_MAIN_recordID)) + 1
             End If
         Case TablesOfThisApplication.TABLE_USERS
             If UBound(Me.usersTable, 1) = 1 Then
                 GetNewID = INDEX_USERID_FIRST
             Else
-                GetNewID = VBA.CLng(GetMax(Me.usersTable, UsersTableFields.COL_userId)) + 1
+                GetNewID = VBA.CLng(GetMethod.GetMax(Me.usersTable, UsersTableFields.COL_userId)) + 1
             End If
     End Select
 End Function
 
-'Following function will pick unique list from the list!
+'Purpose:       Following function will pick unique list from the list!
+
 Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal TargetColumn As Long) As Variant
     
-    'Driving Paramters
-    Dim Records()               As String
-    Dim Record                  As Variant
-    Dim MatchedRecords          As String
-    Dim TotalMatchingRows       As Long
-    Dim firstRow                As Long
-    Dim lastRow                 As Long
-    Dim i                       As Long
-    Dim tmp                     As Variant
-    Dim dict                    As Dictionary
-    Dim uname                   As String
+    'Variable Declarations
+    Dim Records             As Variant
+    Dim Record              As Variant
+    Dim tmp                 As Variant
+    Dim i                   As Long
+    Dim uname               As String
+    Dim TotalMatchingRows   As Long
     
-    'Get Driving parameters
-    firstRow = LBound(ContextTable, 1)
-    lastRow = UBound(ContextTable, 1)
-    ReDim tmp(0)
+    'Get Generic List of Unique items from the Table's Column
+    Records = GetMethod.GetUniqueListFromTableColumn(ContextTable, TargetColumn)
     
-    'Get matching Rows!
-    MatchedRecords = vbNullString
-    TotalMatchingRows = 0
-    Set dict = New Dictionary
-    For i = firstRow + 1 To lastRow
-        If Not dict.Exists(ContextTable(i, TargetColumn)) Then
-            dict.Add ContextTable(i, TargetColumn), ContextTable(i, TargetColumn)
-            MatchedRecords = MatchedRecords & i & SEPERATOR_ITEM
-            TotalMatchingRows = TotalMatchingRows + 1
-        End If
-    Next i
-    
-    'remove last seperator from the matchedrecords variable
-    Set dict = Nothing
-    If MatchedRecords = vbNullString Then
-        GetUniqueListFromColumn = tmp
-        Exit Function
-    Else
-        MatchedRecords = VBA.Left$(MatchedRecords, VBA.Len(MatchedRecords) - VBA.Len(SEPERATOR_ITEM))
-    End If
+'Next step is to filter out uniqueList items based on App's Requirements
     
     'Redimentioning the tmp array
+    TotalMatchingRows = UBound(Records)
     ReDim tmp(TotalMatchingRows)
-    
-    'Transferring Data
-    Records = VBA.Split(MatchedRecords, SEPERATOR_ITEM)
     i = 1
+    
+    'loop through available list and filter out based on app's criteria
     For Each Record In Records
-        If TargetColumn = MainTableFields.COL_MAIN_userID Then
-            uname = GetLookupValue(Me.usersTable, ContextTable(Record, TargetColumn), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
-            If uname <> vbNullString Then
-                tmp(i) = uname
+        If Record <> Empty Then
+            If TargetColumn = MainTableFields.COL_MAIN_userID Then
+                uname = GetMethod.GetLookupValue(Me.usersTable, Record, UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+                If uname <> vbNullString Then
+                    tmp(i) = uname
+                Else
+                    ReDim Preserve tmp(TotalMatchingRows - 1)
+                End If
+            ElseIf VBA.IsDate(Record) Then
+                tmp(i) = VBA.Format(Record, DATEFORMAT_FRONTEND)
             Else
-                ReDim Preserve tmp(TotalMatchingRows - 1)
+                If VBA.IsNumeric(Record) Then
+                    tmp(i) = VBA.CDbl(Record)
+                Else
+                    tmp(i) = Record
+                End If
             End If
-        Else
-            If VBA.IsNumeric(ContextTable(Record, TargetColumn)) Then
-                tmp(i) = VBA.CDbl(ContextTable(Record, TargetColumn))
-            Else
-                tmp(i) = ContextTable(Record, TargetColumn)
-            End If
+            i = i + 1
         End If
-        i = i + 1
     Next Record
     
     'return value
-    GetUniqueListFromColumn = SortOneDimensionalArrayWithNumbers(tmp)
-End Function
-
-'following function act as Vlookup
-
-Private Function GetLookupValue(ByVal TargetTable As Variant, _
-                                ByVal LookupValue As Variant, _
-                                ByVal LookupIndex As Long, _
-                                ByVal TargetIndex As Long) As String
-    Dim i   As Long
-    Dim LB  As Long
-    Dim UB  As Long
-    LB = LBound(TargetTable, 1)
-    UB = UBound(TargetTable, 1)
-    For i = LB To UB
-        If TargetTable(i, LookupIndex) = LookupValue Then
-            GetLookupValue = TargetTable(i, TargetIndex)
-            Exit Function
-        End If
-    Next i
-End Function
-
-'Following function will Sort One Dimensional Array in Ascending Order !
-Private Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Variant
-    Dim FirstItemIndex  As Long
-    Dim LastItemIndex   As Long
-    Dim tmp             As Double
-    Dim i               As Long
-    Dim J               As Long
-    FirstItemIndex = LBound(arr)
-    LastItemIndex = UBound(arr)
-    For i = FirstItemIndex To LastItemIndex - 1
-        For J = i + 1 To LastItemIndex
-            If Val(arr(i)) > Val(arr(J)) Then
-                tmp = arr(J)
-                arr(J) = arr(i)
-                arr(i) = tmp
-            End If
-        Next J
-    Next i
-    SortOneDimensionalArrayWithNumbers = arr
-End Function
-
-Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
-    Dim i As Long
-    For i = LBound(TargetTable, 1) To UBound(TargetTable, 1)
-        If TargetTable(i, TargetColumn) = TargetIndex Then
-            GetTargetRowIndex = i
-            Exit Function
-        End If
-    Next i
-End Function
-
-Private Function GetMax(ByVal TargetTable As Variant, ByVal TargetColumn As Long) As Long
-    Dim i       As Long
-    Dim LB      As Long
-    Dim UB      As Long
-    Dim tmp     As Long
-    LB = LBound(TargetTable, 1)
-    UB = UBound(TargetTable, 1)
-    tmp = 0
-    For i = LB + 1 To UB Step 1
-        If TargetTable(i, TargetColumn) > tmp Then
-            tmp = TargetTable(i, TargetColumn)
-        End If
-    Next i
-    GetMax = tmp
+    GetUniqueListFromColumn = tmp
+    
 End Function
 
 '-------------------------------------------------------------------------

@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@Folder("Authentication.Hashing")
-'@ModuleDescription("An interface representing a hashing algorithm.")
+'@ModuleDescription("An interface representing a hashing Algorithm.")
 '@Interface
 Option Explicit
 

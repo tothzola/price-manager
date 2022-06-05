@@ -189,8 +189,8 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
             HeadersString = HeadersString & "" & TargetTableHeaders(1, i) & ", "
             If VBA.IsEmpty(LineItems(i - 2)) Then
                 ValuesString = ValuesString & "NULL, "
-            ElseIf IsCurrency(LineItems(i - 2)) Then
-                ValuesString = ValuesString & TransformToDBCompatibleCurrency(LineItems(i - 2)) & ", "
+            ElseIf GetMethod.IsCurrency(LineItems(i - 2)) Then
+                ValuesString = ValuesString & GetMethod.TransformToDBCompatibleCurrency(LineItems(i - 2)) & ", "
             Else
                 ValuesString = ValuesString & "'" & LineItems(i - 2) & "', "
             End If
@@ -239,8 +239,8 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
         For i = 2 To UBound(TargetTableHeaders, 2)
             If VBA.IsEmpty(LineItems(i - 2)) Then
                 tmp = tmp & TargetTableHeaders(1, i) & " = NULL, "
-            ElseIf IsCurrency(LineItems(i - 2)) Then
-                tmp = tmp & TargetTableHeaders(1, i) & " = " & TransformToDBCompatibleCurrency(LineItems(i - 2)) & ", "
+            ElseIf GetMethod.IsCurrency(LineItems(i - 2)) Then
+                tmp = tmp & TargetTableHeaders(1, i) & " = " & GetMethod.TransformToDBCompatibleCurrency(LineItems(i - 2)) & ", "
             Else
                 tmp = tmp & TargetTableHeaders(1, i) & " = '" & LineItems(i - 2) & "', "
             End If
@@ -336,101 +336,10 @@ Private Function GetDataWithHeadings() As Variant
     If Not (recordset.BOF Or recordset.EOF) Then
         Dim tmp As Variant
         tmp = Application.WorksheetFunction.Transpose(recordset.GetRows)
-        GetDataWithHeadings = JoinTables(TargetTableHeaders, tmp)
+        GetDataWithHeadings = GetMethod.JoinTables(TargetTableHeaders, tmp)
     Else
         GetDataWithHeadings = TargetTableHeaders
     End If
-End Function
-
-Private Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As Variant
-    Dim TotalRowsTable1     As Long
-    Dim TotalRowsTable2     As Long
-    Dim TotalColumnsTable1  As Long
-    Dim TotalColumnsTable2  As Long
-    Dim FinalTableRows      As Long
-    Dim FinalTableColumns   As Long
-    Dim i                   As Long
-    Dim J                   As Long
-    Dim FinalTable          As Variant
-    'Check if the table2 is Double dimensional or not?
-    'if not then create it
-    If NumberOfArrayDimensions(Table2) = 1 Then
-        Dim tmp As Variant
-        ReDim tmp(1 To 1, 1 To UBound(Table1, 2))
-        For i = 1 To UBound(Table1, 2)
-            tmp(1, i) = Table2(i)
-        Next i
-        Table2 = tmp
-    End If
-    'Everything is clear!
-    TotalRowsTable1 = UBound(Table1, 1)
-    TotalRowsTable2 = UBound(Table2, 1)
-    TotalColumnsTable1 = UBound(Table1, 2)
-    TotalColumnsTable2 = UBound(Table2, 2)
-    If TotalColumnsTable1 <> TotalColumnsTable2 Then
-        JoinTables = Table1
-        Exit Function
-    End If
-    FinalTableRows = TotalRowsTable1 + TotalRowsTable2
-    FinalTableColumns = TotalColumnsTable1
-    ReDim FinalTable(1 To FinalTableRows, 1 To FinalTableColumns)
-    For i = 1 To FinalTableRows
-        For J = 1 To FinalTableColumns
-            If i <= TotalRowsTable1 Then
-                FinalTable(i, J) = Table1(i, J)
-            Else
-                FinalTable(i, J) = Table2(i - TotalRowsTable1, J)
-            End If
-        Next J
-    Next i
-    JoinTables = FinalTable
-End Function
-
-'Copy Right @ Chip Pearson
-Private Function NumberOfArrayDimensions(arr As Variant) As Integer
-    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    ' NumberOfArrayDimensions
-    ' This function returns the number of dimensions of an array. An unallocated dynamic array
-    ' has 0 dimensions. This condition can also be tested with IsArrayEmpty.
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    Dim Ndx As Integer
-    Dim Res As Integer
-    On Error Resume Next
-    ' Loop, increasing the dimension index Ndx, until an error occurs.
-    ' An error will occur when Ndx exceeds the number of dimension
-    ' in the array. Return Ndx - 1.
-    Do
-        Ndx = Ndx + 1
-        Res = UBound(arr, Ndx)
-    Loop Until Err.Number <> 0
-    Err.Clear
-    NumberOfArrayDimensions = Ndx - 1
-End Function
-
-'Following function will tell if the string is currency or not?
-
-Private Function IsCurrency(ByVal inputValue As String) As Boolean
-    If VBA.Left(VBA.Right(inputValue, 3), 1) = Application.International(xlDecimalSeparator) Then
-        IsCurrency = True
-    Else
-        IsCurrency = False
-    End If
-End Function
-
-'Following function will convert currency to DB Compatible currency format! _
-this is very interesting because, We should always keep database column format in _
-single culture format. Like, en_US format, so decimal input will be always seperated with _
-dot! so, and why we need this? because german inputs considers comma as decimal seperator, _
-so we have to transform the currency string into the DB compitable string and then we can only _
-make it workable.
-
-Private Function TransformToDBCompatibleCurrency(ByVal inputValue As String) As String
-    If Application.International(xlDecimalSeparator) = "." Then
-        inputValue = VBA.Replace(inputValue, ",", "")
-    Else
-        inputValue = VBA.Replace(VBA.Replace(VBA.Replace(inputValue, ",", "#"), ".", ""), "#", ".")
-    End If
-    TransformToDBCompatibleCurrency = inputValue
 End Function
 
 '-------------------------------------------------------------------------
