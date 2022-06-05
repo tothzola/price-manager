@@ -154,7 +154,7 @@ EhhErr:
 End Sub
 
 Private Sub GiveHeadings()
-    Dim hCell As Range
+    Dim hCell       As Range
     Dim i As Long
     i = 0
     For Each hCell In TargetSheet.UsedRange.Rows(1).Cells
@@ -174,7 +174,7 @@ Private Sub DecorateReport()
 End Sub
 
 Private Sub ApplyDateFormatToColumns()
-    Dim col As Variant
+    Dim col         As Variant
     For Each col In Me.DateColumns
         TargetSheet.Columns(col).NumberFormat = Me.DateFormat
         TargetSheet.Columns(col).TextToColumns Destination:=TargetSheet.Columns(col), _
@@ -184,7 +184,7 @@ Private Sub ApplyDateFormatToColumns()
 End Sub
 
 Private Sub ApplyCurrencyFormatToColumns()
-    Dim col As Variant
+    Dim col         As Variant
     For Each col In Me.CurrencyColumns
         TargetSheet.Columns(col).Style = Me.CURRENCYFORMAT
     Next col
