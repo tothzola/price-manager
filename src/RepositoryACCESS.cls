@@ -335,75 +335,10 @@ Private Function GetDataWithHeadings() As Variant
     If Not (recordset.BOF Or recordset.EOF) Then
         Dim tmp As Variant
         tmp = Application.WorksheetFunction.Transpose(recordset.GetRows)
-        GetDataWithHeadings = JoinTables(TargetTableHeaders, tmp)
+        GetDataWithHeadings = GetMethod.JoinTables(TargetTableHeaders, tmp)
     Else
         GetDataWithHeadings = TargetTableHeaders
     End If
-End Function
-
-Private Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As Variant
-    Dim TotalRowsTable1     As Long
-    Dim TotalRowsTable2     As Long
-    Dim TotalColumnsTable1  As Long
-    Dim TotalColumnsTable2  As Long
-    Dim FinalTableRows      As Long
-    Dim FinalTableColumns   As Long
-    Dim i                   As Long
-    Dim J                   As Long
-    Dim FinalTable          As Variant
-    'Check if the table2 is Double dimensional or not?
-    'if not then create it
-    If NumberOfArrayDimensions(Table2) = 1 Then
-        Dim tmp As Variant
-        ReDim tmp(1 To 1, 1 To UBound(Table1, 2))
-        For i = 1 To UBound(Table1, 2)
-            tmp(1, i) = Table2(i)
-        Next i
-        Table2 = tmp
-    End If
-    'Everything is clear!
-    TotalRowsTable1 = UBound(Table1, 1)
-    TotalRowsTable2 = UBound(Table2, 1)
-    TotalColumnsTable1 = UBound(Table1, 2)
-    TotalColumnsTable2 = UBound(Table2, 2)
-    If TotalColumnsTable1 <> TotalColumnsTable2 Then
-        JoinTables = Table1
-        Exit Function
-    End If
-    FinalTableRows = TotalRowsTable1 + TotalRowsTable2
-    FinalTableColumns = TotalColumnsTable1
-    ReDim FinalTable(1 To FinalTableRows, 1 To FinalTableColumns)
-    For i = 1 To FinalTableRows
-        For J = 1 To FinalTableColumns
-            If i <= TotalRowsTable1 Then
-                FinalTable(i, J) = Table1(i, J)
-            Else
-                FinalTable(i, J) = Table2(i - TotalRowsTable1, J)
-            End If
-        Next J
-    Next i
-    JoinTables = FinalTable
-End Function
-
-'Copy Right @ Chip Pearson
-Private Function NumberOfArrayDimensions(arr As Variant) As Integer
-    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    ' NumberOfArrayDimensions
-    ' This function returns the number of dimensions of an array. An unallocated dynamic array
-    ' has 0 dimensions. This condition can also be tested with IsArrayEmpty.
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    Dim Ndx As Integer
-    Dim Res As Integer
-    On Error Resume Next
-    ' Loop, increasing the dimension index Ndx, until an error occurs.
-    ' An error will occur when Ndx exceeds the number of dimension
-    ' in the array. Return Ndx - 1.
-    Do
-        Ndx = Ndx + 1
-        Res = UBound(arr, Ndx)
-    Loop Until Err.Number <> 0
-    Err.Clear
-    NumberOfArrayDimensions = Ndx - 1
 End Function
 
 '-------------------------------------------------------------------------
