@@ -25,7 +25,6 @@ Const PANEL_TYPE_SIDE As String = "SIDE"
 Const PANEL_TYPE_MAIN As String = "MAIN"
 Const SYMBOL_OK As String = "ü"
 Const CONTROL_NAME_OK As String = "OK"
-Const Error_NonNumericalInput As Long = 1
 
 'Colors
 Const INVALID_FIELD_BORDERCOLOR As Long = COLOR_OF_NOT_OKAY
@@ -83,7 +82,7 @@ Public Function ApplyFormat(ByVal inputValue As String, ByVal formatType As Data
     If inputValue <> vbNullString Then inputValue = VBA.Trim$(inputValue)
     Select Case formatType
         Case DataTypes.TYPE_CURRENCY
-            ApplyFormat = FormatStringToCurrency(inputValue)
+            ApplyFormat = GetMethod.FormatStringToCurrency(inputValue)
         Case DataTypes.TYPE_DATE
             ApplyFormat = Format$(inputValue, DATEFORMAT_FRONTEND)
     End Select
@@ -347,146 +346,3 @@ Private Sub RedimensionTheFrame(ByVal ctrl As MSForms.Control, ByVal Top As Inte
         .Height = Height
     End With
 End Sub
-
-'Change text format to #,###.00 Currency Format
-
-Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Prefix As String = vbNullString) As String
-    
-    'Variable Declaration
-    Dim IsDecimalSeperatorUsed  As Boolean
-    Dim objRegEx                As Object
-    Dim ThousandSeperator       As String
-    Dim DecimalSeperator        As String
-    Dim DecimalPart             As String
-    Dim WholeNumberPart         As String
-    Dim ArrDecimalNumber()      As String
-    Dim tmp                     As String
-    Dim LenInputValue           As Long
-    Dim LenDecimalPart          As Long
-    Dim i                       As Long
-    Dim J                       As Long
-        
-    'error handeling
-    On Error GoTo EhhErr
-    
-    'Validation Checks
-    
-        'Check 1 : On null value
-        If inputValue = vbNullString Then GoTo CleanExit
-        
-        'Check 2 : If Non-Numerical Value entered!
-        If Prefix <> vbNullString Then
-            inputValue = VBA.Replace(inputValue, Prefix & " ", vbNullString)
-        End If
-        If Not VBA.IsNumeric(inputValue) Then
-            Err.Raise _
-                Number:=Error_NonNumericalInput + 513, _
-                Description:="Non-Numerical character(s) are not allowed!"
-        End If
-        
-    'Get Sepearator String
-    ThousandSeperator = Application.International(xlThousandsSeparator)
-    DecimalSeperator = Application.International(xlDecimalSeparator)
-    inputValue = TransformToAPPCompatibleCurrency(inputValue)
-    
-    'check if decimal seperator has been used or not ?
-    If VBA.InStr(1, inputValue, DecimalSeperator) > 0 Then
-        'Get number parts with Position shifter
-        ArrDecimalNumber = VBA.Split(inputValue, DecimalSeperator)
-        LenDecimalPart = VBA.Len(ArrDecimalNumber(1))
-        If LenDecimalPart = 2 Then
-            WholeNumberPart = ArrDecimalNumber(0)
-            DecimalPart = ArrDecimalNumber(1)
-        ElseIf LenDecimalPart = 3 Then
-            If ArrDecimalNumber(0) = 0 Then
-                WholeNumberPart = VBA.Left$(ArrDecimalNumber(1), 1)
-            Else
-                WholeNumberPart = ArrDecimalNumber(0) & VBA.Left$(ArrDecimalNumber(1), 1)
-            End If
-            DecimalPart = VBA.Right$(ArrDecimalNumber(1), 2)
-        ElseIf LenDecimalPart = 1 Then
-            FormatStringToCurrency = vbNullString
-            GoTo CleanExit
-        End If
-    Else
-        'Length of Input String
-        LenInputValue = VBA.Len(inputValue)
-        'Get whole number parts
-        If LenInputValue <= 2 Then
-            WholeNumberPart = 0
-        Else
-            WholeNumberPart = VBA.Left$(inputValue, LenInputValue - 2)
-        End If
-        'get decimal number part
-        If LenInputValue > 1 Then
-            DecimalPart = VBA.Right$(inputValue, 2)
-        Else
-            DecimalPart = "0" & inputValue
-        End If
-    End If
-    
-    'clean number parts
-    Set objRegEx = CreateObject("vbscript.regexp")
-    With objRegEx
-        .Global = True
-        .Pattern = "[^\d]+"
-        WholeNumberPart = .Replace(WholeNumberPart, vbNullString)
-        DecimalPart = .Replace(DecimalPart, vbNullString)
-    End With
-    
-    'insert Thousand Seperator to whole number part!
-    tmp = vbNullString
-    If VBA.Len(WholeNumberPart) > 3 Then
-        J = 1
-        For i = VBA.Len(WholeNumberPart) To 1 Step -1
-            If J = 3 Then
-                tmp = ThousandSeperator & VBA.Mid$(WholeNumberPart, i, 1) & tmp
-                J = 0
-            Else
-                tmp = VBA.Mid$(WholeNumberPart, i, 1) & tmp
-            End If
-            J = J + 1
-        Next i
-        'Clean whole number part
-        If VBA.Left$(tmp, 1) = ThousandSeperator Then
-            tmp = VBA.Right$(tmp, VBA.Len(tmp) - 1)
-            tmp = VBA.Trim$(tmp)
-        End If
-        'Submission!
-        WholeNumberPart = tmp
-    End If
-    
-    'Joining String
-    If Prefix = vbNullString Then
-        FormatStringToCurrency = WholeNumberPart & DecimalSeperator & DecimalPart
-    Else
-        FormatStringToCurrency = Prefix & " " & WholeNumberPart & DecimalSeperator & DecimalPart
-    End If
-    
-CleanExit:
-    Set objRegEx = Nothing
-    Exit Function
-    
-EhhErr:
-    MsgBox "Error: " & Err.Number & vbNewLine & vbNewLine & Err.Description, vbCritical, "Kamal Bharakhda"
-    FormatStringToCurrency = vbNullString
-    Err.Clear
-    Resume CleanExit
-    
-End Function
-
-'Following function will convert currency to Application Compatible currency format! _
-this is very interesting because, We should always keep database column format in _
-single culture format. Like, en_US format, and we always get data from the database _
-in decimal seperator dot format. So if in case our user is german, than that currency will _
-be invalid string and hence, we have to make few changes by replacing dot with comma to make _
-it compitable with App format. Rest of the work will be carried by then FormatStringToCurrency Function.
-
-Private Function TransformToAPPCompatibleCurrency(ByVal inputValue As String) As String
-    If Application.International(xlDecimalSeparator) = "," Then
-        inputValue = VBA.Replace(inputValue, ".", ",")
-    End If
-    TransformToAPPCompatibleCurrency = inputValue
-End Function
-
-
