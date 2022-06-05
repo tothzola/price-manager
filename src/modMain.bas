@@ -1,4 +1,5 @@
 Attribute VB_Name = "modMain"
+'@Folder("Main")
 Option Explicit
 
 Public Sub MainPAM()
