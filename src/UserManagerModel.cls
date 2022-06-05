@@ -166,7 +166,7 @@ Public Sub InItModel(ByVal usersData As Variant, ByVal StatusOfUser As Variant, 
     userTypesList = TypesOfUser
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
-    Call Validator.ResetSingleDimensionalArray(this.CheckFields)
+    Call GetMethod.ResetSingleDimensionalArray(this.CheckFields)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -187,7 +187,7 @@ Public Sub SetPropertiesToUpdateUserState()
     Call SetPropertiesToNullState
     'update operation begins
     Dim TargetRow As Long
-    TargetRow = GetTargetRowIndex(Me.usersTable, Me.userIndex, UsersTableFields.COL_INDEX)
+    TargetRow = GetMethod.GetTargetRowIndex(Me.usersTable, Me.userIndex, UsersTableFields.COL_INDEX)
     With Me
         .operation = OPERATION_UPDATE
         .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userId)
@@ -275,16 +275,6 @@ Public Function IsEverythingOkayToSaveUser(ByVal currentOperation As FormOperati
                                                             modDataSources.arrListOfColumns_USERS_TABLE, _
                                                             UsersTableFields.COL_userStatus, _
                                                             UsersTableFields.COL_email)
-End Function
-
-Private Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
-    Dim i As Long
-    For i = LBound(TargetTable, 1) To UBound(TargetTable, 1)
-        If TargetTable(i, TargetColumn) = TargetIndex Then
-            GetTargetRowIndex = i
-            Exit Function
-        End If
-    Next i
 End Function
 
 '-------------------------------------------------------------------------
