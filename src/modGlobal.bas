@@ -1,4 +1,5 @@
 Attribute VB_Name = "modGlobal"
+'@Folder("GlobalEntities")
 Option Explicit
 
 'SETTINGS
@@ -9,6 +10,7 @@ Public Const DATEFORMAT_BACKEND As String = "yyyy-mm-dd;@"
 Public Const DATEFORMAT_FRONTEND As String = "dd.mm.yyyy;@"
 Public Const END_OF_THE_EARTH As String = "9999-12-31"
 Public Const START_OF_THE_CENTURY As String = "2000-01-01"
+Public Const CURRENCYFORMAT_FRONTEND As String = "Standard"
 
 'NUMERICAL RANGES
 Public Const INDEX_RECORDID_FIRST As Long = 1000000
