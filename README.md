@@ -29,15 +29,15 @@ Datamanagement System
 
 ### Condition Type
 
-**Feature:** entry is required, default value "Y0PR", prefilled.
+**Feature:** entry is required, default value "0001", prefilled.
 
 ### Sales Organization
 
-**Feature:** entry is required, selection value "2961", prefilled.
+**Feature:** entry is required, selection value "0201", prefilled.
 
 ### Distribution Channel
 
-**Feature:** entry is required, selection values "01", "HD", "GY"
+**Feature:** entry is required, selection values "01", "02", "03"
 
 ### Customer
 
@@ -99,7 +99,7 @@ Datamanagement System
 ### Currency
 
 **Feature:** selection is required, dropdownlist 
-- list values: EUR, USD, GBP, PLN
+- list values: EUR, USD, GBP
 
 ### Price Unit
 
@@ -123,7 +123,7 @@ Datamanagement System
 ### Unit of Measure
 
 **Feature:** selection is required if Price Unit field hase a valid value, dropdownlist 
-- list values: KAR, RO, ST, KG, LM, M2
+- list values: CAR, RO, PC, KG, LM, M2
 ---
 
 ### Valid from
