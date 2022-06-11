@@ -183,6 +183,7 @@ Public Sub SetPropertiesToDefaultState()
     With Me
         .FromDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
         .ToDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
+        .recordStatus = modDataSources.arrRecordStatusesList(2)
     End With
 End Sub
 
