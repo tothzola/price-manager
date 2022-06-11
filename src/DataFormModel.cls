@@ -425,7 +425,7 @@ Public Function GetFilteredAndSortedList() As Variant
                 
         Case MainTableFields.COL_MAIN_statusChangeDate
                 
-            IsValidRow = Me.Validator.IsValidToInclude(Me.dataTable(i, Me.selectedColumn), TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
+            IsValidRow = Me.Validator.IsValidToInclude(GetMethod.GetDateFromUSDate(Me.dataTable(i, Me.selectedColumn)), TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
             If Not IsValidRow Then GoTo IgnoreThisRow
             
         Case Else
