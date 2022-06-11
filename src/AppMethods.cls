@@ -20,27 +20,37 @@ Public Algo                     As PAMXLAM.IHashAlgorithm
 
 'Purpose:       This will parse the German formatted date string into workable format
 
-Public Function GetDateFromGermanDateString(ByVal inputValue As String) As String
+Public Function GetBackendDateFromDateString(ByVal inputValue As String) As String
     
-    Dim dayPart As Long
-    Dim MonthPart As Long
-    Dim YearPart As Long
-    Dim tmp As String
+    Select Case GetRegion
     
-    'clean input string so we only left with 8 characters long length numerical value
-    tmp = CleanString(inputValue)
-    inputValue = tmp
+    Case "US"
+        If VBA.IsDate(inputValue) Then
+            GetBackendDateFromDateString = VBA.Format$(inputValue, DATEFORMAT_BACKEND)
+        Else
+            GetBackendDateFromDateString = vbNullString
+        End If
+    Case "EU"
+        Dim DayPart As Long
+        Dim MonthPart As Long
+        Dim YearPart As Long
+        Dim tmp As String
     
-    'check for [10022009]DDMMYYYY
-    If VBA.Len(inputValue) = 8 And VBA.IsNumeric(inputValue) Then
-        'you are here because inputValue has right 8 characters that suits to DDMMYYYY
-        dayPart = VBA.CLng(VBA.Left$(inputValue, 2))
-        YearPart = VBA.CLng(VBA.Right$(inputValue, 4))
-        MonthPart = VBA.CLng(VBA.Mid$(inputValue, 3, 2))
-        GetDateFromGermanDateString = VBA.Format$(VBA.DateSerial(YearPart, MonthPart, dayPart), DATEFORMAT_BACKEND)
-    Else
-        GetDateFromGermanDateString = vbNullString
-    End If
+        'clean input string so we only left with 8 characters long length numerical value
+        tmp = CleanString(inputValue)
+        inputValue = tmp
+    
+        'check for [10022009]DDMMYYYY
+        If VBA.Len(inputValue) = 8 And VBA.IsNumeric(inputValue) Then
+            'you are here because inputValue has right 8 characters that suits to DDMMYYYY
+            DayPart = VBA.CLng(VBA.Left$(inputValue, 2))
+            YearPart = VBA.CLng(VBA.Right$(inputValue, 4))
+            MonthPart = VBA.CLng(VBA.Mid$(inputValue, 3, 2))
+            GetBackendDateFromDateString = VBA.Format$(VBA.DateSerial(YearPart, MonthPart, DayPart), DATEFORMAT_BACKEND)
+        Else
+            GetBackendDateFromDateString = vbNullString
+        End If
+    End Select
     
 End Function
 
@@ -501,19 +511,27 @@ Public Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Vari
     
     Dim FirstItemIndex  As Long
     Dim LastItemIndex   As Long
-    Dim tmp             As Double
+    Dim tmp             As Variant
     Dim i               As Long
     Dim j               As Long
     
     FirstItemIndex = LBound(arr)
     LastItemIndex = UBound(arr)
     
-    For i = FirstItemIndex To LastItemIndex - 1
+    For i = FirstItemIndex + 1 To LastItemIndex - 1
         For j = i + 1 To LastItemIndex
-            If Val(arr(i)) > Val(arr(j)) Then
-                tmp = arr(j)
-                arr(j) = arr(i)
-                arr(i) = tmp
+            If VBA.IsNumeric(arr(i)) And VBA.IsNumeric(arr(j)) Then
+                If Val(arr(i)) > Val(arr(j)) Then
+                    tmp = arr(j)
+                    arr(j) = arr(i)
+                    arr(i) = tmp
+                End If
+            Else
+                If arr(i) > arr(j) Then
+                    tmp = arr(j)
+                    arr(j) = arr(i)
+                    arr(i) = tmp
+                End If
             End If
         Next j
     Next i

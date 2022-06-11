@@ -7,7 +7,7 @@ Public Const SIGN As String = "Demo Project"
 
 'GENERAL SETTINGS
 Public Const DATEFORMAT_BACKEND As String = "yyyy-mm-dd;@"
-Public Const DATEFORMAT_FRONTEND As String = "dd.mm.yyyy;@"
+'Public Const DATEFORMAT_FRONTEND As String = "dd.mm.yyyy;@"
 Public Const END_OF_THE_EARTH As String = "9999-12-31"
 Public Const START_OF_THE_CENTURY As String = "2000-01-01"
 Public Const CURRENCYFORMAT_FRONTEND As String = "Standard"
@@ -121,6 +121,47 @@ Public Enum ValidationCheckTypes
     TYPE_DATEBETWEENRANGE
 End Enum
 
+Private Enum Region
+    US = 1                                 'United States
+    UK = 44                                'United Kindom
+    DE = 49                                'Germany
+End Enum
+
+Public Function DATEFORMAT_FRONTEND() As String
+    Select Case GetRegion
+    
+        Case "US"
+            DATEFORMAT_FRONTEND = "DD-MMM-YYYY"
+            
+        Case "EU"
+            DATEFORMAT_FRONTEND = GetRegionalShortDate
+            
+        Case vbNullString
+            DATEFORMAT_FRONTEND = "YYYY-MM-DD"
+            
+    End Select
+End Function
+
+Public Function GetRegion() As String
+
+    Dim Code As String
+    Select Case Application.International(xlCountrySetting)
+
+    Case Region.US:
+        Code = "US"
+
+    Case Region.DE, Region.UK:
+        Code = "EU"
+
+    Case Else:
+        Code = vbNullString
+
+    End Select
+
+    GetRegion = Code
+
+End Function
+
 Public Function EXPORTREPORT_CURRENCYFORMAT() As String
     EXPORTREPORT_CURRENCYFORMAT = "Comma"
 End Function
@@ -129,3 +170,4 @@ Public Sub WaitForOneSecond()
     VBA.DoEvents
     Call Excel.Application.Wait(Now + TimeValue("00:00:01"))
 End Sub
+

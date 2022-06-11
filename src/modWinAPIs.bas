@@ -25,6 +25,12 @@ Public Const WS_CAPTION = &HC00000
     Public Declare PtrSafe Function FindWindowA _
                            Lib "user32" (ByVal lpClassName As String, _
                            ByVal lpWindowName As String) As LongPtr
+    Public Declare PtrSafe Function GetLocaleInfo _
+                           Lib "kernel32" Alias "GetLocaleInfoA" ( _
+                           ByVal Locale As Long, _
+                           ByVal LCType As Long, _
+                           ByVal lpLCData As String, _
+                           ByVal cchData As Long) As Long
 #Else
     Public Declare Function GetWindowLong _
                            Lib "user32" Alias "GetWindowLongA" ( _
@@ -41,7 +47,31 @@ Public Const WS_CAPTION = &HC00000
     Public Declare Function FindWindowA _
                            Lib "user32" (ByVal lpClassName As String, _
                            ByVal lpWindowName As String) As Long
+    Public Declare Function GetLocaleInfo _
+                           Lib "kernel32" Alias "GetLocaleInfoA" ( _
+                           ByVal Locale As Long, _
+                           ByVal LCType As Long, _
+                           ByVal lpLCData As String, _
+                           ByVal cchData As Long) As Long
 #End If
+
+Private Const LOCALE_USER_DEFAULT = &H400
+Private Const LOCALE_SSHORTDATE = &H1F ' short date format string
+
+Public Function GetRegionalShortDate() As String
+    
+    Dim strLocale As String
+    Dim lngRet As Long
+    Dim strMsg As String
+    
+    'Get short date format
+    strLocale = Space(255)
+    lngRet = GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SSHORTDATE, strLocale, Len(strLocale))
+    strLocale = Left(strLocale, lngRet - 1)
+    
+    GetRegionalShortDate = strLocale
+    
+End Function
 
 Sub HideTitleBar(frm As Object)
 #If VBA7 Then
