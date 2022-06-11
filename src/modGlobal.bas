@@ -126,6 +126,7 @@ Private Enum Region
     US = 1                                 'United States
     UK = 44                                'United Kindom
     DE = 49                                'Germany
+    IND = 91                               'India
 End Enum
 
 Public Function DATEFORMAT_FRONTEND(Optional Apply As Boolean = True) As String
@@ -134,7 +135,7 @@ Public Function DATEFORMAT_FRONTEND(Optional Apply As Boolean = True) As String
         Case "US"
             DATEFORMAT_FRONTEND = "DD-MMM-YYYY"
             
-        Case "EU"
+        Case "EU", "IND"
             If Apply Then
                 DATEFORMAT_FRONTEND = GetRegionalShortDate
             Else
@@ -157,6 +158,9 @@ Public Function GetRegion() As String
 
     Case Region.DE, Region.UK:
         Code = "EU"
+        
+    Case Region.IND
+        Code = "IND"
 
     Case Else:
         Code = vbNullString

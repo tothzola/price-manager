@@ -330,7 +330,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
                     ReDim Preserve tmp(TotalMatchingRows - 1)
                 End If
             ElseIf VBA.IsDate(Record) Then
-                tmp(i) = VBA.Format$(Record, DATEFORMAT_FRONTEND(False))
+                tmp(i) = VBA.Format$(GetMethod.GetDateFromUSDate(Record), DATEFORMAT_FRONTEND())
             Else
                 If VBA.IsNumeric(Record) Then
                     tmp(i) = VBA.CDbl(Record)
