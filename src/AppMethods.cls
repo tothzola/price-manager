@@ -18,6 +18,28 @@ Public Algo                     As PAMXLAM.IHashAlgorithm
 'Public Methods
 '----------------------------------------------------------------------------------
 
+
+'Purpose:       Get date from the US Date String Format
+
+Public Function GetDateFromUSDate(ByVal inputValue As String) As Date
+    
+    Dim DayPart As Long
+    Dim MonthPart As Long
+    Dim YearPart As Long
+    Dim Arr() As String
+    
+    If VBA.InStr(1, inputValue, "/") > 0 Then
+        Arr = VBA.Split(inputValue, "/")
+        DayPart = VBA.CLng(Arr(1))
+        MonthPart = VBA.CLng(Arr(0))
+        YearPart = VBA.CLng(Arr(2))
+        GetDateFromUSDate = VBA.DateSerial(YearPart, MonthPart, DayPart)
+    Else
+        GetDateFromUSDate = VBA.CDate(inputValue)
+    End If
+    
+End Function
+
 'Purpose:       This will parse the German formatted date string into workable format
 
 Public Function GetBackendDateFromDateString(ByVal inputValue As String) As String
@@ -30,7 +52,7 @@ Public Function GetBackendDateFromDateString(ByVal inputValue As String) As Stri
         Else
             GetBackendDateFromDateString = vbNullString
         End If
-    Case "EU"
+    Case "EU", "IND"
         Dim DayPart As Long
         Dim MonthPart As Long
         Dim YearPart As Long
@@ -76,14 +98,14 @@ End Function
 
 'purpose:   This function will reset each items of array to false or reset it
 
-Public Sub ResetSingleDimensionalArray(ByRef arr As Variant, Optional resetValue As Boolean = False)
+Public Sub ResetSingleDimensionalArray(ByRef Arr As Variant, Optional resetValue As Boolean = False)
     Dim i As Long
     Dim FirstItem As Long
     Dim LastItem As Long
-    FirstItem = LBound(arr)
-    LastItem = UBound(arr)
+    FirstItem = LBound(Arr)
+    LastItem = UBound(Arr)
     For i = FirstItem To LastItem
-        arr(i) = resetValue
+        Arr(i) = resetValue
     Next i
 End Sub
 
@@ -507,7 +529,7 @@ End Function
 
 'Purpose :      Following function will Sort One Dimensional Array in Ascending Order!
 
-Public Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Variant
+Public Function SortOneDimensionalArrayWithNumbers(ByVal Arr As Variant) As Variant
     
     Dim FirstItemIndex  As Long
     Dim LastItemIndex   As Long
@@ -515,28 +537,28 @@ Public Function SortOneDimensionalArrayWithNumbers(ByVal arr As Variant) As Vari
     Dim i               As Long
     Dim j               As Long
     
-    FirstItemIndex = LBound(arr)
-    LastItemIndex = UBound(arr)
+    FirstItemIndex = LBound(Arr)
+    LastItemIndex = UBound(Arr)
     
     For i = FirstItemIndex + 1 To LastItemIndex - 1
         For j = i + 1 To LastItemIndex
-            If VBA.IsNumeric(arr(i)) And VBA.IsNumeric(arr(j)) Then
-                If Val(arr(i)) > Val(arr(j)) Then
-                    tmp = arr(j)
-                    arr(j) = arr(i)
-                    arr(i) = tmp
+            If VBA.IsNumeric(Arr(i)) And VBA.IsNumeric(Arr(j)) Then
+                If Val(Arr(i)) > Val(Arr(j)) Then
+                    tmp = Arr(j)
+                    Arr(j) = Arr(i)
+                    Arr(i) = tmp
                 End If
             Else
-                If arr(i) > arr(j) Then
-                    tmp = arr(j)
-                    arr(j) = arr(i)
-                    arr(i) = tmp
+                If Arr(i) > Arr(j) Then
+                    tmp = Arr(j)
+                    Arr(j) = Arr(i)
+                    Arr(i) = tmp
                 End If
             End If
         Next j
     Next i
     
-    SortOneDimensionalArrayWithNumbers = arr
+    SortOneDimensionalArrayWithNumbers = Arr
     
 End Function
 
@@ -549,7 +571,7 @@ End Function
             has 0 dimensions. This condition can also be tested with IsArrayEmpty. _
             Copy Right @ Chip Pearson
             
-Private Function NumberOfArrayDimensions(arr As Variant) As Integer
+Private Function NumberOfArrayDimensions(Arr As Variant) As Integer
 
     Dim Ndx As Integer
     Dim Res As Integer
@@ -559,7 +581,7 @@ Private Function NumberOfArrayDimensions(arr As Variant) As Integer
     ' in the array. Return Ndx - 1.
     Do
         Ndx = Ndx + 1
-        Res = UBound(arr, Ndx)
+        Res = UBound(Arr, Ndx)
     Loop Until Err.Number <> 0
     Err.Clear
     NumberOfArrayDimensions = Ndx - 1
