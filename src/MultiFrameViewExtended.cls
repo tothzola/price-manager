@@ -90,6 +90,11 @@ Public Function ApplyFormat(ByVal inputValue As String, ByVal formatType As Data
                 ApplyFormat = VBA.Format$(inputValue, DATEFORMAT_FRONTEND)
             End If
             
+        Case DataTypes.TYPE_NO
+            If inputValue <> vbNullString Then
+                ApplyFormat = VBA.Format$(inputValue, DATEFORMAT_FRONTEND(False))
+            End If
+            
     End Select
 End Function
 
@@ -99,7 +104,7 @@ enabled disabled the controls based on user type
 Public Sub FormEditingState(ByVal LockState As Boolean, ParamArray ctrls() As Variant)
     Dim ctrl As Variant
     For Each ctrl In ctrls
-        ctrl.Enabled = LockState
+        ctrl.Locked = Not LockState
     Next ctrl
     Set ctrl = Nothing
 End Sub

@@ -972,6 +972,7 @@ Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
         'input field state
         .txtDateFrom.value = VBA.Format$(ExportModel.FromDate, DATEFORMAT_FRONTEND)
         .txtDateTo.value = VBA.Format$(ExportModel.ToDate, DATEFORMAT_FRONTEND)
+        .cmbStatus.value = ExportModel.recordStatus
     End With
 End Sub
 
@@ -1140,10 +1141,10 @@ Private Sub StateForNewRecordForPriceForm()
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
-            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidTo)
         Else
             Call ShowApprovalRejectionButtons(False)
-            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidTo)
         End If
         'Other Buttons State
         .cmdAddNewRecord.Enabled = True
@@ -1173,7 +1174,7 @@ Private Sub StateForUpdateRecordForPriceForm()
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
-            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidTo)
             'Other Buttons State
             .cmdAddNewRecord.Enabled = False
             .cmdUpdateRecord.Enabled = False
@@ -1181,7 +1182,7 @@ Private Sub StateForUpdateRecordForPriceForm()
             .cmdResetPriceForm.Enabled = False
         Else
             Call ShowApprovalRejectionButtons(False)
-            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidFrom, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidTo)
             'Other Buttons State
             .cmdAddNewRecord.Enabled = False
             .cmdUpdateRecord.Enabled = True
@@ -1268,13 +1269,13 @@ End Sub
 Private Sub ReformatListBoxWithAppropriateDataTypesForMainTable()
     With Me
         'Edit Change Date
-        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_statusChangeDate, TYPE_DATE)
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_statusChangeDate, TYPE_NO)
         'price column
         Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_price, TYPE_CURRENCY)
         'From Date Column
-        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validFromDate, TYPE_DATE)
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validFromDate, TYPE_NO)
         'To Date Column
-        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validToDate, TYPE_DATE)
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validToDate, TYPE_NO)
     End With
 End Sub
 

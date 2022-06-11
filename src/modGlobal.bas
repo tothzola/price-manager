@@ -114,6 +114,7 @@ End Enum
 Public Enum DataTypes
     TYPE_DATE
     TYPE_CURRENCY
+    TYPE_NO
 End Enum
 
 Public Enum ValidationCheckTypes
@@ -127,17 +128,21 @@ Private Enum Region
     DE = 49                                'Germany
 End Enum
 
-Public Function DATEFORMAT_FRONTEND() As String
+Public Function DATEFORMAT_FRONTEND(Optional Apply As Boolean = True) As String
     Select Case GetRegion
     
         Case "US"
             DATEFORMAT_FRONTEND = "DD-MMM-YYYY"
             
         Case "EU"
-            DATEFORMAT_FRONTEND = GetRegionalShortDate
+            If Apply Then
+                DATEFORMAT_FRONTEND = GetRegionalShortDate
+            Else
+                DATEFORMAT_FRONTEND = vbNullString
+            End If
             
         Case vbNullString
-            DATEFORMAT_FRONTEND = "YYYY-MM-DD"
+            DATEFORMAT_FRONTEND = vbNullString
             
     End Select
 End Function
