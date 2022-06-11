@@ -498,7 +498,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
                 If Not IsValidField = True Then Exit Function
             End If
             'if everything okay then save date in backend format
-            Me.validFromDate = GetMethod.GetDateFromGermanDateString(Me.validFromDate)
+            Me.validFromDate = GetMethod.GetBackendDateFromDateString(Me.validFromDate)
             
             
         Case MainTableFields.COL_MAIN_validToDate
@@ -516,7 +516,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
                 If Not IsValidField = True Then Exit Function
             End If
             'if everything okay then save date in backedn format
-            Me.validToDate = GetMethod.GetDateFromGermanDateString(Me.validToDate)
+            Me.validToDate = GetMethod.GetBackendDateFromDateString(Me.validToDate)
             
     End Select
     
