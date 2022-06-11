@@ -422,14 +422,14 @@ Private Sub txtDateFrom_Change()
     'Hydrate model property
     ExportModel.FromDate = Me.txtDateFrom.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [" & DATEFORMAT_FRONTEND & "] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
 End Sub
 
 Private Sub txtDateTo_Change()
     'Hydrate model property
     ExportModel.ToDate = Me.txtDateTo.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [" & DATEFORMAT_FRONTEND & "] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
 End Sub
 
 Private Sub cmbCustomerID_Change()
@@ -579,14 +579,14 @@ Private Sub txtValidFrom_Change()
     'Hydrate model property
     PriceModel.validFromDate = Me.txtValidFrom.value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtValidFrom, PriceModel.IsValidField(MainTableFields.COL_MAIN_validFromDate), TYPE_CUSTOM, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and it should be today's date only!"
+    ExtendedMethods.UpdateControlAfterValidation Me.txtValidFrom, PriceModel.IsValidField(MainTableFields.COL_MAIN_validFromDate), TYPE_CUSTOM, "Date format must be [" & DATEFORMAT_FRONTEND & "] and it should be today's date only!"
 End Sub
 
 Private Sub txtValidTo_Change()
     'Hydrate model property
     PriceModel.validToDate = Me.txtValidTo.value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtValidTo, PriceModel.IsValidField(MainTableFields.COL_MAIN_validToDate), TYPE_CUSTOM, "Date format must be [DD.MM.YYYY] OR [DDMMYYY] and it should be future date!"
+    ExtendedMethods.UpdateControlAfterValidation Me.txtValidTo, PriceModel.IsValidField(MainTableFields.COL_MAIN_validToDate), TYPE_CUSTOM, "Date format must be [" & DATEFORMAT_FRONTEND & "] and it should be future date!"
 End Sub
    
 '-------------------------------------------------------------------------
@@ -948,15 +948,10 @@ Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
         Else
             DataModel.IsApprover = False
         End If
-    'reformat Listbox column with appropriete types
-        'Edit Change Date
-        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_statusChangeDate, TYPE_DATE)
-        'price column
-        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_price, TYPE_CURRENCY)
-        'From Date Column
-        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validFromDate, TYPE_DATE)
-        'To Date Column
-        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validToDate, TYPE_DATE)
+        
+        'reformat Listbox column with appropriete types
+        ReformatListBoxWithAppropriateDataTypesForMainTable
+        
         'State of Controls of Data Form
         .cmdEditRecord.Enabled = False
     End With
@@ -1028,6 +1023,8 @@ Public Sub UserWantsToFilterAndSortDataFormList()
         Else
             Me.lstRecordsContainer.List = DataModel.GetFilteredAndSortedList
         End If
+        'Reformat Grid Columns
+        ReformatListBoxWithAppropriateDataTypesForMainTable
     End With
 End Sub
 
@@ -1265,6 +1262,19 @@ Private Sub UpdateActiveUserInfomation(ByVal uname As String, ByVal uType As Str
         .ActiveUserStatus = uStatus
         .ActiveUserType = uType
         .ActiveUserEmail = uEmail
+    End With
+End Sub
+
+Private Sub ReformatListBoxWithAppropriateDataTypesForMainTable()
+    With Me
+        'Edit Change Date
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_statusChangeDate, TYPE_DATE)
+        'price column
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_price, TYPE_CURRENCY)
+        'From Date Column
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validFromDate, TYPE_DATE)
+        'To Date Column
+        Call ExtendedMethods.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validToDate, TYPE_DATE)
     End With
 End Sub
 
