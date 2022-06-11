@@ -101,7 +101,7 @@ End Property
 Public Property Get selectedValue() As Variant
     Select Case Me.selectedColumn
     Case MainTableFields.COL_MAIN_statusChangeDate
-        If this.selectedValue <> vbNullString Then selectedValue = GetMethod.GetDateFromGermanDateString(this.selectedValue)
+        If this.selectedValue <> vbNullString Then selectedValue = GetMethod.GetBackendDateFromDateString(this.selectedValue)
     Case Else
         selectedValue = this.selectedValue
     End Select
@@ -374,10 +374,6 @@ Public Function GetDataForRecordsList() As Variant
                 Else
                     If j = MainTableFields.COL_MAIN_userID Then
                         tmp(k, j) = uname
-                    ElseIf j = MainTableFields.COL_MAIN_statusChangeDate Then
-                        tmp(k, j) = VBA.Format(Me.dataTable(i, j), DATEFORMAT_FRONTEND)
-                    ElseIf j = MainTableFields.COL_MAIN_price Then
-                        tmp(k, j) = VBA.Format(Me.dataTable(i, j), CURRENCYFORMAT_FRONTEND)
                     Else
                         tmp(k, j) = Me.dataTable(i, j)
                     End If
@@ -469,17 +465,6 @@ IgnoreThisRow:
                 If j = MainTableFields.COL_MAIN_userID Then
                     tmp(i, j) = uname
                     GoTo NextIteration
-                End If
-            
-                'Change Date Format
-                If j = MainTableFields.COL_MAIN_statusChangeDate Then
-                    tmp(i, j) = VBA.Format(Me.dataTable(Record, j), DATEFORMAT_FRONTEND)
-                    GoTo NextIteration
-                End If
-            
-                'Change Currency Format
-                If j = MainTableFields.COL_MAIN_price Then
-                    tmp(i, j) = VBA.Format(Me.dataTable(Record, j), CURRENCYFORMAT_FRONTEND)
                 End If
             
                 'NO GUARD CLAUSE : For Rest of the cells
