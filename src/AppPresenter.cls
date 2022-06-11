@@ -621,7 +621,7 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
         .DateColumns = Array(MainTableFields.COL_MAIN_statusChangeDate, _
                              MainTableFields.COL_MAIN_validFromDate, _
                              MainTableFields.COL_MAIN_validToDate)
-        .DateFormat = DATEFORMAT_FRONTEND
+        .DateFormat = DATEFORMAT_FRONTEND(False)
         .LoadData = EFModel.exportTable
         .Headers = modDataSources.arrHeaders_Export_Report
         .GenerateReport
