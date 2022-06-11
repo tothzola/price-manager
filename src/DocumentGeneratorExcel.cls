@@ -175,12 +175,14 @@ End Sub
 
 Private Sub ApplyDateFormatToColumns()
     Dim col         As Variant
-    For Each col In Me.DateColumns
-        TargetSheet.Columns(col).NumberFormat = Me.DateFormat
-        TargetSheet.Columns(col).TextToColumns Destination:=TargetSheet.Columns(col), _
-                                               DataType:=xlDelimited, _
-                                               FieldInfo:=Array(1, xlDMYFormat)
-    Next col
+    With TargetSheet
+        For Each col In Me.DateColumns
+            .Columns(col).NumberFormat = Me.DateFormat
+            '.Columns(col).TextToColumns Destination:=.Columns(col), _
+                                                   DataType:=xlDelimited, _
+                                                   FieldInfo:=Array(1, xlDMYFormat)
+        Next col
+    End With
 End Sub
 
 Private Sub ApplyCurrencyFormatToColumns()
