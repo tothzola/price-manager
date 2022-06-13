@@ -498,8 +498,9 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
                 If Not IsValidField = True Then Exit Function
             End If
             'if everything okay then save date in backend format
-            Me.validFromDate = GetMethod.GetBackendDateFromDateString(Me.validFromDate)
-            
+            'patchBackendDateformat
+            'Me.validFromDate = GetMethod.GetBackendDateFromDateString(Me.validFromDate)
+            Me.validFromDate = VBA.Format$(Me.validFromDate, GetDateFormat)
             
         Case MainTableFields.COL_MAIN_validToDate
             'Check 1
@@ -516,7 +517,9 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
                 If Not IsValidField = True Then Exit Function
             End If
             'if everything okay then save date in backedn format
-            Me.validToDate = GetMethod.GetBackendDateFromDateString(Me.validToDate)
+            'patchBackendDateformat
+            'Me.validToDate = GetMethod.GetBackendDateFromDateString(Me.validToDate)
+            Me.validToDate = VBA.Format$(Me.validToDate, GetDateFormat)
             
     End Select
     

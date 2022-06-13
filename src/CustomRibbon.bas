@@ -16,6 +16,8 @@ Public Sub PriceApprovalRibbon(ByVal RibbonUI As Office.IRibbonUI)
     
     On Error GoTo CleanFail
     
+    If Not ReferenceCheck.CheckReferenceCompatibility Then Exit Sub
+    
     If Application.ProtectedViewWindows.Count > 0 Then Exit Sub
 
     'Load Ribbon

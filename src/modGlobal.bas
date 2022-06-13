@@ -1,13 +1,22 @@
 Attribute VB_Name = "modGlobal"
 '@Folder("GlobalEntities")
 Option Explicit
+Option Private Module
+#If VBA7 Then
+    Private Declare PtrSafe Function EnumDateFormatsA Lib "Kernel32" (ByVal lpDateFmtEnumProc As LongPtr, ByVal LCID As Long, ByVal dwFlags As Long) As Boolean
+    Private Declare PtrSafe Function lstrlenA Lib "kernel32.dll" (ByVal lpString As LongPtr) As Long
+    Private Declare PtrSafe Sub CopyMemory Lib "kernel32.dll" Alias "RtlMoveMemory" (ByVal Destination As LongPtr, ByVal Source As LongPtr, ByVal Length As Long)
+#Else
+    Private Declare Function EnumDateFormatsA Lib "Kernel32" (ByVal lpDateFmtEnumProc As Long, ByVal LCID As Long, ByVal dwFlags As Long) As Boolean
+    Private Declare Function lstrlenA Lib "kernel32.dll" (ByVal lpString As Long) As Long
+    Private Declare Sub CopyMemory Lib "kernel32.dll" Alias "RtlMoveMemory" (ByVal Destination As Long, ByVal Source As Long, ByVal Length As Long)
+#End If
 
 'SETTINGS
 Public Const SIGN As String = "Demo Project"
 
 'GENERAL SETTINGS
 Public Const DATEFORMAT_BACKEND As String = "yyyy-mm-dd;@"
-'Public Const DATEFORMAT_FRONTEND As String = "dd.mm.yyyy;@"
 Public Const END_OF_THE_EARTH As String = "9999-12-31"
 Public Const START_OF_THE_CENTURY As String = "2000-01-01"
 Public Const CURRENCYFORMAT_FRONTEND As String = "Standard"
@@ -122,52 +131,68 @@ Public Enum ValidationCheckTypes
     TYPE_DATEBETWEENRANGE
 End Enum
 
-Private Enum Region
-    US = 1                                 'United States
-    UK = 44                                'United Kindom
-    DE = 49                                'Germany
-    IND = 91                               'India
+'patchDateFormat
+' this enum is based on the "Date Flags for GetDateFormat." from WinNls.h
+Public Enum DateFormat
+    ShortDate = &H1                              ' use short date picture
+    LongDate = &H2                               ' use long date picture
+    YearMonth = &H8                              ' use year month picture
 End Enum
 
-Public Function DATEFORMAT_FRONTEND(Optional Apply As Boolean = True) As String
-    Select Case GetRegion
+Public Enum SettingContext
+    UserDefault = &H400
+    SystemDefault = &H800
+End Enum
+
+Private m_dateFormat As String
+
+#If VBA7 Then
+Private Function StringFromPointer(ByVal pointerToString As LongPtr) As String
+#Else
+Private Function StringFromPointer(ByVal pointerToString As Long) As String
+#End If
+
+    Dim tmpBuffer()    As Byte
+    Dim byteCount      As Long
+    Dim retVal         As String
+ 
+    byteCount = lstrlenA(pointerToString)
     
-        Case "US"
-            DATEFORMAT_FRONTEND = "DD-MMM-YYYY"
-            
-        Case "EU", "IND"
-            If Apply Then
-                DATEFORMAT_FRONTEND = GetRegionalShortDate
-            Else
-                DATEFORMAT_FRONTEND = vbNullString
-            End If
-            
-        Case vbNullString
-            DATEFORMAT_FRONTEND = vbNullString
-            
-    End Select
+    If byteCount > 0 Then
+  
+        ' Resize the buffer as required
+        ReDim tmpBuffer(0 To byteCount - 1) As Byte
+        
+        ' Copy the bytes from pointerToString to out tmpBuffer
+        CopyMemory VarPtr(tmpBuffer(0)), pointerToString, byteCount
+    End If
+ 
+    ' Convert Buffer to string
+    retVal = StrConv(tmpBuffer, vbUnicode)
+    
+    StringFromPointer = retVal
+
 End Function
 
-Public Function GetRegion() As String
+#If VBA7 Then
+Private Function EnumDateFormatsProc(ByVal lpDateFormatString As LongPtr) As Boolean
+#Else
+Private Function EnumDateFormatsProc(ByVal lpDateFormatString As Long) As Boolean
+#End If
+    m_dateFormat = StringFromPointer(lpDateFormatString)
+    EnumDateFormatsProc = True
+End Function
 
-    Dim Code As String
-    Select Case Application.International(xlCountrySetting)
+Public Function GetDateFormat(Optional ByVal Format As DateFormat = DateFormat.ShortDate, Optional ByVal context As SettingContext = SettingContext.UserDefault) As String
 
-    Case Region.US:
-        Code = "US"
+    Dim apiRetVal As Boolean
+    m_dateFormat = ""
+    
+    apiRetVal = EnumDateFormatsA(AddressOf EnumDateFormatsProc, context, Format)
 
-    Case Region.DE, Region.UK:
-        Code = "EU"
-        
-    Case Region.IND
-        Code = "IND"
-
-    Case Else:
-        Code = vbNullString
-
-    End Select
-
-    GetRegion = Code
+    If apiRetVal Then
+        GetDateFormat = m_dateFormat
+    End If
 
 End Function
 

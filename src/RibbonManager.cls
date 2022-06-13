@@ -17,7 +17,7 @@ Implements IRibbon
 
 #Const LateBind = TestMode
 
-Private Const APP_VERSION As Double = 1.1
+Private Const APP_VERSION As Double = 1.2
 
 Private Type TManager
     Ribbon As Office.IRibbonUI
@@ -110,7 +110,7 @@ Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subrou
         Case Is = "ButtonA_01": modMain.MainPAM
         
         'Feedback
-        Case Is = "ButtonB_01": MsgBox "Not Implementd"
+        Case Is = "ButtonB_01": Templates.EmailFeedback
 
         'Help
         Case Is = "ButtonC_01": MsgBox "Not Implementd"
@@ -133,7 +133,7 @@ Attribute IRibbon_GetImage.VB_Description = "Determine the Image to go along wit
     Case Is = "ButtonA_04": outImage = "ObjectPictureFill"
     Case Is = "ButtonA_05": outImage = "ObjectPictureFill"
     
-    Case Is = "ButtonB_01": outImage = "SchedulingEngineGiveFeedback"
+    Case Is = "ButtonB_01": outImage = "PublishToWeb"
     Case Is = "ButtonB_02": outImage = "ObjectPictureFill"
     Case Is = "ButtonB_03": outImage = "ObjectPictureFill"
     Case Is = "ButtonB_04": outImage = "ObjectPictureFill"

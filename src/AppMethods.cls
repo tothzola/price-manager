@@ -18,64 +18,6 @@ Public Algo                     As PAMXLAM.IHashAlgorithm
 'Public Methods
 '----------------------------------------------------------------------------------
 
-
-'Purpose:       Get date from the US Date String Format
-
-Public Function GetDateFromUSDate(ByVal inputValue As String) As Date
-    
-    Dim DayPart As Long
-    Dim MonthPart As Long
-    Dim YearPart As Long
-    Dim Arr() As String
-    
-    If VBA.InStr(1, inputValue, "/") > 0 Then
-        Arr = VBA.Split(inputValue, "/")
-        DayPart = VBA.CLng(Arr(1))
-        MonthPart = VBA.CLng(Arr(0))
-        YearPart = VBA.CLng(Arr(2))
-        GetDateFromUSDate = VBA.DateSerial(YearPart, MonthPart, DayPart)
-    Else
-        GetDateFromUSDate = VBA.CDate(inputValue)
-    End If
-    
-End Function
-
-'Purpose:       This will parse the German formatted date string into workable format
-
-Public Function GetBackendDateFromDateString(ByVal inputValue As String) As String
-    
-    Select Case GetRegion
-    
-    Case "US"
-        If VBA.IsDate(inputValue) Then
-            GetBackendDateFromDateString = VBA.Format$(inputValue, DATEFORMAT_BACKEND)
-        Else
-            GetBackendDateFromDateString = vbNullString
-        End If
-    Case "EU", "IND"
-        Dim DayPart As Long
-        Dim MonthPart As Long
-        Dim YearPart As Long
-        Dim tmp As String
-    
-        'clean input string so we only left with 8 characters long length numerical value
-        tmp = CleanString(inputValue)
-        inputValue = tmp
-    
-        'check for [10022009]DDMMYYYY
-        If VBA.Len(inputValue) = 8 And VBA.IsNumeric(inputValue) Then
-            'you are here because inputValue has right 8 characters that suits to DDMMYYYY
-            DayPart = VBA.CLng(VBA.Left$(inputValue, 2))
-            YearPart = VBA.CLng(VBA.Right$(inputValue, 4))
-            MonthPart = VBA.CLng(VBA.Mid$(inputValue, 3, 2))
-            GetBackendDateFromDateString = VBA.Format$(VBA.DateSerial(YearPart, MonthPart, DayPart), DATEFORMAT_BACKEND)
-        Else
-            GetBackendDateFromDateString = vbNullString
-        End If
-    End Select
-    
-End Function
-
 'this function uses regexp library to remove unwanted characters from the string and it only keeps numericals!
 Private Function CleanString(ByVal inputValue As String) As String
     With objRegEx
@@ -135,21 +77,21 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     Dim MatchedRecords          As String
     Dim TotalMatchingRows       As Long
     Dim firstRow                As Long
-    Dim lastRow                 As Long
+    Dim LastRow                 As Long
     Dim FirstCol                As Long
     Dim LastCol                 As Long
     Dim i                       As Long
     Dim j                       As Long
     'Get Driving parameters
     firstRow = LBound(ContextTable, 1)
-    lastRow = UBound(ContextTable, 1)
+    LastRow = UBound(ContextTable, 1)
     FirstCol = LBound(ContextTable, 2)
     LastCol = UBound(ContextTable, 2)
     ReDim tmp(1 To 1, 1 To LastCol)
     'Get matching Rows!
     MatchedRecords = CONSIDERHEADERINDEX
     TotalMatchingRows = 0
-    For i = firstRow To lastRow
+    For i = firstRow To LastRow
         If ContextTable(i, columnIndex) = condition Then
             MatchedRecords = MatchedRecords & i & SEPERATOR
             TotalMatchingRows = TotalMatchingRows + 1
@@ -400,20 +342,20 @@ Public Function GetUniqueListFromTableColumn(ByVal ContextTable As Variant, ByVa
     Dim MatchedRecords          As String
     Dim TotalMatchingRows       As Long
     Dim firstRow                As Long
-    Dim lastRow                 As Long
+    Dim LastRow                 As Long
     Dim i                       As Long
     Dim tmp                     As Variant
     
     'Get Driving parameters
     firstRow = LBound(ContextTable, 1)
-    lastRow = UBound(ContextTable, 1)
+    LastRow = UBound(ContextTable, 1)
     ReDim tmp(0)
     
     'Get matching Rows!
     MatchedRecords = vbNullString
     TotalMatchingRows = 0
     Set dict = New Dictionary
-    For i = firstRow + 1 To lastRow
+    For i = firstRow + 1 To LastRow
         If Not dict.Exists(ContextTable(i, TargetColumn)) Then
             dict.Add ContextTable(i, TargetColumn), ContextTable(i, TargetColumn)
             MatchedRecords = MatchedRecords & i & SEPERATOR_ITEM
