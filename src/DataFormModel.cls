@@ -101,7 +101,10 @@ End Property
 Public Property Get selectedValue() As Variant
     Select Case Me.selectedColumn
     Case MainTableFields.COL_MAIN_statusChangeDate
-        If this.selectedValue <> vbNullString Then selectedValue = GetMethod.GetBackendDateFromDateString(this.selectedValue)
+        'patchBackendDateformat
+        'If this.selectedValue <> vbNullString Then selectedValue = GetMethod.GetBackendDateFromDateString(this.selectedValue)
+        If this.selectedValue <> vbNullString Then selectedValue = VBA.Format$(this.selectedValue, GetDateFormat)
+        
     Case Else
         selectedValue = this.selectedValue
     End Select
@@ -323,14 +326,14 @@ Public Function IsValidRecordToEdit() As Variant
     Dim recordStatus    As String
     Dim TargetIndex     As Long
     Dim firstRow        As Long
-    Dim lastRow         As Long
+    Dim LastRow         As Long
     Dim i               As Long
     'Calculate driving paramters
     TargetIndex = GetMethod.GetTargetRowIndex(Me.dataTable, Me.index, MainTableFields.COL_MAIN_INDEX)
     firstRow = LBound(Me.dataTable, 1)
-    lastRow = UBound(Me.dataTable, 1)
+    LastRow = UBound(Me.dataTable, 1)
     'Finding Status!
-    For i = firstRow + 1 To lastRow
+    For i = firstRow + 1 To LastRow
         If i = TargetIndex Then
             recordStatus = Me.dataTable(i, MainTableFields.COL_MAIN_recordStatus)
             Exit For
@@ -424,8 +427,11 @@ Public Function GetFilteredAndSortedList() As Variant
         Select Case Me.selectedColumn
                 
         Case MainTableFields.COL_MAIN_statusChangeDate
-                
-            IsValidRow = Me.Validator.IsValidToInclude(GetMethod.GetDateFromUSDate(Me.dataTable(i, Me.selectedColumn)), TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
+            'patchDateformat
+            'IsValidRow = Me.Validator.IsValidToInclude(GetMethod.GetDateFromUSDate(Me.dataTable(i, Me.selectedColumn)), TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
+            Dim tmpDate As String: tmpDate = VBA.Format$(Me.dataTable(i, Me.selectedColumn), GetDateFormat)
+            IsValidRow = Me.Validator.IsValidToInclude(tmpDate, TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
+            
             If Not IsValidRow Then GoTo IgnoreThisRow
             
         Case Else
