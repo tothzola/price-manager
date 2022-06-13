@@ -12,21 +12,21 @@ Public Const WS_CAPTION = &HC00000
 #If VBA7 Then
     Public Declare PtrSafe Function GetWindowLong _
                            Lib "user32" Alias "GetWindowLongA" ( _
-                           ByVal hwnd As LongPtr, _
+                           ByVal hWnd As LongPtr, _
                            ByVal nIndex As LongPtr) As LongPtr
     Public Declare PtrSafe Function SetWindowLong _
                            Lib "user32" Alias "SetWindowLongA" ( _
-                           ByVal hwnd As LongPtr, _
+                           ByVal hWnd As LongPtr, _
                            ByVal nIndex As LongPtr, _
                            ByVal dwNewLong As LongPtr) As LongPtr
     Public Declare PtrSafe Function DrawMenuBar _
                            Lib "user32" ( _
-                           ByVal hwnd As LongPtr) As LongPtr
+                           ByVal hWnd As LongPtr) As LongPtr
     Public Declare PtrSafe Function FindWindowA _
                            Lib "user32" (ByVal lpClassName As String, _
                            ByVal lpWindowName As String) As LongPtr
     Public Declare PtrSafe Function GetLocaleInfo _
-                           Lib "kernel32" Alias "GetLocaleInfoA" ( _
+                           Lib "Kernel32" Alias "GetLocaleInfoA" ( _
                            ByVal Locale As Long, _
                            ByVal LCType As Long, _
                            ByVal lpLCData As String, _
@@ -48,7 +48,7 @@ Public Const WS_CAPTION = &HC00000
                            Lib "user32" (ByVal lpClassName As String, _
                            ByVal lpWindowName As String) As Long
     Public Declare Function GetLocaleInfo _
-                           Lib "kernel32" Alias "GetLocaleInfoA" ( _
+                           Lib "Kernel32" Alias "GetLocaleInfoA" ( _
                            ByVal Locale As Long, _
                            ByVal LCType As Long, _
                            ByVal lpLCData As String, _
