@@ -88,12 +88,15 @@ Public Function ApplyFormat(ByVal inputValue As String, ByVal formatType As Data
         Case DataTypes.TYPE_DATE
             If inputValue <> vbNullString Then
                 'ApplyFormat = VBA.Format$(inputValue, DATEFORMAT_FRONTEND)
-                ApplyFormat = VBA.Format$(GetMethod.GetDateFromUSDate(inputValue), DATEFORMAT_FRONTEND)
+                'patchDateformat
+                ApplyFormat = VBA.Format$(inputValue, GetDateFormat)
             End If
             
         Case DataTypes.TYPE_NO
             If inputValue <> vbNullString Then
-                ApplyFormat = VBA.Format$(GetMethod.GetDateFromUSDate(inputValue), DATEFORMAT_FRONTEND)
+                'patchDateformat
+                ApplyFormat = VBA.Format$(inputValue, GetDateFormat)
+            
             End If
             
     End Select
