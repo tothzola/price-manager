@@ -422,14 +422,14 @@ Private Sub txtDateFrom_Change()
     'Hydrate model property
     ExportModel.FromDate = Me.txtDateFrom.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [" & DATEFORMAT_FRONTEND & "] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [" & GetDateFormat & "] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, GetDateFormat) & " and " & VBA.Format$(VBA.Now, GetDateFormat)
 End Sub
 
 Private Sub txtDateTo_Change()
     'Hydrate model property
     ExportModel.ToDate = Me.txtDateTo.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [" & DATEFORMAT_FRONTEND & "] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_FRONTEND) & " and " & VBA.Format$(VBA.Now, DATEFORMAT_FRONTEND)
+    ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [" & GetDateFormat & "] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, GetDateFormat) & " and " & VBA.Format$(VBA.Now, GetDateFormat)
 End Sub
 
 Private Sub cmbCustomerID_Change()
@@ -579,14 +579,14 @@ Private Sub txtValidFrom_Change()
     'Hydrate model property
     PriceModel.validFromDate = Me.txtValidFrom.value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtValidFrom, PriceModel.IsValidField(MainTableFields.COL_MAIN_validFromDate), TYPE_CUSTOM, "Date format must be [" & DATEFORMAT_FRONTEND & "] and it should be today's date only!"
+    ExtendedMethods.UpdateControlAfterValidation Me.txtValidFrom, PriceModel.IsValidField(MainTableFields.COL_MAIN_validFromDate), TYPE_CUSTOM, "Date format must be [" & GetDateFormat & "] and it should be today's date only!"
 End Sub
 
 Private Sub txtValidTo_Change()
     'Hydrate model property
     PriceModel.validToDate = Me.txtValidTo.value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtValidTo, PriceModel.IsValidField(MainTableFields.COL_MAIN_validToDate), TYPE_CUSTOM, "Date format must be [" & DATEFORMAT_FRONTEND & "] and it should be future date!"
+    ExtendedMethods.UpdateControlAfterValidation Me.txtValidTo, PriceModel.IsValidField(MainTableFields.COL_MAIN_validToDate), TYPE_CUSTOM, "Date format must be [" & GetDateFormat & "] and it should be future date!"
 End Sub
    
 '-------------------------------------------------------------------------
@@ -970,8 +970,8 @@ Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
         'update model
         Call ExportModel.SetPropertiesToDefaultState
         'input field state
-        .txtDateFrom.value = VBA.Format$(ExportModel.FromDate, DATEFORMAT_FRONTEND)
-        .txtDateTo.value = VBA.Format$(ExportModel.ToDate, DATEFORMAT_FRONTEND)
+        .txtDateFrom.value = VBA.Format$(ExportModel.FromDate, GetDateFormat)
+        .txtDateTo.value = VBA.Format$(ExportModel.ToDate, GetDateFormat)
         .cmbStatus.value = ExportModel.recordStatus
     End With
 End Sub
@@ -1136,8 +1136,12 @@ Private Sub StateForNewRecordForPriceForm()
         .txtConditionType.value = PriceModel.conditionType
         .cmbSalesOrganization.value = PriceModel.salesOrganization
         .txtPriceUnit.value = PriceModel.unitOfPrice
-        .txtValidFrom.value = GetMethod.GetDateFromUSDate(PriceModel.validFromDate)
-        .txtValidTo.value = GetMethod.GetDateFromUSDate(PriceModel.validToDate)
+        'patchDateformat
+        '.txtValidFrom.value = GetMethod.GetDateFromUSDate(PriceModel.validFromDate)
+        .txtValidFrom.value = VBA.Format$(PriceModel.validFromDate, GetDateFormat)
+        '.txtValidTo.value = GetMethod.GetDateFromUSDate(PriceModel.validToDate)
+        .txtValidTo.value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
+        
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
@@ -1169,8 +1173,12 @@ Private Sub StateForUpdateRecordForPriceForm()
         .cmbCurrency.value = PriceModel.currencyType
         .txtPriceUnit.value = PriceModel.unitOfPrice
         .cmbUnitOfMeasure.value = PriceModel.unitOfMeasure
-        .txtValidFrom.value = GetMethod.GetDateFromUSDate(PriceModel.validFromDate)
-        .txtValidTo.value = GetMethod.GetDateFromUSDate(PriceModel.validToDate)
+        'patchDateformat
+        '.txtValidFrom.value = GetMethod.GetDateFromUSDate(PriceModel.validFromDate)
+        .txtValidFrom.value = VBA.Format$(PriceModel.validFromDate, GetDateFormat)
+        '.txtValidTo.value = GetMethod.GetDateFromUSDate(PriceModel.validToDate)
+        .txtValidTo.value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
+        
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
@@ -1299,3 +1307,4 @@ Private Sub UserForm_Terminate()
     Set DataModel = Nothing
     Set ExportModel = Nothing
 End Sub
+
