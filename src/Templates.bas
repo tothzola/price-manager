@@ -16,14 +16,13 @@ Public Enum olSensivity
     olS_Personal = 1
     olS_Private = 2
     olS_Confidential = 3
-    
 End Enum
 
 Private Sub AssambleEmail(ByVal mailTo As String, ByVal mailSubject As String, _
-                     Optional ByVal mailToCC As String = vbNullString, _
-                     Optional ByVal mailBody As String = vbNullString, _
-                     Optional ByVal setImportance As olImportance = olI_Normal, _
-                     Optional ByVal setSensivity As olSensivity = olS_Normal)
+                          Optional ByVal mailToCC As String = vbNullString, _
+                          Optional ByVal mailBody As String = vbNullString, _
+                          Optional ByVal setImportance As olImportance = olI_Normal, _
+                          Optional ByVal setSensivity As olSensivity = olS_Normal)
     
     Dim OutlookApp As Outlook.Application
     Set OutlookApp = New Outlook.Application
