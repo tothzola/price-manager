@@ -322,16 +322,19 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Function IsValidRecordToEdit() As Variant
+
     'Variable declaration
     Dim recordStatus    As String
     Dim TargetIndex     As Long
     Dim firstRow        As Long
     Dim LastRow         As Long
     Dim i               As Long
+    
     'Calculate driving paramters
     TargetIndex = GetMethod.GetTargetRowIndex(Me.dataTable, Me.index, MainTableFields.COL_MAIN_INDEX)
     firstRow = LBound(Me.dataTable, 1)
     LastRow = UBound(Me.dataTable, 1)
+    
     'Finding Status!
     For i = firstRow + 1 To LastRow
         If i = TargetIndex Then
@@ -339,20 +342,25 @@ Public Function IsValidRecordToEdit() As Variant
             Exit For
         End If
     Next i
+    
     'Decision
     Select Case recordStatus
     Case RECORDSTATUS_PENDING
         IsValidRecordToEdit = True
     Case RECORDSTATUS_APPROVED
         IsValidRecordToEdit = "Your record has been already Approved! You have no permission to edit it further!"
+        'Overriding
+        If IsApprover Then IsValidRecordToEdit = True
     Case RECORDSTATUS_REJECTED
         IsValidRecordToEdit = True               'We are allowing client to edit Rejected records!
+    Case RECORDSTATUS_PROCESSED
+        IsValidRecordToEdit = "This record has already been Processed!"
     End Select
-    'Overriding
-    If IsApprover Then IsValidRecordToEdit = True
+    
 End Function
 
 Public Function GetDataForRecordsList() As Variant
+
     Dim i       As Long
     Dim j       As Long
     Dim k       As Long
@@ -360,10 +368,12 @@ Public Function GetDataForRecordsList() As Variant
     Dim UB2     As Long
     Dim tmp     As Variant
     Dim uname   As String
+    
     UB1 = UBound(Me.dataTable, 1)
     UB2 = UBound(Me.dataTable, 2)
     ReDim tmp(1 To UB1, 1 To UB2)
     k = 1
+    
     For i = 1 To UB1
         uname = GetMethod.GetLookupValue(Me.usersTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         If uname <> vbNullString Then
@@ -385,7 +395,9 @@ Public Function GetDataForRecordsList() As Variant
             k = k + 1
         End If
     Next i
+    
     GetDataForRecordsList = tmp
+    
 End Function
 
 Public Function GetFilteredAndSortedList() As Variant
@@ -427,8 +439,6 @@ Public Function GetFilteredAndSortedList() As Variant
         Select Case Me.selectedColumn
                 
         Case MainTableFields.COL_MAIN_statusChangeDate
-            'patchDateformat
-            'IsValidRow = Me.Validator.IsValidToInclude(GetMethod.GetDateFromUSDate(Me.dataTable(i, Me.selectedColumn)), TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
             Dim tmpDate As String: tmpDate = VBA.Format$(Me.dataTable(i, Me.selectedColumn), GetDateFormat)
             IsValidRow = Me.Validator.IsValidToInclude(tmpDate, TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
             
