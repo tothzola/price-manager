@@ -962,7 +962,7 @@ Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
         'Attach Model
         If ExportModel Is Nothing Then Set ExportModel = ExportFormFrameModel
         'Clear Data Form Controls
-        Call ExtendedMethods.SetStateofControlsToNullState(.txtDateFrom, .txtDateTo, .cmbCustomerID, .cmbUserID, .cmbStatus)
+        Call ExtendedMethods.SetStateofControlsToNullState(.txtDateFrom, .txtDateTo, .cmbCustomerID, .cmbUserID, .cmbStatus, .lblMessage)
         'repopulate comboboxes
         .cmbCustomerID.List = ExportModel.customerIDsList
         .cmbUserID.List = ExportModel.userIDsList
@@ -1124,6 +1124,12 @@ Public Sub AfterExportOperation(ByVal IsSuccessfullOperation As Boolean)
     End If
 End Sub
 
+'Show Status on Label
+
+Public Sub ShowStatusOfExportProcess(ByVal message As String)
+    Me.lblMessage.Caption = message
+End Sub
+
 '-------------------------------------------------------------------------
 'Methods that helps Reset Procedures!
 '-------------------------------------------------------------------------
@@ -1136,19 +1142,16 @@ Private Sub StateForNewRecordForPriceForm()
         .txtConditionType.value = PriceModel.conditionType
         .cmbSalesOrganization.value = PriceModel.salesOrganization
         .txtPriceUnit.value = PriceModel.unitOfPrice
-        'patchDateformat
-        '.txtValidFrom.value = GetMethod.GetDateFromUSDate(PriceModel.validFromDate)
         .txtValidFrom.value = VBA.Format$(PriceModel.validFromDate, GetDateFormat)
-        '.txtValidTo.value = GetMethod.GetDateFromUSDate(PriceModel.validToDate)
         .txtValidTo.value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
         
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
-            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure)
         Else
             Call ShowApprovalRejectionButtons(False)
-            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure)
         End If
         'Other Buttons State
         .cmdAddNewRecord.Enabled = True
@@ -1173,16 +1176,13 @@ Private Sub StateForUpdateRecordForPriceForm()
         .cmbCurrency.value = PriceModel.currencyType
         .txtPriceUnit.value = PriceModel.unitOfPrice
         .cmbUnitOfMeasure.value = PriceModel.unitOfMeasure
-        'patchDateformat
-        '.txtValidFrom.value = GetMethod.GetDateFromUSDate(PriceModel.validFromDate)
         .txtValidFrom.value = VBA.Format$(PriceModel.validFromDate, GetDateFormat)
-        '.txtValidTo.value = GetMethod.GetDateFromUSDate(PriceModel.validToDate)
         .txtValidTo.value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
         
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
-            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(False, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure)
             'Other Buttons State
             .cmdAddNewRecord.Enabled = False
             .cmdUpdateRecord.Enabled = False
@@ -1190,7 +1190,7 @@ Private Sub StateForUpdateRecordForPriceForm()
             .cmdResetPriceForm.Enabled = False
         Else
             Call ShowApprovalRejectionButtons(False)
-            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure, .txtValidTo)
+            Call ExtendedMethods.FormEditingState(True, .txtConditionType, .cmbSalesOrganization, .cmbDistributionChannel, .txtCustomerID, .txtMaterialID, .txtPrice, .cmbCurrency, .txtPriceUnit, .cmbUnitOfMeasure)
             'Other Buttons State
             .cmdAddNewRecord.Enabled = False
             .cmdUpdateRecord.Enabled = True
