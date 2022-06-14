@@ -137,7 +137,7 @@ End Function
 
 '-------------------------------------------------------------------------
 
-Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, ByVal condition As Variant) As Variant
+Private Function IRepository_GetRecordsByCondition(ByVal ColumnIndex As Long, ByVal condition As Variant) As Variant
     
     Call OpenConnection
     
@@ -145,9 +145,9 @@ Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, By
         On Error GoTo EhhErr
     'Building SQL Qyery String!
         If VBA.IsNumeric(condition) Then
-            this.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, columnIndex) & "] = " & condition & ";"
+            this.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, ColumnIndex) & "] = " & condition & ";"
         Else
-            this.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, columnIndex) & "] = '" & condition & "';"
+            this.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, ColumnIndex) & "] = '" & condition & "';"
         End If
         'Executing Query
         recordset.Open this.SQLQuery, connection, adOpenForwardOnly, adLockReadOnly

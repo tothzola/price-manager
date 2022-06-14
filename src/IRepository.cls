@@ -31,7 +31,7 @@ End Sub
 Public Function GetRecords() As Variant
 End Function
 
-Public Function GetRecordsByCondition(ByVal columnIndex As Long, ByVal condition As Variant)
+Public Function GetRecordsByCondition(ByVal ColumnIndex As Long, ByVal condition As Variant)
 End Function
 
 Public Sub AddRecord(ParamArray LineItems() As Variant)
@@ -42,5 +42,4 @@ End Sub
 
 Public Sub DeleteRecord(ByVal TargetIndex As Long)
 End Sub
-
 

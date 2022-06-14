@@ -2,6 +2,7 @@ Attribute VB_Name = "modGlobal"
 '@Folder("GlobalEntities")
 Option Explicit
 Option Private Module
+
 #If VBA7 Then
     Private Declare PtrSafe Function EnumDateFormatsA Lib "Kernel32" (ByVal lpDateFmtEnumProc As LongPtr, ByVal LCID As Long, ByVal dwFlags As Long) As Boolean
     Private Declare PtrSafe Function lstrlenA Lib "kernel32.dll" (ByVal lpString As LongPtr) As Long
@@ -54,6 +55,7 @@ Public Const USERTYPE_APPROVER As String = "APPROVER"
 Public Const RECORDSTATUS_PENDING As String = "PENDING"
 Public Const RECORDSTATUS_APPROVED As String = "APPROVED"
 Public Const RECORDSTATUS_REJECTED As String = "REJECTED"
+Public Const RECORDSTATUS_PROCESSED As String = "PROCESSED"
 
 'COLORS
 Public Const COLOR_OF_OKAY As Long = &H8000&        'GREEN TINT
@@ -80,6 +82,7 @@ Public Enum UserApprovalStatus
     TYPE_PENDING
     TYPE_APPROVED
     TYPE_REJECTED
+    TYPE_PROCESSED
 End Enum
 
 Public Enum messageType
@@ -123,7 +126,6 @@ End Enum
 Public Enum DataTypes
     TYPE_DATE
     TYPE_CURRENCY
-    TYPE_NO
 End Enum
 
 Public Enum ValidationCheckTypes
@@ -183,13 +185,13 @@ Private Function EnumDateFormatsProc(ByVal lpDateFormatString As Long) As Boolea
     EnumDateFormatsProc = True
 End Function
 
-Public Function GetDateFormat(Optional ByVal Format As DateFormat = DateFormat.ShortDate, Optional ByVal context As SettingContext = SettingContext.UserDefault) As String
+Public Function GetDateFormat(Optional ByVal Format As DateFormat = DateFormat.ShortDate, Optional ByVal Context As SettingContext = SettingContext.UserDefault) As String
 
     Dim apiRetVal As Boolean
     m_dateFormat = ""
     
-    apiRetVal = EnumDateFormatsA(AddressOf EnumDateFormatsProc, context, Format)
-
+    apiRetVal = EnumDateFormatsA(AddressOf EnumDateFormatsProc, Context, Format)
+    
     If apiRetVal Then
         GetDateFormat = m_dateFormat
     End If

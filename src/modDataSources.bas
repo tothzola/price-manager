@@ -210,7 +210,7 @@ Public Function arrListofStatusOfUser() As Variant
 End Function
 
 Public Function arrRecordStatusesList() As Variant
-    arrRecordStatusesList = Array(vbNullString, "PENDING", "APPROVED", "REJECTED")
+    arrRecordStatusesList = Array(vbNullString, "PENDING", "APPROVED", "REJECTED", "PROCESSED")
 End Function
 
 Public Function arrSalesOrganizationsList() As Variant

@@ -28,6 +28,9 @@ Private Type TExportFormModelComponents
     customerID As String
     userID As String
     recordStatus As String
+    'Attributes
+    RecordsToProcess As String
+    IsRecordsNeedsToBeProcessed As Boolean
 End Type
 
 Private this As TExportFormModelComponents
@@ -153,6 +156,26 @@ Public Property Let ToDate(ByVal vNewValue As String)
 End Property
 
 '-------------------------------------------------------------------------
+
+Public Property Get RecordsToProcess() As String
+    RecordsToProcess = this.RecordsToProcess
+End Property
+
+Public Property Let RecordsToProcess(ByVal vNewValue As String)
+    this.RecordsToProcess = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
+
+Public Property Get IsRecordsNeedsToBeProcessed() As Boolean
+    IsRecordsNeedsToBeProcessed = this.IsRecordsNeedsToBeProcessed
+End Property
+
+Public Property Let IsRecordsNeedsToBeProcessed(ByVal vNewValue As Boolean)
+    this.IsRecordsNeedsToBeProcessed = vNewValue
+End Property
+
+'-------------------------------------------------------------------------
 'InIt Method
 '-------------------------------------------------------------------------
 
@@ -194,6 +217,9 @@ Private Sub SetPropertiesToNullState()
         .customerID = vbNullString
         .userID = vbNullString
         .recordStatus = vbNullString
+        'Setting up the default value of Attributes of this Model
+        .RecordsToProcess = vbNullString
+        .IsRecordsNeedsToBeProcessed = False
     End With
 End Sub
 
@@ -327,6 +353,7 @@ Public Sub GenerateExportData()
     Dim j                   As Long
     Dim IsValidRow          As Boolean
     Dim uname               As String
+    Dim Answer              As VbMsgBoxResult
     
     'you are here because user has set some criteria!
     firstRowIndex = LBound(Me.dataTable, 1)
@@ -377,6 +404,19 @@ IgnoreThisRow:
     'Remove Last Seperator Characters
     MatchingIndexes = VBA.Left$(MatchingIndexes, VBA.Len(MatchingIndexes) - VBA.Len(SEPERATOR_ITEM))
     
+    'If there is no record then there's no meaning of processing. hence we are bypassing this.
+    If VBA.Len(MatchingIndexes) > 1 Then
+        'Set RecordToProcess Property with Value of MatchingIndex! Because we have to mark exporting records as processed as well
+        Me.IsRecordsNeedsToBeProcessed = False
+        Me.RecordsToProcess = VBA.Right(MatchingIndexes, VBA.Len(MatchingIndexes) - VBA.Len("1" & SEPERATOR_ITEM))
+        
+        'Check if the Export is valid to process or not? We have to ask a question as well.
+        If Me.recordStatus = RECORDSTATUS_APPROVED Then
+            Answer = MsgBox("Do you want to Process the Export Data?", vbInformation + vbYesNo, SIGN)
+            Me.IsRecordsNeedsToBeProcessed = (Answer = vbYes)
+        End If
+    End If
+    
     'Generate Array of all matching indexes
     Records = VBA.Split(MatchingIndexes, SEPERATOR_ITEM)
     
@@ -386,27 +426,45 @@ IgnoreThisRow:
     'Create Export Table
     i = 1
     For Each Record In Records
+        
         uname = GetMethod.GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        
         If uname <> vbNullString Then
+            
             For j = firstColumnIndex To lastColumnIndex
+            
                 'GUARD CLAUSE : For preventing excel's automatic conversion of cell values from specific value to _
                                 numerical whole number due
                 If j = MainTableFields.Col_Main_DistributionChannel And VBA.IsNumeric(Me.dataTable(Record, j)) Then
                     tmp(i, j) = "'" & Me.dataTable(Record, j)
                     GoTo NextIteration
                 End If
+                
                 'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
                                 looking up relative values from the another table!
                 If j = MainTableFields.COL_MAIN_userID Then
                     tmp(i, j) = uname
                     GoTo NextIteration
                 End If
+                
+                'If the export reports are being processed then change the value
+                If j = MainTableFields.COL_MAIN_recordStatus Then
+                    If Me.IsRecordsNeedsToBeProcessed Then
+                        tmp(i, j) = modGlobal.RECORDSTATUS_PROCESSED
+                        GoTo NextIteration
+                    End If
+                End If
+                
                 'NO GUARD CLAUSE : For Rest of the cells
                 tmp(i, j) = Me.dataTable(Record, j)
 NextIteration:
+
             Next j
+            
             i = i + 1
+            
         End If
+        
     Next Record
 
     'Submit value to Export Data Array

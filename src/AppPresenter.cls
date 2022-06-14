@@ -468,7 +468,7 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index, , _
+            Call mainService.UpdateRecordOfContextTable(.index, _
                                                         .RecordID, _
                                                         .userID, _
                                                         .recordStatus, _
@@ -499,7 +499,7 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
         If response = True Then
-            Call mainService.UpdateRecordOfContextTable(.index, , _
+            Call mainService.UpdateRecordOfContextTable(.index, _
                                                         .RecordID, _
                                                         .userID, _
                                                         .recordStatus, _
@@ -615,22 +615,74 @@ End Sub
 
 Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel As ExportFormModel)
     With report
+    
         'Configure Report!
         .CurrencyColumns = Array(MainTableFields.COL_MAIN_price)
         .CURRENCYFORMAT = modGlobal.EXPORTREPORT_CURRENCYFORMAT
         .DateColumns = Array(MainTableFields.COL_MAIN_statusChangeDate, _
                              MainTableFields.COL_MAIN_validFromDate, _
                              MainTableFields.COL_MAIN_validToDate)
-        'patchDateformat
-        '.DateFormat = DATEFORMAT_FRONTEND(True)
+        
+        'Process the Data Before we produce the report in excel format!
+        If EFModel.IsRecordsNeedsToBeProcessed Then
+            
+            Dim Records()       As String
+            Dim Record          As Variant
+            Dim TargetRowIndex  As Long
+            Dim TotalRecords    As Long
+            Dim counter         As Long
+            
+            Records = VBA.Split(EFModel.RecordsToProcess, SEPERATOR_ITEM)
+            TotalRecords = UBound(Records) + 1
+                        
+            view.ShowStatusOfExportProcess "Process start..."
+            VBA.DoEvents
+            counter = 0
+            
+            With model
+                For Each Record In Records
+                    mainService.UpdateRecordOfContextTable .mainTable(Record, 1), _
+                                                           .mainTable(Record, 2), _
+                                                           .mainTable(Record, 3), _
+                                                           modGlobal.RECORDSTATUS_PROCESSED, _
+                                                           VBA.Format$(VBA.Now, DATEFORMAT_BACKEND), _
+                                                           .mainTable(Record, 6), _
+                                                           .mainTable(Record, 7), _
+                                                           .mainTable(Record, 8), _
+                                                           .mainTable(Record, 9), _
+                                                           .mainTable(Record, 10), _
+                                                           .mainTable(Record, 11), _
+                                                           .mainTable(Record, 12), _
+                                                           .mainTable(Record, 13), _
+                                                           .mainTable(Record, 14), _
+                                                           VBA.Format$(.mainTable(Record, 15), DATEFORMAT_BACKEND), _
+                                                           VBA.Format$(.mainTable(Record, 16), DATEFORMAT_BACKEND)
+                    counter = counter + 1
+                    view.ShowStatusOfExportProcess counter & " of " & TotalRecords & " Records has been processed!"
+                    VBA.DoEvents
+                Next Record
+            End With
+            
+        'Splash screen output
+        view.ShowStatusOfExportProcess "All records are processed! Exporting the report now."
+        VBA.DoEvents
+            
+        End If
+        
+        'Export Excel based report
         .DateFormat = GetDateFormat
         .LoadData = EFModel.exportTable
         .Headers = modDataSources.arrHeaders_Export_Report
         .GenerateReport
+        
+        'hide status
+        view.ShowStatusOfExportProcess vbNullString
+        
         'After Report Generation process
         If .IsReportGeneratedSuccessfully Then
             Call view.AfterExportOperation(True)
         End If
+        
     End With
 End Sub
 

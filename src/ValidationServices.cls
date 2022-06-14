@@ -10,12 +10,12 @@ Attribute VB_Exposed = False
 '@Folder "Services"
 Option Explicit
 
-Public Function IsValidEmailAddress(ByVal inputValue As Variant) As Boolean
+Public Function IsValidEmailAddress(ByVal InputValue As Variant) As Boolean
 
     If Not GetMethod.objRegEx Is Nothing Then
         GetMethod.objRegEx.Global = True
         GetMethod.objRegEx.Pattern = "^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,6}))*$"
-        IsValidEmailAddress = GetMethod.objRegEx.Test(inputValue)
+        IsValidEmailAddress = GetMethod.objRegEx.Test(InputValue)
     End If
     
 End Function
@@ -40,13 +40,13 @@ End Function
 'if both are mentioned then presently checking if the date is between two mentioned dates or not?
 'the same way this validation can be evolved with multiple check types like, numerical ranges etc.etc.
 
-Public Function IsValidToInclude(ByVal inputValue As Variant, ByVal checkType As ValidationCheckTypes, Optional ByVal checkValue1 As Variant, Optional ByVal checkValue2 As Variant) As Boolean
+Public Function IsValidToInclude(ByVal InputValue As Variant, ByVal checkType As ValidationCheckTypes, Optional ByVal checkValue1 As Variant, Optional ByVal checkValue2 As Variant) As Boolean
     IsValidToInclude = False
     'Check 1
-    If VBA.IsNumeric(inputValue) Then
-        If inputValue = 0 Then IsValidToInclude = False Else IsValidToInclude = True
+    If VBA.IsNumeric(InputValue) Then
+        If InputValue = 0 Then IsValidToInclude = False Else IsValidToInclude = True
     Else
-        If inputValue = vbNullString Then IsValidToInclude = False Else IsValidToInclude = True
+        If InputValue = vbNullString Then IsValidToInclude = False Else IsValidToInclude = True
     End If
     If IsValidToInclude = False Then Exit Function
     'Check 2
@@ -57,29 +57,30 @@ Public Function IsValidToInclude(ByVal inputValue As Variant, ByVal checkType As
     End If
     If IsValidToInclude = True Then Exit Function
     'Check 3
+    'If InputValue = "6/8/2022" Then Stop
     Select Case checkType
         Case ValidationCheckTypes.TYPE_DATEBETWEENRANGE
-            If VBA.CDate(inputValue) >= VBA.CDate(checkValue1) And _
-                VBA.CDate(inputValue) <= VBA.CDate(checkValue2) Then
+            If VBA.CDate(InputValue) >= VBA.CDate(checkValue1) And _
+                VBA.CDate(InputValue) <= VBA.CDate(checkValue2) Then
                 IsValidToInclude = True
             Else
                 IsValidToInclude = False
             End If
         Case ValidationCheckTypes.TYPE_STRINGMATCH
             If VBA.IsNumeric(checkValue1) Then
-                IsValidToInclude = (Val(inputValue) = Val(checkValue1))
+                IsValidToInclude = (Val(InputValue) = Val(checkValue1))
             Else
-                IsValidToInclude = (inputValue = checkValue1)
+                IsValidToInclude = (InputValue = checkValue1)
             End If
     End Select
 End Function
 
 'Check if the date is between the start and end range dates or not?
-Public Function IsValidDateInRange(ByVal inputValue As String, ByVal startDate As Date, ByVal endDate As Date) As Boolean
+Public Function IsValidDateInRange(ByVal InputValue As String, ByVal startDate As Date, ByVal endDate As Date) As Boolean
     Dim TargetDate As Date
     'patchBackendDateformat
     'TargetDate = VBA.CDate(GetMethod.GetBackendDateFromDateString(inputValue))
-    If VBA.IsDate(inputValue) Then TargetDate = VBA.Format$(inputValue, GetDateFormat)
+    If VBA.IsDate(InputValue) Then TargetDate = VBA.Format$(InputValue, GetDateFormat)
     
     If TargetDate >= startDate And TargetDate <= endDate Then
         IsValidDateInRange = True
@@ -90,12 +91,12 @@ End Function
 
 'Check if the value is Valid German accepted date format or not?
 '[10.02.2009] [10022009] [31.12.2022]
-Public Function IsValidGermanFormatDate(ByVal inputValue As String) As Boolean
+Public Function IsValidGermanFormatDate(ByVal InputValue As String) As Boolean
     'use part strings to get if the string is date or not?
     'patchBackendDateformat
     'If GetMethod.GetBackendDateFromDateString(inputValue) <> vbNullString Then
     Dim tmpDate As String
-    If VBA.IsDate(inputValue) Then tmpDate = VBA.Format$(inputValue, GetDateFormat)
+    If VBA.IsDate(InputValue) Then tmpDate = VBA.Format$(InputValue, GetDateFormat)
     If tmpDate <> vbNullString Then
         IsValidGermanFormatDate = True
     Else
@@ -104,7 +105,7 @@ Public Function IsValidGermanFormatDate(ByVal inputValue As String) As Boolean
 End Function
 
 'Check if Value is between Numerical Range or not?
-Public Function IsBetweenNumericalRange(ByVal inputValue As String, _
+Public Function IsBetweenNumericalRange(ByVal InputValue As String, _
                                         ByVal minValue As Long, _
                                         ByVal maxvalue As Long) As Boolean
     Dim result As Boolean
@@ -114,7 +115,7 @@ Public Function IsBetweenNumericalRange(ByVal inputValue As String, _
     'owerflow error is rased if len(inputValue) > len(maxvalue)
     result = False 'I have habit of not depending on default value of any type of variables_
                     '! I explicitly assign value to it!
-    If VBA.CDbl(inputValue) > minValue And VBA.CDbl(inputValue) <= maxvalue Then
+    If VBA.CDbl(InputValue) > minValue And VBA.CDbl(InputValue) <= maxvalue Then
         result = True
     Else
         result = False
@@ -165,22 +166,22 @@ Public Function IsEverythingOkay(ByVal ArrayOfCheckFieldsStatus As Variant, _
 End Function
 
 'check if the value is empty or not?
-Public Function IsNotNullValue(ByVal inputValue As Variant, ByVal inputType As String) As Boolean
+Public Function IsNotNullValue(ByVal InputValue As Variant, ByVal inputType As String) As Boolean
     Select Case inputType
         Case "Byte", "Integer", "Long", "Single", "Double"
-            If inputValue = 0 Then
+            If InputValue = 0 Then
                 IsNotNullValue = False
             Else
                 IsNotNullValue = True
             End If
         Case "String"
-            If inputValue = vbNullString Then
+            If InputValue = vbNullString Then
                 IsNotNullValue = False
             Else
                 IsNotNullValue = True
             End If
         Case "Variant"
-            If VBA.IsNull(inputValue) Then
+            If VBA.IsNull(InputValue) Then
                 IsNotNullValue = False
             Else
                 IsNotNullValue = True
