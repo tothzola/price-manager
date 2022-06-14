@@ -67,36 +67,28 @@ Public mainFrameHeight As Integer
 
 'Data feed into listbox will be in raw format, so we change then format a column by using this method
 
-Public Sub ReformatListBoxColumns(ByVal ctrl As MSForms.ListBox, ByVal columnIndex As Long, ByVal formatType As DataTypes)
+Public Sub ReformatListBoxColumns(ByVal ctrl As MSForms.ListBox, ByVal ColumnIndex As Long, ByVal formatType As DataTypes)
     Dim i As Long
     With ctrl
         For i = 1 To .ListCount - 1
-            .List(i, columnIndex - 1) = ApplyFormat(.List(i, columnIndex - 1), formatType)
+            .List(i, ColumnIndex - 1) = ApplyFormat(.List(i, ColumnIndex - 1), formatType)
         Next i
     End With
 End Sub
 
 'Following function will return string in selected format!
 
-Public Function ApplyFormat(ByVal inputValue As String, ByVal formatType As DataTypes) As String
-    If inputValue <> vbNullString Then inputValue = VBA.Trim$(inputValue)
+Public Function ApplyFormat(ByVal InputValue As String, ByVal formatType As DataTypes) As String
+    If InputValue <> vbNullString Then InputValue = VBA.Trim$(InputValue)
     
     Select Case formatType
+    
         Case DataTypes.TYPE_CURRENCY
-            ApplyFormat = GetMethod.FormatStringToCurrency(inputValue)
+            ApplyFormat = GetMethod.FormatStringToCurrency(InputValue)
             
         Case DataTypes.TYPE_DATE
-            If inputValue <> vbNullString Then
-                'ApplyFormat = VBA.Format$(inputValue, DATEFORMAT_FRONTEND)
-                'patchDateformat
-                ApplyFormat = VBA.Format$(inputValue, GetDateFormat)
-            End If
-            
-        Case DataTypes.TYPE_NO
-            If inputValue <> vbNullString Then
-                'patchDateformat
-                ApplyFormat = VBA.Format$(inputValue, GetDateFormat)
-            
+            If InputValue <> vbNullString Then
+                ApplyFormat = VBA.Format$(InputValue, GetDateFormat)
             End If
             
     End Select
