@@ -97,15 +97,15 @@ End Function
 
 '-------------------------------------------------------------------------
 
-Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, ByVal condition As Variant) As Variant
+Private Function IRepository_GetRecordsByCondition(ByVal ColumnIndex As Long, ByVal condition As Variant) As Variant
     Dim TargetRange     As Range
     Dim TargetTable     As Variant
     Set TargetRange = DataBase.Range(TargetTableName)
     TargetTable = TargetRange.value
     If VBA.IsNumeric(condition) Then
-        IRepository_GetRecordsByCondition = GetMethod.FilterListWithSingleCondition(TargetTable, columnIndex, Val(condition))
+        IRepository_GetRecordsByCondition = GetMethod.FilterListWithSingleCondition(TargetTable, ColumnIndex, Val(condition))
     Else
-        IRepository_GetRecordsByCondition = GetMethod.FilterListWithSingleCondition(TargetTable, columnIndex, condition)
+        IRepository_GetRecordsByCondition = GetMethod.FilterListWithSingleCondition(TargetTable, ColumnIndex, condition)
     End If
     'if you are here then operation is successful!
     IRepository_IsEverythingOkay = True
