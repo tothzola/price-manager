@@ -137,7 +137,7 @@ End Function
 
 '-------------------------------------------------------------------------
 
-Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, ByVal condition As Variant) As Variant
+Private Function IRepository_GetRecordsByCondition(ByVal ColumnIndex As Long, ByVal condition As Variant) As Variant
     
     Call OpenConnection
     
@@ -145,7 +145,7 @@ Private Function IRepository_GetRecordsByCondition(ByVal columnIndex As Long, By
         On Error GoTo EhhErr
     'Building SQL Qyery String!
         this.SQLQuery = "SELECT * FROM " & TargetTableName & " " & _
-                        "WHERE " & TargetTableHeaders(1, columnIndex) & " = '" & condition & "';"
+                        "WHERE " & TargetTableHeaders(1, ColumnIndex) & " = '" & condition & "';"
         'Executing Query
         recordset.Open this.SQLQuery, connection, adOpenForwardOnly, adLockReadOnly
         'Return Table!
