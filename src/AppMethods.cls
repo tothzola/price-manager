@@ -19,20 +19,20 @@ Public Algo                     As PAMXLAM.IHashAlgorithm
 '----------------------------------------------------------------------------------
 
 'this function uses regexp library to remove unwanted characters from the string and it only keeps numericals!
-Private Function CleanString(ByVal inputValue As String) As String
+Private Function CleanString(ByVal InputValue As String) As String
     With objRegEx
         .Global = True
         .Pattern = "[^\d]+"
-        CleanString = .Replace(inputValue, vbNullString)
+        CleanString = .Replace(InputValue, vbNullString)
     End With
 End Function
 
 'This function will crypt the string value
-Public Function CryptString(ByVal inputValue As String) As String
+Public Function CryptString(ByVal InputValue As String) As String
     
     'cript password
     Dim cryptedString As String
-    If Not Algo Is Nothing Then cryptedString = Algo.ComputeHash(inputValue)
+    If Not Algo Is Nothing Then cryptedString = Algo.ComputeHash(InputValue)
     
     CryptString = cryptedString
     
@@ -57,8 +57,8 @@ End Sub
                 decimal seperator's availability only. If it is Available at the _
                 third from the right side of the number then it must be a currency
 
-Public Function IsCurrency(ByVal inputValue As String) As Boolean
-    If VBA.Left(VBA.Right(inputValue, 3), 1) = Application.International(xlDecimalSeparator) Then
+Public Function IsCurrency(ByVal InputValue As String) As Boolean
+    If VBA.Left(VBA.Right(InputValue, 3), 1) = Application.International(xlDecimalSeparator) Then
         IsCurrency = True
     Else
         IsCurrency = False
@@ -68,7 +68,7 @@ End Function
 'Purpose:       Following function will return new array by filtering it from one _
                 it's column
 
-Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByVal columnIndex As Long, ByVal condition As Variant) As Variant
+Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByVal ColumnIndex As Long, ByVal condition As Variant) As Variant
     'Driving Paramters
     Const CONSIDERHEADERINDEX   As String = "1" & SEPERATOR
     Dim Records()               As String
@@ -92,7 +92,7 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
     MatchedRecords = CONSIDERHEADERINDEX
     TotalMatchingRows = 0
     For i = firstRow To LastRow
-        If ContextTable(i, columnIndex) = condition Then
+        If ContextTable(i, ColumnIndex) = condition Then
             MatchedRecords = MatchedRecords & i & SEPERATOR
             TotalMatchingRows = TotalMatchingRows + 1
         End If
@@ -173,7 +173,7 @@ End Function
 
 'Purpose :      Change text format to #,###.00 Currency Format
 
-Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Prefix As String = vbNullString) As String
+Public Function FormatStringToCurrency(ByVal InputValue As String, Optional Prefix As String = vbNullString) As String
     
     'Variable Declaration
     Dim IsDecimalSeperatorUsed  As Boolean
@@ -197,13 +197,13 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
     'Validation Checks
     
         'Check 1 : On null value
-        If inputValue = vbNullString Then GoTo CleanExit
+        If InputValue = vbNullString Then GoTo CleanExit
         
         'Check 2 : If Non-Numerical Value entered!
         If Prefix <> vbNullString Then
-            inputValue = VBA.Replace(inputValue, Prefix & " ", vbNullString)
+            InputValue = VBA.Replace(InputValue, Prefix & " ", vbNullString)
         End If
-        If Not VBA.IsNumeric(inputValue) Then
+        If Not VBA.IsNumeric(InputValue) Then
             Err.Raise _
                 Number:=Error_NonNumericalInput + 513, _
                 Description:="Non-Numerical character(s) are not allowed!"
@@ -212,12 +212,12 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
     'Get Sepearator String
     ThousandSeperator = Application.International(xlThousandsSeparator)
     DecimalSeperator = Application.International(xlDecimalSeparator)
-    inputValue = Me.TransformToAPPCompatibleCurrency(inputValue)
+    InputValue = Me.TransformToAPPCompatibleCurrency(InputValue)
     
     'check if decimal seperator has been used or not ?
-    If VBA.InStr(1, inputValue, DecimalSeperator) > 0 Then
+    If VBA.InStr(1, InputValue, DecimalSeperator) > 0 Then
         'Get number parts with Position shifter
-        ArrDecimalNumber = VBA.Split(inputValue, DecimalSeperator)
+        ArrDecimalNumber = VBA.Split(InputValue, DecimalSeperator)
         LenDecimalPart = VBA.Len(ArrDecimalNumber(1))
         If LenDecimalPart = 2 Then
             WholeNumberPart = ArrDecimalNumber(0)
@@ -235,18 +235,18 @@ Public Function FormatStringToCurrency(ByVal inputValue As String, Optional Pref
         End If
     Else
         'Length of Input String
-        LenInputValue = VBA.Len(inputValue)
+        LenInputValue = VBA.Len(InputValue)
         'Get whole number parts
         If LenInputValue <= 2 Then
             WholeNumberPart = 0
         Else
-            WholeNumberPart = VBA.Left$(inputValue, LenInputValue - 2)
+            WholeNumberPart = VBA.Left$(InputValue, LenInputValue - 2)
         End If
         'get decimal number part
         If LenInputValue > 1 Then
-            DecimalPart = VBA.Right$(inputValue, 2)
+            DecimalPart = VBA.Right$(InputValue, 2)
         Else
-            DecimalPart = "0" & inputValue
+            DecimalPart = "0" & InputValue
         End If
     End If
     
@@ -308,11 +308,11 @@ End Function
                 be invalid string and hence, we have to make few changes by replacing dot with comma to make _
                 it compitable with App format. Rest of the work will be carried by then FormatStringToCurrency Function.
 
-Public Function TransformToAPPCompatibleCurrency(ByVal inputValue As String) As String
+Public Function TransformToAPPCompatibleCurrency(ByVal InputValue As String) As String
     If Application.International(xlDecimalSeparator) = "," Then
-        inputValue = VBA.Replace(inputValue, ".", ",")
+        InputValue = VBA.Replace(InputValue, ".", ",")
     End If
-    TransformToAPPCompatibleCurrency = inputValue
+    TransformToAPPCompatibleCurrency = InputValue
 End Function
 
 'Purpose :      Following function will convert currency to DB Compatible currency format! _
@@ -322,13 +322,13 @@ End Function
                 so we have to transform the currency string into the DB compitable string and then we can only _
                 make it workable.
 
-Public Function TransformToDBCompatibleCurrency(ByVal inputValue As String) As String
+Public Function TransformToDBCompatibleCurrency(ByVal InputValue As String) As String
     If Application.International(xlDecimalSeparator) = "." Then
-        inputValue = VBA.Replace(inputValue, ",", "")
+        InputValue = VBA.Replace(InputValue, ",", "")
     Else
-        inputValue = VBA.Replace(VBA.Replace(VBA.Replace(inputValue, ",", "#"), ".", ""), "#", ".")
+        InputValue = VBA.Replace(VBA.Replace(VBA.Replace(InputValue, ",", "#"), ".", ""), "#", ".")
     End If
-    TransformToDBCompatibleCurrency = inputValue
+    TransformToDBCompatibleCurrency = InputValue
 End Function
 
 'Purpose:       Following function will pick unique list from the list!
