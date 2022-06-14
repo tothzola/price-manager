@@ -75,9 +75,9 @@ Private Sub MainView_DoCRUDOperationForPriceForm(ByVal TypeOfOperation As CRUDOp
                 Case CRUDOperations.CRUD_OPERATION_DELETE
                     RaiseEvent DeleteRecordFromPriceForm(TypeOfOperation, model)
                 Case CRUDOperations.CRUD_OPERATION_REJECT
-                    RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
+                    RaiseEvent RejectRecordFromPriceForm(TypeOfOperation, model)
                 Case CRUDOperations.CRUD_OPERATION_APPROVE
-                    RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
+                    RaiseEvent ApproveRecordFromPriceForm(TypeOfOperation, model)
             End Select
         Else
             RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
