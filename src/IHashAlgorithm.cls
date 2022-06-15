@@ -13,5 +13,5 @@ Attribute VB_Exposed = True
 Option Explicit
 
 '@Description("Computes a hash for the given string value.")
-Public Function ComputeHash(ByVal value As String) As String
+Public Function ComputeHash(ByVal Value As String) As String
 End Function

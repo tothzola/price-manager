@@ -127,7 +127,7 @@ Public Sub GenerateReport()
     On Error GoTo EhhErr
     TargetSheet.Name = SHEETNAME
     'Pasting the Data
-    TargetSheet.Range("A1").Resize(UBound(Me.LoadData, 1), UBound(Me.LoadData, 2)).value = Me.LoadData
+    TargetSheet.Range("A1").Resize(UBound(Me.LoadData, 1), UBound(Me.LoadData, 2)).Value = Me.LoadData
     'Paste Headers if Present
     If VBA.IsArray(Me.Headers) Then GiveHeadings
     'Decorate Report
@@ -158,7 +158,7 @@ Private Sub GiveHeadings()
     Dim i As Long
     i = 0
     For Each hCell In TargetSheet.UsedRange.Rows(1).Cells
-        hCell.value = Me.Headers(i)
+        hCell.Value = Me.Headers(i)
         i = i + 1
     Next hCell
     Set hCell = Nothing

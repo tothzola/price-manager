@@ -129,7 +129,7 @@ Public Sub UpdateControlAfterValidation(ByVal ctrl As MSForms.Control, ByVal val
                 Else
                     .BorderColor = INVALID_FIELD_BORDERCOLOR
                     .ForeColor = INVALID_FIELD_FONTCOLOR
-                    If ctrl.value <> vbNullString Then
+                    If ctrl.Value <> vbNullString Then
                         Call InsertWarningLabel(ctrl, warning, warningMessage)
                     Else
                         Call RemoveWarningLabel(ctrl, warning)
@@ -160,7 +160,7 @@ Public Sub ChangeControlProperties(ByVal ctrl As MSForms.Control, ByVal ctrlValu
     With ctrl
         Select Case VBA.TypeName(ctrl)
             Case CONTROL_TYPE_TEXTBOX, CONTROL_TYPE_COMBOBOX
-                .value = ctrlValue
+                .Value = ctrlValue
             Case CONTROL_TYPE_LABEL
                 .Caption = ctrlValue
         End Select
@@ -176,12 +176,12 @@ Public Sub SetStateofControlsToNullState(ParamArray ctrls() As Variant)
     For Each ctrl In ctrls
         Select Case VBA.TypeName(ctrl)
             Case CONTROL_TYPE_TEXTBOX
-                ctrl.value = vbNullString
+                ctrl.Value = vbNullString
             Case CONTROL_TYPE_LABEL
                 ctrl.Caption = vbNullString
             Case CONTROL_TYPE_COMBOBOX
                 ctrl.Clear
-                ctrl.value = vbNullString
+                ctrl.Value = vbNullString
                 ctrl.Style = 2
             Case CONTROL_TYPE_LISTBOX
                 ctrl.Clear
@@ -266,7 +266,7 @@ Private Sub RemoveWarningLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As 
         Case WarningType.TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied
             HidingLabel ctrl, "TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied"
     End Select
-    If ctrl.value <> vbNullString Then
+    If ctrl.Value <> vbNullString Then
         InsertingLabel ctrl, CONTROL_NAME_OK, SYMBOL_OK, True
     Else
         HidingLabel ctrl, CONTROL_NAME_OK
@@ -282,7 +282,7 @@ Private Sub InsertingLabel(ctrl As MSForms.Control, ByVal ctrlName As String, By
     Dim warningLabel As MSForms.Label
     Dim LabelName As String
     'Setting up Label
-    Set TargetFrame = ctrl.parent
+    Set TargetFrame = ctrl.Parent
     LabelName = ctrl.Name & "_" & ctrlName
     TargetTop = ctrl.Top
     TargetLeft = ctrl.Left + ctrl.Width + 6

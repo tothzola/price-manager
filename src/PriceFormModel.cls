@@ -498,8 +498,6 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
                 If Not IsValidField = True Then Exit Function
             End If
             'if everything okay then save date in backend format
-            'patchBackendDateformat
-            'Me.validFromDate = GetMethod.GetBackendDateFromDateString(Me.validFromDate)
             Me.validFromDate = VBA.Format$(Me.validFromDate, GetDateFormat)
             
         Case MainTableFields.COL_MAIN_validToDate
@@ -511,14 +509,17 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             If Not IsValidField = True Then Exit Function
             'Check 3
             If Me.operation = OPERATION_NEW Then
-                startDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
+                startDate = VBA.Format$(VBA.Now, GetDateFormat)
                 endDate = VBA.CDate(END_OF_THE_EARTH)
                 IsValidField = Validator.IsValidDateInRange(Me.validToDate, startDate, endDate)
                 If Not IsValidField = True Then Exit Function
             End If
+            'Check 4
+            If Not Me.validToDate = VBA.CDate(END_OF_THE_EARTH) Then
+                IsValidField = CDate(Me.validToDate) > CDate(Me.validFromDate)
+                If Not IsValidField = True Then Exit Function
+            End If
             'if everything okay then save date in backedn format
-            'patchBackendDateformat
-            'Me.validToDate = GetMethod.GetBackendDateFromDateString(Me.validToDate)
             Me.validToDate = VBA.Format$(Me.validToDate, GetDateFormat)
             
     End Select

@@ -25,9 +25,9 @@ Private Sub Class_Initialize()
     Set base = New HashAlgorithmBase
 End Sub
 
-Private Function IHashAlgorithm_ComputeHash(ByVal value As String) As String
+Private Function IHashAlgorithm_ComputeHash(ByVal Value As String) As String
     Dim bytes() As Byte
-    bytes = StrConv(salted & value, vbFromUnicode)
+    bytes = StrConv(salted & Value, vbFromUnicode)
     
     Dim Algo As Object
     Set Algo = CreateObject("System.Security.Cryptography.SHA256Managed")
