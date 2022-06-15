@@ -237,6 +237,7 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
                     ByVal ListOfRecordStatus As Variant, _
                     ByVal ListOfSalesOrganizations As Variant, _
                     ByVal ListOfDistributionChannels As Variant)
+                    
     Set Validator = New ValidationServices
     'Tables of The Applications
     Me.mainTable = MainTableContent
@@ -249,6 +250,7 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
     Me.recordStatusList = ListOfRecordStatus
     Me.salesOrganizationList = ListOfSalesOrganizations
     Me.distributionChannelsList = ListOfDistributionChannels
+    
 End Sub
 
 '-------------------------------------------------------------------------
