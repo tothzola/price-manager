@@ -6,7 +6,7 @@ Option Private Module
 #If VBA7 Then
     Private Declare PtrSafe Function EnumDateFormatsA Lib "Kernel32" (ByVal lpDateFmtEnumProc As LongPtr, ByVal LCID As Long, ByVal dwFlags As Long) As Boolean
     Private Declare PtrSafe Function lstrlenA Lib "kernel32.dll" (ByVal lpString As LongPtr) As Long
-    Private Declare PtrSafe Sub CopyMemory Lib "kernel32.dll" Alias "RtlMoveMemory" (ByVal Destination As LongPtr, ByVal Source As LongPtr, ByVal Length As Long)
+    Private Declare PtrSafe Sub CopyMemory Lib "kernel32.dll" Alias "RtlMoveMemory" (ByVal Destination As LongPtr, ByVal source As LongPtr, ByVal Length As Long)
 #Else
     Private Declare Function EnumDateFormatsA Lib "Kernel32" (ByVal lpDateFmtEnumProc As Long, ByVal LCID As Long, ByVal dwFlags As Long) As Boolean
     Private Declare Function lstrlenA Lib "kernel32.dll" (ByVal lpString As Long) As Long
@@ -133,7 +133,6 @@ Public Enum ValidationCheckTypes
     TYPE_DATEBETWEENRANGE
 End Enum
 
-'patchDateFormat
 ' this enum is based on the "Date Flags for GetDateFormat." from WinNls.h
 Public Enum DateFormat
     ShortDate = &H1                              ' use short date picture

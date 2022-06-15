@@ -101,7 +101,7 @@ Private Function IRepository_GetRecordsByCondition(ByVal ColumnIndex As Long, By
     Dim TargetRange     As Range
     Dim TargetTable     As Variant
     Set TargetRange = DataBase.Range(TargetTableName)
-    TargetTable = TargetRange.value
+    TargetTable = TargetRange.Value
     If VBA.IsNumeric(condition) Then
         IRepository_GetRecordsByCondition = GetMethod.FilterListWithSingleCondition(TargetTable, ColumnIndex, Val(condition))
     Else
@@ -149,14 +149,14 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
     index = TRow - 1
     
     'place index
-    TargetRange.Cells(TRow, 1).value = index
+    TargetRange.Cells(TRow, 1).Value = index
     
     'init loop paramters
     i = 2
     
     'Insert mechanism
     For Each item In LineItems
-        TargetRange.Cells(TRow, i).value = item
+        TargetRange.Cells(TRow, i).Value = item
         i = i + 1
     Next item
     
@@ -200,8 +200,8 @@ Private Sub IRepository_DeleteRecord(ByVal TargetIndex As Long)
     're-indexing
     i = 1
     For Each r In TargetRange.Rows
-        If VBA.IsNumeric(r.Cells(1, 1).value) Then
-            r.Cells(1, 1).value = i
+        If VBA.IsNumeric(r.Cells(1, 1).Value) Then
+            r.Cells(1, 1).Value = i
             i = i + 1
         End If
     Next r
@@ -247,7 +247,7 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
     
     'Insert mechanism
     For Each item In LineItems
-        TargetRange.Cells(TRow, i).value = item
+        TargetRange.Cells(TRow, i).Value = item
         i = i + 1
     Next item
     
