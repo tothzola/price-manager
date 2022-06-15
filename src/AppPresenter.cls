@@ -95,6 +95,7 @@ End Property
 '-------------------------------------------------------------------------
 
 Private Property Get report() As DocumentGeneratorExcel
+    Guard.NullReference this.report
     Set report = this.report
 End Property
 
@@ -111,6 +112,10 @@ Public Sub InItMainService(ByVal SelectedRepositoryType As RepositoryType, _
                             ByVal TableName As String, _
                             ByVal TableHeaders As Variant, _
                             ByVal ConnectionString As String)
+                            
+    Guard.EmptyString TableName
+    Guard.ConnectionString ConnectionString
+                            
     Set mainService = New ServicesMain
     Call mainService.InItService(SelectedRepositoryType, TableName, TableHeaders, ConnectionString)
     databaseConnectionStatus = mainService.IsEverythingOkayInEngine
@@ -121,6 +126,10 @@ Public Sub InItUserService(ByVal SelectedRepositoryType As RepositoryType, _
                             ByVal TableName As String, _
                             ByVal TableHeaders As Variant, _
                             ByVal ConnectionString As String)
+                           
+    Guard.EmptyString TableName
+    Guard.ConnectionString ConnectionString
+                            
     Set userService = New ServicesUser
     Call userService.InItService(SelectedRepositoryType, TableName, TableHeaders, ConnectionString)
     databaseConnectionStatus = userService.IsEverythingOkayInEngine
