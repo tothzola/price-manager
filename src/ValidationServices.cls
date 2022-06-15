@@ -78,8 +78,6 @@ End Function
 'Check if the date is between the start and end range dates or not?
 Public Function IsValidDateInRange(ByVal InputValue As String, ByVal startDate As Date, ByVal endDate As Date) As Boolean
     Dim TargetDate As Date
-    'patchBackendDateformat
-    'TargetDate = VBA.CDate(GetMethod.GetBackendDateFromDateString(inputValue))
     If VBA.IsDate(InputValue) Then TargetDate = VBA.Format$(InputValue, GetDateFormat)
     
     If TargetDate >= startDate And TargetDate <= endDate Then
@@ -93,8 +91,6 @@ End Function
 '[10.02.2009] [10022009] [31.12.2022]
 Public Function IsValidGermanFormatDate(ByVal InputValue As String) As Boolean
     'use part strings to get if the string is date or not?
-    'patchBackendDateformat
-    'If GetMethod.GetBackendDateFromDateString(inputValue) <> vbNullString Then
     Dim tmpDate As String
     If VBA.IsDate(InputValue) Then tmpDate = VBA.Format$(InputValue, GetDateFormat)
     If tmpDate <> vbNullString Then
