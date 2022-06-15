@@ -101,8 +101,6 @@ End Property
 Public Property Get selectedValue() As Variant
     Select Case Me.selectedColumn
     Case MainTableFields.COL_MAIN_statusChangeDate
-        'patchBackendDateformat
-        'If this.selectedValue <> vbNullString Then selectedValue = GetMethod.GetBackendDateFromDateString(this.selectedValue)
         If this.selectedValue <> vbNullString Then selectedValue = VBA.Format$(this.selectedValue, GetDateFormat)
         
     Case Else
