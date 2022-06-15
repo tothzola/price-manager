@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PAM 
-   Caption         =   "Price Approval Manager V1.0"
-   ClientHeight    =   6015
+   Caption         =   "Price Approval Manager"
+   ClientHeight    =   5970
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   2550
+   ClientWidth     =   5370
    OleObjectBlob   =   "PAM.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -74,6 +74,7 @@ Private Type TViewComponents
     PriceModel As PriceFormModel
     DataModel As DataFormModel
     ExportModel As ExportFormModel
+    Calendar As VBA.Collection
 End Type
 
 Private this As TViewComponents
@@ -425,11 +426,41 @@ Private Sub txtDateFrom_Change()
     ExtendedMethods.UpdateControlAfterValidation Me.txtDateFrom, ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [" & GetDateFormat & "] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, GetDateFormat) & " and " & VBA.Format$(VBA.Now, GetDateFormat)
 End Sub
 
+Private Sub txtDateFrom_Enter()
+    PozitionCalendar Me.txtDateFrom, Me.frameExportUtility
+    Me.DatePicker.Visible = True
+    Me.txtDateFrom.Locked = True
+End Sub
+
+Private Sub txtDateFrom_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    txtDateFrom_Enter
+End Sub
+
+Private Sub txtDateFrom_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    Me.DatePicker.Visible = False
+    Me.txtDateFrom.Locked = False
+End Sub
+
 Private Sub txtDateTo_Change()
     'Hydrate model property
     ExportModel.ToDate = Me.txtDateTo.Text
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtDateTo, ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "Date format must be [" & GetDateFormat & "] and Date should be between " & VBA.Format$(START_OF_THE_CENTURY, GetDateFormat) & " and " & VBA.Format$(VBA.Now, GetDateFormat)
+End Sub
+
+Private Sub txtDateTo_Enter()
+    PozitionCalendar Me.txtDateTo, Me.frameExportUtility
+    Me.DatePicker.Visible = True
+    Me.txtDateTo.Locked = True
+End Sub
+
+Private Sub txtDateTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    txtDateTo_Enter
+End Sub
+
+Private Sub txtDateTo_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    Me.DatePicker.Visible = False
+    Me.txtDateTo.Locked = False
 End Sub
 
 Private Sub cmbCustomerID_Change()
@@ -475,8 +506,8 @@ End Sub
 
 Private Sub cmdFilterAndSort_Click()
     With Me
-        DataModel.selectedColumn = .cmbColumns.value
-        DataModel.selectedValue = .cmbValues.value
+        DataModel.selectedColumn = .cmbColumns.Value
+        DataModel.selectedValue = .cmbValues.Value
     End With
     RaiseEvent FilterAndSortListFromDataFormFrame
 End Sub
@@ -486,8 +517,8 @@ Private Sub cmbColumns_Change()
         'Reset Values Combobox Because Columns Combobox has been changed!
         ExtendedMethods.SetStateofControlsToNullState Me.cmbValues
         'Rehydrate Properties
-        DataModel.selectedColumn = Me.cmbColumns.value
-        DataModel.selectedValue = Me.cmbValues.value
+        DataModel.selectedColumn = Me.cmbColumns.Value
+        DataModel.selectedValue = Me.cmbValues.Value
         'Raise Event
         RaiseEvent PopulateValuesList
     End If
@@ -506,35 +537,35 @@ End Sub
     
 Private Sub txtConditionType_Change()
     'Hydrate Model Property
-    PriceModel.conditionType = Me.txtConditionType.value
+    PriceModel.conditionType = Me.txtConditionType.Value
     'Validate field
     ExtendedMethods.UpdateControlAfterValidation Me.txtConditionType, PriceModel.IsValidField(MainTableFields.COL_MAIN_ConditionType), TYPE_FIXEDLENGTHSTRING, 4
 End Sub
 
 Private Sub cmbSalesOrganization_Change()
     'Hydrate model property
-    PriceModel.salesOrganization = Me.cmbSalesOrganization.value
+    PriceModel.salesOrganization = Me.cmbSalesOrganization.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbSalesOrganization, PriceModel.IsValidField(MainTableFields.COL_MAIN_SalesOrganization), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub cmbDistributionChannel_Change()
     'Hydrate model property
-    PriceModel.distributionChannel = Me.cmbDistributionChannel.value
+    PriceModel.distributionChannel = Me.cmbDistributionChannel.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbDistributionChannel, PriceModel.IsValidField(MainTableFields.Col_Main_DistributionChannel), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
     
 Private Sub txtCustomerID_Change()
     'Hydrate model property
-    PriceModel.customerID = Me.txtCustomerID.value
+    PriceModel.customerID = Me.txtCustomerID.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtCustomerID, PriceModel.IsValidField(MainTableFields.COL_MAIN_customerID), TYPE_CUSTOM, "Need exact 6 char length, range should be between [399999] and [599999]"
 End Sub
 
 Private Sub txtMaterialID_Change()
     'Hydrate model property
-    PriceModel.materialID = Me.txtMaterialID.value
+    PriceModel.materialID = Me.txtMaterialID.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtMaterialID, PriceModel.IsValidField(MainTableFields.COL_MAIN_materialID), TYPE_CUSTOM, "Need exact 8 char length, range should be between [49999999] and [59999999]"
 End Sub
@@ -544,9 +575,9 @@ Private Sub txtPrice_Change()
         'Event handle mechanism
         EventStop = True
         'Apply formatting
-        Me.txtPrice.value = ExtendedMethods.ApplyFormat(Me.txtPrice.Text, TYPE_CURRENCY)
+        Me.txtPrice.Value = ExtendedMethods.ApplyFormat(Me.txtPrice.Text, TYPE_CURRENCY)
         'Hydrate model property
-        PriceModel.price = Me.txtPrice.value
+        PriceModel.price = Me.txtPrice.Value
         'Validate Field
         ExtendedMethods.UpdateControlAfterValidation Me.txtPrice, PriceModel.IsValidField(MainTableFields.COL_MAIN_price), TYPE_CUSTOM, "maximum 6 char length allowed including decimals!"
         'Event Handle mechanism
@@ -556,74 +587,104 @@ End Sub
 
 Private Sub cmbCurrency_Change()
     'Hydrate model property
-    PriceModel.currencyType = Me.cmbCurrency.value
+    PriceModel.currencyType = Me.cmbCurrency.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbCurrency, PriceModel.IsValidField(MainTableFields.COL_MAIN_currency), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub cmbUnitOfMeasure_Change()
     'Hydrate model property
-    PriceModel.unitOfMeasure = Me.cmbUnitOfMeasure.value
+    PriceModel.unitOfMeasure = Me.cmbUnitOfMeasure.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUnitOfMeasure, PriceModel.IsValidField(MainTableFields.COL_MAIN_unitOfMeasure), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub txtPriceUnit_Change()
     'Hydrate model property
-    PriceModel.unitOfPrice = Me.txtPriceUnit.value
+    PriceModel.unitOfPrice = Me.txtPriceUnit.Value
     'validate field
     ExtendedMethods.UpdateControlAfterValidation Me.txtPriceUnit, PriceModel.IsValidField(MainTableFields.COL_MAIN_unitOfPrice), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "maximal 4 numerical char length"
 End Sub
 
 Private Sub txtValidFrom_Change()
     'Hydrate model property
-    PriceModel.validFromDate = Me.txtValidFrom.value
+    PriceModel.validFromDate = Me.txtValidFrom.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtValidFrom, PriceModel.IsValidField(MainTableFields.COL_MAIN_validFromDate), TYPE_CUSTOM, "Date format must be [" & GetDateFormat & "] and it should be today's date only!"
 End Sub
 
+Private Sub txtValidFrom_Enter()
+    PozitionCalendar Me.txtValidFrom, Me.framePriceForm
+    Me.DatePicker.Visible = True
+    Me.txtValidFrom.Locked = True
+End Sub
+
+Private Sub txtValidFrom_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    txtValidFrom_Enter
+End Sub
+
+Private Sub txtValidFrom_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    Me.DatePicker.Visible = False
+    Me.txtValidFrom.Locked = False
+End Sub
+
 Private Sub txtValidTo_Change()
     'Hydrate model property
-    PriceModel.validToDate = Me.txtValidTo.value
+    PriceModel.validToDate = Me.txtValidTo.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtValidTo, PriceModel.IsValidField(MainTableFields.COL_MAIN_validToDate), TYPE_CUSTOM, "Date format must be [" & GetDateFormat & "] and it should be future date!"
 End Sub
-   
+
+Private Sub txtValidTo_Enter()
+    PozitionCalendar Me.txtValidTo, Me.framePriceForm
+    Me.DatePicker.Visible = True
+    If Not Me.lblActiveUserType.Caption = "APPROVER" Then Me.txtValidTo.Locked = True
+End Sub
+
+Private Sub txtValidTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    txtValidTo_Enter
+End Sub
+
+Private Sub txtValidTo_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+    Me.DatePicker.Visible = False
+    Me.txtValidTo.Locked = False
+End Sub
+
 '-------------------------------------------------------------------------
 'User Manager Fileds Change Events
 '-------------------------------------------------------------------------
 
 Private Sub cmbUserStatus_Change()
     'Hydrate model property
-    UserModel.userStatus = Me.cmbUserStatus.value
+    UserModel.userStatus = Me.cmbUserStatus.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserStatus, UserModel.IsValidField(COL_userStatus), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub cmbUserType_Change()
     'Hydrate model property
-    UserModel.UserType = Me.cmbUserType.value
+    UserModel.UserType = Me.cmbUserType.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserType, UserModel.IsValidField(COL_userType), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
 Private Sub txtSetUsername_Change()
     'Hydrate model property
-    UserModel.UserName = Me.txtSetUsername.value
+    UserModel.UserName = Me.txtSetUsername.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_CUSTOM, "Username should have minimum 6 characters and it shold be UNIQUE as well."
 End Sub
 
 Private Sub txtSetPassword_Change()
     'hydrate model property
-    UserModel.userPassword = Me.txtSetPassword.value
+    UserModel.userPassword = Me.txtSetPassword.Value
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtSetPassword, UserModel.IsValidField(COL_password), TYPE_WRONGPASSWORDPATTERN
 End Sub
 
 Private Sub txtUserEmail_Change()
     'hydrate model property
-    UserModel.userEmail = Me.txtUserEmail.value
+    UserModel.userEmail = Me.txtUserEmail.Value
     'validate field
     ExtendedMethods.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. username@hostname.domain"
 End Sub
@@ -660,7 +721,7 @@ Private Sub txtNewPassword_Change()
     'Hydrate model properties
     PasswordModel.newPassword = Me.txtNewPassword.Text
     'On Every change, of New Password TextBox, We have to reset Confirm Password Field
-    Me.txtConfirmNewPassword.value = vbNullString
+    Me.txtConfirmNewPassword.Value = vbNullString
     PasswordModel.confirmNewPassword = Me.txtConfirmNewPassword.Text
     'Validate Field
     ExtendedMethods.UpdateControlAfterValidation Me.txtNewPassword, PasswordModel.IsValidField(2), TYPE_WRONGPASSWORDPATTERN
@@ -696,6 +757,9 @@ End Sub
 '-------------------------------------------------------------------------
 
 Public Sub InItApplication(ByVal ApplicationModel As AppModel)
+
+    Guard.NullReference ApplicationModel
+
     'init Extended Methods
     Set MainModel = ApplicationModel
     Set ExtendedMethods = New MultiFrameViewExtended
@@ -703,7 +767,7 @@ Public Sub InItApplication(ByVal ApplicationModel As AppModel)
         'Re-Dimension UserForm
         Set .TargetForm = Me
         .formWidth = 600
-        .formHeight = 400
+        .formHeight = 480
         Call .ReDimensionForm
         'Always On Frame Properties
         Set .frameAlwaysOn = Me.frameInfo
@@ -715,18 +779,55 @@ Public Sub InItApplication(ByVal ApplicationModel As AppModel)
         .sideFrameTop = 90
         .sideFrameLeft = 6
         .sideFrameWidth = 140
-        .sideFrameHeight = 274
+        .sideFrameHeight = 354
         'Main Panel Frames Properties
         .mainFrameTop = 6
         .mainFrameLeft = 152
         .mainFrameWidth = 430
-        .mainFrameHeight = 358
+        .mainFrameHeight = 438
         'plug static data sources to the relative comboboxes
         Call .HydrateComboBox(Me.cmbCurrency, modDataSources.arrListofCurrencies)
         Call .HydrateComboBox(Me.cmbUnitOfMeasure, modDataSources.arrListOfUnitOfMeasure)
         'InIt Interface
         Call .ActivateFrames(Me.frameLogin, Me.frameWelcome)
         Call UpdateWelcomeFrame(FORM_LOGIN)
+    End With
+    
+    'Intit DatePicker
+    Set this.Calendar = New VBA.Collection
+    Dim i As Integer
+    For i = 1 To 42
+        this.Calendar.Add New DatePickerFunctions, "titel" & i
+        '@Ignore DefaultMemberRequired
+        Set this.Calendar("titel" & i).LabelBackground = Me("dpLabel" & i)
+        If i < 8 Then
+            '@Ignore DefaultMemberRequired
+            Me("dpLabel5" & i).Caption = VBA.Left$(VBA.WeekdayName(i, True, 2), 1)
+        End If
+    Next
+End Sub
+
+Private Sub MonthsSelector_Change()
+    Dim InitDate As Date
+    InitDate = VBA.DateSerial(VBA.Year(VBA.Date), VBA.Month(VBA.Date) + Me.MonthsSelector.Value, 1)
+    Me.dpLabel50.Caption = VBA.Space(3) & VBA.Year(InitDate) & VBA.Space(6) & VBA.MonthName(VBA.Month(InitDate))
+
+    Dim j As Integer
+    For j = 0 To 41
+        '@Ignore DefaultMemberRequired
+        Me("dpLabel" & j + 1).Caption = VBA.Day(InitDate - VBA.Weekday(InitDate, 2) + 1 + j)
+        '@Ignore DefaultMemberRequired
+        Me("dpLabel" & j + 1).ForeColor = VBA.IIf(Month(InitDate) = VBA.Month(InitDate - VBA.Weekday(InitDate, 2) + 1 + j), &H80000012, &H80000010)
+    Next
+End Sub
+
+Private Sub PozitionCalendar(ByVal Ancor As Variant, ByVal Parent As Variant)
+    Me.MonthsSelector.Value = 0
+    Me.DatePicker.ZOrder 0
+    With Me.DatePicker
+        .Left = Ancor.Left + Ancor.Width + Parent.Left + 6
+        .Top = Ancor.Top + 6
+        .Tag = Ancor.Name
     End With
 End Sub
 
@@ -970,9 +1071,9 @@ Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
         'update model
         Call ExportModel.SetPropertiesToDefaultState
         'input field state
-        .txtDateFrom.value = VBA.Format$(ExportModel.FromDate, GetDateFormat)
-        .txtDateTo.value = VBA.Format$(ExportModel.ToDate, GetDateFormat)
-        .cmbStatus.value = ExportModel.recordStatus
+        .txtDateFrom.Value = VBA.Format$(ExportModel.FromDate, GetDateFormat)
+        .txtDateTo.Value = VBA.Format$(ExportModel.ToDate, GetDateFormat)
+        .cmbStatus.Value = ExportModel.recordStatus
     End With
 End Sub
 
@@ -1019,7 +1120,7 @@ Public Sub UserWantsToFilterAndSortDataFormList()
             .ColumnCount = 16
             .ColumnWidths = "0;0;;;;0;0;0;;;;;0;0;0;0;"
         End With
-        If .cmbColumns.value = vbNullString And .cmbValues.value = vbNullString Then
+        If .cmbColumns.Value = vbNullString And .cmbValues.Value = vbNullString Then
             Me.lstRecordsContainer.List = DataModel.GetDataForRecordsList
         Else
             Me.lstRecordsContainer.List = DataModel.GetFilteredAndSortedList
@@ -1139,11 +1240,11 @@ Private Sub StateForNewRecordForPriceForm()
         Call PriceModel.SetPropertiesToNewRecordState(MainModel.ActiveUserID)
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
-        .txtConditionType.value = PriceModel.conditionType
-        .cmbSalesOrganization.value = PriceModel.salesOrganization
-        .txtPriceUnit.value = PriceModel.unitOfPrice
-        .txtValidFrom.value = VBA.Format$(PriceModel.validFromDate, GetDateFormat)
-        .txtValidTo.value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
+        .txtConditionType.Value = PriceModel.conditionType
+        .cmbSalesOrganization.Value = PriceModel.salesOrganization
+        .txtPriceUnit.Value = PriceModel.unitOfPrice
+        .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, GetDateFormat)
+        .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
         
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
@@ -1167,17 +1268,17 @@ Private Sub StateForUpdateRecordForPriceForm()
         Call PriceModel.SetPropertiesToUpdateRecordState
         'input field state
         .lblMainRecordStatus.Caption = PriceModel.recordStatus
-        .txtConditionType.value = PriceModel.conditionType
-        .cmbSalesOrganization.value = PriceModel.salesOrganization
-        .cmbDistributionChannel.value = PriceModel.distributionChannel
-        .txtCustomerID.value = PriceModel.customerID
-        .txtMaterialID.value = PriceModel.materialID
-        .txtPrice.value = PriceModel.price
-        .cmbCurrency.value = PriceModel.currencyType
-        .txtPriceUnit.value = PriceModel.unitOfPrice
-        .cmbUnitOfMeasure.value = PriceModel.unitOfMeasure
-        .txtValidFrom.value = VBA.Format$(PriceModel.validFromDate, GetDateFormat)
-        .txtValidTo.value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
+        .txtConditionType.Value = PriceModel.conditionType
+        .cmbSalesOrganization.Value = PriceModel.salesOrganization
+        .cmbDistributionChannel.Value = PriceModel.distributionChannel
+        .txtCustomerID.Value = PriceModel.customerID
+        .txtMaterialID.Value = PriceModel.materialID
+        .txtPrice.Value = PriceModel.price
+        .cmbCurrency.Value = PriceModel.currencyType
+        .txtPriceUnit.Value = PriceModel.unitOfPrice
+        .cmbUnitOfMeasure.Value = PriceModel.unitOfMeasure
+        .txtValidFrom.Value = VBA.Format$(PriceModel.validFromDate, GetDateFormat)
+        .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
         
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
@@ -1205,8 +1306,8 @@ Private Sub StateForNewRecordForUserManager()
         'Update Model
         Call UserModel.SetPropertiesToNewUserState
         'Input Field State
-        .cmbUserStatus.value = UserModel.userStatus
-        .cmbUserType.value = UserModel.UserType
+        .cmbUserStatus.Value = UserModel.userStatus
+        .cmbUserType.Value = UserModel.UserType
         'Buttons State
         .cmdAddNewUser.Enabled = True
         .cmdUpdateUser.Enabled = False
@@ -1219,10 +1320,10 @@ Private Sub StateForUpdateRecordForUserManager()
         'Field State
         Call UserModel.SetPropertiesToUpdateUserState
         'input field state
-        .cmbUserStatus.value = UserModel.userStatus
-        .cmbUserType.value = UserModel.UserType
-        .txtSetUsername.value = UserModel.UserName
-        .txtUserEmail.value = UserModel.userEmail
+        .cmbUserStatus.Value = UserModel.userStatus
+        .cmbUserType.Value = UserModel.UserType
+        .txtSetUsername.Value = UserModel.UserName
+        .txtUserEmail.Value = UserModel.userEmail
         'Button State
         .cmdAddNewUser.Enabled = False
         .cmdUpdateUser.Enabled = True
@@ -1307,4 +1408,5 @@ Private Sub UserForm_Terminate()
     Set DataModel = Nothing
     Set ExportModel = Nothing
 End Sub
+
 
