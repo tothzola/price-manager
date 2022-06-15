@@ -270,8 +270,6 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = Validator.IsValidDateInRange(Me.FromDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
             'if everything okay then save date in backend format
-            'patchBackendDateformat
-            'Me.FromDate = GetMethod.GetBackendDateFromDateString(Me.FromDate)
             Me.FromDate = VBA.Format$(Me.FromDate, GetDateFormat)
             
             
@@ -292,8 +290,6 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = Validator.IsValidDateInRange(Me.ToDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
             'if everything okay then save date in backend format
-            'patchBackendDateformat
-            'Me.ToDate = GetMethod.GetBackendDateFromDateString(Me.ToDate)
             Me.ToDate = VBA.Format$(Me.ToDate, GetDateFormat)
             
         
