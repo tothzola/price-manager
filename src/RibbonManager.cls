@@ -17,7 +17,7 @@ Implements IRibbon
 
 #Const LateBind = TestMode
 
-Private Const APP_VERSION As Double = 1.2
+Private Const APP_VERSION As Double = 1.3
 
 Private Type TManager
     Ribbon As Office.IRibbonUI
@@ -40,6 +40,8 @@ Public Property Get Invalidated() As Boolean
 End Property
 
 Public Function Create(ByVal RibbonUI As Office.IRibbonUI) As IRibbon
+
+    Guard.NullReference RibbonUI
     
     With New RibbonManager
         Set .Ribbon = RibbonUI
