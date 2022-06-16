@@ -18,7 +18,7 @@ Private Type TLoginFormModelComponents
     'Table
     usersData As Variant
     'Fields
-    UserName As String
+    userName As String
     Password As String
     'Attributes
     TargetIndex As Long
@@ -50,12 +50,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get UserName() As String
-    UserName = this.UserName
+Public Property Get userName() As String
+    userName = this.userName
 End Property
 
-Public Property Let UserName(ByVal vNewValue As String)
-    this.UserName = vNewValue
+Public Property Let userName(ByVal vNewValue As String)
+    this.userName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -89,8 +89,8 @@ End Property
 Public Property Get userStatus() As String
     Dim i As Long
     For i = 1 To UBound(Me.usersData, 1)
-        If UCase(Me.usersData(i, UsersTableFields.COL_userName)) = UCase(Me.UserName) Then
-            Me.UserName = Me.usersData(i, UsersTableFields.COL_userName)
+        If UCase(Me.usersData(i, UsersTableFields.COL_userName)) = UCase(Me.userName) Then
+            Me.userName = Me.usersData(i, UsersTableFields.COL_userName)
             Me.TargetIndex = i
             userStatus = Me.usersData(i, UsersTableFields.COL_userStatus)
             Exit Property
@@ -103,8 +103,8 @@ End Property
 Public Property Get userEmail() As String
     Dim i As Long
     For i = 1 To UBound(Me.usersData, 1)
-        If UCase(Me.usersData(i, UsersTableFields.COL_userName)) = UCase(Me.UserName) Then
-            Me.UserName = Me.usersData(i, UsersTableFields.COL_userName)
+        If UCase(Me.usersData(i, UsersTableFields.COL_userName)) = UCase(Me.userName) Then
+            Me.userName = Me.usersData(i, UsersTableFields.COL_userName)
             Me.TargetIndex = i
             userEmail = Me.usersData(i, UsersTableFields.COL_email)
             Exit Property
@@ -131,8 +131,8 @@ End Sub
 'Methods & Validation
 '-------------------------------------------------------------------------
 
-Public Function IsValidUsername() As Boolean
-    IsValidUsername = Validator.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
+Public Function IsValiduserName() As Boolean
+    IsValiduserName = Validator.IsNotNullValue(Me.userName, VBA.TypeName(Me.userName))
 End Function
 
 Public Function IsValidPassword() As Boolean
@@ -140,7 +140,7 @@ Public Function IsValidPassword() As Boolean
 End Function
 
 Public Function IsUserAuthorized() As Variant
-    IsUserAuthorized = Validator.IsUserAuthorized(Me.usersData, Me.UserName, Me.Password, UsersTableFields.COL_userName, UsersTableFields.COL_password)
+    IsUserAuthorized = Validator.IsUserAuthorized(Me.usersData, Me.userName, Me.Password, UsersTableFields.COL_userName, UsersTableFields.COL_password)
 End Function
 
 '-------------------------------------------------------------------------

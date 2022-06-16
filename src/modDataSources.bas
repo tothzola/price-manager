@@ -77,14 +77,14 @@ Public Function GetConnectionString(ByVal TypeOfRepository As RepositoryType) As
             Const ServerAddress As String = "ec2-54-164-40-66.compute-1.amazonaws.com"
             Const PortNumber As Integer = 5432
             Const DatabaseName As String = "d34l6r35cqkfjd"
-            Const UserName As String = "lxfsytloshyamh"
+            Const userName As String = "lxfsytloshyamh"
             Const Password As String = "6501b05101dba6b4ac0b2f32bbc18b81096f716bfc92343856d01cab6078153f"
             'Assembling attributes of PostgreSQL to form a ConnectionString
             GetConnectionString = "Driver={PostgreSQL ANSI}" & _
                                   ";Server=" & ServerAddress & _
                                   ";Port=" & PortNumber & _
                                   ";Database=" & DatabaseName & _
-                                  ";Uid=" & UserName & _
+                                  ";Uid=" & userName & _
                                   ";Pwd=" & Password & _
                                   ";sslmode=require;"
         Case RepositoryType.TYPE_SHAREPOINT_LIST
@@ -105,7 +105,7 @@ Public Function arrListOfColumns_USERS_TABLE() As Variant
                                          "User_ID", _
                                          "User_Status", _
                                          "User_Type", _
-                                         "Username", _
+                                         "userName", _
                                          "Password", _
                                          "Email")
 End Function
