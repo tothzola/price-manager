@@ -31,7 +31,7 @@ Private Type TAppModelComponents
     ActiveUserID As String
     ActiveUserStatus As String
     ActiveUserType As String
-    ActiveUserName As String
+    ActiveuserName As String
     ActiveUserPassword As String
     ActiveUserEmail As String
   'Current Parameters
@@ -64,12 +64,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get ActiveUserName() As String
-    ActiveUserName = this.ActiveUserName
+Public Property Get ActiveuserName() As String
+    ActiveuserName = this.ActiveuserName
 End Property
 
-Public Property Let ActiveUserName(ByVal vNewValue As String)
-    this.ActiveUserName = vNewValue
+Public Property Let ActiveuserName(ByVal vNewValue As String)
+    this.ActiveuserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -207,7 +207,7 @@ End Property
 Public Property Get ActiveUserIndex() As Variant
     Dim i As Long
     For i = 1 To UBound(Me.usersTable, 1)
-        If Me.usersTable(i, UsersTableFields.COL_userName) = Me.ActiveUserName Then
+        If Me.usersTable(i, UsersTableFields.COL_userName) = Me.ActiveuserName Then
             ActiveUserIndex = Me.usersTable(i, UsersTableFields.COL_INDEX)
             Exit Property
         End If
