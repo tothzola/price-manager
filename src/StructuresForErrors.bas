@@ -63,11 +63,11 @@ Attribute RaiseError.VB_Description = "Formats and raises a run-time error."
     With errorDetails
         Dim message As Variant
         message = Array("Error:", _
-            "name: " & .Name, _
-            "number: " & .Number, _
-            "message: " & .message, _
-            "description: " & .Description, _
-            "source: " & .source)
+                        "name: " & .Name, _
+                        "number: " & .Number, _
+                        "message: " & .message, _
+                        "description: " & .Description, _
+                        "source: " & .source)
         Debug.Print Join(message, vbNewLine & vbTab)
         VBA.Err.Raise .Number, .source, .message
     End With

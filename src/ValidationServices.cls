@@ -212,26 +212,26 @@ Public Function IsValidStringLength(ByVal inputString As Variant, ByVal checklen
 End Function
 
 'check if the user is authorized or not?
-Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As String, ByVal Password As String, ByVal userCol As Long, ByVal passCol As Long) As Variant
+Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal userName As String, ByVal Password As String, ByVal userCol As Long, ByVal passCol As Long) As Variant
     Dim i As Long
     Dim userFlag As Boolean
     Dim passFlag As Boolean
     userFlag = False
     passFlag = False
     'validation for initial check
-    If UserName = vbNullString And Password = vbNullString Then
-        IsUserAuthorized = "Username and Passwrod fields are empty! Kindly fill in to Login"
+    If userName = vbNullString And Password = vbNullString Then
+        IsUserAuthorized = "userName and Passwrod fields are empty! Kindly fill in to Login"
         Exit Function
-    ElseIf UserName = vbNullString And Password <> vbNullString Then
-        IsUserAuthorized = "Username field is empty! Kindly fill in to Login."
+    ElseIf userName = vbNullString And Password <> vbNullString Then
+        IsUserAuthorized = "userName field is empty! Kindly fill in to Login."
         Exit Function
-    ElseIf UserName <> vbNullString And Password = vbNullString Then
+    ElseIf userName <> vbNullString And Password = vbNullString Then
         IsUserAuthorized = "Password field is empty! Kindly fill in to Login."
         Exit Function
     End If
     'if validation check confirm then go for the next process
     For i = 1 To UBound(dataTable, 1)
-        If UCase(dataTable(i, userCol)) = UCase(UserName) Then
+        If UCase(dataTable(i, userCol)) = UCase(userName) Then
         userFlag = True
         
         If userFlag Then
@@ -249,7 +249,7 @@ Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As S
     Next i
     'conclusion
     If userFlag = False Then
-        IsUserAuthorized = "Invalid Username!"
+        IsUserAuthorized = "Invalid userName!"
     Else
         If passFlag = False Then
             IsUserAuthorized = "Invalid Password!"

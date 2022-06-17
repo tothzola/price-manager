@@ -112,7 +112,7 @@ Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subrou
         Case Is = "ButtonA_01": modMain.MainPAM
         
         'Feedback
-        Case Is = "ButtonB_01": Templates.EmailFeedback
+        Case Is = "ButtonB_01": SendEmail.EmailFeedback
 
         'Help
         Case Is = "ButtonC_01": MsgBox "Not Implementd"

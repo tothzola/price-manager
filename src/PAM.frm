@@ -668,11 +668,11 @@ Private Sub cmbUserType_Change()
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserType, UserModel.IsValidField(COL_userType), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
-Private Sub txtSetUsername_Change()
+Private Sub txtSetuserName_Change()
     'Hydrate model property
-    UserModel.UserName = Me.txtSetUsername.Value
+    UserModel.userName = Me.txtSetUsername.Value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_CUSTOM, "Username should have minimum 6 characters and it shold be UNIQUE as well."
+    ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_CUSTOM, "userName should have minimum 6 characters and it shold be UNIQUE as well."
 End Sub
 
 Private Sub txtSetPassword_Change()
@@ -686,7 +686,7 @@ Private Sub txtUserEmail_Change()
     'hydrate model property
     UserModel.userEmail = Me.txtUserEmail.Value
     'validate field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. username@hostname.domain"
+    ExtendedMethods.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. userName@hostname.domain"
 End Sub
 
 Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
@@ -745,11 +745,11 @@ Private Sub txtPassword_Change()
     ExtendedMethods.UpdateControlAfterValidation Me.txtPassword, LoginModel.IsValidPassword, TYPE_NA
 End Sub
 
-Private Sub txtUsername_Change()
+Private Sub txtuserName_Change()
     'hydrate model property
-    LoginModel.UserName = Me.txtUsername.Text
+    LoginModel.userName = Me.txtUsername.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtUsername, LoginModel.IsValidUsername, TYPE_NA
+    ExtendedMethods.UpdateControlAfterValidation Me.txtUsername, LoginModel.IsValiduserName, TYPE_NA
 End Sub
 
 '-------------------------------------------------------------------------
@@ -1145,9 +1145,9 @@ Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     End If
     'Update Active User Frame
     With LoginModel
-        Call UpdateActiveUserInfomation(.UserName, .UserType, .userStatus, .userID, .Password, .userEmail)
+        Call UpdateActiveUserInfomation(.userName, .UserType, .userStatus, .userID, .Password, .userEmail)
     End With
-    'Update Welcome Frame with Username
+    'Update Welcome Frame with userName
     Call UpdateWelcomeFrame
 End Sub
 
@@ -1322,7 +1322,7 @@ Private Sub StateForUpdateRecordForUserManager()
         'input field state
         .cmbUserStatus.Value = UserModel.userStatus
         .cmbUserType.Value = UserModel.UserType
-        .txtSetUsername.Value = UserModel.UserName
+        .txtSetUsername.Value = UserModel.userName
         .txtUserEmail.Value = UserModel.userEmail
         'Button State
         .cmdAddNewUser.Enabled = False
@@ -1367,7 +1367,7 @@ Private Sub UpdateActiveUserInfomation(ByVal uname As String, ByVal uType As Str
     'Update Active user information in Main Model
     With MainModel
         .ActiveUserID = uID
-        .ActiveUserName = uname
+        .ActiveuserName = uname
         .ActiveUserPassword = uPassword
         .ActiveUserStatus = uStatus
         .ActiveUserType = uType

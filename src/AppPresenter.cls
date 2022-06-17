@@ -245,7 +245,7 @@ End Sub
 Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal newPassword As String)
     'index, userID, userStatus, userType, userName, password
     With model
-        Call userService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, newPassword, .ActiveUserEmail)
+        Call userService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveuserName, newPassword, .ActiveUserEmail)
         If userService.IsEverythingOkayInEngine Then
             Call view.AfterChangePasswordOperation
         End If
@@ -297,7 +297,7 @@ End Sub
 Private Sub presenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
     Call RefreshUsersTable
     With UMModel
-        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .UserName, .userPassword, .userEmail)
+        Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .userName, .userPassword, .userEmail)
     End With
     If userService.IsEverythingOkayInEngine Then
         Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
@@ -310,7 +310,7 @@ Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOf
     With UMModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex, .userID)
         If response = True Then
-            Call userService.UpdateRecordOfContextTable(.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword, .userEmail)
+            Call userService.UpdateRecordOfContextTable(.userIndex, .userID, .userStatus, .UserType, .userName, .userPassword, .userEmail)
             If userService.IsEverythingOkayInEngine Then
                 Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
             End If
@@ -503,10 +503,17 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
 End Sub
 
 Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
+    
     Call RefreshMainTable
-    Dim response As Variant
+    
+    Dim response    As Variant
+    Dim uname       As String
+    Dim uMail       As String
+    Dim subject     As String
+    
     With PFModel
     response = model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
+        
         If response = True Then
             Call mainService.UpdateRecordOfContextTable(.index, _
                                                         .RecordID, _
@@ -524,6 +531,34 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
                                                         .unitOfMeasure, _
                                                         VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
                                                         VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
+            'EMail Creation Starts
+            'Sending Rejection Email to the Client
+            
+            uname = GetMethod.GetLookupValue(model.usersTable, .userID, UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+            uMail = GetMethod.GetLookupValue(model.usersTable, .userID, UsersTableFields.COL_userId, UsersTableFields.COL_email)
+            subject = "Your Proposal# " & .RecordID & " has been Rejected."
+            
+            SendEmail.CreateEmail uname, _
+                                  uMail, _
+                                  subject, _
+                                  False, _
+                                  "Following is the detail of the Record that has been Rejected.", _
+                                  "Record :=  <B>" & .RecordID, _
+                                  "UserID := <B>" & .userID, _
+                                  "Staus of Record := <B>" & .recordStatus, _
+                                  "Condition Type := <B>" & .conditionType, _
+                                  "Sales Organization := <B>" & .salesOrganization, _
+                                  "Distribution Channel := <B>" & .distributionChannel, _
+                                  "Customer ID := <B>" & .customerID, _
+                                  "Material ID := <B>" & .materialID, _
+                                  "Price Proposed := <B>" & .price, _
+                                  "Currency := <B>" & .currencyType, _
+                                  "Unit of Price := <B>" & .unitOfPrice, _
+                                  "Unit of Measure := <B>" & .unitOfMeasure, _
+                                  "Valid from Date := <B>" & VBA.Format$(.validFromDate, GetDateFormat), _
+                                  "Valid To Date := <B>" & VBA.Format$(.validToDate, GetDateFormat)
+            'EMail Creation Ends
+            
             If mainService.IsEverythingOkayInEngine Then
                 Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
