@@ -17,7 +17,7 @@ Implements IRibbon
 
 #Const LateBind = TestMode
 
-Private Const APP_VERSION As Double = 1.3
+Private Const APP_VERSION As Double = 1.4
 
 Private Type TManager
     Ribbon As Office.IRibbonUI
