@@ -26,7 +26,7 @@ Private Type TUserManagerFormModelComponents
     userID As String
     userStatus As String
     UserType As String
-    userName As String
+    UserName As String
     userPassword As String
     userEmail As String
     'Attribute
@@ -117,12 +117,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get userName() As String
-    userName = this.userName
+Public Property Get UserName() As String
+    UserName = this.UserName
 End Property
 
-Public Property Let userName(ByVal vNewValue As String)
-    this.userName = vNewValue
+Public Property Let UserName(ByVal vNewValue As String)
+    this.UserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -191,7 +191,7 @@ Public Sub SetPropertiesToUpdateUserState()
     With Me
         .operation = OPERATION_UPDATE
         .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userId)
-        .userName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
+        .UserName = Me.usersTable(TargetRow, UsersTableFields.COL_userName)
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
         .userEmail = Me.usersTable(TargetRow, UsersTableFields.COL_email)
         .userStatus = Me.usersTable(TargetRow, UsersTableFields.COL_userStatus)
@@ -202,7 +202,7 @@ End Sub
 Private Sub SetPropertiesToNullState()
     With Me
         .userID = vbNullString
-        .userName = vbNullString
+        .UserName = vbNullString
         .userPassword = vbNullString
         .userStatus = vbNullString
         .UserType = vbNullString
@@ -231,14 +231,14 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             
         Case UsersTableFields.COL_userName
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.userName, VBA.TypeName(Me.userName))
+            IsValidField = Validator.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidStringLength(Me.userName, 6)
+            IsValidField = Validator.IsValidStringLength(Me.UserName, 6)
             If Not IsValidField = True Then Exit Function
             'Check 3
             If Me.operation = OPERATION_NEW Then
-                IsValidField = Validator.IsUnique(Me.usersTable, Me.userName, UsersTableFields.COL_userName)
+                IsValidField = Validator.IsUnique(Me.usersTable, Me.UserName, UsersTableFields.COL_userName)
                 If Not IsValidField = True Then Exit Function
             End If
             
