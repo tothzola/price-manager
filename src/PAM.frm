@@ -668,11 +668,11 @@ Private Sub cmbUserType_Change()
     ExtendedMethods.UpdateControlAfterValidation Me.cmbUserType, UserModel.IsValidField(COL_userType), TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, "This is required field! Please select one option!"
 End Sub
 
-Private Sub txtSetuserName_Change()
+Private Sub txtSetUsername_Change()
     'Hydrate model property
-    UserModel.userName = Me.txtSetUsername.Value
+    UserModel.UserName = Me.txtSetUsername.Value
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_CUSTOM, "userName should have minimum 6 characters and it shold be UNIQUE as well."
+    ExtendedMethods.UpdateControlAfterValidation Me.txtSetUsername, UserModel.IsValidField(COL_userName), TYPE_CUSTOM, "Username should have minimum 6 characters and it shold be UNIQUE as well."
 End Sub
 
 Private Sub txtSetPassword_Change()
@@ -686,7 +686,7 @@ Private Sub txtUserEmail_Change()
     'hydrate model property
     UserModel.userEmail = Me.txtUserEmail.Value
     'validate field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. userName@hostname.domain"
+    ExtendedMethods.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. username@hostname.domain"
 End Sub
 
 Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
@@ -745,11 +745,11 @@ Private Sub txtPassword_Change()
     ExtendedMethods.UpdateControlAfterValidation Me.txtPassword, LoginModel.IsValidPassword, TYPE_NA
 End Sub
 
-Private Sub txtuserName_Change()
+Private Sub txtUsername_Change()
     'hydrate model property
-    LoginModel.userName = Me.txtUsername.Text
+    LoginModel.UserName = Me.txtUsername.Text
     'Validate Field
-    ExtendedMethods.UpdateControlAfterValidation Me.txtUsername, LoginModel.IsValiduserName, TYPE_NA
+    ExtendedMethods.UpdateControlAfterValidation Me.txtUsername, LoginModel.IsValidUsername, TYPE_NA
 End Sub
 
 '-------------------------------------------------------------------------
@@ -1145,9 +1145,9 @@ Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     End If
     'Update Active User Frame
     With LoginModel
-        Call UpdateActiveUserInfomation(.userName, .UserType, .userStatus, .userID, .Password, .userEmail)
+        Call UpdateActiveUserInfomation(.UserName, .UserType, .userStatus, .userID, .Password, .userEmail)
     End With
-    'Update Welcome Frame with userName
+    'Update Welcome Frame with Username
     Call UpdateWelcomeFrame
 End Sub
 
@@ -1322,7 +1322,7 @@ Private Sub StateForUpdateRecordForUserManager()
         'input field state
         .cmbUserStatus.Value = UserModel.userStatus
         .cmbUserType.Value = UserModel.UserType
-        .txtSetUsername.Value = UserModel.userName
+        .txtSetUsername.Value = UserModel.UserName
         .txtUserEmail.Value = UserModel.userEmail
         'Button State
         .cmdAddNewUser.Enabled = False
@@ -1351,10 +1351,10 @@ Private Sub UpdateWelcomeFrame(Optional FrameIdentifier As ApplicationForms = 0)
     End If
 End Sub
 
-Private Sub UpdateActiveUserInfomation(ByVal uname As String, ByVal uType As String, ByVal uStatus As String, ByVal uID As String, ByVal uPassword As String, ByVal uEmail As String)
+Private Sub UpdateActiveUserInfomation(ByVal uName As String, ByVal uType As String, ByVal uStatus As String, ByVal uID As String, ByVal uPassword As String, ByVal uEmail As String)
     'Show Active user info on Always On Frame
     With ExtendedMethods
-        Call .ChangeControlProperties(Me.lblActiveUsername, uname)
+        Call .ChangeControlProperties(Me.lblActiveUsername, uName)
         Call .ChangeControlProperties(Me.lblActiveUserType, uType)
         Call .ChangeControlProperties(Me.lblActiveUserID, uID)
         Call .ChangeControlProperties(Me.lblActiveUserPassword, uPassword)
@@ -1367,7 +1367,7 @@ Private Sub UpdateActiveUserInfomation(ByVal uname As String, ByVal uType As Str
     'Update Active user information in Main Model
     With MainModel
         .ActiveUserID = uID
-        .ActiveuserName = uname
+        .ActiveUserName = uName
         .ActiveUserPassword = uPassword
         .ActiveUserStatus = uStatus
         .ActiveUserType = uType

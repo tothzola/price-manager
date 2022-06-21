@@ -365,7 +365,7 @@ Public Function GetDataForRecordsList() As Variant
     Dim UB1     As Long
     Dim UB2     As Long
     Dim tmp     As Variant
-    Dim uname   As String
+    Dim uName   As String
     
     UB1 = UBound(Me.dataTable, 1)
     UB2 = UBound(Me.dataTable, 2)
@@ -373,8 +373,8 @@ Public Function GetDataForRecordsList() As Variant
     k = 1
     
     For i = 1 To UB1
-        uname = GetMethod.GetLookupValue(Me.usersTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
-        If uname <> vbNullString Then
+        uName = GetMethod.GetLookupValue(Me.usersTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        If uName <> vbNullString Then
             For j = 1 To UB2
                 If i = 1 Then
                     If j = MainTableFields.COL_MAIN_userID Then
@@ -384,7 +384,7 @@ Public Function GetDataForRecordsList() As Variant
                     End If
                 Else
                     If j = MainTableFields.COL_MAIN_userID Then
-                        tmp(k, j) = uname
+                        tmp(k, j) = uName
                     Else
                         tmp(k, j) = Me.dataTable(i, j)
                     End If
@@ -413,7 +413,7 @@ Public Function GetFilteredAndSortedList() As Variant
     Dim i                   As Long
     Dim j                   As Long
     Dim IsValidRow          As Boolean
-    Dim uname               As String
+    Dim uName               As String
     
     'you are here because user has set some criteria!
     firstRowIndex = LBound(Me.dataTable, 1)
@@ -470,14 +470,14 @@ IgnoreThisRow:
     'Create Export Table
     i = 1
     For Each Record In Records
-        uname = GetMethod.GetLookupValue(Me.usersTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
-        If uname <> vbNullString Then
+        uName = GetMethod.GetLookupValue(Me.usersTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        If uName <> vbNullString Then
             For j = firstColumnIndex To lastColumnIndex
             
                 'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
                                 looking up relative values from the another table!
                 If j = MainTableFields.COL_MAIN_userID Then
-                    tmp(i, j) = uname
+                    tmp(i, j) = uName
                     GoTo NextIteration
                 End If
             

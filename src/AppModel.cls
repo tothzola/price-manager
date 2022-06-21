@@ -31,7 +31,7 @@ Private Type TAppModelComponents
     ActiveUserID As String
     ActiveUserStatus As String
     ActiveUserType As String
-    ActiveuserName As String
+    ActiveUserName As String
     ActiveUserPassword As String
     ActiveUserEmail As String
   'Current Parameters
@@ -64,12 +64,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get ActiveuserName() As String
-    ActiveuserName = this.ActiveuserName
+Public Property Get ActiveUserName() As String
+    ActiveUserName = this.ActiveUserName
 End Property
 
-Public Property Let ActiveuserName(ByVal vNewValue As String)
-    this.ActiveuserName = vNewValue
+Public Property Let ActiveUserName(ByVal vNewValue As String)
+    this.ActiveUserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -207,7 +207,7 @@ End Property
 Public Property Get ActiveUserIndex() As Variant
     Dim i As Long
     For i = 1 To UBound(Me.usersTable, 1)
-        If Me.usersTable(i, UsersTableFields.COL_userName) = Me.ActiveuserName Then
+        If Me.usersTable(i, UsersTableFields.COL_userName) = Me.ActiveUserName Then
             ActiveUserIndex = Me.usersTable(i, UsersTableFields.COL_INDEX)
             Exit Property
         End If
@@ -308,7 +308,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     Dim Record              As Variant
     Dim tmp                 As Variant
     Dim i                   As Long
-    Dim uname               As String
+    Dim uName               As String
     Dim TotalMatchingRows   As Long
     
     'Get Generic List of Unique items from the Table's Column
@@ -325,9 +325,9 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     For Each Record In Records
         If Record <> Empty Then
             If TargetColumn = MainTableFields.COL_MAIN_userID Then
-                uname = GetMethod.GetLookupValue(Me.usersTable, Record, UsersTableFields.COL_userId, UsersTableFields.COL_userName)
-                If uname <> vbNullString Then
-                    tmp(i) = uname
+                uName = GetMethod.GetLookupValue(Me.usersTable, Record, UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+                If uName <> vbNullString Then
+                    tmp(i) = uName
                 Else
                     ReDim Preserve tmp(TotalMatchingRows - 1)
                 End If

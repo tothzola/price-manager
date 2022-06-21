@@ -71,7 +71,7 @@ End Function
 Public Sub ExitApp()
 
     Dim isDevelopers As Boolean
-    If Application.userName = "Zoltan, Toth" Or "Bharakhda, Kamal" Then
+    If Application.UserName = "Zoltan, Toth" Or "Bharakhda, Kamal" Then
         isDevelopers = True
         MsgBox "Application is in development mode closeing app cancelled."
     End If

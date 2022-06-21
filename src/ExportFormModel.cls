@@ -348,7 +348,7 @@ Public Sub GenerateExportData()
     Dim i                   As Long
     Dim j                   As Long
     Dim IsValidRow          As Boolean
-    Dim uname               As String
+    Dim uName               As String
     Dim Answer              As VbMsgBoxResult
     
     'you are here because user has set some criteria!
@@ -423,9 +423,9 @@ IgnoreThisRow:
     i = 1
     For Each Record In Records
         
-        uname = GetMethod.GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        uName = GetMethod.GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         
-        If uname <> vbNullString Then
+        If uName <> vbNullString Then
             
             For j = firstColumnIndex To lastColumnIndex
             
@@ -439,7 +439,7 @@ IgnoreThisRow:
                 'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
                                 looking up relative values from the another table!
                 If j = MainTableFields.COL_MAIN_userID Then
-                    tmp(i, j) = uname
+                    tmp(i, j) = uName
                     GoTo NextIteration
                 End If
                 
