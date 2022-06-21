@@ -39,33 +39,34 @@ Public Sub EmailFeedback()
                   mailBody:=body
 End Sub
 
-Public Sub CreateEmail(ByVal userName As String, _
+Public Sub CreateEmail(ByVal UserName As String, _
                        ByVal mailTo As String, _
                        ByVal mailSubject As String, _
                        ByVal mailDisplay As Boolean, _
                        ParamArray mailBody() As Variant)
                             
-    Dim uname       As String
-    Dim sendTo      As String
-    Dim subject     As String
-    Dim disp        As Boolean
-    Dim body        As String
-    Dim line        As Variant
+    Dim body As String
+    body = "<html><body style=""font-size:14px;font-family:Arial"">Hello " & UserName & ",<br><br>"
+
+    Dim i As Long
+    For i = LBound(mailBody) To UBound(mailBody)
+        If i = 0 Then
+            body = body & mailBody(i) & "<br>"
+            body = body & "<style> table.schedule td {border-collapse:collapse;border:1px solid black;}" _
+                        & "<table class=""schedule"" style=""width:250px;""><tbody style=""font-size:12px;"">" _
+                        & "<table class=""schedule"" style=""width:250px;""><tbody style=""font-size:12px;"">"
+            
+        Else
+        
+            body = body & "<tr><td>" & mailBody(i) & "</td></tr>"
+            
+        End If
+    Next i
+    body = body & "</tbody></table><br><br></body></html>"
     
-    uname = userName
-    sendTo = mailTo
-    subject = mailSubject
-    disp = mailDisplay
-    
-    body = "<BODY style=font-size:10.5pt;font-family:Arial>Hello " & uname & ",</BODY>"
-    For Each line In mailBody
-        body = body & "<BODY style=font-size:10.5pt;font-family:Arial><p>" & line & "</BODY>"
-    Next line
-    body = body & "<br><br>"
-    
-    AssambleEmail mailTo:=sendTo, _
-                  mailSubject:=subject, _
-                  mailDisplay:=disp, _
+    AssambleEmail mailTo:=mailTo, _
+                  mailSubject:=mailSubject, _
+                  mailDisplay:=mailDisplay, _
                   mailBody:=body
                         
 End Sub
