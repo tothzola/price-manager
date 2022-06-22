@@ -173,7 +173,7 @@ End Function
 
 'Purpose :      Change text format to #,###.00 Currency Format
 
-Public Function FormatStringToCurrency(ByVal InputValue As String, Optional Prefix As String = vbNullString) As String
+Public Function FormatStringToCurrency(ByVal InputValue As String, Optional prefix As String = vbNullString) As String
     
     'Variable Declaration
     Dim IsDecimalSeperatorUsed  As Boolean
@@ -200,13 +200,15 @@ Public Function FormatStringToCurrency(ByVal InputValue As String, Optional Pref
         If InputValue = vbNullString Then GoTo CleanExit
         
         'Check 2 : If Non-Numerical Value entered!
-        If Prefix <> vbNullString Then
-            InputValue = VBA.Replace(InputValue, Prefix & " ", vbNullString)
+        If prefix <> vbNullString Then
+            InputValue = VBA.Replace(InputValue, prefix & " ", vbNullString)
         End If
         If Not VBA.IsNumeric(InputValue) Then
-            Err.Raise _
+            'Err.Raise _
                 Number:=Error_NonNumericalInput + 513, _
                 Description:="Non-Numerical character(s) are not allowed!"
+            MsgBox Err.Description, Title:=VBA.Err.Number
+            LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & " Non-Numerical character(s) are not allowed!"
         End If
         
     'Get Sepearator String
@@ -282,10 +284,10 @@ Public Function FormatStringToCurrency(ByVal InputValue As String, Optional Pref
     End If
     
     'Joining String
-    If Prefix = vbNullString Then
+    If prefix = vbNullString Then
         FormatStringToCurrency = WholeNumberPart & DecimalSeperator & DecimalPart
     Else
-        FormatStringToCurrency = Prefix & " " & WholeNumberPart & DecimalSeperator & DecimalPart
+        FormatStringToCurrency = prefix & " " & WholeNumberPart & DecimalSeperator & DecimalPart
     End If
     
 CleanExit:
@@ -356,7 +358,7 @@ Public Function GetUniqueListFromTableColumn(ByVal ContextTable As Variant, ByVa
     TotalMatchingRows = 0
     Set dict = New Dictionary
     For i = firstRow + 1 To LastRow
-        If Not dict.Exists(ContextTable(i, TargetColumn)) Then
+        If Not dict.exists(ContextTable(i, TargetColumn)) Then
             dict.Add ContextTable(i, TargetColumn), ContextTable(i, TargetColumn)
             MatchedRecords = MatchedRecords & i & SEPERATOR_ITEM
             TotalMatchingRows = TotalMatchingRows + 1

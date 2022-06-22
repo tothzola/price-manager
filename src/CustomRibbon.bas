@@ -63,7 +63,7 @@ CleanFail:
 
 End Sub
 
-Private Sub DebugOutput(ByVal message As String)
+Private Sub DebugOutput(ByVal Message As String)
 
     Dim DebugToImmediate As Boolean
 
@@ -72,7 +72,7 @@ Private Sub DebugOutput(ByVal message As String)
     #End If
     
     CustomRibbon.PriceApprovalInvalidateRibbon
-    If DebugToImmediate Then Debug.Print message & "Ribbon was invalidated"
+    If DebugToImmediate Then Debug.Print Message & "Ribbon was invalidated"
     
 End Sub
 

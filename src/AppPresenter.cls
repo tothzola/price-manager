@@ -252,8 +252,8 @@ Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal newPassword As St
     End With
 End Sub
 
-Private Sub presenterPasswordManagerFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterPasswordManagerFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call view.ShowWarning(Message, typeOfMessage)
 End Sub
 
 Private Sub presenterPasswordManagerFrame_CancelPasswordManagerForm()
@@ -336,8 +336,8 @@ Private Sub presenterUserManagerFrame_DeleteUserFromUserManagerForm(ByVal TypeOf
     End With
 End Sub
 
-Private Sub presenterUserManagerFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterUserManagerFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call view.ShowWarning(Message, typeOfMessage)
 End Sub
 
 '-------------------
@@ -457,8 +457,8 @@ Private Sub presenterPriceFormFrame_ClosePriceForm()
     Call view.UserWantsToCloseFrame(FORM_PRICEFORM)
 End Sub
 
-Private Sub presenterPriceFormFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterPriceFormFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call view.ShowWarning(Message, typeOfMessage)
 End Sub
 
 '----------------------------------------------------------------------------------------
@@ -679,8 +679,8 @@ Private Sub presenterDataFormFrame_CloseDataForm()
     Call view.UserWantsToCloseFrame(FORM_DATAFORM)
 End Sub
 
-Private Sub presenterDataFormFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterDataFormFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call view.ShowWarning(Message, typeOfMessage)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -781,8 +781,8 @@ Private Sub presenterExportFormFrame_ResetExportForm()
     Call OpenExportForm
 End Sub
 
-Private Sub presenterExportFormFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterExportFormFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call view.ShowWarning(Message, typeOfMessage)
 End Sub
 
 '-------------------------------------------------------------------------

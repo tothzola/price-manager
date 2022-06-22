@@ -14,7 +14,7 @@ Implements IHashAlgorithm
 
 Private Const salted As String = "D7D05"
 
-Private base As HashAlgorithmBase
+Private Base As HashAlgorithmBase
 
 '@Description("Factory method creates and returns a new instance of this class.")
 Public Function Create() As IHashAlgorithm
@@ -22,7 +22,7 @@ Public Function Create() As IHashAlgorithm
 End Function
 
 Private Sub Class_Initialize()
-    Set base = New HashAlgorithmBase
+    Set Base = New HashAlgorithmBase
 End Sub
 
 Private Function IHashAlgorithm_ComputeHash(ByVal Value As String) As String
@@ -35,5 +35,5 @@ Private Function IHashAlgorithm_ComputeHash(ByVal Value As String) As String
     Dim buffer() As Byte
     buffer = Algo.ComputeHash_2(bytes)
         
-    IHashAlgorithm_ComputeHash = base.ToHexString(buffer)
+    IHashAlgorithm_ComputeHash = Base.ToHexString(buffer)
 End Function
