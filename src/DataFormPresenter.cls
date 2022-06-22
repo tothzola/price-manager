@@ -47,9 +47,9 @@ End Property
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItDataForm(ByVal view As PAM, ByVal ContainerIdentifier As DataContainer)
+Public Sub InItDataForm(ByVal View As PAM, ByVal ContainerIdentifier As DataContainer)
     If model Is Nothing Then Set model = New DataFormModel
-    If MainView Is Nothing Then Set MainView = view
+    If MainView Is Nothing Then Set MainView = View
     RaiseEvent OpenDataForm(model, ContainerIdentifier)
 End Sub
 

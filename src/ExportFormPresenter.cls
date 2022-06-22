@@ -46,9 +46,9 @@ End Property
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItExportForm(ByVal view As PAM)
+Public Sub InItExportForm(ByVal View As PAM)
     If model Is Nothing Then Set model = New ExportFormModel
-    If MainView Is Nothing Then Set MainView = view
+    If MainView Is Nothing Then Set MainView = View
     RaiseEvent OpenExportForm(model)
 End Sub
 

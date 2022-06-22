@@ -38,11 +38,11 @@ End Type
 Private this As TReference
 
 '@Description("Default instance factory method.")
-Public Function Create(ByVal instance As Object) As IWeakReference
+Public Function Create(ByVal Instance As Object) As IWeakReference
 Attribute Create.VB_Description = "Default instance factory method."
 
     With New WeakReference
-        .WorkbookPointer.Add Name:="PRICEAPPROVAL_RIBBONPOINTER", RefersTo:=VBA.ObjPtr(instance)
+        .WorkbookPointer.Add Name:="PRICEAPPROVAL_RIBBONPOINTER", RefersTo:=VBA.ObjPtr(Instance)
         
         ThisWorkbook.Saved = True
 

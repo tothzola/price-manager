@@ -50,9 +50,9 @@ End Property
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItPriceForm(ByVal view As PAM, ByVal operation As FormOperation)
+Public Sub InItPriceForm(ByVal View As PAM, ByVal operation As FormOperation)
     If model Is Nothing Then Set model = New PriceFormModel
-    If MainView Is Nothing Then Set MainView = view
+    If MainView Is Nothing Then Set MainView = View
     RaiseEvent OpenPriceForm(model, operation)
 End Sub
 
