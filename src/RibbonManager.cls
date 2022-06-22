@@ -94,7 +94,11 @@ End Function
 '@Description "Tell each button which macro subroutine to run when clicked"
 Private Sub IRibbon_OnAction(ByVal Control As Office.IRibbonControl, Optional ByRef index As Integer)
 Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subroutine to run when clicked"
-    
+
+    If Not LogManager.IsEnabled(DebugLevel) Then
+        InitializeLogger.InitLogger
+    End If
+
     If Control.ID Like "Button*" Then
     
         Select Case Control.ID
