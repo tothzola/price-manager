@@ -39,7 +39,7 @@ Public Sub EmailFeedback()
                   mailBody:=body
 End Sub
 
-Public Sub CreateEmail(ByVal UserName As String, _
+Public Sub EmailRecordRejected(ByVal UserName As String, _
                        ByVal mailTo As String, _
                        ByVal mailSubject As String, _
                        ByVal mailDisplay As Boolean, _
@@ -173,3 +173,4 @@ Private Function GetTextStream(ByVal strPath As String, ByRef outString As Strin
     Set SystemFile = Nothing
     
 End Function
+

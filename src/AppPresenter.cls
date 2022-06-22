@@ -554,7 +554,7 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
                                                 
                 Dim inputMessage As String
                 If IsNotifierConfirmed(outMsg:=inputMessage) Then
-                   SendEmail.CreateEmail uName, _
+                   SendEmail.EmailRecordRejected uName, _
                                          uMail, _
                                          subject, _
                                          False, _
