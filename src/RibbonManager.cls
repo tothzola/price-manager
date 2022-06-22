@@ -17,7 +17,7 @@ Implements IRibbon
 
 #Const LateBind = TestMode
 
-Private Const APP_VERSION As Double = 1.4
+Private Const APP_VERSION As Double = 1.5
 
 Private Type TManager
     Ribbon As Office.IRibbonUI
@@ -74,24 +74,15 @@ Attribute IRibbon_GetLabel.VB_Description = "Determine the text to go along with
     Select Case Identifier
     
     Case Is = "PriceApprovalTab": outLabel = "Price Approval Manager"
-    Case Is = "PriceApprovalGroupA": outLabel = "App"
-    Case Is = "ButtonA_01": outLabel = "Price Manager"
-    Case Is = "ButtonA_02": outLabel = "Button Label"
-    Case Is = "ButtonA_03": outLabel = "Button Label"
-    Case Is = "ButtonA_04": outLabel = "Button Label"
-    Case Is = "ButtonA_05": outLabel = "Button Label"
+    Case Is = "PriceApprovalGroupA": outLabel = "Support"
+    Case Is = "ButtonA_01": outLabel = "Send Feedback"
+    Case Is = "LabelA_01": outLabel = "App. Version: " & APP_VERSION
+    Case Is = "ButtonA_02": outLabel = "Check for Updates"
     
-    Case Is = "PriceApprovalGroupB": outLabel = "Contact"
-    Case Is = "ButtonB_01": outLabel = "Send Feedback"
-    Case Is = "ButtonB_02": outLabel = "Button Label"
-    Case Is = "ButtonB_03": outLabel = "Button Label"
-    Case Is = "ButtonB_04": outLabel = "Button Label"
-    Case Is = "ButtonB_05": outLabel = "Button Label"
+    Case Is = "PriceApprovalGroupB": outLabel = "Application"
+    Case Is = "ButtonB_01": outLabel = "User Guide"
+    Case Is = "ButtonB_02": outLabel = "Price Manager"
 
-    Case Is = "PriceApprovalGroupC": outLabel = "Help"
-    Case Is = "LabelC_01": outLabel = "Version: " & APP_VERSION
-    Case Is = "ButtonC_01": outLabel = "Check for Updates..."
-    
     Case Else: outLabel = "Button Label"
     
     End Select
@@ -108,15 +99,14 @@ Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subrou
     
         Select Case Control.ID
         
-        'App
-        Case Is = "ButtonA_01": modMain.MainPAM
+        'Support
+        Case Is = "ButtonA_01": SendEmail.EmailFeedback
+        Case Is = "ButtonA_02": MsgBox "Not Implementd"
         
-        'Feedback
-        Case Is = "ButtonB_01": SendEmail.EmailFeedback
+        'Application
+        Case Is = "ButtonB_01": MsgBox "Not Implementd"
+        Case Is = "ButtonB_02": modMain.MainPAM
 
-        'Help
-        Case Is = "ButtonC_01": MsgBox "Not Implementd"
-        
         End Select
         
     End If
@@ -129,19 +119,11 @@ Attribute IRibbon_GetImage.VB_Description = "Determine the Image to go along wit
     
     Select Case Identifier
     
-    Case Is = "ButtonA_01": outImage = "HelpGettingStarted"
-    Case Is = "ButtonA_02": outImage = "ObjectPictureFill"
-    Case Is = "ButtonA_03": outImage = "ObjectPictureFill"
-    Case Is = "ButtonA_04": outImage = "ObjectPictureFill"
-    Case Is = "ButtonA_05": outImage = "ObjectPictureFill"
+    Case Is = "ButtonA_01": outImage = "GroupOmsSend"
+    Case Is = "ButtonA_02": outImage = "RefreshWebView"
     
-    Case Is = "ButtonB_01": outImage = "PublishToWeb"
-    Case Is = "ButtonB_02": outImage = "ObjectPictureFill"
-    Case Is = "ButtonB_03": outImage = "ObjectPictureFill"
-    Case Is = "ButtonB_04": outImage = "ObjectPictureFill"
-    Case Is = "ButtonB_05": outImage = "ObjectPictureFill"
-    
-    Case Is = "ButtonC_01": outImage = "RefreshWebView"
+    Case Is = "ButtonB_01": outImage = "JotShareMenuHelp"
+    Case Is = "ButtonB_02": outImage = "CalculatedCurrency"
     
     Case Else: outImage = "ObjectPictureFill"
     
@@ -162,17 +144,9 @@ Attribute IRibbon_GetSize.VB_Description = "Determine if the button size is larg
     
     Case Is = "ButtonA_01": outSize = LARGE
     Case Is = "ButtonA_02": outSize = NORMAL
-    Case Is = "ButtonA_03": outSize = NORMAL
-    Case Is = "ButtonA_04": outSize = NORMAL
-    Case Is = "ButtonA_05": outSize = NORMAL
     
     Case Is = "ButtonB_01": outSize = LARGE
-    Case Is = "ButtonB_02": outSize = NORMAL
-    Case Is = "ButtonB_03": outSize = NORMAL
-    Case Is = "ButtonB_04": outSize = NORMAL
-    Case Is = "ButtonB_05": outSize = NORMAL
-    
-    Case Is = "ButtonC_01": outSize = LARGE
+    Case Is = "ButtonB_02": outSize = LARGE
     
     Case Else: outSize = NORMAL
     
@@ -188,20 +162,11 @@ Attribute IRibbon_GetScreenTip.VB_Description = "Display a specific macro descri
     
     Select Case Identifier
     
-    Case Is = "ButtonA_01": outTipp = "Click to Open Application"
-    Case Is = "ButtonA_02": outTipp = "Description"
-    Case Is = "ButtonA_03": outTipp = "Description"
-    Case Is = "ButtonA_04": outTipp = "Description"
-    Case Is = "ButtonA_05": outTipp = "Description"
+    Case Is = "ButtonA_01": outTipp = "Send Feedback to Developers"
+    Case Is = "ButtonA_02": outTipp = "Get new Updated version"
     
-    Case Is = "ButtonB_01": outTipp = "Send Feedback to Developers"
-    Case Is = "ButtonB_02": outTipp = "Description"
-    Case Is = "ButtonB_03": outTipp = "Description"
-    Case Is = "ButtonB_04": outTipp = "Description"
-    Case Is = "ButtonB_05": outTipp = "Description"
-    
-    Case Is = "LabelC_01": outTipp = "Actual version installed on this machine"
-    Case Is = "ButtonC_01": outTipp = "Click"
+    Case Is = "ButtonB_01": outTipp = "Open user guide on the web"
+    Case Is = "ButtonB_02": outTipp = "Open Application"
     
     Case Else: outTipp = "Description"
     
@@ -220,21 +185,12 @@ Attribute IRibbon_IsVisible.VB_Description = "Show/Hide buttons based on how man
     Case Is = "PriceApprovalTab": outBoolean = True
     Case Is = "PriceApprovalGroupA": outBoolean = True
     Case Is = "ButtonA_01": outBoolean = True
-    Case Is = "ButtonA_02": outBoolean = False
-    Case Is = "ButtonA_03": outBoolean = False
-    Case Is = "ButtonA_04": outBoolean = False
-    Case Is = "ButtonA_05": outBoolean = False
+    Case Is = "LabelA_01": outBoolean = True
+    Case Is = "ButtonA_02": outBoolean = True
     
     Case Is = "PriceApprovalGroupB": outBoolean = True
     Case Is = "ButtonB_01": outBoolean = True
-    Case Is = "ButtonB_02": outBoolean = False
-    Case Is = "ButtonB_03": outBoolean = False
-    Case Is = "ButtonB_04": outBoolean = False
-    Case Is = "ButtonB_05": outBoolean = False
-    
-    Case Is = "PriceApprovalGroupC": outBoolean = True
-    Case Is = "LabelC_01": outBoolean = True
-    Case Is = "ButtonC_01": outBoolean = True
+    Case Is = "ButtonB_02": outBoolean = True
     
     Case Else: outBoolean = False
     
