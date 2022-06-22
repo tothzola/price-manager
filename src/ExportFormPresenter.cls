@@ -22,7 +22,7 @@ Public Event OpenExportForm(ByVal EFModel As ExportFormModel)
 Public Event CloseExportForm()
 Public Event ResetExportForm()
 Public Event ExportRecordsFromExportForm(ByVal EFModel As ExportFormModel)
-Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
+Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
 

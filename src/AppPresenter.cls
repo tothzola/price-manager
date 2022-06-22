@@ -15,8 +15,8 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents view As PAM
-Attribute view.VB_VarHelpID = -1
+Private WithEvents View As PAM
+Attribute View.VB_VarHelpID = -1
 '@MemberAttribute VB_VarHelpID, -1
 Private WithEvents presenterLoginFrame As LoginFormPresenter
 Attribute presenterLoginFrame.VB_VarHelpID = -1
@@ -157,8 +157,8 @@ End Sub
 
 'InIt Main View / This step will open Main Interface
 Public Sub InItApp()
-    Set view = New PAM
-    With view
+    Set View = New PAM
+    With View
         Call .InItApplication(model)             'For Supervision View
         Call .Show
     End With
@@ -200,11 +200,11 @@ Private Sub view_OpenExportFormFrame()
 End Sub
 
 Private Sub view_Logout()
-    Call view.UserWantsToLogout
+    Call View.UserWantsToLogout
 End Sub
 
 Private Sub view_ExitApp()
-    Call view.OnCancel
+    Call View.OnCancel
 End Sub
 
 '-------------------------------------------------------------------------
@@ -220,15 +220,15 @@ Private Sub presenterLoginFrame_OpenLoginForm(ByVal LModel As LoginFormModel)
     'Hydrate model property
     Call LModel.InItModel(model.usersTable)
     'Open Login Form
-    Call view.UserWantsToOpenLoginFrame(LModel)
+    Call View.UserWantsToOpenLoginFrame(LModel)
 End Sub
 
 Private Sub presenterLoginFrame_Login()
-    Call view.UserWantsToLogin
+    Call View.UserWantsToLogin
 End Sub
 
 Private Sub presenterLoginFrame_CancelLoginForm()
-    Call view.UserWantsToCloseFrame(FORM_LOGIN)
+    Call View.UserWantsToCloseFrame(FORM_LOGIN)
 End Sub
 
 '------------------------
@@ -239,7 +239,7 @@ Private Sub presenterPasswordManagerFrame_OpenPasswordManagerForm(ByVal PMModel 
     'Hydrate Model property
     Call PMModel.InItModel(model.ActiveUserPassword)
     'Open Passwordmanager Frame
-    Call view.UserWantsToOpenPasswordManagerFrame(PMModel)
+    Call View.UserWantsToOpenPasswordManagerFrame(PMModel)
 End Sub
 
 Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal newPassword As String)
@@ -247,17 +247,17 @@ Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal newPassword As St
     With model
         Call userService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, newPassword, .ActiveUserEmail)
         If userService.IsEverythingOkayInEngine Then
-            Call view.AfterChangePasswordOperation
+            Call View.AfterChangePasswordOperation
         End If
     End With
 End Sub
 
-Private Sub presenterPasswordManagerFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterPasswordManagerFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call View.ShowWarning(Message, typeOfMessage)
 End Sub
 
 Private Sub presenterPasswordManagerFrame_CancelPasswordManagerForm()
-    Call view.UserWantsToCloseFrame(FORM_PASSWORDMANAGER)
+    Call View.UserWantsToCloseFrame(FORM_PASSWORDMANAGER)
 End Sub
 
 '-------------------
@@ -268,11 +268,11 @@ Private Sub presenterUserManagerFrame_OpenUserManagerForm(ByVal UMModel As UserM
     'Hydrate Model Properties
     Call UMModel.InItModel(model.usersTable, model.userStatusList, model.userTypeList)
     'Open User manager frame
-    Call view.UserWantsToOpenUserManagerFrame(UMModel)
+    Call View.UserWantsToOpenUserManagerFrame(UMModel)
 End Sub
 
 Private Sub presenterUserManagerFrame_CloseUserManagerForm()
-    Call view.UserWantsToCloseFrame(FORM_USERMANAGER)
+    Call View.UserWantsToCloseFrame(FORM_USERMANAGER)
 End Sub
 
 Private Sub presenterUserManagerFrame_ResetUserManagerForm()
@@ -280,7 +280,7 @@ Private Sub presenterUserManagerFrame_ResetUserManagerForm()
 End Sub
 
 Private Sub presenterUserManagerFrame_UpdateUserManagerFormRecord()
-    Call view.UserWantsToUpdateUserManagerRecord
+    Call View.UserWantsToUpdateUserManagerRecord
 End Sub
 
 'Values shouold be in sequence of how they are in table!
@@ -300,7 +300,7 @@ Private Sub presenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOf
         Call userService.AddNewRecordToContextTable(model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .UserName, .userPassword, .userEmail)
     End With
     If userService.IsEverythingOkayInEngine Then
-        Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+        Call View.AfterUserManagerCRUDOperation(TypeOfOperation, True)
     End If
 End Sub
 
@@ -312,10 +312,10 @@ Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOf
         If response = True Then
             Call userService.UpdateRecordOfContextTable(.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword, .userEmail)
             If userService.IsEverythingOkayInEngine Then
-                Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+                Call View.AfterUserManagerCRUDOperation(TypeOfOperation, True)
             End If
         Else
-            Call view.ShowWarning(response, TYPE_CRITICAL)
+            Call View.ShowWarning(response, TYPE_CRITICAL)
         End If
     End With
 End Sub
@@ -328,16 +328,16 @@ Private Sub presenterUserManagerFrame_DeleteUserFromUserManagerForm(ByVal TypeOf
         If response = True Then
             Call userService.DeleteRecordofContextTable(.userIndex)
             If userService.IsEverythingOkayInEngine Then
-                Call view.AfterUserManagerCRUDOperation(TypeOfOperation, True)
+                Call View.AfterUserManagerCRUDOperation(TypeOfOperation, True)
             End If
         Else
-            Call view.ShowWarning(response, TYPE_CRITICAL)
+            Call View.ShowWarning(response, TYPE_CRITICAL)
         End If
     End With
 End Sub
 
-Private Sub presenterUserManagerFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterUserManagerFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call View.ShowWarning(Message, typeOfMessage)
 End Sub
 
 '-------------------
@@ -351,13 +351,13 @@ Private Sub presenterPriceFormFrame_OpenPriceForm(ByVal PFModel As PriceFormMode
             Call PFModel.InItModel(.mainTable, .CurrenciesList, .unitOfMeasuresList, .salesOrganizationList, .distributionChannelsList)
         End With
         'Open PriceForm Frame
-        Call view.UserWantsToOpenPriceFormFrame(PFModel, OPERATION_NEW)
+        Call View.UserWantsToOpenPriceFormFrame(PFModel, OPERATION_NEW)
     Else
         With model
             Call PFModel.InItModel(.mainTable, .CurrenciesList, .unitOfMeasuresList, .salesOrganizationList, .distributionChannelsList, .CurrentUpdateIndex)
         End With
         'Open PriceForm Frame
-        Call view.UserWantsToOpenPriceFormFrame(PFModel, OPERATION_UPDATE)
+        Call View.UserWantsToOpenPriceFormFrame(PFModel, OPERATION_UPDATE)
     End If
 End Sub
 
@@ -402,7 +402,7 @@ Private Sub presenterPriceFormFrame_AddNewRecordFromPriceForm(ByVal TypeOfOperat
                                                     VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
     End With
     If mainService.IsEverythingOkayInEngine Then
-        Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+        Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
     End If
 End Sub
 
@@ -429,10 +429,10 @@ Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperat
                                                         VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
                                                         VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
             If mainService.IsEverythingOkayInEngine Then
-                Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+                Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
         Else
-            Call view.ShowWarning(response, TYPE_CRITICAL)
+            Call View.ShowWarning(response, TYPE_CRITICAL)
         End If
     End With
 End Sub
@@ -445,20 +445,20 @@ Private Sub presenterPriceFormFrame_DeleteRecordFromPriceForm(ByVal TypeOfOperat
         If response = True Then
             Call mainService.DeleteRecordofContextTable(.index)
             If mainService.IsEverythingOkayInEngine Then
-                Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+                Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
         Else
-            Call view.ShowWarning(response, TYPE_CRITICAL)
+            Call View.ShowWarning(response, TYPE_CRITICAL)
         End If
     End With
 End Sub
 
 Private Sub presenterPriceFormFrame_ClosePriceForm()
-    Call view.UserWantsToCloseFrame(FORM_PRICEFORM)
+    Call View.UserWantsToCloseFrame(FORM_PRICEFORM)
 End Sub
 
-Private Sub presenterPriceFormFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterPriceFormFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call View.ShowWarning(Message, typeOfMessage)
 End Sub
 
 '----------------------------------------------------------------------------------------
@@ -494,10 +494,10 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
                                                         VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
                                                         VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
             If mainService.IsEverythingOkayInEngine Then
-                Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+                Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
         Else
-            Call view.ShowWarning(response, TYPE_CRITICAL)
+            Call View.ShowWarning(response, TYPE_CRITICAL)
         End If
     End With
 End Sub
@@ -554,7 +554,7 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
                                                 
                 Dim inputMessage As String
                 If IsNotifierConfirmed(outMsg:=inputMessage) Then
-                   SendEmail.CreateEmail uName, _
+                   SendEmail.EmailRecordRejected uName, _
                                          uMail, _
                                          subject, _
                                          False, _
@@ -580,10 +580,10 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
 UserCancelled:
 
             If mainService.IsEverythingOkayInEngine Then
-                Call view.AfterPriceFormCRUDOperation(TypeOfOperation, True)
+                Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
         Else
-            Call view.ShowWarning(response, TYPE_CRITICAL)
+            Call View.ShowWarning(response, TYPE_CRITICAL)
         End If
         
     End With
@@ -633,7 +633,7 @@ Private Sub presenterDataFormFrame_OpenDataForm(ByVal DFModel As DataFormModel, 
     End With
     If mainService.IsEverythingOkayInEngine Then
         'Call View Method to Open Data Form Frame!
-        Call view.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
+        Call View.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
     End If
 End Sub
 
@@ -655,17 +655,17 @@ Private Sub presenterDataFormFrame_ResetDataForm(ByVal DFModel As DataFormModel,
     End With
     If mainService.IsEverythingOkayInEngine Then
         'Call View Method to Open Data Form Frame!
-        Call view.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
+        Call View.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
     End If
 End Sub
 
 Private Sub presenterDataFormFrame_FilterAndSortDataFormList()
-    Call view.UserWantsToFilterAndSortDataFormList
+    Call View.UserWantsToFilterAndSortDataFormList
 End Sub
 
 Private Sub presenterDataFormFrame_PopulateValuesComboBox(ByVal DFModel As DataFormModel, ByVal TargetColumnIndex As Long)
     DFModel.ValuesList = model.GetUniqueListFromColumn(DFModel.dataTable, TargetColumnIndex)
-    Call view.ApplicationWantsToUpdateValueListComboBox
+    Call View.ApplicationWantsToUpdateValueListComboBox
 End Sub
 
 Private Sub presenterDataFormFrame_EditRecordFromDataForm(ByVal DFModel As DataFormModel)
@@ -676,11 +676,11 @@ Private Sub presenterDataFormFrame_EditRecordFromDataForm(ByVal DFModel As DataF
 End Sub
 
 Private Sub presenterDataFormFrame_CloseDataForm()
-    Call view.UserWantsToCloseFrame(FORM_DATAFORM)
+    Call View.UserWantsToCloseFrame(FORM_DATAFORM)
 End Sub
 
-Private Sub presenterDataFormFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterDataFormFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call View.ShowWarning(Message, typeOfMessage)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -697,7 +697,7 @@ Private Sub presenterExportFormFrame_OpenExportForm(ByVal EFModel As ExportFormM
                           .recordStatusList
     End With
     'Open Export Form Frame
-    Call view.UserWantsToOpenExportFormFrame(EFModel)
+    Call View.UserWantsToOpenExportFormFrame(EFModel)
 End Sub
 
 Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel As ExportFormModel)
@@ -722,7 +722,7 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
             Records = VBA.Split(EFModel.RecordsToProcess, SEPERATOR_ITEM)
             TotalRecords = UBound(Records) + 1
                         
-            view.ShowStatusOfExportProcess "Process start..."
+            View.ShowStatusOfExportProcess "Process start..."
             VBA.DoEvents
             counter = 0
             
@@ -745,13 +745,13 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
         VBA.Format$(.mainTable(Record, 15), DATEFORMAT_BACKEND), _
         VBA.Format$(.mainTable(Record, 16), DATEFORMAT_BACKEND)
                     counter = counter + 1
-                    view.ShowStatusOfExportProcess counter & " of " & TotalRecords & " Records has been processed!"
+                    View.ShowStatusOfExportProcess counter & " of " & TotalRecords & " Records has been processed!"
                     VBA.DoEvents
                 Next Record
             End With
             
             'Splash screen output
-            view.ShowStatusOfExportProcess "All records are processed! Exporting the report now."
+            View.ShowStatusOfExportProcess "All records are processed! Exporting the report now."
             VBA.DoEvents
             
         End If
@@ -763,26 +763,26 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
         .GenerateReport
         
         'hide status
-        view.ShowStatusOfExportProcess vbNullString
+        View.ShowStatusOfExportProcess vbNullString
         
         'After Report Generation process
         If .IsReportGeneratedSuccessfully Then
-            Call view.AfterExportOperation(True)
+            Call View.AfterExportOperation(True)
         End If
         
     End With
 End Sub
 
 Private Sub presenterExportFormFrame_CloseExportForm()
-    Call view.UserWantsToCloseFrame(FORM_EXPORTUTILITY)
+    Call View.UserWantsToCloseFrame(FORM_EXPORTUTILITY)
 End Sub
 
 Private Sub presenterExportFormFrame_ResetExportForm()
     Call OpenExportForm
 End Sub
 
-Private Sub presenterExportFormFrame_OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call view.ShowWarning(message, typeOfMessage)
+Private Sub presenterExportFormFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call View.ShowWarning(Message, typeOfMessage)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -796,7 +796,7 @@ Private Sub OpenLoginForm()
         'Open New Login Form
         If presenterLoginFrame Is Nothing Then Set presenterLoginFrame = New LoginFormPresenter
         'InIt Presenter from here
-        Call presenterLoginFrame.InItLoginForm(view)
+        Call presenterLoginFrame.InItLoginForm(View)
     End If
 End Sub
 
@@ -807,7 +807,7 @@ Private Sub OpenPasswordManager()
         'Open Password Manager
         If presenterPasswordManagerFrame Is Nothing Then Set presenterPasswordManagerFrame = New PasswordManagerPresenter
         'InIt Presenter from here
-        Call presenterPasswordManagerFrame.InItPasswordManagerForm(view)
+        Call presenterPasswordManagerFrame.InItPasswordManagerForm(View)
     End If
 End Sub
 
@@ -818,7 +818,7 @@ Private Sub OpenUserManager()
         'open usermanager
         If presenterUserManagerFrame Is Nothing Then Set presenterUserManagerFrame = New UserManagerPresenter
         'InIt Presenter from here
-        Call presenterUserManagerFrame.InItUserManagerForm(view)
+        Call presenterUserManagerFrame.InItUserManagerForm(View)
     End If
 End Sub
 
@@ -830,10 +830,10 @@ Private Sub OpenPriceForm(ByVal operation As FormOperation)
         If presenterPriceFormFrame Is Nothing Then Set presenterPriceFormFrame = New PriceFormPresenter
         If operation = OPERATION_NEW Then
             'InIt Presenter from here
-            Call presenterPriceFormFrame.InItPriceForm(view, OPERATION_NEW)
+            Call presenterPriceFormFrame.InItPriceForm(View, OPERATION_NEW)
         Else
             'Init Presenter From here for update process
-            Call presenterPriceFormFrame.InItPriceForm(view, OPERATION_UPDATE)
+            Call presenterPriceFormFrame.InItPriceForm(View, OPERATION_UPDATE)
         End If
     End If
 End Sub
@@ -845,7 +845,7 @@ Private Sub OpenDataForm(ByVal ContainerIdentification As DataContainer)
         'Open DataForm
         If presenterDataFormFrame Is Nothing Then Set presenterDataFormFrame = New DataFormPresenter
         'InIt Presenter from here
-        Call presenterDataFormFrame.InItDataForm(view, ContainerIdentification)
+        Call presenterDataFormFrame.InItDataForm(View, ContainerIdentification)
     End If
 End Sub
 
@@ -856,7 +856,7 @@ Private Sub OpenExportForm()
         'open usermanager
         If presenterExportFormFrame Is Nothing Then Set presenterExportFormFrame = New ExportFormPresenter
         'InIt Presenter from here
-        Call presenterExportFormFrame.InItExportForm(view)
+        Call presenterExportFormFrame.InItExportForm(View)
     End If
 End Sub
 
@@ -883,7 +883,7 @@ Private Sub Class_Terminate()
     Set presenterUserManagerFrame = Nothing
     Set presenterPasswordManagerFrame = Nothing
     Set presenterLoginFrame = Nothing
-    Set view = Nothing
+    Set View = Nothing
     Set model = Nothing
     Set userService = Nothing
     Set mainService = Nothing

@@ -17,6 +17,7 @@ Public Enum ErrNo
     InvalidParameterErr = 1004&
     NoObject = 31004&
     
+    InvalidFileName = VBA.vbObjectError + 42&
     CustomErr = VBA.vbObjectError + 1000&
     NotImplementedErr = VBA.vbObjectError + 1001&
     IncompatibleArraysErr = VBA.vbObjectError + 1002&
@@ -26,6 +27,11 @@ Public Enum ErrNo
     SingletonErr = VBA.vbObjectError + 1014&
     UnknownClassErr = VBA.vbObjectError + 1015&
     ObjectSetErr = VBA.vbObjectError + 1091&
+    CouldNotOpen = vbObjectError + 1092&
+    LoggerAlreadyRegistered = VBA.vbObjectError + 1098&
+    NoRegisteredLogger = VBA.vbObjectError + 1099&
+    Exeption = VBA.vbObjectError + 9001&
+    NullException = VBA.vbObjectError + 9002&
     AdoFeatureNotAvailableErr = ADODB.ErrorValueEnum.adErrFeatureNotAvailable
     AdoInTransactionErr = ADODB.ErrorValueEnum.adErrInTransaction
     AdoNotInTransactionErr = ADODB.ErrorValueEnum.adErrInvalidTransaction
@@ -38,7 +44,7 @@ Public Type TError
     Number As ErrNo
     Name As String
     source As String
-    message As String
+    Message As String
     Description As String
     trapped As Boolean
 End Type
@@ -61,15 +67,16 @@ End Sub
 Public Sub RaiseError(ByRef errorDetails As TError)
 Attribute RaiseError.VB_Description = "Formats and raises a run-time error."
     With errorDetails
-        Dim message As Variant
-        message = Array("Error:", _
+        Dim Message As Variant
+        Message = Array("Error:", _
                         "name: " & .Name, _
                         "number: " & .Number, _
-                        "message: " & .message, _
+                        "message: " & .Message, _
                         "description: " & .Description, _
                         "source: " & .source)
-        Debug.Print Join(message, vbNewLine & vbTab)
-        VBA.Err.Raise .Number, .source, .message
+        'VBA.Err.Raise .Number, .source, .Message
+        MsgBox .Number & " " & .source & " " & .Message, Title:=VBA.Err.Number
+        LogManager.Log ErrorLevel, Join(Message, vbNewLine & vbTab)
     End With
 End Sub
 

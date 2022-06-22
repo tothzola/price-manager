@@ -21,7 +21,7 @@ Attribute MainView.VB_VarHelpID = -1
 Public Event CancelPasswordManagerForm()
 Public Event OpenPasswordManagerForm(ByVal PMModel As PasswordManagerModel)
 Public Event ChangePassword(ByVal newPassword As String)
-Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
+Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
 

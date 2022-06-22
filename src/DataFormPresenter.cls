@@ -21,7 +21,7 @@ Attribute MainView.VB_VarHelpID = -1
 Public Event OpenDataForm(ByVal DFModel As DataFormModel, ByVal ContainerIdentifier As DataContainer)
 Public Event CloseDataForm()
 Public Event EditRecordFromDataForm(ByVal DFModel As DataFormModel)
-Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
+Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
 Public Event FilterAndSortDataFormList()
 Public Event PopulateValuesComboBox(ByVal DFModel As DataFormModel, ByVal TargetColumnIndex As Long)
 Public Event ResetDataForm(ByVal DFModel As DataFormModel, ByVal ContainerIdentifier As DataContainer)

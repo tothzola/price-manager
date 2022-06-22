@@ -26,7 +26,7 @@ Public Event UpdateRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, 
 Public Event DeleteRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
 Public Event RejectRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
 Public Event ApproveRecordFromPriceForm(ByVal TypeOfOperation As CRUDOperations, ByVal PFModel As PriceFormModel)
-Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
+Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
 

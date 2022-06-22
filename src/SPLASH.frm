@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} SPLASH 
    Caption         =   "InitScreen"
-   ClientHeight    =   3120
+   ClientHeight    =   3075
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   4830
+   ClientWidth     =   4725
    OleObjectBlob   =   "SPLASH.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -21,12 +21,6 @@ Private Const PROGRESSBAR_MAXWIDTH As Integer = 224
 
 Public Event Activated()
 Public Event Cancelled()
-
-'Private Sub UserForm_Initialize()
-'
-'
-'
-'End Sub
 
 Private Sub UserForm_Activate()
     
