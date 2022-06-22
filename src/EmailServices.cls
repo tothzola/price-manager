@@ -148,6 +148,8 @@ CleanExit:
     Exit Function
 
 CleanFail:
+    MsgBox VBA.Err.Description, Title:=VBA.Err.Number
+    LogManager.Log ErrorLevel, VBA.TypeName(Me) & " Error: " & VBA.Err.Number & ". " & VBA.Err.Description
     Resume CleanExit
     Resume
     
