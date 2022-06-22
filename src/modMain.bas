@@ -3,21 +3,36 @@ Attribute VB_Name = "modMain"
 Option Explicit
 
 Public Sub MainPAM()
+
+    On Error GoTo CleanFail:
+    With ProgressIndicator.Create("InitilaizeApplication")
+        .Execute
+    End With
+
+CleanExit:
+    Exit Sub
+    
+CleanFail:
+    MsgBox VBA.Err.Description, Title:=VBA.Err.Number
+    LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & ". " & VBA.Err.Description
+    Resume CleanExit
+    Resume
+    
+End Sub
+
+
+Private Sub InitilaizeApplication(ByVal Splash As ProgressIndicator)
     
     'Object Declaration
     Dim Presenter           As AppPresenter
-    Dim SplashScreen        As SPLASH
     Dim RepositoryInUse     As RepositoryType
     
     'Initialize App
     Set Presenter = New AppPresenter
-    Set SplashScreen = New SPLASH
     
-    'Splash Screen Stage : Initializing Splash Screen
-    SplashScreen.Show vbModeless
-    SplashScreen.lblMessage.Caption = "Loading Repository..."
     Call WaitForOneSecond
-    
+    Splash.Update 10, "Loading Repository..."
+
     'Switch Database type from here
     RepositoryInUse = TYPE_POSTGRESQL
     
@@ -25,8 +40,7 @@ Public Sub MainPAM()
     With Presenter
     
         'Splash Screen Stage : Checking if Tables are accessible or not?
-        SplashScreen.lblMessage.Caption = "Validating Data Sources..."
-        Call WaitForOneSecond
+        Splash.Update 40, "Validating Data Sources..."
         
         'Attach main table of the database with Application and configure Related Services Object
         Call .InItMainService(RepositoryInUse, _
@@ -47,8 +61,7 @@ Public Sub MainPAM()
         If .databaseConnectionStatus = False Then GoTo CleanExit
         
         'Splash Screen Stage : Loading Data To App Model
-        SplashScreen.lblMessage.Caption = "Loading Data..."
-        Call WaitForOneSecond
+        Splash.Update 60, "Loading Data..."
         
         'Configure Application Model with Important DataSet
         Call .InItApplicationModel(modDataSources.arrListofCurrencies, _
@@ -60,13 +73,12 @@ Public Sub MainPAM()
                                     modDataSources.arrDistributionChannelsList)
         
         'Splash Screen Stage : Final
-        SplashScreen.lblMessage.Caption = "Opening App..."
+        Splash.Update 85, "Opening App..."
         Call WaitForOneSecond
-        Call WaitForOneSecond
+        Splash.Update 100, "Status: Ok"
         
         'Splash Screen Exit
-        SplashScreen.Hide
-        Set SplashScreen = Nothing
+        Splash.CloseScreen
         
         'Attach and Configure VIEW with Application
         Call .InItApp
@@ -80,10 +92,11 @@ Public Sub MainPAM()
 CleanExit:
     
     'Splash Screen Exit
-    SplashScreen.Hide
-    Set SplashScreen = Nothing
+    Splash.CloseScreen
     
     'Exiting from Application!
     Set Presenter = Nothing
     
 End Sub
+
+

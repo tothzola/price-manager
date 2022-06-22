@@ -49,9 +49,9 @@ End Property
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItUserManagerForm(ByVal view As PAM)
+Public Sub InItUserManagerForm(ByVal View As PAM)
     If model Is Nothing Then Set model = New UserManagerModel
-    If MainView Is Nothing Then Set MainView = view
+    If MainView Is Nothing Then Set MainView = View
     RaiseEvent OpenUserManagerForm(model)
 End Sub
 
