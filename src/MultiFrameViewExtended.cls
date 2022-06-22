@@ -107,12 +107,12 @@ End Sub
 
 'this method will show popup message
 
-Public Sub ShowMessage(ByVal message As String, ByVal typeOfMessage As messageType)
+Public Sub ShowMessage(ByVal Message As String, ByVal typeOfMessage As messageType)
     Select Case typeOfMessage
         Case messageType.TYPE_CRITICAL
-            MsgBox message, vbCritical, SIGN
+            MsgBox Message, vbCritical, SIGN
         Case messageType.TYPE_INFORMATION
-            MsgBox message, vbInformation, SIGN
+            MsgBox Message, vbInformation, SIGN
     End Select
 End Sub
 
@@ -275,7 +275,7 @@ End Sub
 
 'Inserting Warning Label
 
-Private Sub InsertingLabel(ctrl As MSForms.Control, ByVal ctrlName As String, ByVal message As String, Optional IsItSymbol As Boolean = False)
+Private Sub InsertingLabel(ctrl As MSForms.Control, ByVal ctrlName As String, ByVal Message As String, Optional IsItSymbol As Boolean = False)
     Dim TargetTop As Long
     Dim TargetLeft As Long
     Dim TargetFrame As MSForms.Frame
@@ -298,7 +298,7 @@ Private Sub InsertingLabel(ctrl As MSForms.Control, ByVal ctrlName As String, By
         .Visible = True
         .Top = TargetTop
         .Left = TargetLeft
-        .Caption = IIf(IsItSymbol, message, "* " & message)
+        .Caption = IIf(IsItSymbol, Message, "* " & Message)
         If IsItSymbol Then
             .Height = 18
             .Width = 18

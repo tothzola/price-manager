@@ -70,9 +70,9 @@ Private Property Get IWeakReference_Ribbon() As Object
     On Error GoTo CleanFail
     
     #If VBA7 Then
-        this.Pointer = CLngPtr(VBA.Strings.Replace(WorkbookPointer.item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
+        this.Pointer = CLngPtr(VBA.Strings.Replace(WorkbookPointer.Item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
     #Else
-        this.Pointer = CLng(VBA.Strings.Replace(WorkbookPointer.item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
+        this.Pointer = CLng(VBA.Strings.Replace(WorkbookPointer.Item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
     #End If
     
     #If VBA7 Then
@@ -93,6 +93,8 @@ CleanExit:
     Exit Property
     
 CleanFail:
+    MsgBox VBA.Err.Description, Title:=VBA.Err.Number
+    LogManager.Log ErrorLevel, VBA.TypeName(Me) & " Error: " & VBA.Err.Number & ". " & VBA.Err.Description
     Set IWeakReference_Ribbon = Nothing
     Resume CleanExit
     Resume

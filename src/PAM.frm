@@ -1086,8 +1086,8 @@ Public Sub UserWantsToUpdateUserManagerRecord()
     Call ResetUserManagerFrame(UserModel, OPERATION_UPDATE)
 End Sub
 
-Public Sub ShowWarning(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call ExtendedMethods.ShowMessage(message, typeOfMessage)
+Public Sub ShowWarning(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call ExtendedMethods.ShowMessage(Message, typeOfMessage)
 End Sub
 
 Public Sub UserWantsToLogin()
@@ -1227,8 +1227,8 @@ End Sub
 
 'Show Status on Label
 
-Public Sub ShowStatusOfExportProcess(ByVal message As String)
-    Me.lblMessage.Caption = message
+Public Sub ShowStatusOfExportProcess(ByVal Message As String)
+    Me.lblMessage.Caption = Message
 End Sub
 
 '-------------------------------------------------------------------------
