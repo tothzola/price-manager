@@ -21,7 +21,7 @@ CleanFail:
 End Sub
 
 
-Private Sub InitilaizeApplication(ByVal Splash As ProgressIndicator)
+Private Sub InitilaizeApplication(ByVal SPLASH As ProgressIndicator)
     
     'Object Declaration
     Dim Presenter           As AppPresenter
@@ -30,8 +30,7 @@ Private Sub InitilaizeApplication(ByVal Splash As ProgressIndicator)
     'Initialize App
     Set Presenter = New AppPresenter
     
-    Call WaitForOneSecond
-    Splash.Update 10, "Loading Repository..."
+    SPLASH.Update 10, "Loading Repository..."
 
     'Switch Database type from here
     RepositoryInUse = TYPE_POSTGRESQL
@@ -40,7 +39,7 @@ Private Sub InitilaizeApplication(ByVal Splash As ProgressIndicator)
     With Presenter
     
         'Splash Screen Stage : Checking if Tables are accessible or not?
-        Splash.Update 40, "Validating Data Sources..."
+        SPLASH.Update 30, "Validating Data Sources..."
         
         'Attach main table of the database with Application and configure Related Services Object
         Call .InItMainService(RepositoryInUse, _
@@ -61,7 +60,7 @@ Private Sub InitilaizeApplication(ByVal Splash As ProgressIndicator)
         If .databaseConnectionStatus = False Then GoTo CleanExit
         
         'Splash Screen Stage : Loading Data To App Model
-        Splash.Update 60, "Loading Data..."
+        SPLASH.Update 50, "Loading Data..."
         
         'Configure Application Model with Important DataSet
         Call .InItApplicationModel(modDataSources.arrListofCurrencies, _
@@ -73,12 +72,12 @@ Private Sub InitilaizeApplication(ByVal Splash As ProgressIndicator)
                                     modDataSources.arrDistributionChannelsList)
         
         'Splash Screen Stage : Final
-        Splash.Update 85, "Opening App..."
+        SPLASH.Update 80, "Opening App..."
         Call WaitForOneSecond
-        Splash.Update 100, "Status: Ok"
+        SPLASH.Update 100, "Status: Ok"
         
         'Splash Screen Exit
-        Splash.CloseScreen
+        SPLASH.CloseScreen
         
         'Attach and Configure VIEW with Application
         Call .InItApp
@@ -92,7 +91,7 @@ Private Sub InitilaizeApplication(ByVal Splash As ProgressIndicator)
 CleanExit:
     
     'Splash Screen Exit
-    Splash.CloseScreen
+    SPLASH.CloseScreen
     
     'Exiting from Application!
     Set Presenter = Nothing

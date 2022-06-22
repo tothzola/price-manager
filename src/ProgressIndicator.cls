@@ -46,11 +46,11 @@ End Type
 
 Private this As TProgressIndicator
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents View As Splash
+Private WithEvents View As SPLASH
 Attribute View.VB_VarHelpID = -1
 
 Private Sub Class_Initialize()
-    Set View = New Splash
+    Set View = New SPLASH
     View.Caption = DEFAULT_CAPTION
     View.ProgressLabel = DEFAULT_LABEL
 End Sub
@@ -94,7 +94,7 @@ Optional ByRef CanCancel As Boolean = False) As ProgressIndicator
  
 End Function
 
-Friend Property Get ProgressView() As Splash
+Friend Property Get ProgressView() As SPLASH
     Set ProgressView = View
 End Property
 
