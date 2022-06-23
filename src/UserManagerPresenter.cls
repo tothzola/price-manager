@@ -13,7 +13,7 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents MainView As PAM
+Private WithEvents MainView As PriceApprovalView
 Attribute MainView.VB_VarHelpID = -1
 
 '-------------------------------------------------------------------------
@@ -30,29 +30,29 @@ Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage A
 '-------------------------------------------------------------------------
 
 Private Type TUserManagerComponents
-    model As UserManagerModel
+    Model As UserManagerModel
 End Type
 
 Private this As TUserManagerComponents
 
 '-------------------------------------------------------------------------
 
-Private Property Get model() As UserManagerModel
-    Set model = this.model
+Private Property Get Model() As UserManagerModel
+    Set Model = this.Model
 End Property
 
-Private Property Set model(ByVal vNewValue As UserManagerModel)
-    Set this.model = vNewValue
+Private Property Set Model(ByVal vNewValue As UserManagerModel)
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItUserManagerForm(ByVal View As PAM)
-    If model Is Nothing Then Set model = New UserManagerModel
+Public Sub InItUserManagerForm(ByVal View As PriceApprovalView)
+    If Model Is Nothing Then Set Model = New UserManagerModel
     If MainView Is Nothing Then Set MainView = View
-    RaiseEvent OpenUserManagerForm(model)
+    RaiseEvent OpenUserManagerForm(Model)
 End Sub
 
 Private Sub MainView_CloseUserManagerFrame()
@@ -61,7 +61,7 @@ End Sub
 
 Private Sub MainView_DoCRUDOperationForUserManager(ByVal TypeOfOperation As CRUDOperations)
     Dim response As Variant
-    With model
+    With Model
         'Validation
         Select Case TypeOfOperation
         Case CRUDOperations.CRUD_OPERATION_ADDNEW
@@ -75,11 +75,11 @@ Private Sub MainView_DoCRUDOperationForUserManager(ByVal TypeOfOperation As CRUD
         If response = True Then
             Select Case TypeOfOperation
             Case CRUDOperations.CRUD_OPERATION_ADDNEW
-                RaiseEvent AddNewUserFromUserManagerForm(TypeOfOperation, model)
+                RaiseEvent AddNewUserFromUserManagerForm(TypeOfOperation, Model)
             Case CRUDOperations.CRUD_OPERATION_UPDATE
-                RaiseEvent UpdateUserFromUserManagerForm(TypeOfOperation, model)
+                RaiseEvent UpdateUserFromUserManagerForm(TypeOfOperation, Model)
             Case CRUDOperations.CRUD_OPERATION_DELETE
-                RaiseEvent DeleteUserFromUserManagerForm(TypeOfOperation, model)
+                RaiseEvent DeleteUserFromUserManagerForm(TypeOfOperation, Model)
             End Select
         Else
             RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
@@ -100,6 +100,6 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    Set model = Nothing
+    Set Model = Nothing
     Set MainView = Nothing
 End Sub

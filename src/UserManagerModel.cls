@@ -13,8 +13,6 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 Private Type TUserManagerFormModelComponents
-    'Validation Objects
-    Validator As ValidationServices
     CheckFields(UsersTableFields.COL_userStatus To UsersTableFields.COL_email) As Variant
     'Table
     usersTable As Variant
@@ -31,19 +29,10 @@ Private Type TUserManagerFormModelComponents
     userEmail As String
     'Attribute
     operation As FormOperation
+    
 End Type
 
 Private this As TUserManagerFormModelComponents
-
-'-------------------------------------------------------------------------
-
-Private Property Get Validator() As ValidationServices
-    Set Validator = this.Validator
-End Property
-
-Private Property Set Validator(ByVal vNewValue As ValidationServices)
-    Set this.Validator = vNewValue
-End Property
 
 '-------------------------------------------------------------------------
 
@@ -160,13 +149,13 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Sub InItModel(ByVal usersData As Variant, ByVal StatusOfUser As Variant, ByVal TypesOfUser As Variant)
-    If Validator Is Nothing Then Set Validator = New ValidationServices
     usersTable = usersData
     userStatusList = StatusOfUser
     userTypesList = TypesOfUser
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
-    Call GetMethod.ResetSingleDimensionalArray(this.CheckFields)
+    Call AppMethods.ResetSingleDimensionalArray(this.CheckFields)
+    
 End Sub
 
 '-------------------------------------------------------------------------
@@ -187,7 +176,7 @@ Public Sub SetPropertiesToUpdateUserState()
     Call SetPropertiesToNullState
     'update operation begins
     Dim TargetRow As Long
-    TargetRow = GetMethod.GetTargetRowIndex(Me.usersTable, Me.userIndex, UsersTableFields.COL_INDEX)
+    TargetRow = AppMethods.GetTargetRowIndex(Me.usersTable, Me.userIndex, UsersTableFields.COL_INDEX)
     With Me
         .operation = OPERATION_UPDATE
         .userID = Me.usersTable(TargetRow, UsersTableFields.COL_userId)
@@ -221,41 +210,41 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
     Select Case FieldIndex
         Case UsersTableFields.COL_userStatus
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.userStatus, VBA.TypeName(Me.userStatus))
+            IsValidField = ValidationServices.IsNotNullValue(Me.userStatus, VBA.TypeName(Me.userStatus))
             If Not IsValidField = True Then Exit Function
             
        Case UsersTableFields.COL_userType
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.UserType, VBA.TypeName(Me.UserType))
+            IsValidField = ValidationServices.IsNotNullValue(Me.UserType, VBA.TypeName(Me.UserType))
             If Not IsValidField = True Then Exit Function
             
         Case UsersTableFields.COL_userName
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
+            IsValidField = ValidationServices.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidStringLength(Me.UserName, 6)
+            IsValidField = ValidationServices.IsValidStringLength(Me.UserName, 6)
             If Not IsValidField = True Then Exit Function
             'Check 3
             If Me.operation = OPERATION_NEW Then
-                IsValidField = Validator.IsUnique(Me.usersTable, Me.UserName, UsersTableFields.COL_userName)
+                IsValidField = ValidationServices.IsUnique(Me.usersTable, Me.UserName, UsersTableFields.COL_userName)
                 If Not IsValidField = True Then Exit Function
             End If
             
         Case UsersTableFields.COL_password
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.userPassword, VBA.TypeName(Me.userPassword))
+            IsValidField = ValidationServices.IsNotNullValue(Me.userPassword, VBA.TypeName(Me.userPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidPasswordString(Me.userPassword)
+            IsValidField = ValidationServices.IsValidPasswordString(Me.userPassword)
             If Not IsValidField = True Then Exit Function
             
         Case UsersTableFields.COL_email
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.userEmail, VBA.TypeName(Me.userEmail))
+            IsValidField = ValidationServices.IsNotNullValue(Me.userEmail, VBA.TypeName(Me.userEmail))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidEmailAddress(Me.userEmail)
+            IsValidField = ValidationServices.IsValidEmailAddress(Me.userEmail)
             If Not IsValidField = True Then Exit Function
             
     End Select
@@ -271,14 +260,9 @@ Public Function IsEverythingOkayToSaveUser(ByVal currentOperation As FormOperati
     End If
 
     'Check Everything
-    IsEverythingOkayToSaveUser = Validator.IsEverythingOkay(this.CheckFields, _
+    IsEverythingOkayToSaveUser = ValidationServices.IsEverythingOkay(this.CheckFields, _
                                                             modDataSources.arrListOfColumns_USERS_TABLE, _
                                                             UsersTableFields.COL_userStatus, _
                                                             UsersTableFields.COL_email)
 End Function
 
-'-------------------------------------------------------------------------
-
-Private Sub Class_Terminate()
-    Set Validator = Nothing
-End Sub

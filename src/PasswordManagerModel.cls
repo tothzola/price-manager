@@ -13,14 +13,13 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 Private Type TPasswordManagerFormModelComponents
-    'Validation Objects
-    Validator As ValidationServices
     CheckFields(PasswordManagerFields.PM_CURRENT_PASSWORD To PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD) As Variant
     'field Properties
     Password As String
     insertedPassword As String
     newPassword As String
     confirmNewPassword As String
+    
 End Type
 
 Private this As TPasswordManagerFormModelComponents
@@ -59,16 +58,6 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Private Property Get Validator() As ValidationServices
-    Set Validator = this.Validator
-End Property
-
-Private Property Set Validator(ByVal vNewValue As ValidationServices)
-    Set this.Validator = vNewValue
-End Property
-
-'-------------------------------------------------------------------------
-
 Public Property Get Password() As String
     Password = this.Password
 End Property
@@ -82,11 +71,10 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Sub InItModel(ByVal ActiveUserPassword As String)
-    If Validator Is Nothing Then Set Validator = New ValidationServices
     Me.Password = ActiveUserPassword
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
-    Call GetMethod.ResetSingleDimensionalArray(this.CheckFields)
+    Call AppMethods.ResetSingleDimensionalArray(this.CheckFields)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -94,7 +82,7 @@ End Sub
 '-------------------------------------------------------------------------
 
 Public Function IsEverythingOkayToChangePassword() As Variant
-    IsEverythingOkayToChangePassword = Validator.IsEverythingOkay(this.CheckFields, _
+    IsEverythingOkayToChangePassword = ValidationServices.IsEverythingOkay(this.CheckFields, _
                                                                 modDataSources.arrListOfFields_PASSWORD_MANAGER, _
                                                                 PasswordManagerFields.PM_CURRENT_PASSWORD, _
                                                                 PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD)
@@ -107,26 +95,26 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
     Select Case FieldIndex
         Case PasswordManagerFields.PM_CURRENT_PASSWORD
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.insertedPassword, VBA.TypeName(Me.insertedPassword))
+            IsValidField = ValidationServices.IsNotNullValue(Me.insertedPassword, VBA.TypeName(Me.insertedPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.ComapreTwoStrings(Me.insertedPassword, Me.Password)
+            IsValidField = ValidationServices.ComapreTwoStrings(Me.insertedPassword, Me.Password)
             If Not IsValidField = True Then Exit Function
             
         Case PasswordManagerFields.PM_NEW_PASSWORD
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.newPassword, VBA.TypeName(Me.newPassword))
+            IsValidField = ValidationServices.IsNotNullValue(Me.newPassword, VBA.TypeName(Me.newPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidPasswordString(Me.newPassword)
+            IsValidField = ValidationServices.IsValidPasswordString(Me.newPassword)
             If Not IsValidField = True Then Exit Function
             
         Case PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.confirmNewPassword, VBA.TypeName(Me.confirmNewPassword))
+            IsValidField = ValidationServices.IsNotNullValue(Me.confirmNewPassword, VBA.TypeName(Me.confirmNewPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.ComapreTwoStrings(Me.newPassword, Me.confirmNewPassword)
+            IsValidField = ValidationServices.ComapreTwoStrings(Me.newPassword, Me.confirmNewPassword)
             If Not IsValidField = True Then Exit Function
             
     End Select
@@ -134,8 +122,3 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
     this.CheckFields(FieldIndex) = True
 End Function
 
-'-------------------------------------------------------------------------
-
-Private Sub Class_Terminate()
-    Set Validator = Nothing
-End Sub

@@ -335,7 +335,7 @@ Private Function GetDataWithHeadings() As Variant
     If Not (recordset.BOF Or recordset.EOF) Then
         Dim tmp As Variant
         tmp = Application.WorksheetFunction.Transpose(recordset.GetRows)
-        GetDataWithHeadings = GetMethod.JoinTables(TargetTableHeaders, tmp)
+        GetDataWithHeadings = AppMethods.JoinTables(TargetTableHeaders, tmp)
     Else
         GetDataWithHeadings = TargetTableHeaders
     End If

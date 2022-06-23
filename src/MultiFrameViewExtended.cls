@@ -84,7 +84,7 @@ Public Function ApplyFormat(ByVal InputValue As String, ByVal formatType As Data
     Select Case formatType
     
         Case DataTypes.TYPE_CURRENCY
-            ApplyFormat = GetMethod.FormatStringToCurrency(InputValue)
+            ApplyFormat = AppMethods.FormatStringToCurrency(InputValue)
             
         Case DataTypes.TYPE_DATE
             If InputValue <> vbNullString Then

@@ -157,7 +157,7 @@ Public Function arrHeaders_Export_Report() As Variant
 End Function
 
 Public Function arrListOfColumnsMainTable() As Variant
-    arrListOfColumnsMainTable = Array("", _
+    arrListOfColumnsMainTable = Array(vbNullString, _
                                     "User_Name", _
                                     "Record_Status", _
                                     "Status_Change_Date", _
@@ -169,7 +169,7 @@ Public Function arrListOfColumnsMainTable() As Variant
 End Function
 
 Public Function arrListOfColumnsMainTableFull() As Variant
-    arrListOfColumnsMainTableFull = Array("", _
+    arrListOfColumnsMainTableFull = Array(vbNullString, _
                                     "Index", _
                                     "Record_ID", _
                                     "User_Name", _

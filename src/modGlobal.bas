@@ -72,7 +72,7 @@ Public Enum FormOperation
 End Enum
 
 Public Enum RepositoryType
-    TYPE_EXCEL_NAMED_RANGE
+    TYPE_EXCEL_NAMED_RANGE  'Deprecated
     TYPE_SHAREPOINT_LIST
     TYPE_POSTGRESQL
     TYPE_ACCESS
@@ -187,7 +187,7 @@ End Function
 Public Function GetDateFormat(Optional ByVal Format As DateFormat = DateFormat.ShortDate, Optional ByVal Context As SettingContext = SettingContext.UserDefault) As String
 
     Dim apiRetVal As Boolean
-    m_dateFormat = ""
+    m_dateFormat = vbNullString
     
     apiRetVal = EnumDateFormatsA(AddressOf EnumDateFormatsProc, Context, Format)
     

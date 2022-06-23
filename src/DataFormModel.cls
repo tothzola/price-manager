@@ -11,8 +11,6 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type TDataFormModelComponents
-    'Validation Components
-    Validator As ValidationServices
     'Tables
     dataTable As Variant
     usersTable As Variant
@@ -42,19 +40,10 @@ Private Type TDataFormModelComponents
     'Attributes
     ActiveDataContainer As Long
     IsApprover As Boolean
+    
 End Type
 
 Private this As TDataFormModelComponents
-
-'-------------------------------------------------------------------------
-
-Public Property Get Validator() As ValidationServices
-    Set Validator = this.Validator
-End Property
-
-Public Property Set Validator(ByVal vNewValue As ValidationServices)
-    Set this.Validator = vNewValue
-End Property
 
 '-------------------------------------------------------------------------
 
@@ -115,7 +104,7 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get selectedColumn() As Variant
-    selectedColumn = GetMethod.GetTargetColumnIndex(this.selectedColumn, modDataSources.arrListOfColumnsMainTableFull)
+    selectedColumn = AppMethods.GetTargetColumnIndex(this.selectedColumn, modDataSources.arrListOfColumnsMainTableFull)
 End Property
 
 Public Property Let selectedColumn(ByVal vNewValue As Variant)
@@ -329,7 +318,7 @@ Public Function IsValidRecordToEdit() As Variant
     Dim i               As Long
     
     'Calculate driving paramters
-    TargetIndex = GetMethod.GetTargetRowIndex(Me.dataTable, Me.index, MainTableFields.COL_MAIN_INDEX)
+    TargetIndex = AppMethods.GetTargetRowIndex(Me.dataTable, Me.index, MainTableFields.COL_MAIN_INDEX)
     firstRow = LBound(Me.dataTable, 1)
     LastRow = UBound(Me.dataTable, 1)
     
@@ -373,7 +362,7 @@ Public Function GetDataForRecordsList() As Variant
     k = 1
     
     For i = 1 To UB1
-        uName = GetMethod.GetLookupValue(Me.usersTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        uName = AppMethods.GetLookupValue(Me.usersTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         If uName <> vbNullString Then
             For j = 1 To UB2
                 If i = 1 Then
@@ -423,7 +412,7 @@ Public Function GetFilteredAndSortedList() As Variant
     
     'if Selected Column is User_Name then
     If Me.selectedColumn = 3 Then
-        Me.selectedValue = GetMethod.GetLookupValue(Me.usersTable, Me.selectedValue, UsersTableFields.COL_userName, UsersTableFields.COL_userId)
+        Me.selectedValue = AppMethods.GetLookupValue(Me.usersTable, Me.selectedValue, UsersTableFields.COL_userName, UsersTableFields.COL_userId)
     End If
     
     'Init Parameters
@@ -438,13 +427,13 @@ Public Function GetFilteredAndSortedList() As Variant
                 
         Case MainTableFields.COL_MAIN_statusChangeDate
             Dim tmpDate As String: tmpDate = VBA.Format$(Me.dataTable(i, Me.selectedColumn), GetDateFormat)
-            IsValidRow = Me.Validator.IsValidToInclude(tmpDate, TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
+            IsValidRow = ValidationServices.IsValidToInclude(tmpDate, TYPE_DATEBETWEENRANGE, Me.selectedValue, Me.selectedValue)
             
             If Not IsValidRow Then GoTo IgnoreThisRow
             
         Case Else
             
-            IsValidRow = Me.Validator.IsValidToInclude(Me.dataTable(i, Me.selectedColumn), TYPE_STRINGMATCH, Me.selectedValue)
+            IsValidRow = ValidationServices.IsValidToInclude(Me.dataTable(i, Me.selectedColumn), TYPE_STRINGMATCH, Me.selectedValue)
             If Not IsValidRow Then GoTo IgnoreThisRow
                 
         End Select
@@ -470,7 +459,7 @@ IgnoreThisRow:
     'Create Export Table
     i = 1
     For Each Record In Records
-        uName = GetMethod.GetLookupValue(Me.usersTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        uName = AppMethods.GetLookupValue(Me.usersTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         If uName <> vbNullString Then
             For j = firstColumnIndex To lastColumnIndex
             
@@ -493,12 +482,4 @@ NextIteration:
     GetFilteredAndSortedList = tmp
 
 End Function
-
-'-------------------------------------------------------------------------
-'Class Events
-'-------------------------------------------------------------------------
-
-Private Sub Class_Terminate()
-    Set Validator = Nothing
-End Sub
 

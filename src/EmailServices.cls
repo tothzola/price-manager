@@ -5,8 +5,9 @@ END
 Attribute VB_Name = "EmailServices"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
+Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@PredeclaredId
 '@Folder "Services"
 Option Explicit
 
@@ -24,6 +25,17 @@ Private Enum olSensivity
     olS_Private = 2
     olS_Confidential = 3
 End Enum
+
+'@Ignore ProcedureNotUsed
+'@Description("Returns class reference")
+Public Property Get Class() As EmailServices
+Attribute Class.VB_Description = "Returns class reference"
+    Set Class = EmailServices
+End Property
+
+Private Sub Class_Initialize()
+    Guard.Singleton Me
+End Sub
 
 Public Sub EmailFeedback()
 
@@ -77,41 +89,37 @@ Private Sub AssambleEmail(ByVal mailTo As String, ByVal mailSubject As String, _
                           Optional ByVal mailDisplay As Boolean = True, _
                           Optional ByVal setImportance As olImportance = olI_Normal, _
                           Optional ByVal setSensivity As olSensivity = olS_Normal)
-    
+                          
     Dim OutlookApp As Outlook.Application
     Set OutlookApp = New Outlook.Application
     
-    Dim CreateMail As Outlook.MailItem
-    Set CreateMail = OutlookApp.CreateItem(Outlook.OlItemType.olMailItem)
-
-    If Not CreateMail Is Nothing Then
-
-        With CreateMail
-            .To = mailTo
-            .CC = mailToCC
-            .subject = mailSubject
-            
-            Dim signature As String
-            If GetSignature(signature) Then
-                .HTMLBody = mailBody & signature
-            Else
-                .HTMLBody = mailBody
-            End If
-            
-            .Importance = setImportance
-            .Sensitivity = setSensivity
-            If mailDisplay Then
-                .Display
-            Else
-                .Send
-            End If
-        End With
+    Dim ItemMail As Outlook.MailItem
+    Set ItemMail = OutlookApp.CreateItem(Outlook.OlItemType.olMailItem)
     
-    End If
+    With ItemMail
+        .To = mailTo
+        .CC = mailToCC
+        .subject = mailSubject
+        
+        Dim signature As String
+        If GetSignature(signature) Then
+            .HTMLBody = mailBody & signature
+        Else
+            .HTMLBody = mailBody
+        End If
+        
+        .Importance = setImportance
+        .Sensitivity = setSensivity
+        If mailDisplay Then
+            .Display
+        Else
+            .Send
+        End If
+    End With
     
     Set OutlookApp = Nothing
-    Set CreateMail = Nothing
-    
+    Set ItemMail = Nothing
+        
 End Sub
 
 Private Function GetSignature(ByRef outSign As String) As Boolean

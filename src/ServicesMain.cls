@@ -106,9 +106,10 @@ Private Sub IServices_InItService(ByVal SelectedRepositoryType As RepositoryType
     ConnectionString = ContextConnectionString
     
     Select Case RepositoryTypes
-        Case RepositoryType.TYPE_EXCEL_NAMED_RANGE
-            If Repository Is Nothing Then Set Repository = New RepositoryExcel
-            Call Repository.InItRepository(ContextTableName)
+        'Deprecated
+        'Case RepositoryType.TYPE_EXCEL_NAMED_RANGE
+            'If Repository Is Nothing Then Set Repository = New RepositoryExcel
+            'Call Repository.InItRepository(ContextTableName)
         Case RepositoryType.TYPE_SHAREPOINT_LIST
             If Repository Is Nothing Then Set Repository = New RepositorySharePoint
             Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)

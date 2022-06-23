@@ -5,7 +5,7 @@ Option Explicit
 Public Sub MainPAM()
 
     On Error GoTo CleanFail:
-    With ProgressIndicator.Create("InitilaizeApplication")
+    With ProgressIndicator.Create("InitilaizeApplication", CanCancel:=True)
         .Execute
     End With
 
@@ -21,8 +21,8 @@ CleanFail:
 End Sub
 
 
-Private Sub InitilaizeApplication(ByVal SPLASH As ProgressIndicator)
-    
+Private Sub InitilaizeApplication(ByVal Progress As ProgressIndicator)
+
     'Object Declaration
     Dim Presenter           As AppPresenter
     Dim RepositoryInUse     As RepositoryType
@@ -30,7 +30,7 @@ Private Sub InitilaizeApplication(ByVal SPLASH As ProgressIndicator)
     'Initialize App
     Set Presenter = New AppPresenter
     
-    SPLASH.Update 10, "Loading Repository..."
+    Progress.Update 10, "Loading Repository..."
 
     'Switch Database type from here
     RepositoryInUse = TYPE_POSTGRESQL
@@ -39,7 +39,7 @@ Private Sub InitilaizeApplication(ByVal SPLASH As ProgressIndicator)
     With Presenter
     
         'Splash Screen Stage : Checking if Tables are accessible or not?
-        SPLASH.Update 30, "Validating Data Sources..."
+        Progress.Update 30, "Validating Data Sources..."
         
         'Attach main table of the database with Application and configure Related Services Object
         Call .InItMainService(RepositoryInUse, _
@@ -60,7 +60,7 @@ Private Sub InitilaizeApplication(ByVal SPLASH As ProgressIndicator)
         If .databaseConnectionStatus = False Then GoTo CleanExit
         
         'Splash Screen Stage : Loading Data To App Model
-        SPLASH.Update 50, "Loading Data..."
+        Progress.Update 50, "Loading Data..."
         
         'Configure Application Model with Important DataSet
         Call .InItApplicationModel(modDataSources.arrListofCurrencies, _
@@ -72,29 +72,24 @@ Private Sub InitilaizeApplication(ByVal SPLASH As ProgressIndicator)
                                     modDataSources.arrDistributionChannelsList)
         
         'Splash Screen Stage : Final
-        SPLASH.Update 80, "Opening App..."
+        Progress.Update 80, "Opening App..."
         Call WaitForOneSecond
-        SPLASH.Update 100, "Status: Ok"
+        Progress.Update 100, "Status: Ok"
         
         'Splash Screen Exit
-        SPLASH.CloseScreen
+        Progress.CloseScreen
         
         'Attach and Configure VIEW with Application
         Call .InItApp
         
     End With
-    
-    'Exiting from Application!
-    Set Presenter = Nothing
-    Exit Sub
-    
+
 CleanExit:
-    
     'Splash Screen Exit
-    SPLASH.CloseScreen
+    Progress.CloseScreen
     
-    'Exiting from Application!
-    Set Presenter = Nothing
+    'Cleaning dependencies from memory
+    Disposable.TryDispose Presenter
     
 End Sub
 

@@ -15,8 +15,6 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 Private Type TAppModelComponents
-  'Validation Services
-    Validator As ValidationServices
   'Data Sources
     mainTable As Variant
     usersTable As Variant
@@ -36,6 +34,7 @@ Private Type TAppModelComponents
     ActiveUserEmail As String
   'Current Parameters
     CurrentUpdateIndex As Long
+    
 End Type
 
 Private this As TAppModelComponents
@@ -100,16 +99,6 @@ End Property
 
 Public Property Let ActiveUserID(ByVal vNewValue As String)
     this.ActiveUserID = vNewValue
-End Property
-
-'-------------------------------------------------------------------------
-
-Private Property Get Validator() As ValidationServices
-    Set Validator = this.Validator
-End Property
-
-Private Property Set Validator(ByVal vNewValue As ValidationServices)
-    Set this.Validator = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -238,7 +227,6 @@ Public Sub InItModel(ByVal MainTableContent As Variant, _
                     ByVal ListOfSalesOrganizations As Variant, _
                     ByVal ListOfDistributionChannels As Variant)
                     
-    Set Validator = New ValidationServices
     'Tables of The Applications
     Me.mainTable = MainTableContent
     Me.usersTable = UsersTableContent
@@ -262,10 +250,10 @@ Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplicati
     Dim ID As String
     Select Case TABLE
         Case TablesOfThisApplication.TABLE_MAINRECORDS
-            TRow = GetMethod.GetTargetRowIndex(Me.mainTable, index, MainTableFields.COL_MAIN_INDEX)
+            TRow = AppMethods.GetTargetRowIndex(Me.mainTable, index, MainTableFields.COL_MAIN_INDEX)
             ID = Me.mainTable(TRow, 2)
         Case TablesOfThisApplication.TABLE_USERS
-            TRow = GetMethod.GetTargetRowIndex(Me.usersTable, index, UsersTableFields.COL_INDEX)
+            TRow = AppMethods.GetTargetRowIndex(Me.usersTable, index, UsersTableFields.COL_INDEX)
             ID = Me.usersTable(TRow, 2)
     End Select
     If ID = RecordID Then
@@ -288,13 +276,13 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
             If UBound(Me.mainTable, 1) = 1 Then
                 GetNewID = INDEX_RECORDID_FIRST
             Else
-                GetNewID = VBA.CLng(GetMethod.GetMax(Me.mainTable, MainTableFields.COL_MAIN_recordID)) + 1
+                GetNewID = VBA.CLng(AppMethods.GetMax(Me.mainTable, MainTableFields.COL_MAIN_recordID)) + 1
             End If
         Case TablesOfThisApplication.TABLE_USERS
             If UBound(Me.usersTable, 1) = 1 Then
                 GetNewID = INDEX_USERID_FIRST
             Else
-                GetNewID = VBA.CLng(GetMethod.GetMax(Me.usersTable, UsersTableFields.COL_userId)) + 1
+                GetNewID = VBA.CLng(AppMethods.GetMax(Me.usersTable, UsersTableFields.COL_userId)) + 1
             End If
     End Select
 End Function
@@ -312,7 +300,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     Dim TotalMatchingRows   As Long
     
     'Get Generic List of Unique items from the Table's Column
-    Records = GetMethod.GetUniqueListFromTableColumn(ContextTable, TargetColumn)
+    Records = AppMethods.GetUniqueListFromTableColumn(ContextTable, TargetColumn)
     
 'Next step is to filter out uniqueList items based on App's Requirements
     
@@ -325,7 +313,7 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     For Each Record In Records
         If Record <> Empty Then
             If TargetColumn = MainTableFields.COL_MAIN_userID Then
-                uName = GetMethod.GetLookupValue(Me.usersTable, Record, UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+                uName = AppMethods.GetLookupValue(Me.usersTable, Record, UsersTableFields.COL_userId, UsersTableFields.COL_userName)
                 If uName <> vbNullString Then
                     tmp(i) = uName
                 Else
@@ -349,10 +337,5 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     
 End Function
 
-'-------------------------------------------------------------------------
-
-Private Sub Class_Terminate()
-    Set Validator = Nothing
-End Sub
 
 

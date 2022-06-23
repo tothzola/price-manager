@@ -1,4 +1,4 @@
-﻿'@Folder "ExcelHost"
+﻿'@Folder("Ribbon")
 Option Explicit
 
 '@Ignore ParameterCanBeByVal, ParameterNotUsed

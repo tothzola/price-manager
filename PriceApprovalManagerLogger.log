@@ -1,0 +1,30 @@
+23.06.2022 13:38:14	PriceApprovalManagerLogger	[INFO]	AppModel is terminating
+23.06.2022 13:38:14	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 13:38:14	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 13:55:57	PriceApprovalManagerLogger	[INFO]	AppModel is terminating
+23.06.2022 13:55:57	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 13:55:57	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 14:06:35	PriceApprovalManagerLogger	[INFO]	AppModel is terminating
+23.06.2022 14:06:35	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 14:06:35	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 14:10:53	PriceApprovalManagerLogger	[ERROR]	Error:
+	name: SingletonErr
+	number: -2147220490
+	message: Singleton already instantiated
+	description: Creation of non-default instances is not supported. Use predeclared instance.
+	source: ValidationServices type
+23.06.2022 14:10:56	PriceApprovalManagerLogger	[INFO]	AppModel is terminating
+23.06.2022 14:10:56	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 14:10:56	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 14:19:39	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 14:19:39	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 14:25:30	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 14:25:30	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 14:25:46	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 14:25:46	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 14:26:17	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 14:26:17	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 14:27:50	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 14:27:50	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+23.06.2022 14:35:06	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
+23.06.2022 14:35:06	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating

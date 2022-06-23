@@ -17,8 +17,6 @@ Implements IRibbon
 
 #Const LateBind = TestMode
 
-Private Const APP_VERSION As Double = 1.5
-
 Private Type TManager
     Ribbon As Office.IRibbonUI
     Invalidated As Boolean
@@ -33,6 +31,10 @@ End Property
 
 Public Property Set Ribbon(ByVal RHS As Office.IRibbonUI)
     Set this.Ribbon = RHS
+End Property
+
+Public Property Get AppVersion() As Long
+    AppVersion = ThisWorkbook.Names("PAM_AppVersion").RefersToRange.Value
 End Property
 
 Public Property Get Invalidated() As Boolean
@@ -76,7 +78,7 @@ Attribute IRibbon_GetLabel.VB_Description = "Determine the text to go along with
     Case Is = "PriceApprovalTab": outLabel = "Price Approval Manager"
     Case Is = "PriceApprovalGroupA": outLabel = "Support"
     Case Is = "ButtonA_01": outLabel = "Send Feedback"
-    Case Is = "LabelA_01": outLabel = "App. Version: " & APP_VERSION
+    Case Is = "LabelA_01": outLabel = "App. Version: " & AppVersion
     Case Is = "ButtonA_02": outLabel = "Check for Updates"
     
     Case Is = "PriceApprovalGroupB": outLabel = "Application"
@@ -104,7 +106,7 @@ Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subrou
         Select Case Control.ID
         
         'Support
-        Case Is = "ButtonA_01": SendEmail.EmailFeedback
+        Case Is = "ButtonA_01": EmailServices.EmailFeedback
         Case Is = "ButtonA_02": MsgBox "Not Implementd"
         
         'Application
