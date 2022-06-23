@@ -13,7 +13,7 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents MainView As PAM
+Private WithEvents MainView As PriceApprovalView
 Attribute MainView.VB_VarHelpID = -1
 
 '-------------------------------------------------------------------------
@@ -28,29 +28,29 @@ Public Event ResetDataForm(ByVal DFModel As DataFormModel, ByVal ContainerIdenti
 '-------------------------------------------------------------------------
 
 Private Type TDataFormComponents
-    model As DataFormModel
+    Model As DataFormModel
 End Type
 
 Private this As TDataFormComponents
 
 '-------------------------------------------------------------------------
 
-Private Property Get model() As DataFormModel
-    Set model = this.model
+Private Property Get Model() As DataFormModel
+    Set Model = this.Model
 End Property
 
-Private Property Set model(ByVal vNewValue As DataFormModel)
-    Set this.model = vNewValue
+Private Property Set Model(ByVal vNewValue As DataFormModel)
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItDataForm(ByVal View As PAM, ByVal ContainerIdentifier As DataContainer)
-    If model Is Nothing Then Set model = New DataFormModel
+Public Sub InItDataForm(ByVal View As PriceApprovalView, ByVal ContainerIdentifier As DataContainer)
+    If Model Is Nothing Then Set Model = New DataFormModel
     If MainView Is Nothing Then Set MainView = View
-    RaiseEvent OpenDataForm(model, ContainerIdentifier)
+    RaiseEvent OpenDataForm(Model, ContainerIdentifier)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -63,9 +63,9 @@ End Sub
 
 Private Sub MainView_EditRecordFromDataFormFrame()
     Dim response As Variant
-    response = model.IsValidRecordToEdit
+    response = Model.IsValidRecordToEdit
     If response = True Then
-        RaiseEvent EditRecordFromDataForm(model)
+        RaiseEvent EditRecordFromDataForm(Model)
     Else
         RaiseEvent OnSomethingWentWrong(response, TYPE_INFORMATION)
     End If
@@ -76,15 +76,15 @@ Private Sub MainView_FilterAndSortListFromDataFormFrame()
 End Sub
 
 Private Sub MainView_OpenDataFormFrame(ByVal ContainerIdentifier As DataContainer)
-    RaiseEvent OpenDataForm(model, ContainerIdentifier)
+    RaiseEvent OpenDataForm(Model, ContainerIdentifier)
 End Sub
 
 Private Sub MainView_PopulateValuesList()
-    RaiseEvent PopulateValuesComboBox(model, model.selectedColumn)
+    RaiseEvent PopulateValuesComboBox(Model, Model.selectedColumn)
 End Sub
 
 Private Sub MainView_ResetDataFormFrame(ByVal ContainerIdentifier As DataContainer)
-    RaiseEvent ResetDataForm(model, ContainerIdentifier)
+    RaiseEvent ResetDataForm(Model, ContainerIdentifier)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -92,7 +92,7 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    Set model = Nothing
+    Set Model = Nothing
     Set MainView = Nothing
 End Sub
 

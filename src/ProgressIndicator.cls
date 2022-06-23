@@ -39,18 +39,17 @@ Private Type TProgressIndicator
     Instance As Object
     SleepDelay As Long
     CanCancel As Boolean
-    Cancelling As Boolean
+    CanCelling As Boolean
     CurrentProgressValue As Double
-    Disposed As Boolean
 End Type
 
 Private this As TProgressIndicator
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents View As SPLASH
+Private WithEvents View As SplashView
 Attribute View.VB_VarHelpID = -1
 
 Private Sub Class_Initialize()
-    Set View = New SPLASH
+    Set View = New SplashView
     View.Caption = DEFAULT_CAPTION
     View.ProgressLabel = DEFAULT_LABEL
 End Sub
@@ -76,7 +75,7 @@ Optional ByRef CanCancel As Boolean = False) As ProgressIndicator
     Set result = New ProgressIndicator
 
     result.Parameter = Parameter
-    result.Cancellable = CanCancel
+    result.CanCellable = CanCancel
     result.SleepMilliseconds = CompletedSleepMilliseconds
  
     If Not Instance Is Nothing Then
@@ -94,7 +93,7 @@ Optional ByRef CanCancel As Boolean = False) As ProgressIndicator
  
 End Function
 
-Friend Property Get ProgressView() As SPLASH
+Friend Property Get ProgressView() As SplashView
     Set ProgressView = View
 End Property
 
@@ -134,21 +133,21 @@ Public Property Get CurrentProgress() As Double
     CurrentProgress = this.CurrentProgressValue
 End Property
 
-Public Property Get Cancellable() As Boolean
-    Cancellable = this.CanCancel
+Public Property Get CanCellable() As Boolean
+    CanCellable = this.CanCancel
 End Property
 
-Friend Property Let Cancellable(ByVal Value As Boolean)
+Friend Property Let CanCellable(ByVal Value As Boolean)
     this.CanCancel = Value
 End Property
 
 Public Property Get IsCancelRequested() As Boolean
-    IsCancelRequested = this.Cancelling
+    IsCancelRequested = this.CanCelling
 End Property
 
 Public Sub AbortCancellation()
-    Debug.Assert this.Cancelling
-    this.Cancelling = False
+    Debug.Assert this.CanCelling
+    this.CanCelling = False
 End Sub
 
 Public Sub Execute()
@@ -175,6 +174,7 @@ CleanExit:
 
 CleanFail:
     MsgBox Err.Number & vbTab & Err.Description, vbCritical, "Error"
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     Resume CleanExit
     Resume
     
@@ -213,12 +213,15 @@ CleanExit:
  
 CleanFail:
     MsgBox Err.Number & vbTab & Err.Description, vbCritical, "Error"
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     Resume CleanExit
+    Resume
+    
 End Sub
 
 Private Sub Cancelled()
     If Not this.CanCancel Then Exit Sub
-    this.Cancelling = True
+    this.CanCelling = True
 End Sub
 
 Private Sub ExecuteMacro(Optional ByVal Param As Variant)
@@ -237,7 +240,7 @@ CleanFail:
         LogManager.Log ErrorLevel, "Error: " & ProgressIndicatorError.Error_ProcedureNotFound & ". " & ERR_PROC_NOT_FOUND
     Else
         Err.Raise VBA.Err.Number, VBA.Err.source, VBA.Err.Description, VBA.Err.HelpFile, VBA.Err.HelpContext
-        LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & ". " & VBA.Err.Description
+        LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & vbTab & VBA.Err.Description
     End If
     Resume CleanExit
     Resume
@@ -262,7 +265,7 @@ CleanFail:
         LogManager.Log ErrorLevel, "Error: " & ProgressIndicatorError.Error_ProcedureNotFound & ". " & ERR_PROC_NOT_FOUND
     Else
         Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
-        LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & ". " & VBA.Err.Description
+        LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & vbTab & VBA.Err.Description
     End If
     Resume CleanExit
     Resume
@@ -271,7 +274,7 @@ End Sub
 
 Private Sub View_Cancelled()
     If Not this.CanCancel Then Exit Sub
-    this.Cancelling = True
+    this.CanCelling = True
 End Sub
 
 

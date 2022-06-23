@@ -11,8 +11,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Type TExportFormModelComponents
-    'Validation Object
-    Validator As ValidationServices
+
     CheckFields(ExportFormFields.FIELD_FROMDATE To ExportFormFields.FIELD_RECORDSTATUS) As Variant
     'Table
     dataTable As Variant
@@ -34,16 +33,6 @@ Private Type TExportFormModelComponents
 End Type
 
 Private this As TExportFormModelComponents
-
-'-------------------------------------------------------------------------
-
-Private Property Get Validator() As ValidationServices
-    Set Validator = this.Validator
-End Property
-
-Private Property Set Validator(ByVal vNewValue As ValidationServices)
-    Set this.Validator = vNewValue
-End Property
 
 '-------------------------------------------------------------------------
 
@@ -184,8 +173,7 @@ Public Sub InItModel(ByVal mainData As Variant, _
                     ByVal listOfCustomerIDs As Variant, _
                     ByVal listOfUserIDs As Variant, _
                     ByVal listOfRecordStatuses As Variant)
-    'In it Validator
-    If Validator Is Nothing Then Set Validator = New ValidationServices
+                    
     'populate fields
     Me.dataTable = mainData
     Me.userTable = userData
@@ -193,7 +181,8 @@ Public Sub InItModel(ByVal mainData As Variant, _
     Me.userIDsList = listOfUserIDs
     Me.statusesList = listOfRecordStatuses
     'reset check field array
-    Call GetMethod.ResetSingleDimensionalArray(this.CheckFields, True)
+    Call AppMethods.ResetSingleDimensionalArray(this.CheckFields, True)
+    
 End Sub
 
 '-------------------------------------------------------------------------
@@ -236,7 +225,7 @@ Public Function IsEverythingOkayToExport() As Variant
     End If
     'check 2
     IsEverythingOkayToExport = _
-        Validator.IsEverythingOkay(this.CheckFields, _
+        ValidationServices.IsEverythingOkay(this.CheckFields, _
             modDataSources.arrListOfFields_EXPORT_Form, _
             ExportFormFields.FIELD_FROMDATE, _
             ExportFormFields.FIELD_RECORDSTATUS)
@@ -255,19 +244,19 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
         
         Case ExportFormFields.FIELD_FROMDATE
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.FromDate, VBA.TypeName(Me.FromDate))
+            IsValidField = ValidationServices.IsNotNullValue(Me.FromDate, VBA.TypeName(Me.FromDate))
             If IsValidField = False Then
                 IsValidField = True
                 this.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             'Check 2
-            IsValidField = Validator.IsValidGermanFormatDate(Me.FromDate)
+            IsValidField = ValidationServices.IsValidGermanFormatDate(Me.FromDate)
             If Not IsValidField = True Then Exit Function
             'Check 3
             startDate = VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_BACKEND)
             endDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
-            IsValidField = Validator.IsValidDateInRange(Me.FromDate, startDate, endDate)
+            IsValidField = ValidationServices.IsValidDateInRange(Me.FromDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
             'if everything okay then save date in backend format
             Me.FromDate = VBA.Format$(Me.FromDate, GetDateFormat)
@@ -275,19 +264,19 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             
         Case ExportFormFields.FIELD_TODATE
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.ToDate, VBA.TypeName(Me.ToDate))
+            IsValidField = ValidationServices.IsNotNullValue(Me.ToDate, VBA.TypeName(Me.ToDate))
             If IsValidField = False Then
                 IsValidField = True
                 this.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             'Check 2
-            IsValidField = Validator.IsValidGermanFormatDate(Me.ToDate)
+            IsValidField = ValidationServices.IsValidGermanFormatDate(Me.ToDate)
             If Not IsValidField = True Then Exit Function
             'Check 3
             startDate = VBA.Format$(START_OF_THE_CENTURY, DATEFORMAT_BACKEND)
             endDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
-            IsValidField = Validator.IsValidDateInRange(Me.ToDate, startDate, endDate)
+            IsValidField = ValidationServices.IsValidDateInRange(Me.ToDate, startDate, endDate)
             If Not IsValidField = True Then Exit Function
             'if everything okay then save date in backend format
             Me.ToDate = VBA.Format$(Me.ToDate, GetDateFormat)
@@ -295,7 +284,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
         
         Case ExportFormFields.FIELD_CUSTOMERID
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.customerID, VBA.TypeName(Me.customerID))
+            IsValidField = ValidationServices.IsNotNullValue(Me.customerID, VBA.TypeName(Me.customerID))
             If IsValidField = False Then
                 IsValidField = True
                 this.CheckFields(FieldIndex) = True
@@ -304,7 +293,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             
         Case ExportFormFields.FIELD_USERID
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.userID, VBA.TypeName(Me.userID))
+            IsValidField = ValidationServices.IsNotNullValue(Me.userID, VBA.TypeName(Me.userID))
             If IsValidField = False Then
                 IsValidField = True
                 this.CheckFields(FieldIndex) = True
@@ -313,7 +302,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             
         Case ExportFormFields.FIELD_RECORDSTATUS
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.recordStatus, VBA.TypeName(Me.recordStatus))
+            IsValidField = ValidationServices.IsNotNullValue(Me.recordStatus, VBA.TypeName(Me.recordStatus))
             If IsValidField = False Then
                 IsValidField = True
                 this.CheckFields(FieldIndex) = True
@@ -368,22 +357,22 @@ Public Sub GenerateExportData()
     'Filter Layer 1 : Date Filter
         'Checking First condition : Edit Date
         
-        IsValidRow = Validator.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_statusChangeDate), TYPE_DATEBETWEENRANGE, Me.FromDate, Me.ToDate)
+        IsValidRow = ValidationServices.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_statusChangeDate), TYPE_DATEBETWEENRANGE, Me.FromDate, Me.ToDate)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Filter Layer 2 : String/Number Matching
         'Check Second condition : Customer ID
-        IsValidRow = Validator.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_customerID), TYPE_STRINGMATCH, Me.customerID)
+        IsValidRow = ValidationServices.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_customerID), TYPE_STRINGMATCH, Me.customerID)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Filter Layer 3 : String/Number Matching
         'Check Third condition : User ID
-        IsValidRow = Validator.IsValidToInclude(GetMethod.GetLookupValue(Me.userTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName), TYPE_STRINGMATCH, Me.userID)
+        IsValidRow = ValidationServices.IsValidToInclude(AppMethods.GetLookupValue(Me.userTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName), TYPE_STRINGMATCH, Me.userID)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Filter Layer 4 : String/Number Matching
         'Check Fourth condition : Record Status
-        IsValidRow = Validator.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_recordStatus), TYPE_STRINGMATCH, Me.recordStatus)
+        IsValidRow = ValidationServices.IsValidToInclude(Me.dataTable(i, MainTableFields.COL_MAIN_recordStatus), TYPE_STRINGMATCH, Me.recordStatus)
         If Not IsValidRow Then GoTo IgnoreThisRow
         
     'Keep adding here filters!
@@ -423,7 +412,7 @@ IgnoreThisRow:
     i = 1
     For Each Record In Records
         
-        uName = GetMethod.GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        uName = AppMethods.GetLookupValue(Me.userTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
         
         If uName <> vbNullString Then
             
@@ -467,13 +456,4 @@ NextIteration:
     Me.exportTable = tmp
     
 End Sub
-
-'-------------------------------------------------------------------------
-'Class Events
-'-------------------------------------------------------------------------
-
-Private Sub Class_Terminate()
-    Set Validator = Nothing
-End Sub
-
 

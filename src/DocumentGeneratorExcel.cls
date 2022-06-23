@@ -140,17 +140,22 @@ Public Sub GenerateReport()
         .Application.WindowState = xlMaximized
         TargetSheet.Activate
     End With
+    
 CleanExit:
     Set TargetSheet = Nothing
     Set NewBook = Nothing
     Set ExcelApp = Nothing
     Exit Sub
+    
 EhhErr:
     MsgBox Err.Number & vbNewLine & vbNewLine & Err.Description
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     'Update Failour Flag
     IsReportGeneratedSuccessfully = False
     Err.Clear
     Resume CleanExit
+    Resume
+    
 End Sub
 
 Private Sub GiveHeadings()

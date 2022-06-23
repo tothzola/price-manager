@@ -13,7 +13,7 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents MainView As PAM
+Private WithEvents MainView As PriceApprovalView
 Attribute MainView.VB_VarHelpID = -1
 
 '-------------------------------------------------------------------------
@@ -31,29 +31,29 @@ Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage A
 '-------------------------------------------------------------------------
 
 Private Type TPriceFormComponents
-    model As PriceFormModel
+    Model As PriceFormModel
 End Type
 
 Private this As TPriceFormComponents
 
 '-------------------------------------------------------------------------
 
-Private Property Get model() As PriceFormModel
-    Set model = this.model
+Private Property Get Model() As PriceFormModel
+    Set Model = this.Model
 End Property
 
-Private Property Set model(ByVal vNewValue As PriceFormModel)
-    Set this.model = vNewValue
+Private Property Set Model(ByVal vNewValue As PriceFormModel)
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItPriceForm(ByVal View As PAM, ByVal operation As FormOperation)
-    If model Is Nothing Then Set model = New PriceFormModel
+Public Sub InItPriceForm(ByVal View As PriceApprovalView, ByVal operation As FormOperation)
+    If Model Is Nothing Then Set Model = New PriceFormModel
     If MainView Is Nothing Then Set MainView = View
-    RaiseEvent OpenPriceForm(model, operation)
+    RaiseEvent OpenPriceForm(Model, operation)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -62,22 +62,22 @@ End Sub
 
 Private Sub MainView_DoCRUDOperationForPriceForm(ByVal TypeOfOperation As CRUDOperations)
     Dim response As Variant
-    With model
+    With Model
         'Validation
         response = .IsEverythingOkayToSaveRecord
         'Now based on the validation go for the operation
         If response = True Then
             Select Case TypeOfOperation
                 Case CRUDOperations.CRUD_OPERATION_ADDNEW
-                    RaiseEvent AddNewRecordFromPriceForm(TypeOfOperation, model)
+                    RaiseEvent AddNewRecordFromPriceForm(TypeOfOperation, Model)
                 Case CRUDOperations.CRUD_OPERATION_UPDATE
-                    RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, model)
+                    RaiseEvent UpdateRecordFromPriceForm(TypeOfOperation, Model)
                 Case CRUDOperations.CRUD_OPERATION_DELETE
-                    RaiseEvent DeleteRecordFromPriceForm(TypeOfOperation, model)
+                    RaiseEvent DeleteRecordFromPriceForm(TypeOfOperation, Model)
                 Case CRUDOperations.CRUD_OPERATION_REJECT
-                    RaiseEvent RejectRecordFromPriceForm(TypeOfOperation, model)
+                    RaiseEvent RejectRecordFromPriceForm(TypeOfOperation, Model)
                 Case CRUDOperations.CRUD_OPERATION_APPROVE
-                    RaiseEvent ApproveRecordFromPriceForm(TypeOfOperation, model)
+                    RaiseEvent ApproveRecordFromPriceForm(TypeOfOperation, Model)
             End Select
         Else
             RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
@@ -98,6 +98,6 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    Set model = Nothing
+    Set Model = Nothing
     Set MainView = Nothing
 End Sub

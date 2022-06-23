@@ -186,11 +186,11 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
         'VALUES (value1, value2, value3, ...);
         this.SQLQuery = "INSERT INTO " & TargetTableName & " ("
         For i = 2 To UBound(TargetTableHeaders, 2)
-            HeadersString = HeadersString & "" & TargetTableHeaders(1, i) & ", "
+            HeadersString = HeadersString & vbNullString & TargetTableHeaders(1, i) & ", "
             If VBA.IsEmpty(LineItems(i - 2)) Then
                 ValuesString = ValuesString & "NULL, "
-            ElseIf GetMethod.IsCurrency(LineItems(i - 2)) Then
-                ValuesString = ValuesString & GetMethod.TransformToDBCompatibleCurrency(LineItems(i - 2)) & ", "
+            ElseIf AppMethods.IsCurrency(LineItems(i - 2)) Then
+                ValuesString = ValuesString & AppMethods.TransformToDBCompatibleCurrency(LineItems(i - 2)) & ", "
             Else
                 ValuesString = ValuesString & "'" & LineItems(i - 2) & "', "
             End If
@@ -239,8 +239,8 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
         For i = 2 To UBound(TargetTableHeaders, 2)
             If VBA.IsEmpty(LineItems(i - 2)) Then
                 tmp = tmp & TargetTableHeaders(1, i) & " = NULL, "
-            ElseIf GetMethod.IsCurrency(LineItems(i - 2)) Then
-                tmp = tmp & TargetTableHeaders(1, i) & " = " & GetMethod.TransformToDBCompatibleCurrency(LineItems(i - 2)) & ", "
+            ElseIf AppMethods.IsCurrency(LineItems(i - 2)) Then
+                tmp = tmp & TargetTableHeaders(1, i) & " = " & AppMethods.TransformToDBCompatibleCurrency(LineItems(i - 2)) & ", "
             Else
                 tmp = tmp & TargetTableHeaders(1, i) & " = '" & LineItems(i - 2) & "', "
             End If
@@ -336,7 +336,7 @@ Private Function GetDataWithHeadings() As Variant
     If Not (recordset.BOF Or recordset.EOF) Then
         Dim tmp As Variant
         tmp = Application.WorksheetFunction.Transpose(recordset.GetRows)
-        GetDataWithHeadings = GetMethod.JoinTables(TargetTableHeaders, tmp)
+        GetDataWithHeadings = AppMethods.JoinTables(TargetTableHeaders, tmp)
     Else
         GetDataWithHeadings = TargetTableHeaders
     End If

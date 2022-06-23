@@ -13,8 +13,6 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 Private Type TPriceFormModelComponents
-    'Validation Objects
-    Validator As ValidationServices
     CheckFields(MainTableFields.COL_MAIN_ConditionType To MainTableFields.COL_MAIN_validToDate) As Variant
     'Tables
     mainTable As Variant
@@ -42,19 +40,10 @@ Private Type TPriceFormModelComponents
     validToDate As String
     'Attribute
     operation As FormOperation
+    
 End Type
 
 Private this As TPriceFormModelComponents
-
-'-------------------------------------------------------------------------
-
-Private Property Get Validator() As ValidationServices
-    Set Validator = this.Validator
-End Property
-
-Private Property Set Validator(ByVal vNewValue As ValidationServices)
-    Set this.Validator = vNewValue
-End Property
 
 '-------------------------------------------------------------------------
 
@@ -287,7 +276,6 @@ Public Sub InItModel(ByVal mainData As Variant, _
                      ByVal ListOfSalesOrganizations As Variant, _
                      ByVal ListOfDistributionChannels As Variant, _
                      Optional TargetIndex As Long = 0)
-    If Validator Is Nothing Then Set Validator = New ValidationServices
     Me.mainTable = mainData
     Me.curenciesList = ListofCurrencies
     Me.unitOfMeasuresList = ListOfUnits
@@ -296,9 +284,10 @@ Public Sub InItModel(ByVal mainData As Variant, _
     Me.index = TargetIndex
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
-    Call GetMethod.ResetSingleDimensionalArray(this.CheckFields)
+    Call AppMethods.ResetSingleDimensionalArray(this.CheckFields)
     'Keep Not-Mendatory Field Always True!
     this.CheckFields(MainTableFields.COL_MAIN_unitOfPrice) = True 'Unit of Price!
+    
 End Sub
 
 '-------------------------------------------------------------------------
@@ -327,7 +316,7 @@ Public Sub SetPropertiesToUpdateRecordState()
     Call SetPropertiesToNullState
     'update operation begins
     Dim TargetRow As Long
-    TargetRow = GetMethod.GetTargetRowIndex(Me.mainTable, Me.index, MainTableFields.COL_MAIN_INDEX)
+    TargetRow = AppMethods.GetTargetRowIndex(Me.mainTable, Me.index, MainTableFields.COL_MAIN_INDEX)
     With Me
         .operation = OPERATION_UPDATE
         .RecordID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordID)
@@ -373,7 +362,7 @@ End Sub
 '-------------------------------------------------------------------------
 
 Public Function IsEverythingOkayToSaveRecord() As Variant
-    IsEverythingOkayToSaveRecord = Validator.IsEverythingOkay(this.CheckFields, _
+    IsEverythingOkayToSaveRecord = ValidationServices.IsEverythingOkay(this.CheckFields, _
                                                               modDataSources.arrListOfColumns_MAIN_Table, _
                                                               MainTableFields.COL_MAIN_ConditionType, _
                                                               MainTableFields.COL_MAIN_validToDate)
@@ -391,74 +380,74 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
         
         Case MainTableFields.COL_MAIN_ConditionType
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.conditionType, VBA.TypeName(Me.conditionType))
+            IsValidField = ValidationServices.IsNotNullValue(Me.conditionType, VBA.TypeName(Me.conditionType))
             If Not IsValidField = True Then Exit Function
             'check 2
-            IsValidField = Validator.IsValidStringLength(Me.conditionType, 4)
+            IsValidField = ValidationServices.IsValidStringLength(Me.conditionType, 4)
             If Not IsValidField = True Then Exit Function
             
         Case MainTableFields.COL_MAIN_SalesOrganization
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.salesOrganization, VBA.TypeName(Me.salesOrganization))
+            IsValidField = ValidationServices.IsNotNullValue(Me.salesOrganization, VBA.TypeName(Me.salesOrganization))
             If Not IsValidField = True Then Exit Function
             
         Case MainTableFields.Col_Main_DistributionChannel
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.distributionChannel, VBA.TypeName(Me.distributionChannel))
+            IsValidField = ValidationServices.IsNotNullValue(Me.distributionChannel, VBA.TypeName(Me.distributionChannel))
             If Not IsValidField = True Then Exit Function
         
         Case MainTableFields.COL_MAIN_customerID
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.customerID, VBA.TypeName(Me.customerID))
+            IsValidField = ValidationServices.IsNotNullValue(Me.customerID, VBA.TypeName(Me.customerID))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = VBA.IsNumeric(Me.customerID)
             If Not IsValidField = True Then Exit Function
             'check 3
-            IsValidField = Validator.IsValidStringLength(Me.customerID, 6)
+            IsValidField = ValidationServices.IsValidStringLength(Me.customerID, 6)
             If Not IsValidField = True Then Exit Function
             'Check 4
-            IsValidField = Validator.IsBetweenNumericalRange(Me.customerID, INDEX_CUSTOMERID_FIRST, INDEX_CUSTOMERID_LAST)
+            IsValidField = ValidationServices.IsBetweenNumericalRange(Me.customerID, INDEX_CUSTOMERID_FIRST, INDEX_CUSTOMERID_LAST)
             If Not IsValidField = True Then Exit Function
          
         Case MainTableFields.COL_MAIN_materialID
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.materialID, VBA.TypeName(Me.materialID))
+            IsValidField = ValidationServices.IsNotNullValue(Me.materialID, VBA.TypeName(Me.materialID))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = VBA.IsNumeric(Me.materialID)
             If Not IsValidField = True Then Exit Function
             'check 3
-            IsValidField = Validator.IsValidStringLength(Me.materialID, 8)
+            IsValidField = ValidationServices.IsValidStringLength(Me.materialID, 8)
             If Not IsValidField = True Then Exit Function
             'Check 4
-            IsValidField = Validator.IsBetweenNumericalRange(Me.materialID, INDEX_MATERIALID_FIRST, INDEX_MATERIALID_LAST)
+            IsValidField = ValidationServices.IsBetweenNumericalRange(Me.materialID, INDEX_MATERIALID_FIRST, INDEX_MATERIALID_LAST)
             If Not IsValidField = True Then Exit Function
             
             
         Case MainTableFields.COL_MAIN_price
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.price, VBA.TypeName(Me.price))
+            IsValidField = ValidationServices.IsNotNullValue(Me.price, VBA.TypeName(Me.price))
             If Not IsValidField = True Then Exit Function
             'Check 2
             IsValidField = VBA.IsNumeric(Me.price)
             If Not IsValidField = True Then Exit Function
             'Check 3
-            IsValidField = Validator.IsBetweenNumericalRange(Me.price, MIN_PRICE_VALUE, MAX_PRICE_VALUE)
+            IsValidField = ValidationServices.IsBetweenNumericalRange(Me.price, MIN_PRICE_VALUE, MAX_PRICE_VALUE)
             If Not IsValidField = True Then Exit Function
             'Check 4
-            IsValidField = Validator.IsValidStringLengthUnderLimit(Me.price, 6)
+            IsValidField = ValidationServices.IsValidStringLengthUnderLimit(Me.price, 6)
             
             
         Case MainTableFields.COL_MAIN_currency
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.currencyType, VBA.TypeName(Me.currencyType))
+            IsValidField = ValidationServices.IsNotNullValue(Me.currencyType, VBA.TypeName(Me.currencyType))
             If Not IsValidField = True Then Exit Function
             
             
         Case MainTableFields.COL_MAIN_unitOfPrice
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.unitOfPrice, VBA.TypeName(Me.unitOfPrice))
+            IsValidField = ValidationServices.IsNotNullValue(Me.unitOfPrice, VBA.TypeName(Me.unitOfPrice))
             If IsValidField = False Then
                 IsValidField = True
                 this.CheckFields(FieldIndex) = True
@@ -468,22 +457,22 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             IsValidField = VBA.IsNumeric(Me.unitOfPrice)
             If Not IsValidField = True Then Exit Function
             'Check 3
-            IsValidField = Validator.IsBetweenNumericalRange(Me.unitOfPrice, MIN_UNITOFPRICE_VALUE, MAX_UNITOFPRICE_VALUE)
+            IsValidField = ValidationServices.IsBetweenNumericalRange(Me.unitOfPrice, MIN_UNITOFPRICE_VALUE, MAX_UNITOFPRICE_VALUE)
             If Not IsValidField = True Then Exit Function
             
             
         Case MainTableFields.COL_MAIN_unitOfMeasure
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.unitOfMeasure, VBA.TypeName(Me.unitOfMeasure))
+            IsValidField = ValidationServices.IsNotNullValue(Me.unitOfMeasure, VBA.TypeName(Me.unitOfMeasure))
             If Not IsValidField = True Then Exit Function
             
             
         Case MainTableFields.COL_MAIN_validFromDate
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.validFromDate, VBA.TypeName(Me.validFromDate))
+            IsValidField = ValidationServices.IsNotNullValue(Me.validFromDate, VBA.TypeName(Me.validFromDate))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidGermanFormatDate(Me.validFromDate)
+            IsValidField = ValidationServices.IsValidGermanFormatDate(Me.validFromDate)
             If Not IsValidField = True Then Exit Function
             'Check 3
             'This check confirm that the from date should be current date!
@@ -494,7 +483,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             If Me.operation = OPERATION_NEW Then
                 startDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
                 endDate = startDate
-                IsValidField = Validator.IsValidDateInRange(Me.validFromDate, startDate, endDate)
+                IsValidField = ValidationServices.IsValidDateInRange(Me.validFromDate, startDate, endDate)
                 If Not IsValidField = True Then Exit Function
             End If
             'if everything okay then save date in backend format
@@ -502,16 +491,16 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             
         Case MainTableFields.COL_MAIN_validToDate
             'Check 1
-            IsValidField = Validator.IsNotNullValue(Me.validToDate, VBA.TypeName(Me.validToDate))
+            IsValidField = ValidationServices.IsNotNullValue(Me.validToDate, VBA.TypeName(Me.validToDate))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = Validator.IsValidGermanFormatDate(Me.validToDate)
+            IsValidField = ValidationServices.IsValidGermanFormatDate(Me.validToDate)
             If Not IsValidField = True Then Exit Function
             'Check 3
             If Me.operation = OPERATION_NEW Then
                 startDate = VBA.Format$(VBA.Now, GetDateFormat)
                 endDate = VBA.CDate(END_OF_THE_EARTH)
-                IsValidField = Validator.IsValidDateInRange(Me.validToDate, startDate, endDate)
+                IsValidField = ValidationServices.IsValidDateInRange(Me.validToDate, startDate, endDate)
                 If Not IsValidField = True Then Exit Function
             End If
             'Check 4
@@ -528,13 +517,4 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
     this.CheckFields(FieldIndex) = True
     
 End Function
-
-'-------------------------------------------------------------------------
-'Class Events
-'-------------------------------------------------------------------------
-
-Private Sub Class_Terminate()
-    Set Validator = Nothing
-End Sub
-
 

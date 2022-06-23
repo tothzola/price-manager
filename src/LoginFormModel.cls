@@ -13,8 +13,6 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 Private Type TLoginFormModelComponents
-    'Validation object
-    Validator As ValidationServices
     'Table
     usersData As Variant
     'Fields
@@ -22,21 +20,10 @@ Private Type TLoginFormModelComponents
     Password As String
     'Attributes
     TargetIndex As Long
+    
 End Type
 
 Private this As TLoginFormModelComponents
-
-'-------------------------------------------------------------------------
-'Properties
-'-------------------------------------------------------------------------
-
-Private Property Get Validator() As ValidationServices
-    Set Validator = this.Validator
-End Property
-
-Private Property Set Validator(ByVal vNewValue As ValidationServices)
-    Set this.Validator = vNewValue
-End Property
 
 '-------------------------------------------------------------------------
 
@@ -123,7 +110,6 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Sub InItModel(ByVal UsersTableContent As Variant)
-    If Validator Is Nothing Then Set Validator = New ValidationServices
     Me.usersData = UsersTableContent
 End Sub
 
@@ -132,19 +118,14 @@ End Sub
 '-------------------------------------------------------------------------
 
 Public Function IsValidUsername() As Boolean
-    IsValidUsername = Validator.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
+    IsValidUsername = ValidationServices.IsNotNullValue(Me.UserName, VBA.TypeName(Me.UserName))
 End Function
 
 Public Function IsValidPassword() As Boolean
-    IsValidPassword = Validator.IsNotNullValue(Me.Password, VBA.TypeName(Me.Password))
+    IsValidPassword = ValidationServices.IsNotNullValue(Me.Password, VBA.TypeName(Me.Password))
 End Function
 
 Public Function IsUserAuthorized() As Variant
-    IsUserAuthorized = Validator.IsUserAuthorized(Me.usersData, Me.UserName, Me.Password, UsersTableFields.COL_userName, UsersTableFields.COL_password)
+    IsUserAuthorized = ValidationServices.IsUserAuthorized(Me.usersData, Me.UserName, Me.Password, UsersTableFields.COL_userName, UsersTableFields.COL_password)
 End Function
 
-'-------------------------------------------------------------------------
-
-Private Sub Class_Terminate()
-    Set Validator = Nothing
-End Sub

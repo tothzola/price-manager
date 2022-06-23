@@ -13,7 +13,7 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents MainView As PAM
+Private WithEvents MainView As PriceApprovalView
 Attribute MainView.VB_VarHelpID = -1
 
 '-------------------------------------------------------------------------
@@ -26,29 +26,29 @@ Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage A
 '-------------------------------------------------------------------------
 
 Private Type TPasswordManagerComponents
-    model As PasswordManagerModel
+    Model As PasswordManagerModel
 End Type
 
 Private this As TPasswordManagerComponents
 
 '-------------------------------------------------------------------------
 
-Private Property Get model() As PasswordManagerModel
-    Set model = this.model
+Private Property Get Model() As PasswordManagerModel
+    Set Model = this.Model
 End Property
 
-Private Property Set model(ByVal vNewValue As PasswordManagerModel)
-    Set this.model = vNewValue
+Private Property Set Model(ByVal vNewValue As PasswordManagerModel)
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItPasswordManagerForm(ByVal View As PAM)
-    If model Is Nothing Then Set model = New PasswordManagerModel
+Public Sub InItPasswordManagerForm(ByVal View As PriceApprovalView)
+    If Model Is Nothing Then Set Model = New PasswordManagerModel
     If MainView Is Nothing Then Set MainView = View
-    RaiseEvent OpenPasswordManagerForm(model) 'Giving Responcibility of opening frame to a AppPresenter! Only AppPresenter could handle MainView!
+    RaiseEvent OpenPasswordManagerForm(Model) 'Giving Responcibility of opening frame to a AppPresenter! Only AppPresenter could handle MainView!
 End Sub
 
 'Following event handler will help to change the password but
@@ -57,9 +57,9 @@ End Sub
 
 Private Sub MainView_ChangePassword()
     Dim response As Variant
-    response = model.IsEverythingOkayToChangePassword
+    response = Model.IsEverythingOkayToChangePassword
     If response = True Then
-        RaiseEvent ChangePassword(model.newPassword)
+        RaiseEvent ChangePassword(Model.newPassword)
     Else
         RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
     End If
@@ -76,6 +76,6 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    Set model = Nothing
+    Set Model = Nothing
     Set MainView = Nothing
 End Sub

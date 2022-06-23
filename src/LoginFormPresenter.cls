@@ -13,7 +13,7 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents MainView As PAM
+Private WithEvents MainView As PriceApprovalView
 Attribute MainView.VB_VarHelpID = -1
 
 '-------------------------------------------------------------------------
@@ -25,7 +25,7 @@ Public Event Login()
 '-------------------------------------------------------------------------
 
 Private Type TLoginFormComponents
-    model As LoginFormModel
+    Model As LoginFormModel
 End Type
 
 '-------------------------------------------------------------------------
@@ -34,20 +34,20 @@ Private this As TLoginFormComponents
 
 '-------------------------------------------------------------------------
 
-Private Property Get model() As LoginFormModel
-    Set model = this.model
+Private Property Get Model() As LoginFormModel
+    Set Model = this.Model
 End Property
 
-Private Property Set model(ByVal vNewValue As LoginFormModel)
-    Set this.model = vNewValue
+Private Property Set Model(ByVal vNewValue As LoginFormModel)
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
-Public Sub InItLoginForm(ByVal View As PAM)
-    If model Is Nothing Then Set model = New LoginFormModel
+Public Sub InItLoginForm(ByVal View As PriceApprovalView)
+    If Model Is Nothing Then Set Model = New LoginFormModel
     If MainView Is Nothing Then Set MainView = View
-    RaiseEvent OpenLoginForm(model) 'Giving Responcibility of opening frame to a AppPresenter! Only AppPresenter could handle MainView!
+    RaiseEvent OpenLoginForm(Model) 'Giving Responcibility of opening frame to a AppPresenter! Only AppPresenter could handle MainView!
 End Sub
 
 Private Sub MainView_CloseLoginFrame()
@@ -63,6 +63,6 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    Set model = Nothing
+    Set Model = Nothing
     Set MainView = Nothing
 End Sub

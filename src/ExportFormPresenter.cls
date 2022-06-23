@@ -13,7 +13,7 @@ Option Explicit
 '-------------------------------------------------------------------------
 
 '@MemberAttribute VB_VarHelpID, -1
-Private WithEvents MainView As PAM
+Private WithEvents MainView As PriceApprovalView
 Attribute MainView.VB_VarHelpID = -1
 
 '-------------------------------------------------------------------------
@@ -27,29 +27,29 @@ Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage A
 '-------------------------------------------------------------------------
 
 Private Type TExportFormComponents
-    model As ExportFormModel
+    Model As ExportFormModel
 End Type
 
 Private this As TExportFormComponents
 
 '-------------------------------------------------------------------------
 
-Private Property Get model() As ExportFormModel
-    Set model = this.model
+Private Property Get Model() As ExportFormModel
+    Set Model = this.Model
 End Property
 
-Private Property Set model(ByVal vNewValue As ExportFormModel)
-    Set this.model = vNewValue
+Private Property Set Model(ByVal vNewValue As ExportFormModel)
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 'InIt This Presenter with necessary parameters / Constructure procedure
 '-------------------------------------------------------------------------
 
-Public Sub InItExportForm(ByVal View As PAM)
-    If model Is Nothing Then Set model = New ExportFormModel
+Public Sub InItExportForm(ByVal View As PriceApprovalView)
+    If Model Is Nothing Then Set Model = New ExportFormModel
     If MainView Is Nothing Then Set MainView = View
-    RaiseEvent OpenExportForm(model)
+    RaiseEvent OpenExportForm(Model)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -62,17 +62,17 @@ End Sub
 
 Private Sub MainView_ExportReport()
     Dim response As Variant
-    response = model.IsEverythingOkayToExport
+    response = Model.IsEverythingOkayToExport
     If response = True Then
-        Call model.GenerateExportData
-        RaiseEvent ExportRecordsFromExportForm(model)
+        Call Model.GenerateExportData
+        RaiseEvent ExportRecordsFromExportForm(Model)
     Else
         RaiseEvent OnSomethingWentWrong(response, TYPE_INFORMATION)
     End If
 End Sub
 
 Private Sub MainView_OpenExportFormFrame()
-    RaiseEvent OpenExportForm(model)
+    RaiseEvent OpenExportForm(Model)
 End Sub
 
 Private Sub MainView_ResetExportFormFrame()
@@ -85,7 +85,7 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    Set model = Nothing
+    Set Model = Nothing
     Set MainView = Nothing
 End Sub
 
