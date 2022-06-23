@@ -1,0 +1,34 @@
+<?xml version="1.0" standalone="yes"?>
+<!--Custom Ribbon for Custom Tools -->
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="CustomRibbon.PriceApprovalRibbon">
+   <!-- startFromScratch="true" hides all of the Ribbon tabs and it hide the QAT.-->
+   <ribbon startFromScratch="false">
+      <tabs>
+         <tab id="PriceApprovalTab" getLabel="PriceApprovalGetLabel" insertAfterMso="TabView" tag="PriceApprovalTab">
+
+            <group id="PriceApprovalGroupA" getVisible="PriceApprovalGetVisible" getLabel="PriceApprovalGetLabel">
+
+               <button id="ButtonA_01" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
+
+               <separator id="PriceApprovalGroupASeperator_01"/>
+
+               <labelControl id="LabelA_01" getLabel="PriceApprovalGetLabel" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible"/>
+
+               <button id="ButtonA_02" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
+
+            </group>
+
+            <group id="PriceApprovalGroupB" getVisible="PriceApprovalGetVisible" getLabel="PriceApprovalGetLabel">
+
+               <button id="ButtonB_01" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
+
+               <separator id="PriceApprovalGroupBSeperator_01"/>
+
+               <button id="ButtonB_02" getLabel="PriceApprovalGetLabel" onAction="PriceApprovalOnAction" getImage="PriceApprovalGetImage" getSize="PriceApprovalGetSize" getScreentip="PriceApprovalGetScreentip" getVisible="PriceApprovalGetVisible" tag="PriceApproval"/>
+
+            </group>
+
+         </tab>
+      </tabs>
+   </ribbon>
+</customUI>
