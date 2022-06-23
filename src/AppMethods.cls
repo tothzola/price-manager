@@ -5,30 +5,62 @@ END
 Attribute VB_Name = "AppMethods"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
+Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@PredeclaredId
 '@Folder("AppObjects")
 Option Explicit
 
-Private Const SEPERATOR         As String = "<ITEM>"
-Public objRegEx                 As Object
-Public Algo                     As PAMXLAM.IHashAlgorithm
+Private Const SEPERATOR  As String = "<ITEM>"
 
-'----------------------------------------------------------------------------------
-'Public Methods
-'----------------------------------------------------------------------------------
+Private Type TAppMethods
+    ObjRegEx As Object
+    Algo As IHashAlgorithm
+End Type
 
-'this function uses regexp library to remove unwanted characters from the string and it only keeps numericals!
+Private this As TAppMethods
+
+'@Ignore ProcedureNotUsed
+'@Description("Returns class reference")
+Public Property Get Class() As AppMethods
+Attribute Class.VB_Description = "Returns class reference"
+    Set Class = AppMethods
+End Property
+
+Private Sub Class_Initialize()
+    Guard.Singleton Me
+End Sub
+
+Public Property Get ObjRegEx() As Object
+    If this.ObjRegEx Is Nothing Then
+        Set this.ObjRegEx = CreateObject("vbscript.regexp")
+    End If
+    Set ObjRegEx = this.ObjRegEx
+    
+End Property
+
+Public Property Get Algo() As PAMXLAM.IHashAlgorithm
+    If this.Algo Is Nothing Then
+        Set this.Algo = PAMXLAM.SHA256Managed.Create()
+    End If
+    Set Algo = this.Algo
+    
+End Property
+
+'@Description("This function uses regexp library to remove unwanted characters from the string and it only keeps numericals!")
 Private Function CleanString(ByVal InputValue As String) As String
-    With objRegEx
+Attribute CleanString.VB_Description = "This function uses regexp library to remove unwanted characters from the string and it only keeps numericals!"
+    With ObjRegEx
         .Global = True
         .Pattern = "[^\d]+"
         CleanString = .Replace(InputValue, vbNullString)
     End With
 End Function
 
-'This function will crypt the string value
+'@Description("This function will crypt the string value")
 Public Function CryptString(ByVal InputValue As String) As String
+Attribute CryptString.VB_Description = "This function will crypt the string value"
+    Guard.EmptyString InputValue
     
     'cript password
     Dim cryptedString As String
@@ -38,9 +70,9 @@ Public Function CryptString(ByVal InputValue As String) As String
     
 End Function
 
-'purpose:   This function will reset each items of array to false or reset it
-
+'@Description("This function will reset each items of array to false or reset it")
 Public Sub ResetSingleDimensionalArray(ByRef Arr As Variant, Optional resetValue As Boolean = False)
+Attribute ResetSingleDimensionalArray.VB_Description = "This function will reset each items of array to false or reset it"
     Dim i As Long
     Dim FirstItem As Long
     Dim LastItem As Long
@@ -51,12 +83,11 @@ Public Sub ResetSingleDimensionalArray(ByRef Arr As Variant, Optional resetValue
     Next i
 End Sub
 
-'Purpose:       Following function will tell if the string is currency or not? _
+'@Description("Following function will tell if the string is currency or not? _
                 Basically, in this app, if the number is representing the currency _
                 then it must have decimal seperator! So we have to check for the _
                 decimal seperator's availability only. If it is Available at the _
-                third from the right side of the number then it must be a currency
-
+                third from the right side of the number then it must be a currency")
 Public Function IsCurrency(ByVal InputValue As String) As Boolean
     If VBA.Left(VBA.Right(InputValue, 3), 1) = Application.International(xlDecimalSeparator) Then
         IsCurrency = True
@@ -65,10 +96,9 @@ Public Function IsCurrency(ByVal InputValue As String) As Boolean
     End If
 End Function
 
-'Purpose:       Following function will return new array by filtering it from one _
-                it's column
-
+'@Description("Following function will return new array by filtering it from one it's column")
 Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByVal ColumnIndex As Long, ByVal condition As Variant) As Variant
+Attribute FilterListWithSingleCondition.VB_Description = "Following function will return new array by filtering it from one it's column"
     'Driving Paramters
     Const CONSIDERHEADERINDEX   As String = "1" & SEPERATOR
     Dim Records()               As String
@@ -123,10 +153,9 @@ Public Function FilterListWithSingleCondition(ByVal ContextTable As Variant, ByV
 End Function
 
 
-'Purpose :      Following table will join Table 1 on Table 2. First Table 1 will be _
+'@Description("Following table will join Table 1 on Table 2. First Table 1 will be _
                 populated on new array then new table will join thereafter. This is _
-                Two Dimensional Arrays
-
+                Two Dimensional Arrays")
 Public Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As Variant
     Dim TotalRowsTable1     As Long
     Dim TotalRowsTable2     As Long
@@ -171,13 +200,13 @@ Public Function JoinTables(ByVal Table1 As Variant, ByVal Table2 As Variant) As 
     JoinTables = FinalTable
 End Function
 
-'Purpose :      Change text format to #,###.00 Currency Format
-
+'@Description("Change text format to #,###.00 Currency Format")
 Public Function FormatStringToCurrency(ByVal InputValue As String, Optional prefix As String = vbNullString) As String
+Attribute FormatStringToCurrency.VB_Description = "Change text format to #,###.00 Currency Format"
     
     'Variable Declaration
     Dim IsDecimalSeperatorUsed  As Boolean
-    Dim objRegEx                As Object
+    Dim ObjRegEx                As Object
     Dim ThousandSeperator       As String
     Dim DecimalSeperator        As String
     Dim DecimalPart             As String
@@ -253,8 +282,8 @@ Public Function FormatStringToCurrency(ByVal InputValue As String, Optional pref
     End If
     
     'clean number parts
-    Set objRegEx = CreateObject("vbscript.regexp")
-    With objRegEx
+    Set ObjRegEx = CreateObject("vbscript.regexp")
+    With ObjRegEx
         .Global = True
         .Pattern = "[^\d]+"
         WholeNumberPart = .Replace(WholeNumberPart, vbNullString)
@@ -291,7 +320,7 @@ Public Function FormatStringToCurrency(ByVal InputValue As String, Optional pref
     End If
     
 CleanExit:
-    Set objRegEx = Nothing
+    Set ObjRegEx = Nothing
     Exit Function
     
 EhhErr:
@@ -303,13 +332,12 @@ EhhErr:
 End Function
 
 
-'Purpose :      Following function will convert currency to Application Compatible currency format! _
+'@Description("Following function will convert currency to Application Compatible currency format! _
                 this is very interesting because, We should always keep database column format in _
                 single culture format. Like, en_US format, and we always get data from the database _
                 in decimal seperator dot format. So if in case our user is german, than that currency will _
                 be invalid string and hence, we have to make few changes by replacing dot with comma to make _
-                it compitable with App format. Rest of the work will be carried by then FormatStringToCurrency Function.
-
+                it compitable with App format. Rest of the work will be carried by then FormatStringToCurrency Function.")
 Public Function TransformToAPPCompatibleCurrency(ByVal InputValue As String) As String
     If Application.International(xlDecimalSeparator) = "," Then
         InputValue = VBA.Replace(InputValue, ".", ",")
@@ -317,25 +345,24 @@ Public Function TransformToAPPCompatibleCurrency(ByVal InputValue As String) As 
     TransformToAPPCompatibleCurrency = InputValue
 End Function
 
-'Purpose :      Following function will convert currency to DB Compatible currency format! _
+'@Description("Following function will convert currency to DB Compatible currency format! _
                 this is very interesting because, We should always keep database column format in _
                 single culture format. Like, en_US format, so decimal input will be always seperated with _
                 dot! so, and why we need this? because german inputs considers comma as decimal seperator, _
                 so we have to transform the currency string into the DB compitable string and then we can only _
-                make it workable.
-
+                make it workable.")
 Public Function TransformToDBCompatibleCurrency(ByVal InputValue As String) As String
     If Application.International(xlDecimalSeparator) = "." Then
-        InputValue = VBA.Replace(InputValue, ",", "")
+        InputValue = VBA.Replace(InputValue, ",", vbNullString)
     Else
-        InputValue = VBA.Replace(VBA.Replace(VBA.Replace(InputValue, ",", "#"), ".", ""), "#", ".")
+        InputValue = VBA.Replace(VBA.Replace(VBA.Replace(InputValue, ",", "#"), ".", vbNullString), "#", ".")
     End If
     TransformToDBCompatibleCurrency = InputValue
 End Function
 
-'Purpose:       Following function will pick unique list from the list!
-
+'@Description("Following function will pick unique list from the list!")
 Public Function GetUniqueListFromTableColumn(ByVal ContextTable As Variant, ByVal TargetColumn As Long) As Variant
+Attribute GetUniqueListFromTableColumn.VB_Description = "Following function will pick unique list from the list!"
     
     'Driving Paramters
     Dim Records()               As String
@@ -390,12 +417,12 @@ Public Function GetUniqueListFromTableColumn(ByVal ContextTable As Variant, ByVa
     
 End Function
 
-'Purpose:       following function act as Vlookup
-
+'@Description("Following function act as Vlookup")
 Public Function GetLookupValue(ByVal TargetTable As Variant, _
                                 ByVal LookupValue As Variant, _
                                 ByVal LookupIndex As Long, _
                                 ByVal TargetIndex As Long) As String
+Attribute GetLookupValue.VB_Description = "Following function act as Vlookup"
     Dim i   As Long
     Dim LB  As Long
     Dim UB  As Long
@@ -412,10 +439,9 @@ Public Function GetLookupValue(ByVal TargetTable As Variant, _
     
 End Function
 
-'Purpose :      The Following function will return Column Position from the Headers Array _
-                and Column's Name
-
+'@Description("The Following function will return Column Position from the Headers Array and Column's Name")
 Public Function GetTargetColumnIndex(ByVal TargetColumn As String, ByVal Headers As Variant) As Long
+Attribute GetTargetColumnIndex.VB_Description = "The Following function will return Column Position from the Headers Array and Column's Name"
     Dim Header  As Variant
     Dim i       As Long
     
@@ -431,10 +457,9 @@ Public Function GetTargetColumnIndex(ByVal TargetColumn As String, ByVal Headers
     
 End Function
 
-'Purpose :      Get Target Row of the Table based on Target Index! Like say we are looking for the index no. 4 _
+'@Description("Get Target Row of the Table based on Target Index! Like say we are looking for the index no. 4 _
                 but it is possible that index/record no. 4 could be found at row now. 3 or 9. Depends on the _
-                possibilities.
-
+                possibilities.")
 Public Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetIndex As Long, ByVal TargetColumn As Long) As Long
     
     Dim i   As Long
@@ -448,9 +473,9 @@ Public Function GetTargetRowIndex(ByVal TargetTable As Variant, ByVal TargetInde
     
 End Function
 
-'Purpose :      Following function will get us the Maximum number from the Table Column by looking through it
-
+'@Description("Following function will get us the Maximum number from the Table Column by looking through it")
 Public Function GetMax(ByVal TargetTable As Variant, ByVal TargetColumn As Long) As Long
+Attribute GetMax.VB_Description = "Following function will get us the Maximum number from the Table Column by looking through it"
     
     Dim i       As Long
     Dim LB      As Long
@@ -471,9 +496,9 @@ Public Function GetMax(ByVal TargetTable As Variant, ByVal TargetColumn As Long)
 
 End Function
 
-'Purpose :      Following function will Sort One Dimensional Array in Ascending Order!
-
+'@Description("Following function will Sort One Dimensional Array in Ascending Order!")
 Public Function SortOneDimensionalArrayWithNumbers(ByVal Arr As Variant) As Variant
+Attribute SortOneDimensionalArrayWithNumbers.VB_Description = "Following function will Sort One Dimensional Array in Ascending Order!"
     
     Dim FirstItemIndex  As Long
     Dim LastItemIndex   As Long
@@ -506,15 +531,9 @@ Public Function SortOneDimensionalArrayWithNumbers(ByVal Arr As Variant) As Vari
     
 End Function
 
-'----------------------------------------------------------------------------------
-'private Methods
-'----------------------------------------------------------------------------------
-
-'Purpose:   NumberOfArrayDimensions _
+'@Description("NumberOfArrayDimensions _
             This function returns the number of dimensions of an array. An unallocated dynamic array _
-            has 0 dimensions. This condition can also be tested with IsArrayEmpty. _
-            Copy Right @ Chip Pearson
-            
+            has 0 dimensions. This condition can also be tested with IsArrayEmpty. Copy Right @ Chip Pearson")
 Private Function NumberOfArrayDimensions(Arr As Variant) As Integer
 
     Dim Ndx As Integer
@@ -531,17 +550,7 @@ Private Function NumberOfArrayDimensions(Arr As Variant) As Integer
     NumberOfArrayDimensions = Ndx - 1
 End Function
 
-'----------------------------------------------------------------------------------
-'Class Methods
-'----------------------------------------------------------------------------------
-
-Private Sub Class_Initialize()
-    Set objRegEx = CreateObject("vbscript.regexp")
-    Set Algo = PAMXLAM.SHA256Managed.Create()
-End Sub
-
 Private Sub Class_Terminate()
-    Set objRegEx = Nothing
-    Set Algo = Nothing
+    Set this.ObjRegEx = Nothing
+    Disposable.TryDispose Algo
 End Sub
-

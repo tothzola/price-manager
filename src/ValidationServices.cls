@@ -5,17 +5,28 @@ END
 Attribute VB_Name = "ValidationServices"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
+Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@PredeclaredId
 '@Folder "Services"
 Option Explicit
 
+'@Ignore ProcedureNotUsed
+'@Description("Returns class reference")
+Public Property Get Class() As ValidationServices
+    Set Class = ValidationServices
+End Property
+
+Private Sub Class_Initialize()
+    Guard.Singleton Me
+End Sub
+
 Public Function IsValidEmailAddress(ByVal InputValue As Variant) As Boolean
 
-    If Not GetMethod.objRegEx Is Nothing Then
-        GetMethod.objRegEx.Global = True
-        GetMethod.objRegEx.Pattern = "^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,6}))*$"
-        IsValidEmailAddress = GetMethod.objRegEx.Test(InputValue)
+    If Not AppMethods.ObjRegEx Is Nothing Then
+        AppMethods.ObjRegEx.Global = True
+        AppMethods.ObjRegEx.Pattern = "^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,6}))*$"
+        IsValidEmailAddress = AppMethods.ObjRegEx.Test(InputValue)
     End If
     
 End Function
@@ -237,7 +248,7 @@ Public Function IsUserAuthorized(ByVal dataTable As Variant, ByVal UserName As S
         If userFlag Then
             'cript password
             Dim criptedPassword As String
-            criptedPassword = GetMethod.CryptString(Password)
+            criptedPassword = AppMethods.CryptString(Password)
             
         End If
         
