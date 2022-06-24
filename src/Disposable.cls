@@ -8,7 +8,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "An object that encapsulates the necessary casting operation to invoke IDisposable.Dispose."
-Attribute VB_Ext_KEY = "Rubberduck" ,"Predeclared Class Module"
 '@ModuleAttribute VB_Ext_KEY, "Rubberduck", "Predeclared Class Module"
 '@ModuleDescription "An object that encapsulates the necessary casting operation to invoke IDisposable.Dispose."
 '@Folder("Structure")
