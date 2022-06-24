@@ -3,7 +3,7 @@ Option Explicit
 
 '@Ignore ParameterCanBeByVal, ParameterNotUsed
 Private Sub Workbook_BeforeClose(ByRef Cancel As Boolean)
-
+    
     LogManager.UnRegister LOGGER_NAME
     
 End Sub
