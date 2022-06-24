@@ -21,6 +21,8 @@ Attribute MainView.VB_VarHelpID = -1
 Public Event OpenLoginForm(ByVal LModel As LoginFormModel)
 Public Event CancelLoginForm()
 Public Event Login()
+Public Event ResetPasswordForUser(ByVal TargetUserName As String, ByVal TargetEmailAddress As String)
+Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
 
@@ -56,6 +58,16 @@ End Sub
 
 Private Sub MainView_Login()
     RaiseEvent Login
+End Sub
+
+Private Sub MainView_ResetPassword(ByVal TargetUserName As String, ByVal TargetEmailAddress As String)
+    Dim response As Variant
+    response = Model.IsValidDataForResettingPassword(TargetUserName, TargetEmailAddress)
+    If response = True Then
+        RaiseEvent ResetPasswordForUser(TargetUserName, TargetEmailAddress)
+    Else
+        RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
+    End If
 End Sub
 
 '-------------------------------------------------------------------------
