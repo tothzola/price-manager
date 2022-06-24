@@ -20,7 +20,7 @@ Attribute MainView.VB_VarHelpID = -1
 
 Public Event CancelPasswordManagerForm()
 Public Event OpenPasswordManagerForm(ByVal PMModel As PasswordManagerModel)
-Public Event ChangePassword(ByVal newPassword As String)
+Public Event ChangePassword(ByVal NewPassword As String)
 Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Private Sub MainView_ChangePassword()
     Dim response As Variant
     response = Model.IsEverythingOkayToChangePassword
     If response = True Then
-        RaiseEvent ChangePassword(Model.newPassword)
+        RaiseEvent ChangePassword(Model.NewPassword)
     Else
         RaiseEvent OnSomethingWentWrong(response, TYPE_CRITICAL)
     End If

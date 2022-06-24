@@ -170,7 +170,7 @@ Public Sub InItApp()
     Set View = New PriceApprovalView
     With View
         Call .InItApplication(Model)             'For Supervision View
-        Call .Show(vbModal)
+        Call .Show(vbModeless)
     End With
 End Sub
 
@@ -241,6 +241,59 @@ Private Sub presenterLoginFrame_CancelLoginForm()
     Call View.UserWantsToCloseFrame(FORM_LOGIN)
 End Sub
 
+Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal TargetUserName As String, ByVal TargetEmailAddress As String)
+    
+    Dim DummyPassword   As String
+    Dim NewPassword     As String
+    Dim TargetIndex     As Long
+    Dim TargetRow       As Long
+    Dim MessageToShow   As String
+    
+    'Generate Dummy Password
+    DummyPassword = AppMethods.RandomString(10)
+    NewPassword = DummyPassword
+    
+    'Reset User's Password
+    TargetIndex = AppMethods.GetLookupValue(Model.usersTable, _
+                                            TargetUserName, _
+                                            UsersTableFields.COL_userName, _
+                                            UsersTableFields.COL_INDEX)
+                                            
+    TargetRow = AppMethods.GetTargetRowIndex(Model.usersTable, _
+                                             TargetIndex, _
+                                             UsersTableFields.COL_INDEX)
+                                            
+    '.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword, .userEmail
+    Call UserService.UpdateRecordOfContextTable(TargetIndex, _
+        Model.usersTable(TargetRow, UsersTableFields.COL_userId), _
+        Model.usersTable(TargetRow, UsersTableFields.COL_userStatus), _
+        Model.usersTable(TargetRow, UsersTableFields.COL_userType), _
+        Model.usersTable(TargetRow, UsersTableFields.COL_userName), _
+        DummyPassword, _
+        Model.usersTable(TargetRow, UsersTableFields.COL_email))
+    
+    If UserService.IsEverythingOkayInEngine Then
+    
+        MessageToShow = "Dear " & Model.usersTable(TargetRow, UsersTableFields.COL_userName) & "," & vbNewLine & vbNewLine & _
+                        "Your new password is following" & vbNewLine & vbNewLine & _
+                        NewPassword & vbNewLine & vbNewLine & _
+                        "Kindly note down the password and Login again with new password."
+        
+        'Notify user through messagebox that, new password has been sent to you email.
+        Call View.ShowWarning(MessageToShow, TYPE_INFORMATION)
+        
+    Else
+        Call View.ShowWarning("Something went wrong while Resetting the password. Please try again", TYPE_CRITICAL)
+    End If
+    
+    Call OpenLoginForm
+    
+End Sub
+
+Private Sub presenterLoginFrame_OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+    Call View.ShowWarning(Message, typeOfMessage)
+End Sub
+
 '------------------------
 'Password Manager Events
 '------------------------
@@ -252,10 +305,10 @@ Private Sub presenterPasswordManagerFrame_OpenPasswordManagerForm(ByVal PMModel 
     Call View.UserWantsToOpenPasswordManagerFrame(PMModel)
 End Sub
 
-Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal newPassword As String)
+Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal NewPassword As String)
     'index, userID, userStatus, userType, userName, password
     With Model
-        Call UserService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, newPassword, .ActiveUserEmail)
+        Call UserService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, NewPassword, .ActiveUserEmail)
         If UserService.IsEverythingOkayInEngine Then
             Call View.AfterChangePasswordOperation
         End If

@@ -27,6 +27,7 @@ Public Event Logout()
 'Login Frame Events
 Public Event Login()
 Public Event CloseLoginFrame()
+Public Event ResetPassword(ByVal TargetUserName As String, ByVal TargetEmailAddress As String)
 'Password Manager Frame Events
 Public Event OpenPasswordManagerFrame()
 Public Event ChangePassword()
@@ -205,6 +206,21 @@ Private Sub cmdOpenLoginInterface_Click()
     Me.MousePointer = fmMousePointerAppStarting
     VBA.DoEvents
     RaiseEvent OpenLoginFrame
+    Me.MousePointer = fmMousePointerDefault
+End Sub
+
+Private Sub lblForgotPassword_Click()
+    Dim TargetUserName  As Variant
+    Dim TargetEmail     As Variant
+    
+    TargetUserName = Application.InputBox("Please enter UserName", "Reset Password")
+    TargetEmail = Application.InputBox("Please enter registered Email", "Reset Password")
+    
+    If TargetUserName = False Or TargetEmail = False Then MsgBox "UserName or Email cannot be left blank!", vbCritical, SIGN
+    
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
+    RaiseEvent ResetPassword(TargetUserName, TargetEmail)
     Me.MousePointer = fmMousePointerDefault
 End Sub
 
@@ -432,7 +448,7 @@ Private Sub txtDateFrom_Enter()
     Me.txtDateFrom.Locked = True
 End Sub
 
-Private Sub txtDateFrom_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub txtDateFrom_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
     txtDateFrom_Enter
 End Sub
 
@@ -454,7 +470,7 @@ Private Sub txtDateTo_Enter()
     Me.txtDateTo.Locked = True
 End Sub
 
-Private Sub txtDateTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub txtDateTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
     txtDateTo_Enter
 End Sub
 
@@ -619,7 +635,7 @@ Private Sub txtValidFrom_Enter()
     Me.txtValidFrom.Locked = True
 End Sub
 
-Private Sub txtValidFrom_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub txtValidFrom_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
     txtValidFrom_Enter
 End Sub
 
@@ -641,7 +657,7 @@ Private Sub txtValidTo_Enter()
     If Not Me.lblActiveUserType.Caption = "APPROVER" Then Me.txtValidTo.Locked = True
 End Sub
 
-Private Sub txtValidTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub txtValidTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
     txtValidTo_Enter
 End Sub
 
@@ -719,7 +735,7 @@ End Sub
 
 Private Sub txtNewPassword_Change()
     'Hydrate model properties
-    PasswordModel.newPassword = Me.txtNewPassword.Text
+    PasswordModel.NewPassword = Me.txtNewPassword.Text
     'On Every change, of New Password TextBox, We have to reset Confirm Password Field
     Me.txtConfirmNewPassword.Value = vbNullString
     PasswordModel.confirmNewPassword = Me.txtConfirmNewPassword.Text
@@ -882,6 +898,8 @@ Public Sub UserWantsToCloseFrame(ByVal FrameIdentifier As ApplicationForms)
 End Sub
 
 Public Sub OnCancel()
+    'Cleaning dependencies from memory
+    Disposable.TryDispose Presenter
     Me.Hide
 End Sub
 

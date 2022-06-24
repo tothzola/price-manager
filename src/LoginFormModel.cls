@@ -129,3 +129,23 @@ Public Function IsUserAuthorized() As Variant
     IsUserAuthorized = ValidationServices.IsUserAuthorized(Me.usersData, Me.UserName, Me.Password, UsersTableFields.COL_userName, UsersTableFields.COL_password)
 End Function
 
+Public Function IsValidDataForResettingPassword(ByVal tUserName As String, ByVal tEmail As String) As Variant
+    Dim i               As Long
+    Dim GetUserStatus   As String
+    For i = LBound(Me.usersData, 1) + 1 To UBound(Me.usersData, 1)
+        If UCase(Me.usersData(i, UsersTableFields.COL_userName)) = UCase(tUserName) Then
+            If Me.usersData(i, UsersTableFields.COL_userStatus) = USERSTATUS_INACTIVE Then
+                IsValidDataForResettingPassword = "User is InActive! Cannot reset password. Kindly Contact Admin for more information"
+                Exit Function
+            End If
+            If UCase(Me.usersData(i, UsersTableFields.COL_email)) = UCase(tEmail) Then
+                IsValidDataForResettingPassword = True
+            Else
+                IsValidDataForResettingPassword = "Username and Email doesn't not match. Please try again."
+            End If
+            Exit Function
+        End If
+    Next i
+    IsValidDataForResettingPassword = "Username is Invalid"
+End Function
+

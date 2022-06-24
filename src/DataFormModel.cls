@@ -348,41 +348,78 @@ End Function
 
 Public Function GetDataForRecordsList() As Variant
 
-    Dim i       As Long
-    Dim j       As Long
-    Dim k       As Long
-    Dim UB1     As Long
-    Dim UB2     As Long
-    Dim tmp     As Variant
-    Dim uName   As String
+    'Variables Declaration
+    Dim firstRowIndex       As Long
+    Dim lastRowIndex        As Long
+    Dim firstColumnIndex    As Long
+    Dim lastColumnIndex     As Long
+    Dim TotalMatchingRows   As Long
+    Dim MatchingIndexes     As String
+    Dim Records()           As String
+    Dim Record              As Variant
+    Dim tmp                 As Variant
+    Dim i                   As Long
+    Dim j                   As Long
+    Dim IsValidRow          As Boolean
+    Dim uName               As String
     
-    UB1 = UBound(Me.dataTable, 1)
-    UB2 = UBound(Me.dataTable, 2)
-    ReDim tmp(1 To UB1, 1 To UB2)
-    k = 1
+    'you are here because user has set some criteria!
+    firstRowIndex = LBound(Me.dataTable, 1)
+    lastRowIndex = UBound(Me.dataTable, 1)
+    firstColumnIndex = LBound(Me.dataTable, 2)
+    lastColumnIndex = UBound(Me.dataTable, 2)
     
-    For i = 1 To UB1
-        uName = AppMethods.GetLookupValue(Me.usersTable, Me.dataTable(i, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
-        If uName <> vbNullString Then
-            For j = 1 To UB2
-                If i = 1 Then
-                    If j = MainTableFields.COL_MAIN_userID Then
-                        tmp(k, j) = "User_Name"
-                    Else
-                        tmp(k, j) = Me.dataTable(i, j)
-                    End If
-                Else
-                    If j = MainTableFields.COL_MAIN_userID Then
-                        tmp(k, j) = uName
-                    Else
-                        tmp(k, j) = Me.dataTable(i, j)
-                    End If
-                End If
-            Next j
-            k = k + 1
+    'Init Parameters
+    TotalMatchingRows = 1
+    MatchingIndexes = 1 & SEPERATOR_ITEM
+    
+    'Getting Matching Indexes
+    
+    For i = firstRowIndex + 1 To lastRowIndex
+        
+        'Check if the Row is processed or not
+        IsValidRow = (Me.dataTable(i, MainTableFields.COL_MAIN_recordStatus) <> RECORDSTATUS_PROCESSED)
+        
+        'if you are here means, the row meets all criterias and happy to include!
+        If IsValidRow Then
+            TotalMatchingRows = TotalMatchingRows + 1
+            MatchingIndexes = MatchingIndexes & i & SEPERATOR_ITEM
         End If
+
     Next i
     
+    'Remove Last Seperator Characters
+    MatchingIndexes = VBA.Left$(MatchingIndexes, VBA.Len(MatchingIndexes) - VBA.Len(SEPERATOR_ITEM))
+    
+    'Generate Array of all matching indexes
+    Records = VBA.Split(MatchingIndexes, SEPERATOR_ITEM)
+    
+    'Redim Tmp Array
+    ReDim tmp(firstRowIndex To TotalMatchingRows, firstColumnIndex To lastColumnIndex)
+    
+    'Create Export Table
+    i = 1
+    For Each Record In Records
+        uName = AppMethods.GetLookupValue(Me.usersTable, Me.dataTable(Record, MainTableFields.COL_MAIN_userID), UsersTableFields.COL_userId, UsersTableFields.COL_userName)
+        If uName <> vbNullString Then
+            For j = firstColumnIndex To lastColumnIndex
+            
+                'GUARD CLAUSE : For preventing cells original value instead cell's value will be used for _
+                                looking up relative values from the another table!
+                If j = MainTableFields.COL_MAIN_userID Then
+                    tmp(i, j) = uName
+                    GoTo NextIteration
+                End If
+                
+                'NO GUARD CLAUSE : For Rest of the cells
+                tmp(i, j) = Me.dataTable(Record, j)
+NextIteration:
+            Next j
+            i = i + 1
+        End If
+    Next Record
+
+    'Submit value to Export Data Array
     GetDataForRecordsList = tmp
     
 End Function
@@ -482,4 +519,3 @@ NextIteration:
     GetFilteredAndSortedList = tmp
 
 End Function
-

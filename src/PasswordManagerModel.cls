@@ -17,7 +17,7 @@ Private Type TPasswordManagerFormModelComponents
     'field Properties
     Password As String
     insertedPassword As String
-    newPassword As String
+    NewPassword As String
     confirmNewPassword As String
     
 End Type
@@ -38,12 +38,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get newPassword() As String
-    newPassword = this.newPassword
+Public Property Get NewPassword() As String
+    NewPassword = this.NewPassword
 End Property
 
-Public Property Let newPassword(ByVal vNewValue As String)
-    this.newPassword = vNewValue
+Public Property Let NewPassword(ByVal vNewValue As String)
+    this.NewPassword = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -103,10 +103,10 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
             
         Case PasswordManagerFields.PM_NEW_PASSWORD
             'Check 1
-            IsValidField = ValidationServices.IsNotNullValue(Me.newPassword, VBA.TypeName(Me.newPassword))
+            IsValidField = ValidationServices.IsNotNullValue(Me.NewPassword, VBA.TypeName(Me.NewPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = ValidationServices.IsValidPasswordString(Me.newPassword)
+            IsValidField = ValidationServices.IsValidPasswordString(Me.NewPassword)
             If Not IsValidField = True Then Exit Function
             
         Case PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD
@@ -114,7 +114,7 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
             IsValidField = ValidationServices.IsNotNullValue(Me.confirmNewPassword, VBA.TypeName(Me.confirmNewPassword))
             If Not IsValidField = True Then Exit Function
             'Check 2
-            IsValidField = ValidationServices.ComapreTwoStrings(Me.newPassword, Me.confirmNewPassword)
+            IsValidField = ValidationServices.ComapreTwoStrings(Me.NewPassword, Me.confirmNewPassword)
             If Not IsValidField = True Then Exit Function
             
     End Select

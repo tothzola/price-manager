@@ -20,4 +20,3 @@ Public Sub LoggerEnabledCheck()
         InitLogger
     End If
 End Sub
-

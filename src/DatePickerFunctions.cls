@@ -47,7 +47,7 @@ Private Sub LabelBackground_Click()
     
 End Sub
 
-Private Sub LabelBackground_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub LabelBackground_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
     
     Dim j As Integer
     For j = 1 To 42
