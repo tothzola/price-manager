@@ -2,10 +2,18 @@ Attribute VB_Name = "modMain"
 '@Folder("Main")
 Option Explicit
 
+'As we want our Main View to be VbModeless, We have to take out our main driving object _
+which is nothing but the Presenter! Yes The whole Application is dependent on the scope _
+of Presenter object. So, What happens when Form becomes vbmodeless, it simply allow _
+compiler to run next steps. So to preven Presenter to go out of scope, we have to take _
+out the object defination from the Mehtod and keep it as Public Object.
+
+Public Presenter As AppPresenter
+
 Public Sub MainPAM()
 
     On Error GoTo CleanFail:
-    With ProgressIndicator.Create("InitilaizeApplication", CanCancel:=True)
+    With ProgressIndicator.Create("InitializeApplication", CanCancel:=True)
         .Execute
     End With
 
@@ -20,11 +28,9 @@ CleanFail:
     
 End Sub
 
-
-Private Sub InitilaizeApplication(ByVal Progress As ProgressIndicator)
+Private Sub InitializeApplication(ByVal Progress As ProgressIndicator)
 
     'Object Declaration
-    Dim Presenter           As AppPresenter
     Dim RepositoryInUse     As RepositoryType
     
     'Initialize App
@@ -88,9 +94,4 @@ CleanExit:
     'Splash Screen Exit
     Progress.CloseScreen
     
-    'Cleaning dependencies from memory
-    Disposable.TryDispose Presenter
-    
 End Sub
-
-
