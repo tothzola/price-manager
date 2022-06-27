@@ -6,11 +6,17 @@ Attribute VB_Name = "IRepository"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
+Attribute VB_Exposed = True
 '@Folder "Repository"
+'@Exposed
 Option Explicit
 
 'public properties
+
+Public Enum RepositoryType
+    TYPE_POSTGRESQL
+    TYPE_ACCESS
+End Enum
 
 Public Property Get IsEverythingOkay() As Boolean
 End Property

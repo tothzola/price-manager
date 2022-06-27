@@ -5,8 +5,9 @@ END
 Attribute VB_Name = "AppModel"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
+Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@PredeclaredId
 '@Folder "AppObjects"
 Option Explicit
 
@@ -39,6 +40,41 @@ End Type
 
 Private this As TAppModelComponents
 
+'@Ignore ProcedureNotUsed
+'@Description("Returns class reference")
+Public Property Get Class() As AppModel
+    Set Class = AppModel
+End Property
+
+'@Description "Creates a new application context."
+Public Function Create(ByVal State As IAppState) As AppModel
+    Guard.NonDefaultInstance AppModel
+    Guard.NullReference State
+    
+    Dim result As AppModel
+    Set result = New AppModel
+    
+    InitializeAppModel result, State
+    
+    Set Create = result
+End Function
+
+Private Sub InitializeAppModel(ByVal Context As AppModel, ByVal State As AppState)
+                    
+    'Tables of The Applications
+    Context.mainTable = State.MainService.GetListOfAllRecordsFromContextTable
+    Context.usersTable = State.UserService.GetListOfAllRecordsFromContextTable
+  
+    'Single Column Lists for DropDown/ComboBoxes
+    Context.CurrenciesList = DataResources.arrListofCurrencies
+    Context.unitOfMeasuresList = DataResources.arrListOfUnitOfMeasure
+    Context.userTypeList = DataResources.arrListofTypesOfUser
+    Context.userStatusList = DataResources.arrListofStatusOfUser
+    Context.recordStatusList = DataResources.arrRecordStatusesList
+    Context.salesOrganizationList = DataResources.arrSalesOrganizationsList
+    Context.distributionChannelsList = DataResources.arrDistributionChannelsList
+    
+End Sub
 '-------------------------------------------------------------------------
 'Properties
 '-------------------------------------------------------------------------
@@ -214,34 +250,6 @@ Public Property Let CurrentUpdateIndex(ByVal vNewValue As Long)
 End Property
 
 '-------------------------------------------------------------------------
-'InIt This Model
-'-------------------------------------------------------------------------
-
-Public Sub InItModel(ByVal MainTableContent As Variant, _
-                    ByVal UsersTableContent As Variant, _
-                    ByVal ListofCurrencies As Variant, _
-                    ByVal ListOfUnits As Variant, _
-                    ByVal ListofUserTypes As Variant, _
-                    ByVal ListofUserStatus As Variant, _
-                    ByVal ListOfRecordStatus As Variant, _
-                    ByVal ListOfSalesOrganizations As Variant, _
-                    ByVal ListOfDistributionChannels As Variant)
-                    
-    'Tables of The Applications
-    Me.mainTable = MainTableContent
-    Me.usersTable = UsersTableContent
-    'Single Column Lists for DropDown/ComboBoxes
-    Me.CurrenciesList = ListofCurrencies
-    Me.unitOfMeasuresList = ListOfUnits
-    Me.userTypeList = ListofUserTypes
-    Me.userStatusList = ListofUserStatus
-    Me.recordStatusList = ListOfRecordStatus
-    Me.salesOrganizationList = ListOfSalesOrganizations
-    Me.distributionChannelsList = ListOfDistributionChannels
-    
-End Sub
-
-'-------------------------------------------------------------------------
 'Validations
 '-------------------------------------------------------------------------
 
@@ -288,7 +296,6 @@ Public Function GetNewID(ByVal TABLE As TablesOfThisApplication) As String
 End Function
 
 'Purpose:       Following function will pick unique list from the list!
-
 Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal TargetColumn As Long) As Variant
     
     'Variable Declarations
@@ -336,6 +343,4 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     GetUniqueListFromColumn = tmp
     
 End Function
-
-
 

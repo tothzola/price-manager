@@ -75,7 +75,7 @@ Attribute IRibbon_GetLabel.VB_Description = "Determine the text to go along with
 
     Select Case Identifier
     
-    Case Is = "PriceApprovalTab": outLabel = "Price Approval Manager"
+    Case Is = "PriceApprovalTab": outLabel = "Price Approval"
     Case Is = "PriceApprovalGroupA": outLabel = "Support"
     Case Is = "ButtonA_01": outLabel = "Send Feedback"
     Case Is = "LabelA_01": outLabel = "App. Version: " & AppVersion
@@ -111,7 +111,7 @@ Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subrou
         
         'Application
         Case Is = "ButtonB_01": MsgBox "Not Implementd"
-        Case Is = "ButtonB_02": modMain.MainPAM
+        Case Is = "ButtonB_02": Main.StartApp
 
         End Select
         

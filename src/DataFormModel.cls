@@ -104,7 +104,7 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get selectedColumn() As Variant
-    selectedColumn = AppMethods.GetTargetColumnIndex(this.selectedColumn, modDataSources.arrListOfColumnsMainTableFull)
+    selectedColumn = AppMethods.GetTargetColumnIndex(this.selectedColumn, DataResources.arrListOfColumnsMainTableFull)
 End Property
 
 Public Property Let selectedColumn(ByVal vNewValue As Variant)
@@ -519,3 +519,4 @@ NextIteration:
     GetFilteredAndSortedList = tmp
 
 End Function
+

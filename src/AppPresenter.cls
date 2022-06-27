@@ -5,11 +5,13 @@ END
 Attribute VB_Name = "AppPresenter"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
+Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@PredeclaredId
 '@Folder "AppObjects"
 Option Explicit
 
+Implements IAppPresenter
 Implements IDisposable
 
 '-------------------------------------------------------------------------
@@ -44,64 +46,65 @@ Attribute presenterExportFormFrame.VB_VarHelpID = -1
 
 Private Type TAppPresenterComponents
     databaseConnectionStatus As Boolean
-    MainService As IServices
-    UserService As IServices
+    
+    MainView As IView
+    State As IAppState
     Model As AppModel
+    
     Report As DocumentGeneratorExcel
     Disposed As Boolean
 End Type
 
 Private this As TAppPresenterComponents
 
+'@Ignore ProcedureNotUsed
+'@Description("Returns class reference")
+Public Property Get Class() As AppPresenter
+    Set Class = AppPresenter
+End Property
+
 '-------------------------------------------------------------------------
 'Private properties
 '-------------------------------------------------------------------------
 
-Public Property Get databaseConnectionStatus() As Boolean
+Friend Property Get MainView() As IView
+    Set MainView = View
+End Property
+
+Friend Property Set MainView(ByVal RHS As IView)
+    Set this.MainView = RHS
+    Set View = RHS
+End Property
+
+Friend Property Get databaseConnectionStatus() As Boolean
     databaseConnectionStatus = this.databaseConnectionStatus
 End Property
 
-Public Property Let databaseConnectionStatus(ByVal RHS As Boolean)
+Friend Property Let databaseConnectionStatus(ByVal RHS As Boolean)
     this.databaseConnectionStatus = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
-Private Property Get Model() As AppModel
+Public Property Get Model() As AppModel
     Guard.NullReference this.Model
     Set Model = this.Model
 End Property
 
-Private Property Set Model(ByVal vNewValue As AppModel)
-    Guard.NullReference vNewValue
-    Set this.Model = vNewValue
+Public Property Set Model(ByVal RHS As AppModel)
+    Guard.NullReference RHS
+    Set this.Model = RHS
 End Property
 
-'-------------------------------------------------------------------------
-
-Private Property Get MainService() As IServices
-    Guard.NullReference this.MainService
-    Set MainService = this.MainService
+Public Property Get State() As IAppState
+    Guard.NullReference this.State
+    Set State = this.State
 End Property
 
-Private Property Set MainService(ByVal vNewValue As IServices)
-    Guard.NullReference vNewValue
-    Set this.MainService = vNewValue
+Public Property Set State(ByVal RHS As IAppState)
+    Guard.NullReference RHS
+    Set this.State = RHS
 End Property
-
-'-------------------------------------------------------------------------
-
-Private Property Get UserService() As IServices
-    Guard.NullReference this.UserService
-    Set UserService = this.UserService
-End Property
-
-Private Property Set UserService(ByVal vNewValue As IServices)
-    Guard.NullReference vNewValue
-    Set this.UserService = vNewValue
-End Property
-
-'-------------------------------------------------------------------------
 
 Private Property Get Report() As DocumentGeneratorExcel
     Guard.NullReference this.Report
@@ -113,66 +116,22 @@ Private Property Set Report(ByVal vNewValue As DocumentGeneratorExcel)
     Set this.Report = vNewValue
 End Property
 
-'-------------------------------------------------------------------------
-'InIt Application/Starting Point of Application at pattern level
-'-------------------------------------------------------------------------
 
-'InIt Main Services
-Public Sub InItMainService(ByVal SelectedRepositoryType As RepositoryType, _
-                           ByVal TableName As String, _
-                           ByVal TableHeaders As Variant, _
-                           ByVal ConnectionString As String)
-                            
-    Guard.EmptyString TableName
-    Guard.ConnectionString ConnectionString
-                            
-    Set MainService = New ServicesMain
-    Call MainService.InItService(SelectedRepositoryType, TableName, TableHeaders, ConnectionString)
-    databaseConnectionStatus = MainService.IsEverythingOkayInEngine
-End Sub
+Public Function Create(ByVal State As IAppState, ByVal Model As AppModel, ByVal View As IView) As IAppPresenter
+    Guard.NonDefaultInstance Me
+    Guard.NullReference State
+    Guard.NullReference Model
+    Guard.NullReference View
 
-'InIt User Services
-Public Sub InItUserService(ByVal SelectedRepositoryType As RepositoryType, _
-                           ByVal TableName As String, _
-                           ByVal TableHeaders As Variant, _
-                           ByVal ConnectionString As String)
-                           
-    Guard.EmptyString TableName
-    Guard.ConnectionString ConnectionString
-                            
-    Set UserService = New ServicesUser
-    Call UserService.InItService(SelectedRepositoryType, TableName, TableHeaders, ConnectionString)
-    databaseConnectionStatus = UserService.IsEverythingOkayInEngine
-End Sub
+    Dim result As AppPresenter
+    Set result = New AppPresenter
+    
+    Set result.State = State
+    Set result.MainView = View
+    Set result.Model = Model
+    Set Create = result
 
-'InIt Model
-Public Sub InItApplicationModel(ByVal ListofCurrencies As Variant, _
-                                ByVal ListOfUnits As Variant, _
-                                ByVal TypesOfUser As Variant, _
-                                ByVal StatusOfUser As Variant, _
-                                ByVal StatusOfRecord As Variant, _
-                                ByVal ListOfSalesOrganizations As Variant, _
-                                ByVal ListofDistrobutionChannels As Variant)
-    Set Model = New AppModel
-    Call Model.InItModel(MainService.GetListOfAllRecordsFromContextTable, _
-                         UserService.GetListOfAllRecordsFromContextTable, _
-                         ListofCurrencies, _
-                         ListOfUnits, _
-                         TypesOfUser, _
-                         StatusOfUser, _
-                         StatusOfRecord, _
-                         ListOfSalesOrganizations, _
-                         ListofDistrobutionChannels)
-End Sub
-
-'InIt Main View / This step will open Main Interface
-Public Sub InItApp()
-    Set View = New PriceApprovalView
-    With View
-        Call .InItApplication(Model)             'For Supervision View
-        Call .Show(vbModeless)
-    End With
-End Sub
+End Function
 
 '-------------------------------------------------------------------------
 'Frame Opening Operations / Side Panel Buttons
@@ -241,7 +200,7 @@ Private Sub presenterLoginFrame_CancelLoginForm()
     Call View.UserWantsToCloseFrame(FORM_LOGIN)
 End Sub
 
-Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal TargetUserName As String, ByVal TargetEmailAddress As String)
+Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal targetUserName As String, ByVal TargetEmailAddress As String)
     
     Dim DummyPassword   As String
     Dim NewPassword     As String
@@ -255,7 +214,7 @@ Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal TargetUserName As Str
     
     'Reset User's Password
     TargetIndex = AppMethods.GetLookupValue(Model.usersTable, _
-                                            TargetUserName, _
+                                            targetUserName, _
                                             UsersTableFields.COL_userName, _
                                             UsersTableFields.COL_INDEX)
                                             
@@ -264,7 +223,7 @@ Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal TargetUserName As Str
                                              UsersTableFields.COL_INDEX)
                                             
     '.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword, .userEmail
-    Call UserService.UpdateRecordOfContextTable(TargetIndex, _
+    Call State.UserService.UpdateRecordOfContextTable(TargetIndex, _
         Model.usersTable(TargetRow, UsersTableFields.COL_userId), _
         Model.usersTable(TargetRow, UsersTableFields.COL_userStatus), _
         Model.usersTable(TargetRow, UsersTableFields.COL_userType), _
@@ -272,7 +231,7 @@ Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal TargetUserName As Str
         DummyPassword, _
         Model.usersTable(TargetRow, UsersTableFields.COL_email))
     
-    If UserService.IsEverythingOkayInEngine Then
+    If State.UserService.IsEverythingOkayInEngine Then
     
         MessageToShow = "Dear " & Model.usersTable(TargetRow, UsersTableFields.COL_userName) & "," & vbNewLine & vbNewLine & _
                         "Your new password is following" & vbNewLine & vbNewLine & _
@@ -308,8 +267,8 @@ End Sub
 Private Sub presenterPasswordManagerFrame_ChangePassword(ByVal NewPassword As String)
     'index, userID, userStatus, userType, userName, password
     With Model
-        Call UserService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, NewPassword, .ActiveUserEmail)
-        If UserService.IsEverythingOkayInEngine Then
+        Call State.UserService.UpdateRecordOfContextTable(.ActiveUserIndex, .ActiveUserID, .ActiveUserStatus, .ActiveUserType, .ActiveUserName, NewPassword, .ActiveUserEmail)
+        If State.UserService.IsEverythingOkayInEngine Then
             Call View.AfterChangePasswordOperation
         End If
     End With
@@ -360,9 +319,9 @@ End Sub
 Private Sub presenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
     Call RefreshUsersTable
     With UMModel
-        Call UserService.AddNewRecordToContextTable(Model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .UserName, .userPassword, .userEmail)
+        Call State.UserService.AddNewRecordToContextTable(Model.GetNewID(TablesOfThisApplication.TABLE_USERS), .userStatus, .UserType, .UserName, .userPassword, .userEmail)
     End With
-    If UserService.IsEverythingOkayInEngine Then
+    If State.UserService.IsEverythingOkayInEngine Then
         Call View.AfterUserManagerCRUDOperation(TypeOfOperation, True)
     End If
 End Sub
@@ -373,8 +332,8 @@ Private Sub presenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOf
     With UMModel
         response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex, .userID)
         If response = True Then
-            Call UserService.UpdateRecordOfContextTable(.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword, .userEmail)
-            If UserService.IsEverythingOkayInEngine Then
+            Call State.UserService.UpdateRecordOfContextTable(.userIndex, .userID, .userStatus, .UserType, .UserName, .userPassword, .userEmail)
+            If State.UserService.IsEverythingOkayInEngine Then
                 Call View.AfterUserManagerCRUDOperation(TypeOfOperation, True)
             End If
         Else
@@ -389,8 +348,8 @@ Private Sub presenterUserManagerFrame_DeleteUserFromUserManagerForm(ByVal TypeOf
     With UMModel
         response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_USERS, .userIndex, .userID)
         If response = True Then
-            Call UserService.DeleteRecordofContextTable(.userIndex)
-            If UserService.IsEverythingOkayInEngine Then
+            Call State.UserService.DeleteRecordofContextTable(.userIndex)
+            If State.UserService.IsEverythingOkayInEngine Then
                 Call View.AfterUserManagerCRUDOperation(TypeOfOperation, True)
             End If
         Else
@@ -448,7 +407,7 @@ Private Sub presenterPriceFormFrame_AddNewRecordFromPriceForm(ByVal TypeOfOperat
     Call RefreshMainTable
     'I added here StatusChangeDate, because, While filtering the date it is causing an issue! Consider this statusChangeDate field as record added/update date!
     With PFModel
-        Call MainService.AddNewRecordToContextTable(Model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), _
+        Call State.MainService.AddNewRecordToContextTable(Model.GetNewID(TablesOfThisApplication.TABLE_MAINRECORDS), _
                                                     .userID, _
                                                     .recordStatus, _
                                                     VBA.Format$(.statusChangeDate, DATEFORMAT_BACKEND), _
@@ -464,7 +423,7 @@ Private Sub presenterPriceFormFrame_AddNewRecordFromPriceForm(ByVal TypeOfOperat
                                                     VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
                                                     VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
     End With
-    If MainService.IsEverythingOkayInEngine Then
+    If State.MainService.IsEverythingOkayInEngine Then
         Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
     End If
 End Sub
@@ -475,7 +434,7 @@ Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
         response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
         If response = True Then
-            Call MainService.UpdateRecordOfContextTable(.index, _
+            Call State.MainService.UpdateRecordOfContextTable(.index, _
                                                         .RecordID, _
                                                         .userID, _
                                                         .recordStatus, _
@@ -491,7 +450,7 @@ Private Sub presenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperat
                                                         .unitOfMeasure, _
                                                         VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
                                                         VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
-            If MainService.IsEverythingOkayInEngine Then
+            If State.MainService.IsEverythingOkayInEngine Then
                 Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
         Else
@@ -506,8 +465,8 @@ Private Sub presenterPriceFormFrame_DeleteRecordFromPriceForm(ByVal TypeOfOperat
     With PFModel
         response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
         If response = True Then
-            Call MainService.DeleteRecordofContextTable(.index)
-            If MainService.IsEverythingOkayInEngine Then
+            Call State.MainService.DeleteRecordofContextTable(.index)
+            If State.MainService.IsEverythingOkayInEngine Then
                 Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
         Else
@@ -540,7 +499,7 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
     With PFModel
         response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
         If response = True Then
-            Call MainService.UpdateRecordOfContextTable(.index, _
+            Call State.MainService.UpdateRecordOfContextTable(.index, _
                                                         .RecordID, _
                                                         .userID, _
                                                         .recordStatus, _
@@ -556,7 +515,7 @@ Private Sub presenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
                                                         .unitOfMeasure, _
                                                         VBA.Format$(.validFromDate, DATEFORMAT_BACKEND), _
                                                         VBA.Format$(.validToDate, DATEFORMAT_BACKEND))
-            If MainService.IsEverythingOkayInEngine Then
+            If State.MainService.IsEverythingOkayInEngine Then
                 Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
         Else
@@ -579,7 +538,7 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
         
         If response = True Then
         
-            Call MainService.UpdateRecordOfContextTable(.index, _
+            Call State.MainService.UpdateRecordOfContextTable(.index, _
                                                         .RecordID, _
                                                         .userID, _
                                                         .recordStatus, _
@@ -615,13 +574,13 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
                 
             Else
                                                 
-                Dim inputMessage As String
-                If IsNotifierConfirmed(outMsg:=inputMessage) Then
+                Dim targetMessage As String
+                If ValidationServices.IsInputValid(outText:=targetMessage, inPrompt:="Rejecting reason: ", inTitel:="Please type meassage") Then
                    EmailServices.EmailRecordRejected uName, _
                                          uMail, _
                                          subject, _
                                          False, _
-                                         "Message from approver: <B>" & inputMessage & "</B><br><br>" & _
+                                         "Message from approver: <B>" & targetMessage & "</B><br><br>" & _
                                          "Details of the record that has been rejected:<br>", _
                                          "<B>Record </B></td><td>" & .RecordID, _
                                          "<B>UserID </B></td><td>" & .userID, _
@@ -638,11 +597,12 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
                                          "<B>Valid from Date </B></td><td>" & VBA.Format$(.validFromDate, GetDateFormat), _
                                          "<B>Valid To Date </B></td><td>" & VBA.Format$(.validToDate, GetDateFormat)
                 End If 'EMail Creation Ends
+                
             End If
             
 UserCancelled:
 
-            If MainService.IsEverythingOkayInEngine Then
+            If State.MainService.IsEverythingOkayInEngine Then
                 Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
         Else
@@ -653,27 +613,6 @@ UserCancelled:
     
 End Sub
 
-Private Function IsNotifierConfirmed(ByRef outMsg As String) As Boolean
-                  
-            Dim inputPrompt As String: inputPrompt = "Rejecting reason: "
-            Dim inputTitel As String: inputTitel = "Please type meassage "
-            outMsg = VBA.Interaction.InputBox(Prompt:=inputPrompt, Title:=inputTitel)
-            
-            If StrPtr(outMsg) = 0 Then 'Approver cancelled process to notify
-                Exit Function
-                
-            ElseIf outMsg = vbNullString Then  'Approver has typed no message
-                VBA.MsgBox "You cannot leave the input field blank!", vbCritical
-                IsNotifierConfirmed outMsg
-    
-            Else
-                outMsg = VBA.StrConv(outMsg, VBA.vbProperCase)
-                IsNotifierConfirmed = Not (outMsg = vbNullString)
-                
-            End If
-
-End Function
-
 '-------------------------------------------------------------------------
 'Data FORM Events
 '-------------------------------------------------------------------------
@@ -683,18 +622,18 @@ Private Sub presenterDataFormFrame_OpenDataForm(ByVal DFModel As DataFormModel, 
     With DFModel
         Select Case ContainerIdentifier
         Case DataContainer.FOR_CLIENTHISTORY
-            .dataTable = MainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_userID, Model.ActiveUserID)
+            .dataTable = State.MainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_userID, Model.ActiveUserID)
         Case DataContainer.FOR_PENDINGAPPROVALS
-            .dataTable = MainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_recordStatus, "PENDING")
+            .dataTable = State.MainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_recordStatus, "PENDING")
         Case DataContainer.FOR_ALLHISTORY
             .dataTable = Model.mainTable
         End Select
         .usersTable = Model.usersTable
         .ActiveDataContainer = ContainerIdentifier
-        .DataColumnsList = modDataSources.arrListOfColumnsMainTable
+        .DataColumnsList = DataResources.arrListOfColumnsMainTable
     End With
     
-    If MainService.IsEverythingOkayInEngine Then
+    If State.MainService.IsEverythingOkayInEngine Then
         'Call View Method to Open Data Form Frame!
         Call View.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
     End If
@@ -706,18 +645,18 @@ Private Sub presenterDataFormFrame_ResetDataForm(ByVal DFModel As DataFormModel,
     With DFModel
         Select Case ContainerIdentifier
         Case DataContainer.FOR_CLIENTHISTORY
-            .dataTable = MainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_userID, Model.ActiveUserID)
+            .dataTable = State.MainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_userID, Model.ActiveUserID)
         Case DataContainer.FOR_PENDINGAPPROVALS
-            .dataTable = MainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_recordStatus, "PENDING")
+            .dataTable = State.MainService.GetSpecificListOfRecordsFromContextTable(MainTableFields.COL_MAIN_recordStatus, "PENDING")
         Case DataContainer.FOR_ALLHISTORY
             .dataTable = Model.mainTable
         End Select
         .usersTable = Model.usersTable
         .ActiveDataContainer = ContainerIdentifier
-        .DataColumnsList = modDataSources.arrListOfColumnsMainTable
+        .DataColumnsList = DataResources.arrListOfColumnsMainTable
     End With
     
-    If MainService.IsEverythingOkayInEngine Then
+    If State.MainService.IsEverythingOkayInEngine Then
         'Call View Method to Open Data Form Frame!
         Call View.UserWantsToOpenDataFormFrame(DFModel, ContainerIdentifier)
     End If
@@ -770,7 +709,7 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
     
         'Configure Report!
         .CurrencyColumns = Array(MainTableFields.COL_MAIN_price)
-        .CURRENCYFORMAT = modGlobal.EXPORTREPORT_CURRENCYFORMAT
+        .CURRENCYFORMAT = GlobalResources.EXPORTREPORT_CURRENCYFORMAT
         .DateColumns = Array(MainTableFields.COL_MAIN_statusChangeDate, _
                              MainTableFields.COL_MAIN_validFromDate, _
                              MainTableFields.COL_MAIN_validToDate)
@@ -793,10 +732,10 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
             
             With Model
                 For Each Record In Records
-                    MainService.UpdateRecordOfContextTable .mainTable(Record, 1), _
+                    State.MainService.UpdateRecordOfContextTable .mainTable(Record, 1), _
         .mainTable(Record, 2), _
         .mainTable(Record, 3), _
-        modGlobal.RECORDSTATUS_PROCESSED, _
+        GlobalResources.RECORDSTATUS_PROCESSED, _
         VBA.Format$(VBA.Now, DATEFORMAT_BACKEND), _
         .mainTable(Record, 6), _
         .mainTable(Record, 7), _
@@ -824,7 +763,7 @@ Private Sub presenterExportFormFrame_ExportRecordsFromExportForm(ByVal EFModel A
         'Export Excel based report
         .DateFormat = GetDateFormat
         .LoadData = EFModel.exportTable
-        .Headers = modDataSources.arrHeaders_Export_Report
+        .Headers = DataResources.arrHeaders_Export_Report
         .GenerateReport
         
         'hide status
@@ -857,7 +796,7 @@ End Sub
 Private Sub OpenLoginForm()
     'Refresh Model Data Table with Updated information
     Call RefreshUsersTable                       '(Only user because Login Mechanism does not required other tables)
-    If MainService.IsEverythingOkayInEngine Then
+    If State.MainService.IsEverythingOkayInEngine Then
         'Open New Login Form
         If presenterLoginFrame Is Nothing Then Set presenterLoginFrame = New LoginFormPresenter
         'InIt Presenter from here
@@ -868,7 +807,7 @@ End Sub
 Private Sub OpenPasswordManager()
     'Refresh Model Data Table with Updated information
     Call RefreshUsersTable                       '(Only user because password manager does not required other tables)
-    If UserService.IsEverythingOkayInEngine Then
+    If State.UserService.IsEverythingOkayInEngine Then
         'Open Password Manager
         If presenterPasswordManagerFrame Is Nothing Then Set presenterPasswordManagerFrame = New PasswordManagerPresenter
         'InIt Presenter from here
@@ -879,7 +818,7 @@ End Sub
 Private Sub OpenUserManager()
     'Refresh Model Data Table with Updated information
     Call RefreshUsersTable                       '(Only user because password manager does not required other tables)
-    If UserService.IsEverythingOkayInEngine Then
+    If State.UserService.IsEverythingOkayInEngine Then
         'open usermanager
         If presenterUserManagerFrame Is Nothing Then Set presenterUserManagerFrame = New UserManagerPresenter
         'InIt Presenter from here
@@ -890,7 +829,7 @@ End Sub
 Private Sub OpenPriceForm(ByVal operation As FormOperation)
     'Refresh Model Data Table with Updated information
     Call RefreshMainTable                        '(Only user because password manager does not required other tables)
-    If MainService.IsEverythingOkayInEngine Then
+    If State.MainService.IsEverythingOkayInEngine Then
         'open usermanager
         If presenterPriceFormFrame Is Nothing Then Set presenterPriceFormFrame = New PriceFormPresenter
         If operation = OPERATION_NEW Then
@@ -906,7 +845,7 @@ End Sub
 Private Sub OpenDataForm(ByVal ContainerIdentification As DataContainer)
     'Refresh model data table with updated information
     Call RefreshMainTable
-    If MainService.IsEverythingOkayInEngine Then
+    If State.MainService.IsEverythingOkayInEngine Then
         'Open DataForm
         If presenterDataFormFrame Is Nothing Then Set presenterDataFormFrame = New DataFormPresenter
         'InIt Presenter from here
@@ -917,7 +856,7 @@ End Sub
 Private Sub OpenExportForm()
     'Refresh Model Data Table with Updated information
     Call RefreshMainTable                        '(Only user because password manager does not required other tables)
-    If MainService.IsEverythingOkayInEngine Then
+    If State.MainService.IsEverythingOkayInEngine Then
         'open usermanager
         If presenterExportFormFrame Is Nothing Then Set presenterExportFormFrame = New ExportFormPresenter
         'InIt Presenter from here
@@ -926,11 +865,11 @@ Private Sub OpenExportForm()
 End Sub
 
 Private Sub RefreshMainTable()
-    Model.mainTable = MainService.GetListOfAllRecordsFromContextTable
+    Model.mainTable = State.MainService.GetListOfAllRecordsFromContextTable
 End Sub
 
 Private Sub RefreshUsersTable()
-    Model.usersTable = UserService.GetListOfAllRecordsFromContextTable
+    Model.usersTable = State.UserService.GetListOfAllRecordsFromContextTable
 End Sub
 
 '-------------------------------------------------------------------------
@@ -953,14 +892,9 @@ Private Sub Dispose()
         Set this.Model = Nothing
     End If
 
-    If Not this.MainService Is Nothing Then
-        Disposable.TryDispose this.MainService
-        Set this.MainService = Nothing
-    End If
-    
-    If Not this.UserService Is Nothing Then
-        Disposable.TryDispose this.UserService
-        Set this.UserService = Nothing
+    If Not this.State Is Nothing Then
+        Disposable.TryDispose this.State
+        Set this.State = Nothing
     End If
 
     If Not this.Report Is Nothing Then
@@ -994,5 +928,9 @@ End Sub
 Private Sub IDisposable_Dispose()
     Dispose
     
+End Sub
+
+Private Sub IAppPresenter_ShowView()
+    MainView.Show
 End Sub
 

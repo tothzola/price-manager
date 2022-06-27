@@ -21,6 +21,24 @@ Private Sub Class_Initialize()
     Guard.Singleton Me
 End Sub
 
+Public Function IsInputValid(ByRef outText As String, ByVal inPrompt As String, ByVal inTitel As String) As Boolean
+        
+        outText = VBA.Interaction.InputBox(Prompt:=inPrompt, Title:=inTitel)
+        
+        If StrPtr(outText) = 0 Then 'Cancelled the InputBox
+            Exit Function
+            
+        ElseIf outText = vbNullString Then  'Check input field blank?
+            VBA.MsgBox "You cannot leave the input field blank!", vbCritical, Title:=SIGN
+            IsInputValid outText, inPrompt, inTitel
+
+        Else
+            IsInputValid = Not (outText = vbNullString)
+            
+        End If
+
+End Function
+
 Public Function IsValidEmailAddress(ByVal InputValue As Variant) As Boolean
 
     If Not AppMethods.ObjRegEx Is Nothing Then

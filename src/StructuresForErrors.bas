@@ -43,7 +43,7 @@ End Enum
 Public Type TError
     Number As ErrNo
     Name As String
-    source As String
+    Source As String
     Message As String
     Description As String
     trapped As Boolean
@@ -73,9 +73,9 @@ Attribute RaiseError.VB_Description = "Formats and raises a run-time error."
                         "number: " & .Number, _
                         "message: " & .Message, _
                         "description: " & .Description, _
-                        "source: " & .source)
+                        "source: " & .Source)
         'VBA.Err.Raise .Number, .source, .Message
-        MsgBox .Number & " " & .source & " " & .Message, Title:=VBA.Err.Number
+        MsgBox .Number & " " & .Source & " " & .Message, Title:=VBA.Err.Number
         LogManager.Log ErrorLevel, Join(Message, vbNewLine & vbTab)
     End With
 End Sub

@@ -72,7 +72,7 @@ Public Sub WriteLine(ByVal Data As String, Optional ByVal FileName As String = V
 Catch:
     If Err.Number <> 0 Then
         RemoveByValue fileNumber, openedFiles
-        Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+        Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
     End If
 
 End Sub

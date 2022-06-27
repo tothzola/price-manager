@@ -5,8 +5,9 @@ END
 Attribute VB_Name = "ServicesUser"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
+Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@PredeclaredId
 '@Folder "Services"
 Option Explicit
 
@@ -16,9 +17,9 @@ Private Type TUserServicesComponents
     'Public Properties
     IsEverythingOkayInEngine As Boolean
     'Private properties
-    Algo As PAMXLAM.IHashAlgorithm
-    Repository As PAMXLAM.IRepository
-    RepositoryTypes As PAMXLAM.RepositoryType
+    Algo As IHashAlgorithm
+    Repository As IRepository
+    RepositoryTypes As RepositoryType
     ContextTableName As String
     ConnectionString As String
     ContextTableHeaders As Variant
@@ -107,19 +108,14 @@ Private Sub IServices_InItService(ByVal SelectedRepositoryType As RepositoryType
     ContextTableHeaders = TableHeaders
     
     Select Case RepositoryTypes
-        'Deprecated
-        'Case RepositoryType.TYPE_EXCEL_NAMED_RANGE
-            'If Repository Is Nothing Then Set Repository = New RepositoryExcel
-            'Call Repository.InItRepository(ContextTableName)
-        Case RepositoryType.TYPE_SHAREPOINT_LIST
-            If Repository Is Nothing Then Set Repository = New RepositorySharePoint
-            Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
         Case RepositoryType.TYPE_POSTGRESQL
             If Repository Is Nothing Then Set Repository = New RepositoryPostgreSQL
             Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
+            
         Case RepositoryType.TYPE_ACCESS
             If Repository Is Nothing Then Set Repository = New RepositoryACCESS
             Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
+            
     End Select
     
     'Check for the Table Status and hence we can indirectly get the status of Database itself
@@ -191,4 +187,3 @@ Private Sub Class_Terminate()
     Set this.Algo = Nothing
     Set Repository = Nothing
 End Sub
-
