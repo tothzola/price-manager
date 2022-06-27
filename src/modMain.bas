@@ -1,5 +1,5 @@
 Attribute VB_Name = "modMain"
-'@Folder("Main")
+'@Folder("PAMXLAM")
 Option Explicit
 
 'As we want our Main View to be VbModeless, We have to take out our main driving object _

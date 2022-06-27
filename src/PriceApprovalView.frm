@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PriceApprovalView 
    Caption         =   "Price Approval Manager"
-   ClientHeight    =   5970
+   ClientHeight    =   19410
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   5370
+   ClientWidth     =   39765
    OleObjectBlob   =   "PriceApprovalView.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -27,7 +27,7 @@ Public Event Logout()
 'Login Frame Events
 Public Event Login()
 Public Event CloseLoginFrame()
-Public Event ResetPassword(ByVal TargetUserName As String, ByVal TargetEmailAddress As String)
+Public Event ResetPassword(ByVal targetUserName As String, ByVal TargetEmailAddress As String)
 'Password Manager Frame Events
 Public Event OpenPasswordManagerFrame()
 Public Event ChangePassword()
@@ -210,22 +210,25 @@ Private Sub cmdOpenLoginInterface_Click()
 End Sub
 
 Private Sub lblForgotPassword_Click()
-    Dim TargetUserName  As Variant
-    Dim TargetEmail     As Variant
-    
-    TargetUserName = Application.InputBox("Please enter UserName", "Reset Password")
-    TargetEmail = Application.InputBox("Please enter registered Email", "Reset Password")
-    
-    If TargetUserName = False Or TargetEmail = False Then MsgBox "UserName or Email cannot be left blank!", vbCritical, SIGN
-    
-    Me.MousePointer = fmMousePointerAppStarting
-    VBA.DoEvents
-    RaiseEvent ResetPassword(TargetUserName, TargetEmail)
-    Me.MousePointer = fmMousePointerDefault
+
+    Dim targetUserName As String
+    If ValidationServices.IsInputValid(outText:=targetUserName, inPrompt:="Please enter UserName: ", inTitel:="Reset Password") Then
+        
+        Dim targetEmail As String
+        If ValidationServices.IsInputValid(outText:=targetEmail, inPrompt:="Please enter registered Email: ", inTitel:="Reset Password") Then
+        
+            Me.MousePointer = fmMousePointerAppStarting
+            VBA.DoEvents
+            RaiseEvent ResetPassword(targetUserName, targetEmail)
+            Me.MousePointer = fmMousePointerDefault
+        
+        End If
+        
+    End If
+ 
 End Sub
 
 'Password Manager
-
 Private Sub cmdOpenPasswordManager_Click()
     Me.MousePointer = fmMousePointerAppStarting
     VBA.DoEvents

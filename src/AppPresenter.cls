@@ -241,7 +241,7 @@ Private Sub presenterLoginFrame_CancelLoginForm()
     Call View.UserWantsToCloseFrame(FORM_LOGIN)
 End Sub
 
-Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal TargetUserName As String, ByVal TargetEmailAddress As String)
+Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal targetUserName As String, ByVal TargetEmailAddress As String)
     
     Dim DummyPassword   As String
     Dim NewPassword     As String
@@ -255,7 +255,7 @@ Private Sub presenterLoginFrame_ResetPasswordForUser(ByVal TargetUserName As Str
     
     'Reset User's Password
     TargetIndex = AppMethods.GetLookupValue(Model.usersTable, _
-                                            TargetUserName, _
+                                            targetUserName, _
                                             UsersTableFields.COL_userName, _
                                             UsersTableFields.COL_INDEX)
                                             
@@ -615,13 +615,13 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
                 
             Else
                                                 
-                Dim inputMessage As String
-                If IsNotifierConfirmed(outMsg:=inputMessage) Then
+                Dim targetMessage As String
+                If ValidationServices.IsInputValid(outText:=targetMessage, inPrompt:="Rejecting reason: ", inTitel:="Please type meassage") Then
                    EmailServices.EmailRecordRejected uName, _
                                          uMail, _
                                          subject, _
                                          False, _
-                                         "Message from approver: <B>" & inputMessage & "</B><br><br>" & _
+                                         "Message from approver: <B>" & targetMessage & "</B><br><br>" & _
                                          "Details of the record that has been rejected:<br>", _
                                          "<B>Record </B></td><td>" & .RecordID, _
                                          "<B>UserID </B></td><td>" & .userID, _
@@ -638,6 +638,7 @@ Private Sub presenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
                                          "<B>Valid from Date </B></td><td>" & VBA.Format$(.validFromDate, GetDateFormat), _
                                          "<B>Valid To Date </B></td><td>" & VBA.Format$(.validToDate, GetDateFormat)
                 End If 'EMail Creation Ends
+                
             End If
             
 UserCancelled:
@@ -652,27 +653,6 @@ UserCancelled:
     End With
     
 End Sub
-
-Private Function IsNotifierConfirmed(ByRef outMsg As String) As Boolean
-                  
-            Dim inputPrompt As String: inputPrompt = "Rejecting reason: "
-            Dim inputTitel As String: inputTitel = "Please type meassage "
-            outMsg = VBA.Interaction.InputBox(Prompt:=inputPrompt, Title:=inputTitel)
-            
-            If StrPtr(outMsg) = 0 Then 'Approver cancelled process to notify
-                Exit Function
-                
-            ElseIf outMsg = vbNullString Then  'Approver has typed no message
-                VBA.MsgBox "You cannot leave the input field blank!", vbCritical
-                IsNotifierConfirmed outMsg
-    
-            Else
-                outMsg = VBA.StrConv(outMsg, VBA.vbProperCase)
-                IsNotifierConfirmed = Not (outMsg = vbNullString)
-                
-            End If
-
-End Function
 
 '-------------------------------------------------------------------------
 'Data FORM Events
