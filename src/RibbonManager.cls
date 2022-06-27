@@ -111,7 +111,7 @@ Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subrou
         
         'Application
         Case Is = "ButtonB_01": MsgBox "Not Implementd"
-        Case Is = "ButtonB_02": modMain.MainPAM
+        Case Is = "ButtonB_02": Main.StartApp
 
         End Select
         

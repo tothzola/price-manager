@@ -239,7 +239,7 @@ CleanFail:
         Err.Raise ProgressIndicatorError.Error_ProcedureNotFound, TypeName(Me), ERR_PROC_NOT_FOUND
         LogManager.Log ErrorLevel, "Error: " & ProgressIndicatorError.Error_ProcedureNotFound & ". " & ERR_PROC_NOT_FOUND
     Else
-        Err.Raise VBA.Err.Number, VBA.Err.source, VBA.Err.Description, VBA.Err.HelpFile, VBA.Err.HelpContext
+        Err.Raise VBA.Err.Number, VBA.Err.Source, VBA.Err.Description, VBA.Err.HelpFile, VBA.Err.HelpContext
         LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & vbTab & VBA.Err.Description
     End If
     Resume CleanExit
@@ -264,7 +264,7 @@ CleanFail:
         Err.Raise ProgressIndicatorError.Error_ProcedureNotFound, TypeName(Me), ERR_PROC_NOT_FOUND
         LogManager.Log ErrorLevel, "Error: " & ProgressIndicatorError.Error_ProcedureNotFound & ". " & ERR_PROC_NOT_FOUND
     Else
-        Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+        Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
         LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & vbTab & VBA.Err.Description
     End If
     Resume CleanExit

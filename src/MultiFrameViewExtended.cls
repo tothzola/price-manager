@@ -5,8 +5,9 @@ END
 Attribute VB_Name = "MultiFrameViewExtended"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
+Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@PredeclaredId
 '@Folder "View"
 Option Explicit
 'By Kamal Bharakhda

@@ -83,7 +83,7 @@ End Sub
 
 Public Function IsEverythingOkayToChangePassword() As Variant
     IsEverythingOkayToChangePassword = ValidationServices.IsEverythingOkay(this.CheckFields, _
-                                                                modDataSources.arrListOfFields_PASSWORD_MANAGER, _
+                                                                DataResources.arrListOfFields_PASSWORD_MANAGER, _
                                                                 PasswordManagerFields.PM_CURRENT_PASSWORD, _
                                                                 PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD)
 End Function
@@ -121,4 +121,5 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
     'If All Goes Well!
     this.CheckFields(FieldIndex) = True
 End Function
+
 

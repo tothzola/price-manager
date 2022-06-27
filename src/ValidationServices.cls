@@ -29,7 +29,7 @@ Public Function IsInputValid(ByRef outText As String, ByVal inPrompt As String, 
             Exit Function
             
         ElseIf outText = vbNullString Then  'Check input field blank?
-            VBA.MsgBox "You cannot leave the input field blank!", vbCritical
+            VBA.MsgBox "You cannot leave the input field blank!", vbCritical, Title:=SIGN
             IsInputValid outText, inPrompt, inTitel
 
         Else

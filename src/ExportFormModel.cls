@@ -195,7 +195,7 @@ Public Sub SetPropertiesToDefaultState()
     With Me
         .FromDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
         .ToDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
-        .recordStatus = modDataSources.arrRecordStatusesList(2)
+        .recordStatus = DataResources.arrRecordStatusesList(2)
     End With
 End Sub
 
@@ -226,7 +226,7 @@ Public Function IsEverythingOkayToExport() As Variant
     'check 2
     IsEverythingOkayToExport = _
         ValidationServices.IsEverythingOkay(this.CheckFields, _
-            modDataSources.arrListOfFields_EXPORT_Form, _
+            DataResources.arrListOfFields_EXPORT_Form, _
             ExportFormFields.FIELD_FROMDATE, _
             ExportFormFields.FIELD_RECORDSTATUS)
 End Function
@@ -420,7 +420,7 @@ IgnoreThisRow:
             
                 'GUARD CLAUSE : For preventing excel's automatic conversion of cell values from specific value to _
                                 numerical whole number due
-                If j = MainTableFields.Col_Main_DistributionChannel And VBA.IsNumeric(Me.dataTable(Record, j)) Then
+                If j = MainTableFields.COL_Main_DistributionChannel And VBA.IsNumeric(Me.dataTable(Record, j)) Then
                     tmp(i, j) = "'" & Me.dataTable(Record, j)
                     GoTo NextIteration
                 End If
@@ -435,7 +435,7 @@ IgnoreThisRow:
                 'If the export reports are being processed then change the value
                 If j = MainTableFields.COL_MAIN_recordStatus Then
                     If Me.IsRecordsNeedsToBeProcessed Then
-                        tmp(i, j) = modGlobal.RECORDSTATUS_PROCESSED
+                        tmp(i, j) = GlobalResources.RECORDSTATUS_PROCESSED
                         GoTo NextIteration
                     End If
                 End If
@@ -456,4 +456,5 @@ NextIteration:
     Me.exportTable = tmp
     
 End Sub
+
 

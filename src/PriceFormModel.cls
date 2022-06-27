@@ -325,7 +325,7 @@ Public Sub SetPropertiesToUpdateRecordState()
         .statusChangeDate = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_statusChangeDate)
         .conditionType = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_ConditionType)
         .salesOrganization = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_SalesOrganization)
-        .distributionChannel = Me.mainTable(TargetRow, MainTableFields.Col_Main_DistributionChannel)
+        .distributionChannel = Me.mainTable(TargetRow, MainTableFields.COL_Main_DistributionChannel)
         .customerID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_customerID)
         .materialID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_materialID)
         .price = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_price)
@@ -363,7 +363,7 @@ End Sub
 
 Public Function IsEverythingOkayToSaveRecord() As Variant
     IsEverythingOkayToSaveRecord = ValidationServices.IsEverythingOkay(this.CheckFields, _
-                                                              modDataSources.arrListOfColumns_MAIN_Table, _
+                                                              DataResources.arrListOfColumns_MAIN_Table, _
                                                               MainTableFields.COL_MAIN_ConditionType, _
                                                               MainTableFields.COL_MAIN_validToDate)
 End Function
@@ -391,7 +391,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             IsValidField = ValidationServices.IsNotNullValue(Me.salesOrganization, VBA.TypeName(Me.salesOrganization))
             If Not IsValidField = True Then Exit Function
             
-        Case MainTableFields.Col_Main_DistributionChannel
+        Case MainTableFields.COL_Main_DistributionChannel
             'Check 1
             IsValidField = ValidationServices.IsNotNullValue(Me.distributionChannel, VBA.TypeName(Me.distributionChannel))
             If Not IsValidField = True Then Exit Function
@@ -517,4 +517,5 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
     this.CheckFields(FieldIndex) = True
     
 End Function
+
 

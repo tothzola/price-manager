@@ -261,8 +261,9 @@ Public Function IsEverythingOkayToSaveUser(ByVal currentOperation As FormOperati
 
     'Check Everything
     IsEverythingOkayToSaveUser = ValidationServices.IsEverythingOkay(this.CheckFields, _
-                                                            modDataSources.arrListOfColumns_USERS_TABLE, _
+                                                            DataResources.arrListOfColumns_USERS_TABLE, _
                                                             UsersTableFields.COL_userStatus, _
                                                             UsersTableFields.COL_email)
 End Function
+
 

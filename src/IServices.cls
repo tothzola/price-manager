@@ -6,8 +6,9 @@ Attribute VB_Name = "IServices"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
+Attribute VB_Exposed = True
 '@Folder "Services"
+'@Exposed
 Option Explicit
 
 'public properties
@@ -18,10 +19,9 @@ Public Property Let IsEverythingOkayInEngine(ByVal vNewValue As Boolean)
 End Property
 
 'public methods for communication
-Public Sub InItService(ByVal SelectedRepositoryType As RepositoryType, _
-                        ByVal TableName As String, _
-                        ByVal TableHeaders As Variant, _
-                        Optional ByVal ContextConnectionString As String = vbNullString)
+Public Sub InItService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String, ByVal TableHeaders As Variant, _
+Optional ByVal ContextConnectionString As String = vbNullString)
+
 End Sub
 
 Public Function GetListOfAllRecordsFromContextTable() As Variant
