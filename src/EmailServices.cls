@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '@PredeclaredId
-'@Folder "Services"
+'@Folder("AppObjects.Services")
 Option Explicit
 
 Private Const DEVELOPERS As String = "Zoltan.To@outlook.com;kamal.9328093207@gmail.com"
@@ -37,10 +37,42 @@ Private Sub Class_Initialize()
     Guard.Singleton Me
 End Sub
 
+Public Sub EmailNotifyUser(ByVal mailTo As String, _
+                        ByVal mailSubject As String, _
+                        ByVal mailDisplay As Boolean, _
+                        ParamArray mailBody() As Variant)
+
+    Dim body As String
+    body = "<html><body style=""font-size:14px;font-family:Arial"">Hello, <br><br>"
+    
+    Dim i As Long
+    For i = LBound(mailBody) To UBound(mailBody)
+        If i = 0 Then
+            body = body & mailBody(i) & "<br>"
+            body = body & "<style> table.schedule td {border-collapse:collapse;border:1px solid black;}" _
+                        & "<table class=""schedule"" style=""width:250px;""><tbody style=""font-size:12px;"">" _
+                        & "<table class=""schedule"" style=""width:250px;""><tbody style=""font-size:12px;"">"
+        
+        ElseIf i = UBound(mailBody) Then
+            body = body & "</td></tr></tbody></table><br>" & mailBody(i) & "<br><br></body></html>"
+            
+        Else
+            body = body & "<tr><td>" & mailBody(i) & "</td></tr>"
+            
+        End If
+    Next i
+    
+    AssambleEmail mailTo:=mailTo, _
+                  mailSubject:=mailSubject, _
+                  mailDisplay:=mailDisplay, _
+                  mailBody:=body
+
+End Sub
+
 Public Sub EmailFeedback()
 
     Dim sendTo As String: sendTo = DEVELOPERS
-    Dim subject As String: subject = "Price Approval Manager - Feedback"
+    Dim subject As String: subject = "Price Approval App - Feedback"
     Dim body As String: body = "<BODY style=font-size:10.5pt;font-family:Arial>Hello Dev Team,</BODY>" & _
         "<BODY style=font-size:10.5pt;font-family:Arial><p> we would like you feedback to improve this app. </BODY>" & _
         "<BODY style=font-size:10.5pt;font-family:Arial><p> What is your opinion of this app? </BODY>" & _
@@ -156,7 +188,7 @@ CleanExit:
     Exit Function
 
 CleanFail:
-    MsgBox VBA.Err.Description, Title:=VBA.Err.Number
+    MsgBox VBA.Err.Description, vbCritical, Title:=SIGN
     LogManager.Log ErrorLevel, VBA.TypeName(Me) & " Error: " & VBA.Err.Number & ". " & VBA.Err.Description
     Resume CleanExit
     Resume
