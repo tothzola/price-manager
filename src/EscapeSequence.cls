@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder("Logger.Strings")
+'@Folder("System.Logger.Strings")
 
 Private Type tEscapeSequence
     EscapeString As String

@@ -7,8 +7,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@ModuleAttribute VB_Ext_KEY, "Rubberduck", "Predeclared Class Module"
 '@PredeclaredId
-'@Folder "AppObjects"
+'@Folder("AppObjects.Model")
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -43,36 +44,38 @@ Private this As TAppModelComponents
 '@Ignore ProcedureNotUsed
 '@Description("Returns class reference")
 Public Property Get Class() As AppModel
+Attribute Class.VB_Description = "Returns class reference"
     Set Class = AppModel
 End Property
 
 '@Description "Creates a new application context."
-Public Function Create(ByVal State As IAppState) As AppModel
+Public Function Create(ByVal Context As IAppContext) As AppModel
+Attribute Create.VB_Description = "Creates a new application context."
     Guard.NonDefaultInstance AppModel
-    Guard.NullReference State
+    Guard.NullReference Context
     
     Dim result As AppModel
     Set result = New AppModel
     
-    InitializeAppModel result, State
+    InitializeAppModel result, Context
     
     Set Create = result
 End Function
 
-Private Sub InitializeAppModel(ByVal Context As AppModel, ByVal State As AppState)
+Private Sub InitializeAppModel(ByVal Model As AppModel, ByVal Context As IAppContext)
                     
     'Tables of The Applications
-    Context.mainTable = State.MainService.GetListOfAllRecordsFromContextTable
-    Context.usersTable = State.UserService.GetListOfAllRecordsFromContextTable
+    Model.mainTable = Context.MainService.GetListOfAllRecordsFromContextTable
+    Model.usersTable = Context.UserService.GetListOfAllRecordsFromContextTable
   
     'Single Column Lists for DropDown/ComboBoxes
-    Context.CurrenciesList = DataResources.arrListofCurrencies
-    Context.unitOfMeasuresList = DataResources.arrListOfUnitOfMeasure
-    Context.userTypeList = DataResources.arrListofTypesOfUser
-    Context.userStatusList = DataResources.arrListofStatusOfUser
-    Context.recordStatusList = DataResources.arrRecordStatusesList
-    Context.salesOrganizationList = DataResources.arrSalesOrganizationsList
-    Context.distributionChannelsList = DataResources.arrDistributionChannelsList
+    Model.CurrenciesList = DataResources.arrListofCurrencies
+    Model.unitOfMeasuresList = DataResources.arrListOfUnitOfMeasure
+    Model.userTypeList = DataResources.arrListofTypesOfUser
+    Model.userStatusList = DataResources.arrListofStatusOfUser
+    Model.recordStatusList = DataResources.arrRecordStatusesList
+    Model.salesOrganizationList = DataResources.arrSalesOrganizationsList
+    Model.distributionChannelsList = DataResources.arrDistributionChannelsList
     
 End Sub
 '-------------------------------------------------------------------------
@@ -343,4 +346,3 @@ Public Function GetUniqueListFromColumn(ByVal ContextTable As Variant, ByVal Tar
     GetUniqueListFromColumn = tmp
     
 End Function
-

@@ -11,7 +11,7 @@ Attribute VB_Description = "Default instance factory; avoid altering default ins
 '@IgnoreModule ProcedureNotUsed, ImplicitUnboundDefaultMemberAccess, VariableNotAssigned, UnassignedVariableUsage
 '@PredeclaredId
 '@Exposed
-'@Folder("WeakReference.Impl")
+'@Folder("System.WeakReference.Impl")
 '@ModuleDescription("Default instance factory; avoid altering default instance state.")
 Option Explicit
 
@@ -93,7 +93,7 @@ CleanExit:
     Exit Property
     
 CleanFail:
-    MsgBox VBA.Err.Description, Title:=VBA.Err.Number
+    MsgBox VBA.Err.Description, vbCritical, Title:=SIGN
     LogManager.Log ErrorLevel, VBA.TypeName(Me) & " Error: " & VBA.Err.Number & ". " & VBA.Err.Description
     Set IWeakReference_Ribbon = Nothing
     Resume CleanExit

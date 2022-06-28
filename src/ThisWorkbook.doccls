@@ -1,4 +1,4 @@
-﻿'@Folder("Ribbon")
+﻿'@Folder("System.Ribbon")
 Option Explicit
 
 '@Ignore ParameterCanBeByVal, ParameterNotUsed

@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
- '@Folder "Services"
+'@Folder("AppObjects.Services")
 Option Explicit
 
 'This Document Generator Class is designed for the reports where we have to _
@@ -148,7 +148,7 @@ CleanExit:
     Exit Sub
     
 EhhErr:
-    MsgBox Err.Number & vbNewLine & vbNewLine & Err.Description
+    MsgBox Err.Number & vbNewLine & vbNewLine & Err.Description, vbCritical, Title:=SIGN
     LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     'Update Failour Flag
     IsReportGeneratedSuccessfully = False

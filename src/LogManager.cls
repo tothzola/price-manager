@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule EmptyElseBlock
-'@Folder("Logger")
+'@Folder("System.Logger")
 '@PredeclaredId
 '@Exposed
 Option Explicit
@@ -71,7 +71,7 @@ Public Function IsEnabled(ByVal level As LogLevel) As Boolean
 
 End Function
 
-Public Sub Log(ByVal level As LogLevel, ByVal Message As String, Optional ByVal loggerName As String)
+Public Sub Log(ByVal level As LogLevel, ByVal message As String, Optional ByVal loggerName As String)
 
     Dim Logger As ILogger
     If loggerName = VBA.Constants.vbNullString Then
@@ -79,25 +79,25 @@ Public Sub Log(ByVal level As LogLevel, ByVal Message As String, Optional ByVal 
         Dim Item As Variant
         For Each Item In this.Loggers.Items
             Set Logger = Item
-            LogWith Logger, level, Message
+            LogWith Logger, level, message
         Next
 
     ElseIf this.Loggers.exists(loggerName) Then
-        LogWith this.Loggers.Item(loggerName), level, Message
+        LogWith this.Loggers.Item(loggerName), level, message
     Else
         Err.Raise NoRegisteredLogger, "LogManager.Log", "There is no registered logger named '" & loggerName & "'."
     End If
 
 End Sub
 
-Private Sub LogWith(ByVal Logger As ILogger, ByVal level As LogLevel, ByVal Message As String)
+Private Sub LogWith(ByVal Logger As ILogger, ByVal level As LogLevel, ByVal message As String)
     If level >= Logger.MinLevel Then
-        Logger.Log FormatMessage(level, Logger.Name, Message)
+        Logger.Log FormatMessage(level, Logger.Name, message)
     End If
 End Sub
 
-Friend Function FormatMessage(ByVal level As LogLevel, ByVal loggerName As String, ByVal Message As String) As String
-    FormatMessage = this.Formatter.FormatMessage(level, loggerName, Message)
+Friend Function FormatMessage(ByVal level As LogLevel, ByVal loggerName As String, ByVal message As String) As String
+    FormatMessage = this.Formatter.FormatMessage(level, loggerName, message)
 End Function
 
 Private Sub Class_Initialize()

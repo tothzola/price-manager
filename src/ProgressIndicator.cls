@@ -173,7 +173,7 @@ CleanExit:
     Exit Sub
 
 CleanFail:
-    MsgBox Err.Number & vbTab & Err.Description, vbCritical, "Error"
+    MsgBox Err.Number & vbTab & Err.Description, vbCritical, SIGN
     LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     Resume CleanExit
     Resume
@@ -212,7 +212,7 @@ CleanExit:
     Exit Sub
  
 CleanFail:
-    MsgBox Err.Number & vbTab & Err.Description, vbCritical, "Error"
+    MsgBox Err.Number & vbTab & Err.Description, vbCritical, SIGN
     LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     Resume CleanExit
     Resume
@@ -225,11 +225,15 @@ Private Sub Cancelled()
 End Sub
 
 Private Sub ExecuteMacro(Optional ByVal Param As Variant)
+
     On Error GoTo CleanFail
+    Dim App As Excel.Application
+    Set App = Excel.Application
+    
     If Param = Empty Then
-        Application.Run this.Procedure, Me
+        App.Run this.Procedure, Me
     Else
-        Application.Run this.Procedure, Me, Param
+        App.Run this.Procedure, Me, Param
     End If
 CleanExit:
     Exit Sub

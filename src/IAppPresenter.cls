@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-'@Folder "AppObjects"
+'@Folder("AppObjects.Presenter")
 '@Interface
 
 Public Sub ShowView()

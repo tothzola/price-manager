@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Attribute VB_Description = "Describes an object that holds the address of a pointer to another object."
-'@Folder("WeakReference")
+'@Folder("System.WeakReference")
 '@ModuleDescription("Describes an object that holds the address of a pointer to another object.")
 '@Interface
 '@Exposed

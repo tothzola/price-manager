@@ -1,5 +1,5 @@
 Attribute VB_Name = "InitializeLogger"
-'@Folder("Logger")
+'@Folder("System.Logger")
 Option Explicit
 Option Private Module
     

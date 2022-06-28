@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@Folder("Authentication.Hashing")
 '@PredeclaredId
+'@Exposed
 Option Explicit
 
 Implements IHashAlgorithm

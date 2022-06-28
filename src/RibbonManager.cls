@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule FunctionReturnValueAlwaysDiscarded
-'@Folder("Ribbon.Impl")
+'@Folder("System.Ribbon.Impl")
 '@PredeclaredId
 '@Exposed
 Option Explicit
@@ -94,7 +94,7 @@ Attribute IRibbon_GetLabel.VB_Description = "Determine the text to go along with
 End Function
 
 '@Description "Tell each button which macro subroutine to run when clicked"
-Private Sub IRibbon_OnAction(ByVal Control As Office.IRibbonControl, Optional ByRef index As Integer)
+Private Sub IRibbon_OnAction(ByVal Control As Office.IRibbonControl)
 Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subroutine to run when clicked"
 
     If Not LogManager.IsEnabled(DebugLevel) Then
@@ -107,10 +107,10 @@ Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subrou
         
         'Support
         Case Is = "ButtonA_01": EmailServices.EmailFeedback
-        Case Is = "ButtonA_02": MsgBox "Not Implementd"
+        Case Is = "ButtonA_02": MsgBox "Not Implementd", vbInformation, SIGN
         
         'Application
-        Case Is = "ButtonB_01": MsgBox "Not Implementd"
+        Case Is = "ButtonB_01": MsgBox "Not Implementd", vbInformation, SIGN
         Case Is = "ButtonB_02": Main.StartApp
 
         End Select

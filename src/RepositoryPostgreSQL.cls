@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "Repository"
+'@Folder("AppObjects.Repository")
 Option Explicit
 
 Implements IRepository
@@ -130,6 +130,7 @@ CleanExit:
 EhhErr:
     If Err Then MsgBox Err.Description, vbCritical, SIGN
     Err.Clear
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     IRepository_IsEverythingOkay = False
     Resume CleanExit
     
@@ -163,6 +164,7 @@ CleanExit:
 EhhErr:
     If Err Then MsgBox Err.Description, vbCritical, SIGN
     Err.Clear
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     IRepository_IsEverythingOkay = False
     Resume CleanExit
     
@@ -213,6 +215,7 @@ CleanExit:
 EhhErr:
     If Err Then MsgBox Err.Description, vbCritical, SIGN
     Err.Clear
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     IRepository_IsEverythingOkay = False
     Resume CleanExit
     
@@ -262,6 +265,7 @@ CleanExit:
 EhhErr:
     If Err Then MsgBox Err.Description, vbCritical, SIGN
     Err.Clear
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     IRepository_IsEverythingOkay = False
     Resume CleanExit
     
@@ -292,6 +296,7 @@ CleanExit:
 EhhErr:
     If Err Then MsgBox Err.Description, vbCritical, SIGN
     Err.Clear
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     IRepository_IsEverythingOkay = False
     Resume CleanExit
     
@@ -319,6 +324,7 @@ Private Sub OpenConnection()
 EhhErr:
     MsgBox Err.Description, vbCritical, SIGN
     Err.Clear
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     IRepository_IsEverythingOkay = False
     
 End Sub

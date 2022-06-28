@@ -1,6 +1,6 @@
 Attribute VB_Name = "ReferenceCheck"
 Attribute VB_Description = "Internal methods used to configure this addin on startup."
-'@Folder("Settings")
+'@Folder("System.Settings")
 '@ModuleDescription("Internal methods used to configure this addin on startup.")
 Option Explicit
 Option Private Module

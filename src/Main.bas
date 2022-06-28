@@ -1,6 +1,7 @@
 Attribute VB_Name = "Main"
 '@Folder("PAMXLAM")
 Option Explicit
+Option Private Module
 
 'As we want our Main View to be VbModeless, We have to take out our main driving object _
 which is nothing but the Presenter! Yes The whole Application is dependent on the scope _
@@ -10,6 +11,7 @@ out the object defination from the Mehtod and keep it as Public Object.
 
 Public Presenter As IAppPresenter
 
+'@EntryPoint
 Public Sub StartApp()
 
     On Error GoTo CleanFail:
@@ -21,32 +23,33 @@ CleanExit:
     Exit Sub
     
 CleanFail:
-    MsgBox VBA.Err.Description, Title:=VBA.Err.Number
+    MsgBox VBA.Err.Description, vbCritical, Title:=SIGN
     LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & ". " & VBA.Err.Description
     Resume CleanExit
     Resume
     
 End Sub
 
+'@EntryPoint
 Private Sub OpenApplication(ByVal Progress As ProgressIndicator)
 
     Progress.Update 30, "Application State ..."
-    Dim State As IAppState
-    Set State = AppState.Create
+    Dim Context As IAppContext
+    Set Context = AppContext.Create
     
     Progress.Update 50, "Validating Data ..."
-    If Not State.IsAppOnline Then GoTo CleanExit
+    If Not Context.IsRepositoryReachable Then GoTo CleanExit
     
     Progress.Update 60, "Loading Model ..."
     Dim Model As AppModel
-    Set Model = AppModel.Create(State)
+    Set Model = AppModel.Create(Context)
     
     Progress.Update 70, "Building View ..."
     Dim View As IView
     Set View = PriceApprovalView.Create(Model)
     
     Progress.Update 80, "Opening App ..."
-    Set Presenter = AppPresenter.Create(State, Model, View)
+    Set Presenter = AppPresenter.Create(Context, Model, View)
     
     Progress.Update 100, "Application Status = OK"
     GlobalResources.WaitForOneSecond
@@ -58,4 +61,5 @@ CleanExit:
     Progress.CloseScreen
 
 End Sub
+
 

@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '@IgnoreModule ImplementedInterfaceMember
-'@Folder("Ribbon")
+'@Folder("System.Ribbon")
 '@Interface
 '@Exposed
 Option Explicit
@@ -16,7 +16,7 @@ Option Explicit
 Public Sub Invalidate()
 End Sub
 
-Public Sub OnAction(ByVal Control As Office.IRibbonControl, Optional ByRef index As Integer)
+Public Sub OnAction(ByVal Control As Office.IRibbonControl)
 End Sub
 
 Public Function GetImage(ByVal Identifier As String, ByRef outImage As Variant) As Variant

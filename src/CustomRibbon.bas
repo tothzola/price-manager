@@ -1,7 +1,7 @@
 Attribute VB_Name = "CustomRibbon"
 Attribute VB_Description = "Ribbon callback, captures the ribbon to an Instance class"
 '@IgnoreModule ParameterNotUsed, VariableNotUsed
-'@Folder("Ribbon")
+'@Folder("System.Ribbon")
 Option Explicit
 Option Private Module
 
@@ -18,7 +18,9 @@ Public Sub PriceApprovalRibbon(ByVal RibbonUI As Office.IRibbonUI)
     
     If Not ReferenceCheck.CheckReferenceCompatibility Then Exit Sub
     
-    If Application.ProtectedViewWindows.Count > 0 Then Exit Sub
+    Dim App As Excel.Application
+    Set App = Excel.Application
+    If App.ProtectedViewWindows.Count > 0 Then Exit Sub
 
     'Load Ribbon
     Set Ribbon = RibbonManager.Create(RibbonUI)
@@ -63,7 +65,7 @@ CleanFail:
 
 End Sub
 
-Private Sub DebugOutput(ByVal Message As String)
+Private Sub DebugOutput(ByVal message As String)
 
     Dim DebugToImmediate As Boolean
 
@@ -72,7 +74,7 @@ Private Sub DebugOutput(ByVal Message As String)
     #End If
     
     CustomRibbon.PriceApprovalInvalidateRibbon
-    If DebugToImmediate Then Debug.Print Message & "Ribbon was invalidated"
+    If DebugToImmediate Then Debug.Print message & "Ribbon was invalidated"
     
 End Sub
 
@@ -94,11 +96,11 @@ End Function
 
 '@Description "Tell Button which macro subroutine to run when clicked"
 '@EntryPoint
-Private Sub PriceApprovalOnAction(ByVal Control As Office.IRibbonControl, Optional ByVal ID As String, Optional ByRef index As Integer)
+Private Sub PriceApprovalOnAction(ByVal Control As Office.IRibbonControl)
 Attribute PriceApprovalOnAction.VB_Description = "Tell Button which macro subroutine to run when clicked"
 
     If Not Ribbon Is Nothing Then
-        Ribbon.OnAction Control, index
+        Ribbon.OnAction Control
     ElseIf Control.ID = "ButtonA_03" Then
         CustomRibbon.PriceApprovalInvalidateRibbon
     Else

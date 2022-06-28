@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "LoginForm"
+'@Folder("AppObjects.Model.LoginForm")
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -130,8 +130,8 @@ Public Function IsUserAuthorized() As Variant
 End Function
 
 Public Function IsValidDataForResettingPassword(ByVal tUserName As String, ByVal tEmail As String) As Variant
-    Dim i               As Long
-    Dim GetUserStatus   As String
+
+    Dim i As Long
     For i = LBound(Me.usersData, 1) + 1 To UBound(Me.usersData, 1)
         If UCase(Me.usersData(i, UsersTableFields.COL_userName)) = UCase(tUserName) Then
             If Me.usersData(i, UsersTableFields.COL_userStatus) = USERSTATUS_INACTIVE Then
@@ -147,5 +147,6 @@ Public Function IsValidDataForResettingPassword(ByVal tUserName As String, ByVal
         End If
     Next i
     IsValidDataForResettingPassword = "Username is Invalid"
+    
 End Function
 

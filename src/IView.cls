@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Attribute VB_Description = "Describes a View."
 '@ModuleDescription "Describes a View."
-'@Folder "View"
+'@Folder("AppObjects.View")
 '@Interface
 '@Exposed
 Option Explicit

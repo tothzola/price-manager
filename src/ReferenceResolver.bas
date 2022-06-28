@@ -1,6 +1,6 @@
 Attribute VB_Name = "ReferenceResolver"
 Attribute VB_Description = "Internal methods used to resolve commonly used references in a VBproject."
-'@Folder("Settings")
+'@Folder("System.Settings")
 '@ModuleDescription("Internal methods used to resolve commonly used references in a VBproject.")
 Option Explicit
 Option Private Module
