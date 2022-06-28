@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "DataForm"
+'@Folder("AppObjects.Model.DataForm")
 Option Explicit
 
 Private Type TDataFormModelComponents
