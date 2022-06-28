@@ -1516,12 +1516,12 @@ Private Sub UpdateWelcomeFrame(Optional FrameIdentifier As ApplicationForms = 0)
     If FrameIdentifier = FORM_LOGIN Then
         'Update Welcome Frame while user is in logout state
         With MultiFrameViewExtended
-            Call .ChangeControlProperties(Me.lblWelcomeMessage, MESSAGE_WELCOMESCREEN_LOGOUT_STATE)
+            Call .ChangeControlProperties(Me.lblWelcomeMessage, MESSAGE_WELCOMESCREEN_LOGOUT_STATE, &H8000000D)
             Call .SetStateofControlsToNullState(Me.lblActiveUsername, Me.lblActiveUserType, Me.lblActiveUserStatus, Me.lblActiveUserID, Me.lblActiveUserPassword)
         End With
     Else
         'Update Welcome Message While User is Still Logged In
-        Call this.ViewExtended.ChangeControlProperties(Me.lblWelcomeMessage, MESSAGE_WELCOMESCREEN_LOGIN_STATE & Me.lblActiveUsername.Caption)
+        Call this.ViewExtended.ChangeControlProperties(Me.lblWelcomeMessage, MESSAGE_WELCOMESCREEN_LOGIN_STATE & Me.lblActiveUsername.Caption, &H8000000D)
     End If
 End Sub
 
