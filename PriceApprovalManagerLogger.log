@@ -1,101 +1,53 @@
-27.06.2022 10:16:19	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 10:16:19	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 10:23:01	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 10:23:01	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 10:24:54	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 10:24:54	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 10:25:58	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 10:25:58	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 10:50:19	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 10:50:19	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 11:27:19	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 11:27:19	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 11:31:06	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 11:31:06	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 11:32:18	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 11:32:18	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 14:57:19	PriceApprovalManagerLogger	[ERROR]	Error:
-	name: DefaultInstanceErr
-	number: -2147220493
-	message: Non-default (AppState) object instance must be used
-	description: 
-	source: AppState Class
-27.06.2022 14:58:48	PriceApprovalManagerLogger	[ERROR]	Error:
-	name: DefaultInstanceErr
-	number: -2147220493
-	message: Non-default (AppState) object instance must be used
-	description: 
-	source: AppState Class
-27.06.2022 14:58:52	PriceApprovalManagerLogger	[ERROR]	Error:
-	name: DefaultInstanceErr
-	number: -2147220493
-	message: Non-default (AppState) object instance must be used
-	description: 
-	source: AppState Class
-27.06.2022 14:58:52	PriceApprovalManagerLogger	[ERROR]	Error:
-	name: DefaultInstanceErr
-	number: -2147220493
-	message: Non-default (AppState) object instance must be used
-	description: 
-	source: AppState Class
-27.06.2022 15:14:18	PriceApprovalManagerLogger	[ERROR]	Error:
-	name: ObjectNotSetErr
-	number: 91
-	message: Object variable not set
-	description: Variable type: Nothing. Object not set.
-	source: Variable is Nothing
-27.06.2022 15:15:01	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 15:19:03	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 15:19:03	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 15:22:45	PriceApprovalManagerLogger	[ERROR]	Error:
-	name: ObjectNotSetErr
-	number: 91
-	message: Object variable not set
-	description: Variable type: Nothing. Object not set.
-	source: Variable is Nothing
-27.06.2022 15:23:11	PriceApprovalManagerLogger	[ERROR]	Error:
-	name: ObjectNotSetErr
-	number: 91
-	message: Object variable not set
-	description: Variable type: Nothing. Object not set.
-	source: Variable is Nothing
-27.06.2022 15:23:27	PriceApprovalManagerLogger	[ERROR]	Error:
-	name: ObjectNotSetErr
-	number: 91
-	message: Object variable not set
-	description: Variable type: Nothing. Object not set.
-	source: Variable is Nothing
-27.06.2022 16:19:16	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:19:16	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:19:24	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:19:24	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:22:01	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:22:11	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:22:11	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:23:26	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:23:31	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:23:31	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:25:00	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:25:19	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:25:19	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:34:52	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:34:58	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:34:58	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:35:40	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:35:41	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:35:41	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:36:08	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:36:24	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:36:24	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:40:49	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:40:52	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:40:52	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:45:19	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:45:19	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:45:19	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:46:38	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:46:38	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:46:38	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
-27.06.2022 16:55:39	PriceApprovalManagerLogger	[INFO]	SHA256Managed is terminating
-27.06.2022 16:55:39	PriceApprovalManagerLogger	[INFO]	AppState is terminating
-27.06.2022 16:55:39	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+28.06.2022 11:45:07	PriceApprovalManagerLogger	[INFO]	ServicesMain is terminating
+28.06.2022 11:45:07	PriceApprovalManagerLogger	[INFO]	ServicesUser is terminating
+28.06.2022 11:45:07	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 11:45:07	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+28.06.2022 11:46:23	PriceApprovalManagerLogger	[INFO]	ServicesMain is terminating
+28.06.2022 11:46:23	PriceApprovalManagerLogger	[INFO]	ServicesUser is terminating
+28.06.2022 11:46:23	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 11:46:23	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+28.06.2022 12:16:38	PriceApprovalManagerLogger	[ERROR]	Error:
+	name: ObjectRequiredErr
+	number: 424
+	message: Object required
+	description: Variable type: Long. Object required.
+	source: Long Type
+28.06.2022 12:16:38	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 12:17:13	PriceApprovalManagerLogger	[ERROR]	Error:
+	name: ObjectRequiredErr
+	number: 424
+	message: Object required
+	description: Variable type: Long. Object required.
+	source: Long Type
+28.06.2022 12:17:13	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 12:17:52	PriceApprovalManagerLogger	[ERROR]	Error:
+	name: ObjectRequiredErr
+	number: 424
+	message: Object required
+	description: Variable type: Long. Object required.
+	source: Long Type
+28.06.2022 12:17:52	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 12:19:33	PriceApprovalManagerLogger	[ERROR]	Error: 0 Non-Numerical character(s) are not allowed!
+28.06.2022 12:19:44	PriceApprovalManagerLogger	[ERROR]	Error: 0 Non-Numerical character(s) are not allowed!
+28.06.2022 12:20:09	PriceApprovalManagerLogger	[ERROR]	Error: 0 Non-Numerical character(s) are not allowed!
+28.06.2022 12:20:55	PriceApprovalManagerLogger	[ERROR]	Error: 0 Non-Numerical character(s) are not allowed!
+28.06.2022 12:22:20	PriceApprovalManagerLogger	[ERROR]	Error: 0 Non-Numerical character(s) are not allowed!
+28.06.2022 12:24:54	PriceApprovalManagerLogger	[ERROR]	Error: 0	
+28.06.2022 12:25:02	PriceApprovalManagerLogger	[ERROR]	Error: 0 Non-Numerical character(s) are not allowed!
+28.06.2022 12:26:08	PriceApprovalManagerLogger	[ERROR]	Error: 0 Non-Numerical character(s) are not allowed!
+28.06.2022 12:27:03	PriceApprovalManagerLogger	[INFO]	ServicesMain is terminating
+28.06.2022 12:27:03	PriceApprovalManagerLogger	[INFO]	ServicesUser is terminating
+28.06.2022 12:27:03	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 12:27:03	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+28.06.2022 12:33:41	PriceApprovalManagerLogger	[INFO]	ServicesMain is terminating
+28.06.2022 12:33:41	PriceApprovalManagerLogger	[INFO]	ServicesUser is terminating
+28.06.2022 12:33:41	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 12:33:41	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+28.06.2022 13:44:41	PriceApprovalManagerLogger	[INFO]	ServicesMain is terminating
+28.06.2022 13:44:41	PriceApprovalManagerLogger	[INFO]	ServicesUser is terminating
+28.06.2022 13:44:41	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 13:44:41	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
+28.06.2022 15:25:24	PriceApprovalManagerLogger	[INFO]	ServicesMain is terminating
+28.06.2022 15:25:24	PriceApprovalManagerLogger	[INFO]	ServicesUser is terminating
+28.06.2022 15:25:24	PriceApprovalManagerLogger	[INFO]	AppContext is terminating
+28.06.2022 15:25:24	PriceApprovalManagerLogger	[INFO]	AppPresenter is terminating
