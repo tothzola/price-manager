@@ -2,8 +2,8 @@ Attribute VB_Name = "StructuresForErrors"
 '@Folder "Guard"
 Option Explicit
 
-
 Private Const adErrInvalidParameterType As Long = &HE3D&
+
 Public Enum ErrNo
     PassedNoErr = 0&
     SubscriptOutOfRange = 9&
@@ -21,6 +21,7 @@ Public Enum ErrNo
     CustomErr = VBA.vbObjectError + 1000&
     NotImplementedErr = VBA.vbObjectError + 1001&
     IncompatibleArraysErr = VBA.vbObjectError + 1002&
+    ObjectAlreadyInitialized = VBA.vbObjectError + 1003&
     DefaultInstanceErr = VBA.vbObjectError + 1011&
     NonDefaultInstanceErr = VBA.vbObjectError + 1012&
     EmptyStringErr = VBA.vbObjectError + 1013&
@@ -44,7 +45,7 @@ Public Type TError
     Number As ErrNo
     Name As String
     Source As String
-    Message As String
+    message As String
     Description As String
     trapped As Boolean
 End Type
@@ -56,8 +57,10 @@ Public Sub RethrowOnError()
 Attribute RethrowOnError.VB_Description = "Re-raises the current error, if there is one."
     With VBA.Err
         If .Number <> 0 Then
-            Debug.Print "Error " & .Number, .Description
-            .Raise .Number
+            'Debug.Print "Error " & .Number, .Description
+            '.Raise .Number
+            MsgBox .Number & " " & .Description, vbCritical, Title:=SIGN
+            LogManager.Log ErrorLevel, .Number & vbTab & .Description
         End If
     End With
 End Sub
@@ -67,16 +70,16 @@ End Sub
 Public Sub RaiseError(ByRef errorDetails As TError)
 Attribute RaiseError.VB_Description = "Formats and raises a run-time error."
     With errorDetails
-        Dim Message As Variant
-        Message = Array("Error:", _
+        Dim message As Variant
+        message = Array("Error:", _
                         "name: " & .Name, _
                         "number: " & .Number, _
-                        "message: " & .Message, _
+                        "message: " & .message, _
                         "description: " & .Description, _
                         "source: " & .Source)
         'VBA.Err.Raise .Number, .source, .Message
-        MsgBox .Number & " " & .Source & " " & .Message, Title:=VBA.Err.Number
-        LogManager.Log ErrorLevel, Join(Message, vbNewLine & vbTab)
+        MsgBox .Number & " " & .Source & " " & .message, vbCritical, Title:=SIGN
+        LogManager.Log ErrorLevel, Join(message, vbNewLine & vbTab)
     End With
 End Sub
 
