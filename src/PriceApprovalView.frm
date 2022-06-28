@@ -563,6 +563,12 @@ Private Sub txtDateFrom_Change()
                                                    VBA.Format$(VBA.Now, GetDateFormat)
 End Sub
 
+Private Sub lblGeneratePassword_Click()
+    Dim dummyPassword As String
+    dummyPassword = AppMethods.RandomString(8)
+    Me.txtSetPassword = dummyPassword
+End Sub
+
 Private Sub txtDateFrom_Enter()
     PozitionCalendar Me.txtDateFrom, Me.frameExportUtility
     Me.DatePicker.Visible = True
