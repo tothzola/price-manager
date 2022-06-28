@@ -199,15 +199,15 @@ End Sub
 
 Private Sub PresenterLoginFrame_ResetPasswordForUser(ByVal targetUserName As String, ByVal TargetEmailAddress As String)
     
-    Dim DummyPassword   As String
+    Dim dummyPassword   As String
     Dim NewPassword     As String
     Dim TargetIndex     As Long
     Dim TargetRow       As Long
     Dim MessageToShow   As String
     
     'Generate Dummy Password
-    DummyPassword = AppMethods.RandomString(10)
-    NewPassword = DummyPassword
+    dummyPassword = AppMethods.RandomString(10)
+    NewPassword = dummyPassword
     
     'Reset User's Password
     TargetIndex = AppMethods.GetLookupValue(Model.usersTable, _
@@ -225,7 +225,7 @@ Private Sub PresenterLoginFrame_ResetPasswordForUser(ByVal targetUserName As Str
         Model.usersTable(TargetRow, UsersTableFields.COL_userStatus), _
         Model.usersTable(TargetRow, UsersTableFields.COL_userType), _
         Model.usersTable(TargetRow, UsersTableFields.COL_userName), _
-        DummyPassword, _
+        dummyPassword, _
         Model.usersTable(TargetRow, UsersTableFields.COL_email))
     
     If Context.UserService.IsEverythingOkayInEngine Then

@@ -59,7 +59,7 @@ Public Function UserNotifierConfirmation(ByVal msgPrompt As String, ByVal msgTit
 End Function
 
 '@Description("Create a Randomized String of Characters, SOURCE: www.TheSpreadsheetGuru.com/the-code-vault")
-Public Function RandomString(Length As Integer) As String
+Public Function RandomString(ByVal Length As Integer) As String
 Attribute RandomString.VB_Description = "Create a Randomized String of Characters, SOURCE: www.TheSpreadsheetGuru.com/the-code-vault"
 
     Dim CharacterBank   As Variant
