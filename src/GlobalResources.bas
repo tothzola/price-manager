@@ -20,17 +20,14 @@ Public Const SIGN As String = "Demo Project"
 Public Const DATEFORMAT_BACKEND As String = "yyyy-mm-dd;@"
 Public Const END_OF_THE_EARTH As String = "9999-12-31"
 Public Const START_OF_THE_CENTURY As String = "2000-01-01"
-Public Const CURRENCYFORMAT_FRONTEND As String = "Standard"
 
 'NUMERICAL RANGES
 Public Const INDEX_RECORDID_FIRST As Long = 1000000
-Public Const INDEX_RECORDID_LAST As Long = 9999999
 
 Public Const INDEX_CUSTOMERID_FIRST As Long = 399999
 Public Const INDEX_CUSTOMERID_LAST As Long = 599999
 
 Public Const INDEX_USERID_FIRST As Long = 100
-Public Const INDEX_USERID_LAST As Long = 999
 
 Public Const INDEX_MATERIALID_FIRST As Long = 49999999
 Public Const INDEX_MATERIALID_LAST As Long = 59999999
@@ -42,7 +39,6 @@ Public Const MIN_UNITOFPRICE_VALUE As Long = 0
 Public Const MAX_UNITOFPRICE_VALUE As Long = 9999
 
 'SEPERATORS FOR STRINGS MANIPULATION
-Public Const SEPERATOR_LINE As String = "<LINE>"
 Public Const SEPERATOR_ITEM As String = "<ITEM>"
 
 'STATUSES

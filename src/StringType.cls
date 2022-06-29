@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '@IgnoreModule IndexedUnboundDefaultMemberAccess, ProcedureNotUsed
-'@Folder("Logger.Strings")
+'@Folder("System.Logger.Strings")
 '@PredeclaredId
 '@Exposed
 Option Explicit

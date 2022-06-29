@@ -7,8 +7,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@ModuleAttribute VB_Ext_KEY, "Rubberduck", "Predeclared Class Module"
 '@PredeclaredId
-'@Folder("AppObjects")
+'@Folder("AppObjects.Model")
 Option Explicit
 
 Private Const SEPERATOR  As String = "<ITEM>"
@@ -39,16 +40,27 @@ Public Property Get ObjRegEx() As Object
     
 End Property
 
-Public Property Get Algo() As PAMXLAM.IHashAlgorithm
+Public Property Get Algo() As IHashAlgorithm
     If this.Algo Is Nothing Then
-        Set this.Algo = PAMXLAM.SHA256Managed.Create()
+        Set this.Algo = SHA256Managed.Create()
     End If
     Set Algo = this.Algo
     
 End Property
 
+'@Description("Function return (6) = YES or (7) = NO depending on user selection")
+Public Function UserNotifierConfirmation(ByVal msgPrompt As String, ByVal msgTitel As String) As Long
+
+    UserNotifierConfirmation = VBA.Interaction.MsgBox( _
+                                        Prompt:=msgPrompt, _
+                                        Buttons:=VBA.vbQuestion + VBA.vbYesNo + VBA.vbDefaultButton1, _
+                                        Title:=msgTitel)
+
+End Function
+
 '@Description("Create a Randomized String of Characters, SOURCE: www.TheSpreadsheetGuru.com/the-code-vault")
-Public Function RandomString(Length As Integer) As String
+Public Function RandomString(ByVal Length As Integer) As String
+Attribute RandomString.VB_Description = "Create a Randomized String of Characters, SOURCE: www.TheSpreadsheetGuru.com/the-code-vault"
 
     Dim CharacterBank   As Variant
     Dim x               As Long
@@ -77,16 +89,6 @@ Public Function RandomString(Length As Integer) As String
     'Output Randomly Generated String
     RandomString = str
 
-End Function
-
-'@Description("This function uses regexp library to remove unwanted characters from the string and it only keeps numericals!")
-Private Function CleanString(ByVal InputValue As String) As String
-Attribute CleanString.VB_Description = "This function uses regexp library to remove unwanted characters from the string and it only keeps numericals!"
-    With ObjRegEx
-        .Global = True
-        .Pattern = "[^\d]+"
-        CleanString = .Replace(InputValue, vbNullString)
-    End With
 End Function
 
 '@Description("This function will crypt the string value")
@@ -121,11 +123,11 @@ End Sub
                 decimal seperator's availability only. If it is Available at the _
                 third from the right side of the number then it must be a currency")
 Public Function IsCurrency(ByVal InputValue As String) As Boolean
-    If VBA.Left(VBA.Right(InputValue, 3), 1) = Application.International(xlDecimalSeparator) Then
-        IsCurrency = True
-    Else
-        IsCurrency = False
-    End If
+    
+    Dim commaChar As String
+    commaChar = VBA.Left(VBA.Right(InputValue, 3), 1)
+    IsCurrency = (commaChar = Application.International(xlDecimalSeparator))
+    
 End Function
 
 '@Description("Following function will return new array by filtering it from one it's column")
@@ -268,7 +270,7 @@ Attribute FormatStringToCurrency.VB_Description = "Change text format to #,###.0
             'Err.Raise _
                 Number:=Error_NonNumericalInput + 513, _
                 Description:="Non-Numerical character(s) are not allowed!"
-            MsgBox Err.Description, Title:=VBA.Err.Number
+            MsgBox "Non-Numerical character(s) are not allowed!", vbCritical, Title:=SIGN
             LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & " Non-Numerical character(s) are not allowed!"
         End If
         
@@ -356,9 +358,10 @@ CleanExit:
     Exit Function
     
 EhhErr:
-    MsgBox "Error: " & Err.Number & vbNewLine & vbNewLine & Err.Description, vbCritical, "Kamal Bharakhda"
+    MsgBox "Error: " & Err.Number & vbNewLine & vbNewLine & Err.Description, vbCritical, SIGN
     FormatStringToCurrency = vbNullString
     Err.Clear
+    LogManager.Log ErrorLevel, "Error: " & Err.Number & vbTab & Err.Description
     Resume CleanExit
     
 End Function
@@ -591,5 +594,5 @@ End Function
 
 Private Sub Class_Terminate()
     Set this.ObjRegEx = Nothing
-    Disposable.TryDispose Algo
+    Disposable.TryDispose this.Algo
 End Sub

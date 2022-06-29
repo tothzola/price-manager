@@ -11,6 +11,7 @@ Attribute VB_Description = "An interface representing a hashing Algorithm."
 '@Folder("Authentication.Hashing")
 '@ModuleDescription("An interface representing a hashing Algorithm.")
 '@Interface
+'@Exposed
 Option Explicit
 
 '@Description("Computes a hash for the given string value.")

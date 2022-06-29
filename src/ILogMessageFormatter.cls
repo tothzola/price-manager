@@ -7,11 +7,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder("Logger")
+'@Folder("System.Logger")
 '@Interface
 '@Exposed
 Option Explicit
 
-Public Function FormatMessage(ByVal level As LogLevel, ByVal loggerName As String, ByVal Message As String) As String
+Public Function FormatMessage(ByVal level As LogLevel, ByVal loggerName As String, ByVal message As String) As String
 End Function
 

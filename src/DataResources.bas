@@ -1,6 +1,7 @@
 Attribute VB_Name = "DataResources"
 '@Folder("Constants")
 Option Explicit
+Option Private Module
 
 'Data Tables Structure
 

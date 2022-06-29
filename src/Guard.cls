@@ -48,7 +48,7 @@ Private Sub Class_Initialize()
             .Name = "SingletonErr"
             .Number = ErrNo.SingletonErr
             .Source = TypeName(Me) & " type"
-            .Message = "Singleton already instantiated"
+            .message = "Singleton already instantiated"
             .Description = "Creation of non-default instances is not supported. Use predeclared instance."
             RaiseError this
         End If
@@ -66,7 +66,7 @@ Attribute EmptyString.VB_Description = "Raises a run-time error if the specified
             .Name = "TypeMismatchErr"
             .Number = ErrNo.TypeMismatchErr
             .Source = TypeName(Text) & " type"
-            .Message = "String required"
+            .message = "String required"
             .Description = "Variable type: " & TypeName(Text) & ". String required."
             RaiseError errorDetails
         End If
@@ -76,8 +76,8 @@ Attribute EmptyString.VB_Description = "Raises a run-time error if the specified
             .Name = "EmptyStringErr"
             .Number = ErrNo.EmptyStringErr
             .Source = "String variable"
-            .Message = "String variable empty"
-            .Description = .Message
+            .message = "String variable empty"
+            .Description = .message
             RaiseError errorDetails
         End If
     End With
@@ -94,7 +94,7 @@ Attribute NullReference.VB_Description = "Raises a run-time error if the specifi
             .Name = "ObjectRequiredErr"
             .Number = ErrNo.ObjectRequiredErr
             .Source = TypeName(instanceVar) & " Type"
-            .Message = "Object required"
+            .message = "Object required"
             .Description = "Variable type: " & TypeName(instanceVar) & ". Object required."
             RaiseError errorDetails
         End If
@@ -104,7 +104,7 @@ Attribute NullReference.VB_Description = "Raises a run-time error if the specifi
             .Name = "ObjectNotSetErr"
             .Number = ErrNo.ObjectNotSetErr
             .Source = "Variable is Nothing"
-            .Message = "Object variable not set"
+            .message = "Object variable not set"
             .Description = "Variable type: " & TypeName(instanceVar) & ". Object not set."
             RaiseError errorDetails
         End If
@@ -122,7 +122,7 @@ Attribute NonNullReference.VB_Description = "Raises a run-time error if the spec
             .Name = "ObjectRequiredErr"
             .Number = ErrNo.ObjectRequiredErr
             .Source = TypeName(instanceVar) & " Type"
-            .Message = "Object required"
+            .message = "Object required"
             .Description = "Variable type: " & TypeName(instanceVar) & ". Object required."
             RaiseError errorDetails
         End If
@@ -132,7 +132,7 @@ Attribute NonNullReference.VB_Description = "Raises a run-time error if the spec
             .Name = "ObjectSetErr"
             .Number = ErrNo.ObjectSetErr
             .Source = TypeName(instanceVar) & " Type"
-            .Message = "Object variable already set"
+            .message = "Object variable already set"
             .Description = "Variable type: " & TypeName(instanceVar) & ". Object is not Nothing."
             RaiseError errorDetails
         End If
@@ -156,7 +156,7 @@ Attribute Singleton.VB_Description = "Raises a run-time error if the specified i
             .Name = "SingletonErr"
             .Number = ErrNo.SingletonErr
             .Source = TypeName(instanceVar) & " type"
-            .Message = "Singleton already instantiated"
+            .message = "Singleton already instantiated"
             .Description = "Creation of non-default instances is not supported. Use predeclared instance."
             RaiseError errorDetails
         End If
@@ -179,7 +179,7 @@ Attribute NonDefaultInstance.VB_Description = "Raises a run-time error if the sp
             .Name = "NonDefaultInstanceErr"
             .Number = ErrNo.NonDefaultInstanceErr
             .Source = TypeName(classVar) & " Class"
-            .Message = "Default (" & TypeName(classVar) & ") object instance must be used"
+            .message = "Default (" & TypeName(classVar) & ") object instance must be used"
             .Description = vbNullString
             RaiseError errorDetails
         End If
@@ -188,7 +188,7 @@ End Sub
 
 
 '@Description("Raises a run-time error if the specified expression is false.")
-Public Sub Expression(ByVal AssertionResult As Boolean, ByVal Source As String, ByVal Message As String)
+Public Sub Expression(ByVal AssertionResult As Boolean, ByVal Source As String, ByVal message As String)
 Attribute Expression.VB_Description = "Raises a run-time error if the specified expression is false."
     Dim errorDetails As TError
     With errorDetails
@@ -197,7 +197,7 @@ Attribute Expression.VB_Description = "Raises a run-time error if the specified 
             .Name = "CustomErr"
             .Number = ErrNo.CustomErr
             .Source = Source
-            .Message = Message
+            .message = message
             .Description = vbNullString
             RaiseError errorDetails
         End If
@@ -220,7 +220,7 @@ Attribute DefaultInstance.VB_Description = "Raises a run-time error if the speci
             .Name = "DefaultInstanceErr"
             .Number = ErrNo.DefaultInstanceErr
             .Source = TypeName(classVar) & " Class"
-            .Message = "Non-default (" & TypeName(classVar) & ") object instance must be used"
+            .message = "Non-default (" & TypeName(classVar) & ") object instance must be used"
             .Description = vbNullString
             RaiseError errorDetails
         End If
@@ -242,7 +242,7 @@ Attribute FileNotExist.VB_Description = "Raises a run-time error if the specifie
             .Name = "FileNotFoundErr"
             .Number = ErrNo.FileNotFoundErr
             .Source = FilePathName
-            .Message = "File not found " & FilePathName
+            .message = "File not found " & FilePathName
             .Description = vbNullString
             RaiseError errorDetails
         End If
@@ -261,7 +261,7 @@ Attribute InTransaction.VB_Description = "Raises a run-time error if the specifi
             .Name = "InTransaction"
             .Number = ErrNo.AdoInTransactionErr
             .Source = vbNullString
-            .Message = "Current database connection already in transaction"
+            .message = "Current database connection already in transaction"
             .Description = "Attempted operation not permmited when transaction in progress (e.g. starting a new transaction)."
             RaiseError errorDetails
         End If
@@ -281,7 +281,7 @@ Attribute NotInTransaction.VB_Description = "Raises a run-time error if the spec
             .Name = "NotInTransaction"
             .Number = ErrNo.AdoNotInTransactionErr
             .Source = vbNullString
-            .Message = "Current database connection is not in transaction"
+            .message = "Current database connection is not in transaction"
             .Description = "Attempted operation not permmited when no  active transaction in progress (e.g. commit or rollback)."
             RaiseError errorDetails
         End If
@@ -299,8 +299,8 @@ Attribute ConnectionString.VB_Description = "Raises a run-time error if the spec
             .Name = "ConnectionStringError"
             .Number = ErrNo.AdoConnectionStringErr
             .Source = "Argument is Nothing"
-            .Message = "Either the connection string is invalid or provider not found"
-            .Description = .Message
+            .message = "Either the connection string is invalid or provider not found"
+            .Description = .message
             RaiseError errorDetails
         End If
     End With
@@ -317,8 +317,8 @@ Attribute IncompatibleArrays.VB_Description = "Raises a run-time error if the sp
             .Name = "Invalid parameters"
             .Number = ErrNo.InvalidParameterErr
             .Source = "Bad arrays"
-            .Message = "Expected two arrays"
-            .Description = .Message
+            .message = "Expected two arrays"
+            .Description = .message
             RaiseError errorDetails
         End If
     End With
@@ -329,8 +329,8 @@ Attribute IncompatibleArrays.VB_Description = "Raises a run-time error if the sp
             .Name = "Incompatible arrays"
             .Number = ErrNo.IncompatibleArraysErr
             .Source = "Bad arrays"
-            .Message = "Provided arrays have different bases"
-            .Description = .Message
+            .message = "Provided arrays have different bases"
+            .Description = .message
             RaiseError errorDetails
         End If
     End With
@@ -341,9 +341,62 @@ Attribute IncompatibleArrays.VB_Description = "Raises a run-time error if the sp
             .Name = "Incompatible arrays"
             .Number = ErrNo.IncompatibleArraysErr
             .Source = "Bad arrays"
-            .Message = "Provided arrays have different sizes"
-            .Description = .Message
+            .message = "Provided arrays have different sizes"
+            .Description = .message
             RaiseError errorDetails
         End If
     End With
 End Sub
+
+'@Description("Raises a run-time error if the specified object reference is already set.")
+Public Sub DoubleInitialization(ByVal Value As Variant)
+Attribute DoubleInitialization.VB_Description = "Raises a run-time error if the specified object reference is already set."
+    
+    Dim errorDetails As TError
+    With errorDetails
+    
+        If IsObject(Value) Then
+            .trapped = Not Value Is Nothing
+        Else
+            .trapped = Value <> GetDefaultValue(VarType(Value))
+        End If
+        
+        If .trapped Then
+            .Name = "Double Initialization"
+            .Number = ErrNo.ObjectAlreadyInitialized
+            .Source = vbNullString
+            .message = "Value is already initialized."
+            .Description = "Attempted operation not permmited the instance value is alredy initialized."
+            RaiseError errorDetails
+        End If
+    End With
+    
+End Sub
+
+Private Function GetDefaultValue(ByVal VType As VBA.VbVarType) As Variant
+    Select Case VType
+    Case VbVarType.vbString
+        GetDefaultValue = VBA.Constants.vbNullString
+    Case VbVarType.vbBoolean
+        GetDefaultValue = False
+    Case VbVarType.vbByte, VbVarType.vbCurrency, VbVarType.vbDate, _
+         VbVarType.vbDecimal, VbVarType.vbDouble, VbVarType.vbLong, _
+         VbVarType.vbLong, VbVarType.vbSingle
+        GetDefaultValue = 0
+    Case VbVarType.vbArray, VbVarType.vbEmpty, VbVarType.vbVariant
+        GetDefaultValue = Empty
+    Case VbVarType.vbNull
+        GetDefaultValue = Null
+    Case VbVarType.vbObject
+        Set GetDefaultValue = Nothing
+        #If VBA7 Then
+            #If Win64 Then
+            Case VbVarType.vbLongLong
+                GetDefaultValue = 0
+            #Else
+            Case VbVarType.vbLong
+                GetDefaultValue = 0
+            #End If
+        #End If
+    End Select
+End Function

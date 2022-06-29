@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Attribute VB_Description = "Mathieu Guindon CR https://codereview.stackexchange.com/q/52185/146810"
 
-'@Folder("Logger.TextWriter")
+'@Folder("System.Logger.TextWriter")
 '@ModuleDescription("Mathieu Guindon CR https://codereview.stackexchange.com/q/52185/146810")
 '@PredeclaredID
 '@Exposed

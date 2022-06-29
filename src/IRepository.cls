@@ -7,15 +7,16 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder "Repository"
+'@Folder("AppObjects.Repository")
+'@Interface
 '@Exposed
 Option Explicit
 
 'public properties
 
 Public Enum RepositoryType
-    TYPE_POSTGRESQL
-    TYPE_ACCESS
+    TYPE_POSTGRESQL = 1
+    TYPE_ACCESS = 2
 End Enum
 
 Public Property Get IsEverythingOkay() As Boolean
@@ -25,7 +26,6 @@ Public Property Let IsEverythingOkay(ByVal vNewValue As Boolean)
 End Property
 
 'public methods
-
 Public Sub InItRepository(ByVal ContextTableName As String, _
                             Optional ContextConnectionString As String = vbNullString, _
                             Optional ContextTableHeaders As Variant = vbNullString)

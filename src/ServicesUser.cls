@@ -7,22 +7,24 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+'@Folder("AppObjects.Services")
 '@PredeclaredId
-'@Folder "Services"
 Option Explicit
 
 Implements IServices
+Implements IDisposable
 
 Private Type TUserServicesComponents
     'Public Properties
     IsEverythingOkayInEngine As Boolean
     'Private properties
-    Algo As IHashAlgorithm
     Repository As IRepository
     RepositoryTypes As RepositoryType
     ContextTableName As String
     ConnectionString As String
     ContextTableHeaders As Variant
+    Disposed As Boolean
 End Type
 
 Private this As TUserServicesComponents
@@ -50,10 +52,12 @@ End Property
 '-------------------------------------------------------------------------
 
 Private Property Get Repository() As IRepository
+
     Set Repository = this.Repository
 End Property
 
 Private Property Set Repository(ByVal RHS As IRepository)
+
     Set this.Repository = RHS
 End Property
 
@@ -110,11 +114,15 @@ Private Sub IServices_InItService(ByVal SelectedRepositoryType As RepositoryType
     Select Case RepositoryTypes
         Case RepositoryType.TYPE_POSTGRESQL
             If Repository Is Nothing Then Set Repository = New RepositoryPostgreSQL
-            Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
+            Repository.InItRepository ContextTableName, _
+            ConnectionString, _
+            ContextTableHeaders
             
         Case RepositoryType.TYPE_ACCESS
             If Repository Is Nothing Then Set Repository = New RepositoryACCESS
-            Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
+            Repository.InItRepository ContextTableName, _
+            ConnectionString, _
+            ContextTableHeaders
             
     End Select
     
@@ -141,7 +149,7 @@ End Function
 Private Sub IServices_AddNewRecordToContextTable(ParamArray ContextLineItems() As Variant)
 
     Dim cryptPass As String
-    cryptPass = this.Algo.ComputeHash(ContextLineItems(4))
+    cryptPass = AppMethods.Algo.ComputeHash(ContextLineItems(4))
     ContextLineItems(4) = cryptPass
 
     Call Repository.AddRecord(ContextLineItems(0), _
@@ -151,12 +159,13 @@ Private Sub IServices_AddNewRecordToContextTable(ParamArray ContextLineItems() A
                               ContextLineItems(4), _
                               ContextLineItems(5))
     IServices_IsEverythingOkayInEngine = Repository.IsEverythingOkay
+    
 End Sub
 
 Private Sub IServices_UpdateRecordOfContextTable(ByVal index As Long, ParamArray ContextLineItems() As Variant)
     
     Dim cryptPass As String
-    cryptPass = this.Algo.ComputeHash(ContextLineItems(4))
+    cryptPass = AppMethods.Algo.ComputeHash(ContextLineItems(4))
     ContextLineItems(4) = cryptPass
         
     Call Repository.UpdateRecord(index, _
@@ -178,12 +187,31 @@ End Sub
 'Class Events
 '-------------------------------------------------------------------------
 
-Private Sub Class_Initialize()
-    Set this.Algo = PAMXLAM.SHA256Managed.Create
-
-End Sub
-
 Private Sub Class_Terminate()
-    Set this.Algo = Nothing
-    Set Repository = Nothing
+    If Not this.Disposed Then Dispose
 End Sub
+
+Private Sub Dispose()
+
+    If this.Disposed Then
+        LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
+        Exit Sub
+    End If
+
+    If Not this.Repository Is Nothing Then
+        Disposable.TryDispose this.Repository
+        Set this.Repository = Nothing
+    End If
+    
+    this.Disposed = True
+    
+    #If TestMode Then
+        LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"
+    #End If
+    
+End Sub
+
+Private Sub IDisposable_Dispose()
+    Dispose
+End Sub
+

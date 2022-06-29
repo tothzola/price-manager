@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@IgnoreModule EncapsulatePublicField
-'@Folder "View"
+'@Folder("AppObjects.View")
 Option Explicit
 
 '@MemberAttribute VB_VarHelpID, -1

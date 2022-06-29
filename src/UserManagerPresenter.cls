@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "UserManager"
+'@Folder("AppObjects.Presenter.UserManager")
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -25,7 +25,7 @@ Public Event AddNewUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperatio
 Public Event UpdateUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
 Public Event DeleteUserFromUserManagerForm(ByVal TypeOfOperation As CRUDOperations, ByVal UMModel As UserManagerModel)
 Public Event UpdateUserManagerFormRecord()
-Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
 

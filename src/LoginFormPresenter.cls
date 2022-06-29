@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "LoginForm"
+'@Folder("AppObjects.Presenter.LoginForm")
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -22,7 +22,7 @@ Public Event OpenLoginForm(ByVal LModel As LoginFormModel)
 Public Event CancelLoginForm()
 Public Event Login()
 Public Event ResetPasswordForUser(ByVal targetUserName As String, ByVal TargetEmailAddress As String)
-Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
 

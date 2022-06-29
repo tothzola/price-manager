@@ -7,7 +7,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder "Services"
+'@Folder("AppObjects.Services")
+'@Interface
 '@Exposed
 Option Explicit
 
@@ -18,9 +19,10 @@ End Property
 Public Property Let IsEverythingOkayInEngine(ByVal vNewValue As Boolean)
 End Property
 
-'public methods for communication
+'@Description "public methods for communication"
 Public Sub InItService(ByVal SelectedRepositoryType As RepositoryType, ByVal TableName As String, ByVal TableHeaders As Variant, _
 Optional ByVal ContextConnectionString As String = vbNullString)
+Attribute InItService.VB_Description = "public methods for communication"
 
 End Sub
 

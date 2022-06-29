@@ -7,11 +7,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+'@Folder("AppObjects.Services")
 '@PredeclaredId
-'@Folder "Services"
 Option Explicit
 
 Implements IServices
+Implements IDisposable
 
 Private Type TMainServicesComponents
     'Public Properties
@@ -22,6 +24,7 @@ Private Type TMainServicesComponents
     ContextTableName As String
     ConnectionString As String
     ContextTableHeaders As Variant
+    Disposed As Boolean
 End Type
 
 Private this As TMainServicesComponents
@@ -97,9 +100,9 @@ End Property
 '-------------------------------------------------------------------------
 
 Private Sub IServices_InItService(ByVal SelectedRepositoryType As RepositoryType, _
-                                    ByVal TableName As String, _
-                                    ByVal TableHeaders As Variant, _
-                                    Optional ByVal ContextConnectionString As String = vbNullString)
+                                  ByVal TableName As String, _
+                                  ByVal TableHeaders As Variant, _
+                                  Optional ByVal ContextConnectionString As String = vbNullString)
     'Hydrate Properties
     RepositoryTypes = SelectedRepositoryType
     ContextTableName = TableName
@@ -107,18 +110,22 @@ Private Sub IServices_InItService(ByVal SelectedRepositoryType As RepositoryType
     ConnectionString = ContextConnectionString
     
     Select Case RepositoryTypes
-        Case RepositoryType.TYPE_POSTGRESQL
-            If Repository Is Nothing Then Set Repository = New RepositoryPostgreSQL
-            Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
+    Case RepositoryType.TYPE_POSTGRESQL
+        If Repository Is Nothing Then Set Repository = New RepositoryPostgreSQL
+        Repository.InItRepository ContextTableName, _
+                                  ConnectionString, _
+                                  ContextTableHeaders
             
-        Case RepositoryType.TYPE_ACCESS
-            If Repository Is Nothing Then Set Repository = New RepositoryACCESS
-            Call Repository.InItRepository(ContextTableName, ConnectionString, ContextTableHeaders)
+    Case RepositoryType.TYPE_ACCESS
+        If Repository Is Nothing Then Set Repository = New RepositoryACCESS
+        Repository.InItRepository ContextTableName, _
+                                  ConnectionString, _
+                                  ContextTableHeaders
             
     End Select
     
     'Check for the Table Status and hence we can indirectly get the status of Database itself
-    Call Repository.CheckTableStatus
+    Repository.CheckTableStatus
     IServices_IsEverythingOkayInEngine = Repository.IsEverythingOkay
     
 End Sub
@@ -186,5 +193,31 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    Set Repository = Nothing
+    If Not this.Disposed Then Dispose
 End Sub
+
+Private Sub Dispose()
+
+    If this.Disposed Then
+        LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
+        Exit Sub
+    End If
+
+    If Not this.Repository Is Nothing Then
+        Disposable.TryDispose this.Repository
+        Set this.Repository = Nothing
+    End If
+
+    
+    this.Disposed = True
+    
+    #If TestMode Then
+        LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"
+    #End If
+    
+End Sub
+
+Private Sub IDisposable_Dispose()
+    Dispose
+End Sub
+

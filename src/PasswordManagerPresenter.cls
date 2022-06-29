@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder "PasswordManager"
+'@Folder("AppObjects.Presenter.PasswordManager")
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -21,7 +21,7 @@ Attribute MainView.VB_VarHelpID = -1
 Public Event CancelPasswordManagerForm()
 Public Event OpenPasswordManagerForm(ByVal PMModel As PasswordManagerModel)
 Public Event ChangePassword(ByVal NewPassword As String)
-Public Event OnSomethingWentWrong(ByVal Message As String, ByVal typeOfMessage As messageType)
+Public Event OnSomethingWentWrong(ByVal message As String, ByVal typeOfMessage As messageType)
 
 '-------------------------------------------------------------------------
 

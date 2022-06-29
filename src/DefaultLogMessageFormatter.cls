@@ -7,12 +7,12 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder("Logger")
+'@Folder("System.Logger")
 Option Explicit
 Implements ILogMessageFormatter
 
-Private Function ILogMessageFormatter_FormatMessage(ByVal level As LogLevel, ByVal loggerName As String, ByVal Message As String) As String
-    ILogMessageFormatter_FormatMessage = StringType.Format("{0}\t{1}\t[{2}]\t{3}", Now, loggerName, FormatLogLevel(level), Message)
+Private Function ILogMessageFormatter_FormatMessage(ByVal level As LogLevel, ByVal loggerName As String, ByVal message As String) As String
+    ILogMessageFormatter_FormatMessage = StringType.Format("{0}\t{1}\t[{2}]\t{3}", Now, loggerName, FormatLogLevel(level), message)
     
 End Function
 
