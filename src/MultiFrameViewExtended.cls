@@ -38,7 +38,7 @@ Const VALID_FIELD_FONTCOLOR As Long = vbBlack
 '-----------------------------------------------------------------------
 
 'Userform Properties
-Public TargetForm As Object 'Instance of User Form/VIEW
+Public TargetForm As Object 'Instance of User Form/View
 Public formWidth As Integer
 Public formHeight As Integer
 

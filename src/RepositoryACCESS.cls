@@ -26,58 +26,58 @@ Private Type TAccessRepositoryComponents
     SQLQuery As String
 End Type
 
-Private this As TAccessRepositoryComponents
+Private This As TAccessRepositoryComponents
 
 '-------------------------------------------------------------------------
 'Public/Private Properties
 '-------------------------------------------------------------------------
 
 Private Property Get TargetTableName() As String
-    TargetTableName = this.TargetTableName
+    TargetTableName = This.TargetTableName
 End Property
 
 Private Property Let TargetTableName(ByVal vNewValue As String)
-    this.TargetTableName = vNewValue
+    This.TargetTableName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get TargetTableHeaders() As Variant
-    TargetTableHeaders = this.TargetTableHeaders
+    TargetTableHeaders = This.TargetTableHeaders
 End Property
 
 Private Property Let TargetTableHeaders(ByVal vNewValue As Variant)
-    this.TargetTableHeaders = vNewValue
+    This.TargetTableHeaders = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get IRepository_IsEverythingOkay() As Boolean
-    IRepository_IsEverythingOkay = this.IsEverythingOkay
+    IRepository_IsEverythingOkay = This.IsEverythingOkay
 End Property
 
 Private Property Let IRepository_IsEverythingOkay(ByVal RHS As Boolean)
-    this.IsEverythingOkay = RHS
+    This.IsEverythingOkay = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get connection() As ADODB.connection
-    Set connection = this.connection
+    Set connection = This.connection
 End Property
 
 Private Property Set connection(ByVal vNewValue As ADODB.connection)
-    Set this.connection = vNewValue
+    Set This.connection = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get recordset() As ADODB.recordset
-    Set recordset = this.recordset
+    Set recordset = This.recordset
 End Property
 
 Private Property Set recordset(ByVal vNewValue As ADODB.recordset)
-    Set this.recordset = vNewValue
+    Set This.recordset = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -88,7 +88,7 @@ Private Sub IRepository_InItRepository(ByVal ContextTableName As String, _
                                         Optional ContextConnectionString As String = vbNullString, _
                                         Optional ContextTableHeaders As Variant = vbNullString)
     TargetTableName = ContextTableName
-    this.ConnectionString = ContextConnectionString
+    This.ConnectionString = ContextConnectionString
     TargetTableHeaders = ContextTableHeaders
     If connection Is Nothing Then Set connection = New ADODB.connection
     If recordset Is Nothing Then Set recordset = New ADODB.recordset
@@ -112,9 +112,9 @@ Private Function IRepository_GetRecords() As Variant
     If IRepository_IsEverythingOkay Then
         On Error GoTo EhhErr
     'Building SQL Qyery String!
-        this.SQLQuery = "SELECT * FROM " & TargetTableName & ";"
+        This.SQLQuery = "SELECT * FROM " & TargetTableName & ";"
         'Executing Query
-        recordset.Open this.SQLQuery, connection, adOpenForwardOnly, adLockReadOnly
+        recordset.Open This.SQLQuery, connection, adOpenForwardOnly, adLockReadOnly
         'Return Table!
         IRepository_GetRecords = GetDataWithHeadings
     End If
@@ -145,12 +145,12 @@ Private Function IRepository_GetRecordsByCondition(ByVal ColumnIndex As Long, By
         On Error GoTo EhhErr
     'Building SQL Qyery String!
         If VBA.IsNumeric(condition) Then
-            this.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, ColumnIndex) & "] = " & condition & ";"
+            This.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, ColumnIndex) & "] = " & condition & ";"
         Else
-            this.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, ColumnIndex) & "] = '" & condition & "';"
+            This.SQLQuery = "SELECT * FROM " & TargetTableName & " WHERE [" & TargetTableHeaders(1, ColumnIndex) & "] = '" & condition & "';"
         End If
         'Executing Query
-        recordset.Open this.SQLQuery, connection, adOpenForwardOnly, adLockReadOnly
+        recordset.Open This.SQLQuery, connection, adOpenForwardOnly, adLockReadOnly
         'Return Table!
         IRepository_GetRecordsByCondition = GetDataWithHeadings
     End If
@@ -187,7 +187,7 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
         'Syntax
         'INSERT INTO table_name ([column1], [column2], [column3], ...)
         'VALUES (value1, value2, value3, ...);
-        this.SQLQuery = "INSERT INTO " & TargetTableName & " ("
+        This.SQLQuery = "INSERT INTO " & TargetTableName & " ("
         For i = 2 To UBound(TargetTableHeaders, 2)
             HeadersString = HeadersString & "[" & TargetTableHeaders(1, i) & "], "
             If VBA.IsEmpty(LineItems(i - 2)) Then
@@ -198,9 +198,9 @@ Private Sub IRepository_AddRecord(ParamArray LineItems() As Variant)
         Next i
         HeadersString = VBA.Left$(HeadersString, VBA.Len(HeadersString) - 2)
         ValuesString = VBA.Left$(ValuesString, VBA.Len(ValuesString) - 2)
-        this.SQLQuery = this.SQLQuery & HeadersString & ") VALUES (" & ValuesString & ");"
+        This.SQLQuery = This.SQLQuery & HeadersString & ") VALUES (" & ValuesString & ");"
         'Executing Query
-        recordset.Open this.SQLQuery, connection, adOpenDynamic, adLockOptimistic
+        recordset.Open This.SQLQuery, connection, adOpenDynamic, adLockOptimistic
     End If
     
     'if you are here then operation is successful!
@@ -236,7 +236,7 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
         'SET column1 = value1, column2 = value2, ...
         'WHERE columnX = valueX;
         tmp = vbNullString
-        this.SQLQuery = "UPDATE " & TargetTableName & " SET "
+        This.SQLQuery = "UPDATE " & TargetTableName & " SET "
         For i = 2 To UBound(TargetTableHeaders, 2)
             If VBA.IsEmpty(LineItems(i - 2)) Then
                 tmp = tmp & "[" & TargetTableHeaders(1, i) & "] = '', "
@@ -245,9 +245,9 @@ Private Sub IRepository_UpdateRecord(ByVal TargetIndex As Long, ParamArray LineI
             End If
         Next i
         tmp = VBA.Left$(tmp, VBA.Len(tmp) - 2)
-        this.SQLQuery = this.SQLQuery & tmp & " WHERE [Index] = " & TargetIndex & ";"
+        This.SQLQuery = This.SQLQuery & tmp & " WHERE [Index] = " & TargetIndex & ";"
         'Executing Query
-        recordset.Open this.SQLQuery, connection, adOpenDynamic, adLockOptimistic
+        recordset.Open This.SQLQuery, connection, adOpenDynamic, adLockOptimistic
     End If
     
     'if you are here then operation is successful!
@@ -275,9 +275,9 @@ Private Sub IRepository_DeleteRecord(ByVal TargetIndex As Long)
     If IRepository_IsEverythingOkay Then
         On Error GoTo EhhErr
         'Building SQL Qyery String!
-        this.SQLQuery = "DELETE FROM " & TargetTableName & " WHERE [Index] = " & TargetIndex & ";"
+        This.SQLQuery = "DELETE FROM " & TargetTableName & " WHERE [Index] = " & TargetIndex & ";"
         'Executing Query
-        recordset.Open this.SQLQuery, connection, adOpenDynamic, adLockOptimistic
+        recordset.Open This.SQLQuery, connection, adOpenDynamic, adLockOptimistic
     End If
     
     'if you are here then operation is successful!
@@ -307,7 +307,7 @@ Private Sub OpenConnection()
     If connection Is Nothing Then Set connection = New ADODB.connection
     
     With connection
-        .ConnectionString = this.ConnectionString
+        .ConnectionString = This.ConnectionString
         .Open
     End With
     
@@ -324,7 +324,7 @@ End Sub
 
 Private Sub CloseConnection()
     If CBool(connection.State And adStateOpen) = True Then connection.Close
-    this.SQLQuery = vbNullString
+    This.SQLQuery = vbNullString
 End Sub
 
 Private Sub CloseRecordSet()
@@ -348,7 +348,7 @@ End Function
 Private Sub Class_Terminate()
     TargetTableName = vbNullString
     TargetTableHeaders = Empty
-    this.ConnectionString = vbNullString
+    This.ConnectionString = vbNullString
     Set connection = Nothing
     Set recordset = Nothing
 End Sub

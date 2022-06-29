@@ -23,7 +23,7 @@ CleanExit:
     Exit Sub
     
 CleanFail:
-    MsgBox VBA.Err.Description, vbCritical, Title:=SIGN
+    MsgBox Err.Number & vbTab & Err.Description, vbCritical, Title:=SIGN
     LogManager.Log ErrorLevel, "Error: " & VBA.Err.Number & ". " & VBA.Err.Description
     Resume CleanExit
     Resume

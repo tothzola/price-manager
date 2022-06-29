@@ -39,7 +39,7 @@ Private Type TAppModelComponents
     
 End Type
 
-Private this As TAppModelComponents
+Private This As TAppModelComponents
 
 '@Ignore ProcedureNotUsed
 '@Description("Returns class reference")
@@ -83,151 +83,151 @@ End Sub
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserEmail() As String
-    ActiveUserEmail = this.ActiveUserEmail
+    ActiveUserEmail = This.ActiveUserEmail
 End Property
 
 Public Property Let ActiveUserEmail(ByVal vNewValue As String)
-    this.ActiveUserEmail = vNewValue
+    This.ActiveUserEmail = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserPassword() As String
-    ActiveUserPassword = this.ActiveUserPassword
+    ActiveUserPassword = This.ActiveUserPassword
 End Property
 
 Public Property Let ActiveUserPassword(ByVal vNewValue As String)
-    this.ActiveUserPassword = vNewValue
+    This.ActiveUserPassword = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserName() As String
-    ActiveUserName = this.ActiveUserName
+    ActiveUserName = This.ActiveUserName
 End Property
 
 Public Property Let ActiveUserName(ByVal vNewValue As String)
-    this.ActiveUserName = vNewValue
+    This.ActiveUserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserType() As String
-    ActiveUserType = this.ActiveUserType
+    ActiveUserType = This.ActiveUserType
 End Property
 
 Public Property Let ActiveUserType(ByVal vNewValue As String)
-    this.ActiveUserType = vNewValue
+    This.ActiveUserType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserStatus() As String
-    ActiveUserStatus = this.ActiveUserStatus
+    ActiveUserStatus = This.ActiveUserStatus
 End Property
 
 Public Property Let ActiveUserStatus(ByVal vNewValue As String)
-    this.ActiveUserStatus = vNewValue
+    This.ActiveUserStatus = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveUserID() As String
-    ActiveUserID = this.ActiveUserID
+    ActiveUserID = This.ActiveUserID
 End Property
 
 Public Property Let ActiveUserID(ByVal vNewValue As String)
-    this.ActiveUserID = vNewValue
+    This.ActiveUserID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get mainTable() As Variant
-    mainTable = this.mainTable
+    mainTable = This.mainTable
 End Property
 
 Public Property Let mainTable(ByVal vNewValue As Variant)
-    this.mainTable = vNewValue
+    This.mainTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get usersTable() As Variant
-    usersTable = this.usersTable
+    usersTable = This.usersTable
 End Property
 
 Public Property Let usersTable(ByVal vNewValue As Variant)
-    this.usersTable = vNewValue
+    This.usersTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get CurrenciesList() As Variant
-    CurrenciesList = this.CurrenciesList
+    CurrenciesList = This.CurrenciesList
 End Property
 
 Public Property Let CurrenciesList(ByVal vNewValue As Variant)
-    this.CurrenciesList = vNewValue
+    This.CurrenciesList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get unitOfMeasuresList() As Variant
-    unitOfMeasuresList = this.unitOfMeasuresList
+    unitOfMeasuresList = This.unitOfMeasuresList
 End Property
 
 Public Property Let unitOfMeasuresList(ByVal vNewValue As Variant)
-    this.unitOfMeasuresList = vNewValue
+    This.unitOfMeasuresList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userTypeList() As Variant
-    userTypeList = this.userTypeList
+    userTypeList = This.userTypeList
 End Property
 
 Public Property Let userTypeList(ByVal vNewValue As Variant)
-    this.userTypeList = vNewValue
+    This.userTypeList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userStatusList() As Variant
-    userStatusList = this.userStatusList
+    userStatusList = This.userStatusList
 End Property
 
 Public Property Let userStatusList(ByVal vNewValue As Variant)
-    this.userStatusList = vNewValue
+    This.userStatusList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get recordStatusList() As Variant
-    recordStatusList = this.recordStatusList
+    recordStatusList = This.recordStatusList
 End Property
 
 Public Property Let recordStatusList(ByVal vNewValue As Variant)
-    this.recordStatusList = vNewValue
+    This.recordStatusList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get distributionChannelsList() As Variant
-    distributionChannelsList = this.distributionChannelsList
+    distributionChannelsList = This.distributionChannelsList
 End Property
 
 Public Property Let distributionChannelsList(ByVal vNewValue As Variant)
-    this.distributionChannelsList = vNewValue
+    This.distributionChannelsList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get salesOrganizationList() As Variant
-    salesOrganizationList = this.salesOrganizationList
+    salesOrganizationList = This.salesOrganizationList
 End Property
 
 Public Property Let salesOrganizationList(ByVal vNewValue As Variant)
-    this.salesOrganizationList = vNewValue
+    This.salesOrganizationList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -245,26 +245,26 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get CurrentUpdateIndex() As Long
-    CurrentUpdateIndex = this.CurrentUpdateIndex
+    CurrentUpdateIndex = This.CurrentUpdateIndex
 End Property
 
 Public Property Let CurrentUpdateIndex(ByVal vNewValue As Long)
-    this.CurrentUpdateIndex = vNewValue
+    This.CurrentUpdateIndex = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 'Validations
 '-------------------------------------------------------------------------
 
-Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplication, ByVal index As Long, ByVal RecordID As String) As Variant
+Public Function IsRecordIDAvailableToUpdate(ByVal TABLE As TablesOfThisApplication, ByVal Index As Long, ByVal RecordID As String) As Variant
     Dim TRow As Long
     Dim ID As String
     Select Case TABLE
         Case TablesOfThisApplication.TABLE_MAINRECORDS
-            TRow = AppMethods.GetTargetRowIndex(Me.mainTable, index, MainTableFields.COL_MAIN_INDEX)
+            TRow = AppMethods.GetTargetRowIndex(Me.mainTable, Index, MainTableFields.COL_MAIN_INDEX)
             ID = Me.mainTable(TRow, 2)
         Case TablesOfThisApplication.TABLE_USERS
-            TRow = AppMethods.GetTargetRowIndex(Me.usersTable, index, UsersTableFields.COL_INDEX)
+            TRow = AppMethods.GetTargetRowIndex(Me.usersTable, Index, UsersTableFields.COL_INDEX)
             ID = Me.usersTable(TRow, 2)
     End Select
     If ID = RecordID Then

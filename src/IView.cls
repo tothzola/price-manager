@@ -14,11 +14,6 @@ Attribute VB_Description = "Describes a View."
 '@Exposed
 Option Explicit
 
-'@Description "Displays the View modally and returns a value indicating confirmation (True) or cancellation (False)."
-Public Function ShowDialog() As Boolean
-Attribute ShowDialog.VB_Description = "Displays the View modally and returns a value indicating confirmation (True) or cancellation (False)."
-End Function
-
 '@Description "Displays the View."
 Public Sub Show()
 Attribute Show.VB_Description = "Displays the View."

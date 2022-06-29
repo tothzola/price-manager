@@ -17,7 +17,6 @@ Attribute VB_Exposed = False
 '@Exposed
 Option Explicit
 
-Private ControlView As IFormControl
 Private Const PROGRESSBAR_MAXWIDTH As Integer = 224
 
 Public Event Activated()
@@ -25,10 +24,9 @@ Public Event Cancelled()
 
 Private Sub UserForm_Activate()
     
-    Set ControlView = FormControl.Create
-    With ControlView
-        .ShowTitleBar UF:=Me, HideTitle:=True
-        .SetFormOpacity UF:=Me, Opacity:=250
+    With FormControl
+        .ShowTitleBar outForm:=Me, HideTitle:=True
+        .SetFormOpacity outForm:=Me, Opacity:=250
     End With
     
     ProgressBar.Width = 0                        ' it's set to 10 to be visible at design-time

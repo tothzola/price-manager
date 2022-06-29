@@ -35,8 +35,8 @@ End Function
 Public Sub AddNewRecordToContextTable(ParamArray ContextLineItems() As Variant)
 End Sub
 
-Public Sub UpdateRecordOfContextTable(ByVal index As Long, ParamArray ContextLineItems() As Variant)
+Public Sub UpdateRecordOfContextTable(ByVal Index As Long, ParamArray ContextLineItems() As Variant)
 End Sub
 
-Public Sub DeleteRecordofContextTable(ByVal index As Long)
+Public Sub DeleteRecordofContextTable(ByVal Index As Long)
 End Sub

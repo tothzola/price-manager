@@ -53,7 +53,7 @@ Private Type TAppPresenterComponents
     Disposed As Boolean
 End Type
 
-Private this As TAppPresenterComponents
+Private This As TAppPresenterComponents
 
 '@Ignore ProcedureNotUsed
 '@Description("Returns class reference")
@@ -68,9 +68,9 @@ End Property
 
 Public Property Set MainView(ByVal RHS As IView)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization this.MainView
+    Guard.DoubleInitialization This.MainView
     Guard.NullReference RHS
-    Set this.MainView = RHS
+    Set This.MainView = RHS
     Set View = RHS
 End Property
 
@@ -78,38 +78,38 @@ End Property
 
 Public Property Get Model() As AppModel
     Guard.DefaultInstance Me
-    Set Model = this.Model
+    Set Model = This.Model
 End Property
 
 Public Property Set Model(ByVal RHS As AppModel)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization this.Model
+    Guard.DoubleInitialization This.Model
     Guard.NullReference RHS
-    Set this.Model = RHS
+    Set This.Model = RHS
 End Property
 
 Public Property Get Context() As IAppContext
     Guard.DefaultInstance Me
-    Set Context = this.Context
+    Set Context = This.Context
 End Property
 
 Public Property Set Context(ByVal RHS As IAppContext)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization this.Context
+    Guard.DoubleInitialization This.Context
     Guard.NullReference RHS
-    Set this.Context = RHS
+    Set This.Context = RHS
 End Property
 
 Public Property Get Report() As DocumentGeneratorExcel
     Guard.DefaultInstance Me
-    Set Report = this.Report
+    Set Report = This.Report
 End Property
 
 Public Property Set Report(ByVal RHS As DocumentGeneratorExcel)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization this.Report
+    Guard.DoubleInitialization This.Report
     Guard.NullReference RHS
-    Set this.Report = RHS
+    Set This.Report = RHS
 End Property
 
 
@@ -504,9 +504,9 @@ Private Sub PresenterPriceFormFrame_UpdateRecordFromPriceForm(ByVal TypeOfOperat
     Call RefreshMainTable
     Dim response As Variant
     With PFModel
-        response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
+        response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .Index, .RecordID)
         If response = True Then
-            Call Context.MainService.UpdateRecordOfContextTable(.index, _
+            Call Context.MainService.UpdateRecordOfContextTable(.Index, _
                                                         .RecordID, _
                                                         .userID, _
                                                         .recordStatus, _
@@ -535,9 +535,9 @@ Private Sub PresenterPriceFormFrame_DeleteRecordFromPriceForm(ByVal TypeOfOperat
     Call RefreshMainTable
     Dim response As Variant
     With PFModel
-        response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
+        response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .Index, .RecordID)
         If response = True Then
-            Call Context.MainService.DeleteRecordofContextTable(.index)
+            Call Context.MainService.DeleteRecordofContextTable(.Index)
             If Context.MainService.IsEverythingOkayInEngine Then
                 Call View.AfterPriceFormCRUDOperation(TypeOfOperation, True)
             End If
@@ -569,9 +569,9 @@ Private Sub PresenterPriceFormFrame_ApproveRecordFromPriceForm(ByVal TypeOfOpera
     Call RefreshMainTable
     Dim response As Variant
     With PFModel
-        response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
+        response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .Index, .RecordID)
         If response = True Then
-            Call Context.MainService.UpdateRecordOfContextTable(.index, _
+            Call Context.MainService.UpdateRecordOfContextTable(.Index, _
                                                         .RecordID, _
                                                         .userID, _
                                                         .recordStatus, _
@@ -606,11 +606,11 @@ Private Sub PresenterPriceFormFrame_RejectRecordFromPriceForm(ByVal TypeOfOperat
     Dim subject     As String
     
     With PFModel
-        response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .index, .RecordID)
+        response = Model.IsRecordIDAvailableToUpdate(TablesOfThisApplication.TABLE_MAINRECORDS, .Index, .RecordID)
         
         If response = True Then
         
-            Call Context.MainService.UpdateRecordOfContextTable(.index, _
+            Call Context.MainService.UpdateRecordOfContextTable(.Index, _
                                                         .RecordID, _
                                                         .userID, _
                                                         .recordStatus, _
@@ -743,7 +743,7 @@ End Sub
 Private Sub PresenterDataFormFrame_EditRecordFromDataForm(ByVal DFModel As DataFormModel)
     'We are leaving here one frame and entering into another frame hence,
     'we shold inform main model about the index that next frame should begin with
-    Model.CurrentUpdateIndex = DFModel.index
+    Model.CurrentUpdateIndex = DFModel.Index
     Call OpenPriceForm(OPERATION_UPDATE)
 End Sub
 
@@ -945,34 +945,34 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    If Not this.Disposed Then Dispose
+    If Not This.Disposed Then Dispose
 End Sub
 
 Private Sub Dispose()
 
-    If this.Disposed Then
+    If This.Disposed Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
         Exit Sub
     End If
     
-    If Not this.Model Is Nothing Then
-        Disposable.TryDispose this.Model
-        Set this.Model = Nothing
+    If Not This.Model Is Nothing Then
+        Disposable.TryDispose This.Model
+        Set This.Model = Nothing
     End If
 
-    If Not this.Context Is Nothing Then
-        Disposable.TryDispose this.Context
-        Set this.Context = Nothing
+    If Not This.Context Is Nothing Then
+        Disposable.TryDispose This.Context
+        Set This.Context = Nothing
     End If
 
-    If Not this.Report Is Nothing Then
-        Disposable.TryDispose this.Report
-        Set this.Report = Nothing
+    If Not This.Report Is Nothing Then
+        Disposable.TryDispose This.Report
+        Set This.Report = Nothing
     End If
 
-    If Not this.MainView Is Nothing Then
-        Disposable.TryDispose this.MainView
-        Set this.MainView = Nothing
+    If Not This.MainView Is Nothing Then
+        Disposable.TryDispose This.MainView
+        Set This.MainView = Nothing
 
         Set PresenterExportFormFrame = Nothing
         Set PresenterDataFormFrame = Nothing
@@ -984,7 +984,7 @@ Private Sub Dispose()
         
     End If
     
-    this.Disposed = True
+    This.Disposed = True
     
     #If TestMode Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"
@@ -997,5 +997,5 @@ Private Sub IDisposable_Dispose()
 End Sub
 
 Private Sub IAppPresenter_ShowView()
-    this.MainView.Show
+    This.MainView.Show
 End Sub

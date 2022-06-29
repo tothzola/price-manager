@@ -32,136 +32,136 @@ Private Type TExportFormModelComponents
     IsRecordsNeedsToBeProcessed As Boolean
 End Type
 
-Private this As TExportFormModelComponents
+Private This As TExportFormModelComponents
 
 '-------------------------------------------------------------------------
 
 Public Property Get dataTable() As Variant
-    dataTable = this.dataTable
+    dataTable = This.dataTable
 End Property
 
 Public Property Let dataTable(ByVal vNewValue As Variant)
-    this.dataTable = vNewValue
+    This.dataTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userTable() As Variant
-    userTable = this.userTable
+    userTable = This.userTable
 End Property
 
 Public Property Let userTable(ByVal vNewValue As Variant)
-    this.userTable = vNewValue
+    This.userTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get exportTable() As Variant
-    exportTable = this.exportTable
+    exportTable = This.exportTable
 End Property
 
 Public Property Let exportTable(ByVal vNewValue As Variant)
-    this.exportTable = vNewValue
+    This.exportTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get statusesList() As Variant
-    statusesList = this.statusesList
+    statusesList = This.statusesList
 End Property
 
 Public Property Let statusesList(ByVal vNewValue As Variant)
-    this.statusesList = vNewValue
+    This.statusesList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userIDsList() As Variant
-    userIDsList = this.userIDsList
+    userIDsList = This.userIDsList
 End Property
 
 Public Property Let userIDsList(ByVal vNewValue As Variant)
-    this.userIDsList = vNewValue
+    This.userIDsList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get customerIDsList() As Variant
-    customerIDsList = this.customerIDsList
+    customerIDsList = This.customerIDsList
 End Property
 
 Public Property Let customerIDsList(ByVal vNewValue As Variant)
-    this.customerIDsList = vNewValue
+    This.customerIDsList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get recordStatus() As String
-    recordStatus = this.recordStatus
+    recordStatus = This.recordStatus
 End Property
 
 Public Property Let recordStatus(ByVal vNewValue As String)
-    this.recordStatus = vNewValue
+    This.recordStatus = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userID() As String
-    userID = this.userID
+    userID = This.userID
 End Property
 
 Public Property Let userID(ByVal vNewValue As String)
-    this.userID = vNewValue
+    This.userID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get customerID() As String
-    customerID = this.customerID
+    customerID = This.customerID
 End Property
 
 Public Property Let customerID(ByVal vNewValue As String)
-    this.customerID = vNewValue
+    This.customerID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get FromDate() As String
-    FromDate = this.FromDate
+    FromDate = This.FromDate
 End Property
 
 Public Property Let FromDate(ByVal vNewValue As String)
-    this.FromDate = vNewValue
+    This.FromDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ToDate() As String
-    ToDate = this.ToDate
+    ToDate = This.ToDate
 End Property
 
 Public Property Let ToDate(ByVal vNewValue As String)
-    this.ToDate = vNewValue
+    This.ToDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get RecordsToProcess() As String
-    RecordsToProcess = this.RecordsToProcess
+    RecordsToProcess = This.RecordsToProcess
 End Property
 
 Public Property Let RecordsToProcess(ByVal vNewValue As String)
-    this.RecordsToProcess = vNewValue
+    This.RecordsToProcess = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get IsRecordsNeedsToBeProcessed() As Boolean
-    IsRecordsNeedsToBeProcessed = this.IsRecordsNeedsToBeProcessed
+    IsRecordsNeedsToBeProcessed = This.IsRecordsNeedsToBeProcessed
 End Property
 
 Public Property Let IsRecordsNeedsToBeProcessed(ByVal vNewValue As Boolean)
-    this.IsRecordsNeedsToBeProcessed = vNewValue
+    This.IsRecordsNeedsToBeProcessed = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -181,7 +181,7 @@ Public Sub InItModel(ByVal mainData As Variant, _
     Me.userIDsList = listOfUserIDs
     Me.statusesList = listOfRecordStatuses
     'reset check field array
-    Call AppMethods.ResetSingleDimensionalArray(this.CheckFields, True)
+    Call AppMethods.ResetSingleDimensionalArray(This.CheckFields, True)
     
 End Sub
 
@@ -225,7 +225,7 @@ Public Function IsEverythingOkayToExport() As Variant
     End If
     'check 2
     IsEverythingOkayToExport = _
-        ValidationServices.IsEverythingOkay(this.CheckFields, _
+        ValidationServices.IsEverythingOkay(This.CheckFields, _
             DataResources.arrListOfFields_EXPORT_Form, _
             ExportFormFields.FIELD_FROMDATE, _
             ExportFormFields.FIELD_RECORDSTATUS)
@@ -237,7 +237,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
     Dim endDate As Date
     
     'Reset CheckField's State to False
-    this.CheckFields(FieldIndex) = False
+    This.CheckFields(FieldIndex) = False
     
     'Check the validation of field based on field index
     Select Case FieldIndex
@@ -247,7 +247,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = ValidationServices.IsNotNullValue(Me.FromDate, VBA.TypeName(Me.FromDate))
             If IsValidField = False Then
                 IsValidField = True
-                this.CheckFields(FieldIndex) = True
+                This.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             'Check 2
@@ -267,7 +267,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = ValidationServices.IsNotNullValue(Me.ToDate, VBA.TypeName(Me.ToDate))
             If IsValidField = False Then
                 IsValidField = True
-                this.CheckFields(FieldIndex) = True
+                This.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             'Check 2
@@ -287,7 +287,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = ValidationServices.IsNotNullValue(Me.customerID, VBA.TypeName(Me.customerID))
             If IsValidField = False Then
                 IsValidField = True
-                this.CheckFields(FieldIndex) = True
+                This.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             
@@ -296,7 +296,7 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = ValidationServices.IsNotNullValue(Me.userID, VBA.TypeName(Me.userID))
             If IsValidField = False Then
                 IsValidField = True
-                this.CheckFields(FieldIndex) = True
+                This.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             
@@ -305,14 +305,14 @@ Public Function IsValidField(ByVal FieldIndex As ExportFormFields) As Boolean
             IsValidField = ValidationServices.IsNotNullValue(Me.recordStatus, VBA.TypeName(Me.recordStatus))
             If IsValidField = False Then
                 IsValidField = True
-                this.CheckFields(FieldIndex) = True
+                This.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             
     End Select
     
     'If All Goes Well!
-    this.CheckFields(FieldIndex) = True
+    This.CheckFields(FieldIndex) = True
     
 End Function
 

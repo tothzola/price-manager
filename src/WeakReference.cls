@@ -35,7 +35,7 @@ Private Type TReference
     
 End Type
 
-Private this As TReference
+Private This As TReference
 
 '@Description("Default instance factory method.")
 Public Function Create(ByVal Instance As Object) As IWeakReference
@@ -70,9 +70,9 @@ Private Property Get IWeakReference_Ribbon() As Object
     On Error GoTo CleanFail
     
     #If VBA7 Then
-        this.Pointer = CLngPtr(VBA.Strings.Replace(WorkbookPointer.Item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
+        This.Pointer = CLngPtr(VBA.Strings.Replace(WorkbookPointer.Item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
     #Else
-        this.Pointer = CLng(VBA.Strings.Replace(WorkbookPointer.Item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
+        This.Pointer = CLng(VBA.Strings.Replace(WorkbookPointer.Item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
     #End If
     
     #If VBA7 Then
@@ -81,10 +81,10 @@ Private Property Get IWeakReference_Ribbon() As Object
         Dim pointerSize As Long
     #End If
     
-    pointerSize = VBA.Strings.LenB(this.Pointer)
+    pointerSize = VBA.Strings.LenB(This.Pointer)
     
     Dim obj As Object
-    CopyMemory obj, this.Pointer, pointerSize
+    CopyMemory obj, This.Pointer, pointerSize
     
     Set IWeakReference_Ribbon = obj
     CopyMemory obj, 0&, pointerSize
@@ -93,7 +93,7 @@ CleanExit:
     Exit Property
     
 CleanFail:
-    MsgBox VBA.Err.Description, vbCritical, Title:=SIGN
+    MsgBox Err.Number & vbTab & Err.Description, vbCritical, Title:=SIGN
     LogManager.Log ErrorLevel, VBA.TypeName(Me) & " Error: " & VBA.Err.Number & ". " & VBA.Err.Description
     Set IWeakReference_Ribbon = Nothing
     Resume CleanExit

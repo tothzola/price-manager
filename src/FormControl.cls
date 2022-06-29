@@ -16,8 +16,6 @@ Option Compare Text
 'By Chip Pearson, chip@cpearson.com, www.cpearson.com
 'URL: http://www.cpearson.com/Excel/FormControl.aspx
 
-Implements IFormControl
-
 Private Const C_USERFORM_CLASSNAME = "ThunderDFrame"
 Private Const C_EXCEL_APP_CLASSNAME = "XLMain"
 Private Const C_EXCEL_DESK_CLASSNAME = "XLDesk"
@@ -61,6 +59,12 @@ Private Enum REG_DATA_TYPE
     REG_DWORD = 4                                ' Long
 End Enum
 
+Public Enum FORM_PARENT_WINDOW_TYPE
+    FORM_PARENT_NONE = 0
+    FORM_PARENT_APPLICATION = 1
+    FORM_PARENT_WINDOW = 2
+End Enum
+
 '''64 & 32-bit compatability
 #If VBA7 Then
     Private Declare PtrSafe Function SetParent Lib "user32" ( _
@@ -70,42 +74,42 @@ End Enum
     ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
     
     Private Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" ( _
-    ByVal hwnd As LongPtr, ByVal nIndex As LongPtr) As LongPtr
+    ByVal hWnd As LongPtr, ByVal nIndex As LongPtr) As LongPtr
     
     Private Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" ( _
-    ByVal hwnd As LongPtr, ByVal nIndex As LongPtr, ByVal dwNewLong As LongPtr) As LongPtr
+    ByVal hWnd As LongPtr, ByVal nIndex As LongPtr, ByVal dwNewLong As LongPtr) As LongPtr
     
     Private Declare PtrSafe Function SetLayeredWindowAttributes Lib "user32" ( _
-    ByVal hwnd As LongPtr, ByVal crey As Byte, ByVal bAlpha As Byte, ByVal dwFlags As LongPtr) As LongPtr
+    ByVal hWnd As LongPtr, ByVal crey As Byte, ByVal bAlpha As Byte, ByVal dwFlags As LongPtr) As LongPtr
     
     Private Declare PtrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" ( _
     ByVal hWnd1 As LongPtr, ByVal hWnd2 As LongPtr, ByVal lpsz1 As String, ByVal lpsz2 As String) As LongPtr
 
     Private Declare PtrSafe Function GetActiveWindow Lib "user32" () As LongPtr
     
-    Private Declare PtrSafe Function DrawMenuBar Lib "user32" (ByVal hwnd As LongPtr) As LongPtr
+    Private Declare PtrSafe Function DrawMenuBar Lib "user32" (ByVal hWnd As LongPtr) As LongPtr
     
     Private Declare PtrSafe Function GetMenuItemCount Lib "user32" (ByVal hMenu As LongPtr) As LongPtr
     
-    Private Declare PtrSafe Function GetSystemMenu Lib "user32" (ByVal hwnd As LongPtr, ByVal bRevert As LongPtr) As LongPtr
+    Private Declare PtrSafe Function GetSystemMenu Lib "user32" (ByVal hWnd As LongPtr, ByVal bRevert As LongPtr) As LongPtr
     
     Private Declare PtrSafe Function RemoveMenu Lib "user32" (ByVal hMenu As LongPtr, ByVal nPosition As LongPtr, ByVal wFlags As LongPtr) As LongPtr
     
-    Private Declare PtrSafe Function GetWindowTextLength Lib "user32" Alias "GetWindowTextLengthA" (ByVal hwnd As LongPtr) As LongPtr
+    Private Declare PtrSafe Function GetWindowTextLength Lib "user32" Alias "GetWindowTextLengthA" (ByVal hWnd As LongPtr) As LongPtr
 
     Private Declare PtrSafe Function EnableMenuItem Lib "user32" ( _
     ByVal hMenu As LongPtr, ByVal wIDEnableItem As LongPtr, ByVal wEnable As LongPtr) As LongPtr
     
     #If Win64 Then
         Private Declare PtrSafe Function GetWindowLongPtr Lib "user32" Alias "GetWindowLongPtrA" ( _
-        ByVal hwnd As LongPtr, ByVal nIndex As Long) As LongPtr
+        ByVal hWnd As LongPtr, ByVal nIndex As Long) As LongPtr
     #Else
         Private Declare PtrSafe Function GetWindowLongPtr Lib "user32" Alias "GetWindowLongA" ( _
-        ByVal hwnd As LongPtr, ByVal nIndex As Long) As LongPtr
+        ByVal hWnd As LongPtr, ByVal nIndex As Long) As LongPtr
     #End If
     
     Private Declare PtrSafe Function GetWindowText Lib "user32" Alias "GetWindowTextA" ( _
-    ByVal hwnd As LongPtr, ByVal lpString As String, ByVal cch As LongPtr) As Long
+    ByVal hWnd As LongPtr, ByVal lpString As String, ByVal cch As LongPtr) As Long
     
     Private Declare PtrSafe Function RegOpenKeyEx Lib "AdvApi32.dll" Alias "RegOpenKeyExA" ( _
     ByVal HKey As LongPtr, ByVal lpSubKey As String, ByVal ulOptions As LongPtr, _
@@ -118,7 +122,7 @@ End Enum
     Private Declare PtrSafe Function RegCloseKey Lib "AdvApi32.dll" (ByVal HKey As LongPtr) As LongPtr
     
     Private Declare PtrSafe Function GetClassName Lib "user32" Alias "GetClassNameA" ( _
-    ByVal hwnd As LongPtr, ByVal lpClassName As String, ByVal nMaxCount As LongPtr) As Long
+    ByVal hWnd As LongPtr, ByVal lpClassName As String, ByVal nMaxCount As LongPtr) As Long
 #Else
     Private Declare Function SetParent Lib "user32" ( _
                              ByVal hWndChild As Long, ByVal hWndNewParent As Long) As Long
@@ -172,19 +176,20 @@ End Enum
                              ByVal hwnd As Long, ByVal lpClassName As String, ByVal nMaxCount As Long) As Long
 #End If
 
-Public Function Create() As IFormControl
-    With New FormControl
-        Set Create = .Self
-    End With
-End Function
-
-Public Property Get Self() As IFormControl
-    Set Self = Me
+'@Ignore ProcedureNotUsed
+'@Description("Returns class reference")
+Public Property Get Class() As FormControl
+    Set Class = FormControl
 End Property
 
-'Displays (if HideButton is False) or hides (if HideButton is True) a maximize window button.
-' NOTE: If EITHER a Minimize or Maximize button is displayed, BOTH buttons are visible but may be disabled.
-Private Function IFormControl_ShowMaximizeButton(UF As MSForms.UserForm, HideButton As Boolean) As Boolean
+Private Sub Class_Initialize()
+    Guard.Singleton Me
+End Sub
+
+'@Description("Displays (if HideButton is False) or hides (if HideButton is True) a maximize window button _
+NOTE: If EITHER a Minimize or Maximize button is displayed, BOTH buttons are visible but may be disabled.")
+Public Function ShowMaximizeButton(ByRef outForm As MSForms.UserForm, ByVal HideButton As Boolean) As Boolean
+
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -195,9 +200,9 @@ Private Function IFormControl_ShowMaximizeButton(UF As MSForms.UserForm, HideBut
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_ShowMaximizeButton = False
+        ShowMaximizeButton = False
         Exit Function
     End If
 
@@ -209,12 +214,14 @@ Private Function IFormControl_ShowMaximizeButton(UF As MSForms.UserForm, HideBut
     End If
     r = SetWindowLong(UFHWnd, GWL_STYLE, WinInfo)
 
-    IFormControl_ShowMaximizeButton = (r <> 0)
+    ShowMaximizeButton = (r <> 0)
+    
 End Function
 
-'Displays (if HideButton is False) or hides (if HideButton is True) a minimize window button.
-' NOTE: If EITHER a Minimize or Maximize button is displayed, BOTH buttons are visible but may be disabled.
-Private Function IFormControl_ShowMinimizeButton(UF As MSForms.UserForm, HideButton As Boolean) As Boolean
+'@Description("Displays (if HideButton is False) or hides (if HideButton is True) a minimize window button. _
+NOTE: If EITHER a Minimize or Maximize button is displayed, BOTH buttons are visible but may be disabled.")
+Public Function ShowMinimizeButton(ByRef outForm As MSForms.UserForm, ByVal HideButton As Boolean) As Boolean
+ 
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -225,9 +232,9 @@ Private Function IFormControl_ShowMinimizeButton(UF As MSForms.UserForm, HideBut
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_ShowMinimizeButton = False
+        ShowMinimizeButton = False
         Exit Function
     End If
 
@@ -239,11 +246,13 @@ Private Function IFormControl_ShowMinimizeButton(UF As MSForms.UserForm, HideBut
     End If
     r = SetWindowLong(UFHWnd, GWL_STYLE, WinInfo)
 
-    IFormControl_ShowMinimizeButton = (r <> 0)
+    ShowMinimizeButton = (r <> 0)
+    
 End Function
 
-'Returns True if the userform has a minimize button, False otherwise.
-Private Function IFormControl_HasMinimizeButton(UF As MSForms.UserForm) As Boolean
+'@Description("Returns True if the userform has a minimize button, False otherwise.")
+Public Function HasMinimizeButton(ByRef outForm As MSForms.UserForm) As Boolean
+        
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -254,23 +263,25 @@ Private Function IFormControl_HasMinimizeButton(UF As MSForms.UserForm) As Boole
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_HasMinimizeButton = False
+        HasMinimizeButton = False
         Exit Function
     End If
 
     WinInfo = GetWindowLong(UFHWnd, GWL_STYLE)
 
     If WinInfo And WS_MINIMIZEBOX Then
-        IFormControl_HasMinimizeButton = True
+        HasMinimizeButton = True
     Else
-        IFormControl_HasMinimizeButton = False
+        HasMinimizeButton = False
     End If
+    
 End Function
 
-'Returns True if the userform has a maximize button, False otherwise.
-Private Function IFormControl_HasMaximizeButton(UF As MSForms.UserForm) As Boolean
+'@Description("Returns True if the userform has a maximize button, False otherwise.")
+Public Function HasMaximizeButton(ByRef outForm As MSForms.UserForm) As Boolean
+        
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -281,23 +292,25 @@ Private Function IFormControl_HasMaximizeButton(UF As MSForms.UserForm) As Boole
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_HasMaximizeButton = False
+        HasMaximizeButton = False
         Exit Function
     End If
 
     WinInfo = GetWindowLong(UFHWnd, GWL_STYLE)
 
     If WinInfo And WS_MAXIMIZEBOX Then
-        IFormControl_HasMaximizeButton = True
+        HasMaximizeButton = True
     Else
-        IFormControl_HasMaximizeButton = False
+        HasMaximizeButton = False
     End If
+    
 End Function
 
-'Set the UserForm UF as a child of (1) the Application, (2) the Excel ActiveWindow, or (3) no parent. Returns TRUE if successful or FALSE if unsuccessful.
-Private Function IFormControl_SetFormParent(UF As MSForms.UserForm, Parent As FORM_PARENT_WINDOW_TYPE) As Boolean
+'@Description("Set the UserForm outForm as a child of (1) the Application, (2) the Excel ActiveWindow, or (3) no parent. Returns TRUE if successful or FALSE if unsuccessful.")
+Public Function SetFormParent(ByRef outForm As MSForms.UserForm, ByVal Parent As FORM_PARENT_WINDOW_TYPE) As Boolean
+        
     #If VBA7 Then
         Dim WindHWnd As LongPtr
         Dim r As LongPtr
@@ -308,37 +321,39 @@ Private Function IFormControl_SetFormParent(UF As MSForms.UserForm, Parent As FO
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_SetFormParent = False
+        SetFormParent = False
         Exit Function
     End If
 
     Select Case Parent
     Case FORM_PARENT_APPLICATION
-        r = SetParent(UFHWnd, Application.hwnd)
+        r = SetParent(UFHWnd, Application.hWnd)
     Case FORM_PARENT_NONE
         r = SetParent(UFHWnd, 0&)
     Case FORM_PARENT_WINDOW
         If Application.ActiveWindow Is Nothing Then
-            IFormControl_SetFormParent = False
+            SetFormParent = False
             Exit Function
         End If
         WindHWnd = WindowHWnd(Application.ActiveWindow)
         If WindHWnd = 0 Then
-            IFormControl_SetFormParent = False
+            SetFormParent = False
             Exit Function
         End If
         r = SetParent(UFHWnd, WindHWnd)
     Case Else
-        IFormControl_SetFormParent = False
+        SetFormParent = False
         Exit Function
     End Select
-    IFormControl_SetFormParent = (r <> 0)
+    SetFormParent = (r <> 0)
+    
 End Function
 
-'Returns TRUE if UserForm UF has a close button, FALSE if there is no close button.
-Private Function IFormControl_IsCloseButtonVisible(UF As MSForms.UserForm) As Boolean
+'@Description("Returns TRUE if UserForm outForm has a close button, FALSE if there is no close button.")
+Public Function IsCloseButtonVisible(ByRef outForm As MSForms.UserForm) As Boolean
+        
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -349,18 +364,20 @@ Private Function IFormControl_IsCloseButtonVisible(UF As MSForms.UserForm) As Bo
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_IsCloseButtonVisible = False
+        IsCloseButtonVisible = False
         Exit Function
     End If
 
     WinInfo = GetWindowLong(UFHWnd, GWL_STYLE)
-    IFormControl_IsCloseButtonVisible = (WinInfo And WS_SYSMENU)
+    IsCloseButtonVisible = (WinInfo And WS_SYSMENU)
+    
 End Function
 
-'This displays (if HideButton is FALSE) or hides (if HideButton is TRUE) the Close button on the userform
-Private Function IFormControl_ShowCloseButton(UF As MSForms.UserForm, HideButton As Boolean) As Boolean
+'@Description("This displays (if HideButton is FALSE) or hides (if HideButton is TRUE) the Close button on the userform")
+Public Function ShowCloseButton(ByRef outForm As MSForms.UserForm, ByVal HideButton As Boolean) As Boolean
+
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -371,7 +388,7 @@ Private Function IFormControl_ShowCloseButton(UF As MSForms.UserForm, HideButton
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
         Exit Function
     End If
@@ -386,11 +403,13 @@ Private Function IFormControl_ShowCloseButton(UF As MSForms.UserForm, HideButton
     End If
 
     r = SetWindowLong(UFHWnd, GWL_STYLE, WinInfo)
-    IFormControl_ShowCloseButton = (r <> 0)
+    ShowCloseButton = (r <> 0)
+    
 End Function
 
-'This returns TRUE if the close button is enabled or FALSE if the close button is disabled.
-Private Function IFormControl_IsCloseButtonEnabled(UF As MSForms.UserForm) As Boolean
+'@Description("This returns TRUE if the close button is enabled or FALSE if the close button is disabled.")
+Public Function IsCloseButtonEnabled(ByRef outForm As MSForms.UserForm) As Boolean
+        
     #If VBA7 Then
         Dim hMenu As LongPtr
         Dim ItemCount As LongPtr
@@ -403,15 +422,15 @@ Private Function IFormControl_IsCloseButtonEnabled(UF As MSForms.UserForm) As Bo
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_IsCloseButtonEnabled = False
+        IsCloseButtonEnabled = False
         Exit Function
     End If
     ' Get the menu handle
     hMenu = GetSystemMenu(UFHWnd, 0&)
     If hMenu = 0 Then
-        IFormControl_IsCloseButtonEnabled = False
+        IsCloseButtonEnabled = False
         Exit Function
     End If
 
@@ -421,18 +440,20 @@ Private Function IFormControl_IsCloseButtonEnabled(UF As MSForms.UserForm) As Bo
     PrevState = EnableMenuItem(hMenu, ItemCount - 1, MF_DISABLED Or MF_BYPOSITION)
 
     If PrevState = MF_DISABLED Then
-        IFormControl_IsCloseButtonEnabled = False
+        IsCloseButtonEnabled = False
     Else
-        IFormControl_IsCloseButtonEnabled = True
+        IsCloseButtonEnabled = True
     End If
     ' restore the previous state
-    IFormControl_EnableCloseButton UF, (PrevState = MF_DISABLED)
+    EnableCloseButton outForm, (PrevState = MF_DISABLED)
 
     DrawMenuBar UFHWnd
+        
 End Function
 
-'This function enables (if Disable is False) or disables (if Disable is True) the "X" button on a UserForm UF.
-Private Function IFormControl_EnableCloseButton(UF As MSForms.UserForm, Disable As Boolean) As Boolean
+'@Description("This function enables (if Disable is False) or disables (if Disable is True) the "X" button on a UserForm outForm.")
+Public Function EnableCloseButton(ByRef outForm As MSForms.UserForm, ByVal Disable As Boolean) As Boolean
+        
     #If VBA7 Then
         Dim hMenu As LongPtr
         Dim ItemCount As LongPtr
@@ -446,15 +467,15 @@ Private Function IFormControl_EnableCloseButton(UF As MSForms.UserForm, Disable 
     #End If
 
     ' Get the HWnd of the UserForm.
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_EnableCloseButton = False
+        EnableCloseButton = False
         Exit Function
     End If
     ' Get the menu handle
     hMenu = GetSystemMenu(UFHWnd, 0&)
     If hMenu = 0 Then
-        IFormControl_EnableCloseButton = False
+        EnableCloseButton = False
         Exit Function
     End If
 
@@ -465,16 +486,18 @@ Private Function IFormControl_EnableCloseButton(UF As MSForms.UserForm, Disable 
         Res = EnableMenuItem(hMenu, ItemCount - 1, MF_ENABLED Or MF_BYPOSITION)
     End If
     If Res = -1 Then
-        IFormControl_EnableCloseButton = False
+        EnableCloseButton = False
         Exit Function
     End If
     DrawMenuBar UFHWnd
 
-    IFormControl_EnableCloseButton = True
+    EnableCloseButton = True
+    
 End Function
 
-'Displays (if HideTitle is FALSE) or hides (if HideTitle is TRUE) the title bar of the userform UF.
-Private Function IFormControl_ShowTitleBar(UF As MSForms.UserForm, HideTitle As Boolean) As Boolean
+'@Description("Displays (if HideTitle is FALSE) or hides (if HideTitle is TRUE) the title bar of the userform outForm.")
+Public Function ShowTitleBar(ByRef outForm As MSForms.UserForm, ByVal HideTitle As Boolean) As Boolean
+        
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -485,9 +508,9 @@ Private Function IFormControl_ShowTitleBar(UF As MSForms.UserForm, HideTitle As 
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_ShowTitleBar = False
+        ShowTitleBar = False
         Exit Function
     End If
 
@@ -501,11 +524,13 @@ Private Function IFormControl_ShowTitleBar(UF As MSForms.UserForm, HideTitle As 
         WinInfo = WinInfo And (Not WS_CAPTION)
     End If
     r = SetWindowLong(UFHWnd, GWL_STYLE, WinInfo)
-    IFormControl_ShowTitleBar = (r <> 0)
+    ShowTitleBar = (r <> 0)
+    
 End Function
 
-'Returns TRUE if the title bar of UF is visible or FALSE if the title bar is not visible.
-Private Function IFormControl_IsTitleBarVisible(UF As MSForms.UserForm) As Boolean
+'@Description("Returns TRUE if the title bar of outForm is visible or FALSE if the title bar is not visible.")
+Public Function IsTitleBarVisible(ByRef outForm As MSForms.UserForm) As Boolean
+        
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -516,19 +541,21 @@ Private Function IFormControl_IsTitleBarVisible(UF As MSForms.UserForm) As Boole
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_IsTitleBarVisible = False
+        IsTitleBarVisible = False
         Exit Function
     End If
 
     WinInfo = GetWindowLong(UFHWnd, GWL_STYLE)
 
-    IFormControl_IsTitleBarVisible = (WinInfo And WS_CAPTION)
+    IsTitleBarVisible = (WinInfo And WS_CAPTION)
+    
 End Function
 
-'This makes the userform UF resizable (if Sizable is TRUE) or not resizable (if Sizalbe is FALSE). Returns TRUE if successful or FALSE if an error occurred.
-Private Function IFormControl_MakeFormResizable(UF As MSForms.UserForm, Sizable As Boolean) As Boolean
+'@Description("This makes the userform outForm resizable (if Sizable is TRUE) or not resizable (if Sizalbe is FALSE). Returns TRUE if successful or FALSE if an error occurred.")
+Public Function MakeFormResizable(ByRef outForm As MSForms.UserForm, ByVal Sizable As Boolean) As Boolean
+        
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -539,9 +566,9 @@ Private Function IFormControl_MakeFormResizable(UF As MSForms.UserForm, Sizable 
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_MakeFormResizable = False
+        MakeFormResizable = False
         Exit Function
     End If
 
@@ -553,11 +580,13 @@ Private Function IFormControl_MakeFormResizable(UF As MSForms.UserForm, Sizable 
     End If
 
     r = SetWindowLong(UFHWnd, GWL_STYLE, WinInfo)
-    IFormControl_MakeFormResizable = (r <> 0)
+    MakeFormResizable = (r <> 0)
+
 End Function
 
-'Returns TRUE if UF is resizable, FALSE if UF is not resizable.
-Private Function IFormControl_IsFormResizable(UF As MSForms.UserForm) As Boolean
+'@Description("Returns TRUE if outForm is resizable, FALSE if outForm is not resizable.")
+Public Function IsFormResizable(ByRef outForm As MSForms.UserForm) As Boolean
+
     #If VBA7 Then
         Dim WinInfo As LongPtr
         Dim r As LongPtr
@@ -568,21 +597,23 @@ Private Function IFormControl_IsFormResizable(UF As MSForms.UserForm) As Boolean
         Dim UFHWnd As Long
     #End If
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
-        IFormControl_IsFormResizable = False
+        IsFormResizable = False
         Exit Function
     End If
 
     WinInfo = GetWindowLong(UFHWnd, GWL_STYLE)
 
-    IFormControl_IsFormResizable = (WinInfo And WS_SIZEBOX)
+    IsFormResizable = (WinInfo And WS_SIZEBOX)
+    
 End Function
 
-'This function sets the opacity of the UserForm referenced by the UF parameter. Opacity specifies the opacity of the form, from
-' 0 = fully transparent (invisible) to 255 = fully opaque. The function returns True if successful or False if an error occurred. This
-' requires Windows 2000 or later -- it will not work in Windows 95, 98, or ME.
-Private Function IFormControl_SetFormOpacity(UF As MSForms.UserForm, Opacity As Byte) As Boolean
+'@Description("This function sets the opacity of the UserForm referenced by the outForm parameter. Opacity specifies the opacity of the form, from _
+0 = fully transparent (invisible) to 255 = fully opaque. The function returns True if successful or False if an error occurred. This _
+requires Windows 2000 or later -- it will not work in Windows 95, 98, or ME.")
+Public Function SetFormOpacity(ByRef outForm As MSForms.UserForm, ByVal Opacity As Byte) As Boolean
+        
     #If VBA7 Then
         Dim WinL As LongPtr
         Dim Res As LongPtr
@@ -593,9 +624,9 @@ Private Function IFormControl_SetFormOpacity(UF As MSForms.UserForm, Opacity As 
         Dim UFHWnd As Long
     #End If
 
-    IFormControl_SetFormOpacity = False
+    SetFormOpacity = False
 
-    UFHWnd = IFormControl_HWndOfUserForm(UF)
+    UFHWnd = HWndOfUserForm(outForm)
     If UFHWnd = 0 Then
         Exit Function
     End If
@@ -615,13 +646,14 @@ Private Function IFormControl_SetFormOpacity(UF As MSForms.UserForm, Opacity As 
         Exit Function
     End If
 
-    IFormControl_SetFormOpacity = True
+    SetFormOpacity = True
+    
 End Function
 
-'Clears the specified bit in Value and returns the result. Bits are
-' numbered, right (most significant) 31 to left (least significant) 0.
-' BitNumber is made positive and then MOD 32 to get a valid bit number.
-Private Function IFormControl_ClearBit(Value As Long, ByVal BitNumber As Long) As Long
+'@Description("Clears the specified bit in Value and returns the result. Bits are _
+numbered, right (most significant) 31 to left (least significant) 0. _
+BitNumber is made positive and then MOD 32 to get a valid bit number.")
+Public Function ClearBit(ByRef Value As Long, ByVal BitNumber As Long) As Long
     Dim SetMask As Long
     Dim ClearMask As Long
 
@@ -630,18 +662,18 @@ Private Function IFormControl_ClearBit(Value As Long, ByVal BitNumber As Long) A
     SetMask = Value
     If BitNumber < 30 Then
         ClearMask = Not (2 ^ (BitNumber - 1))
-        IFormControl_ClearBit = SetMask And ClearMask
+        ClearBit = SetMask And ClearMask
     Else
-        IFormControl_ClearBit = Value And &H7FFFFFFF
+        ClearBit = Value And &H7FFFFFFF
     End If
 End Function
 
-'This returns the window handle (HWnd) of the userform referenced by UF.
-'It first looks for a top-level window, then a child of the Application window, then a child of the ActiveWindow.
+'@Description("This returns the window handle (HWnd) of the userform referenced by outForm. _
+It first looks for a top-level window, then a child of the Application window, then a child of the ActiveWindow.")
 #If VBA7 Then
-Private Function IFormControl_HWndOfUserForm(UF As MSForms.UserForm) As LongPtr
+Public Function HWndOfUserForm(ByRef outForm As MSForms.UserForm) As LongPtr
 #Else
-Private Function IFormControl_HWndOfUserForm(UF As MSForms.UserForm) As Long
+Public Function HWndOfUserForm(ByRef outForm As MSForms.UserForm) As Long
 #End If
 
 #If VBA7 Then
@@ -652,39 +684,38 @@ Private Function IFormControl_HWndOfUserForm(UF As MSForms.UserForm) As Long
     Dim WinHWnd As Long
 #End If
     
-Dim AppHWnd As Long
-Dim DeskHWnd As Long
+    Dim AppHWnd As Long
+    Dim DeskHWnd As Long
+            
+    Dim Cap As String
+    Dim WindowCap As String
         
+    Cap = outForm.Caption
         
-Dim Cap As String
-Dim WindowCap As String
-    
-Cap = UF.Caption
-    
-' First, look in top level windows
-UFHWnd = FindWindow(C_USERFORM_CLASSNAME, Cap)
-If UFHWnd <> 0 Then
-    IFormControl_HWndOfUserForm = UFHWnd
-    Exit Function
-End If
-' Not a top level window. Search for child of application.
-AppHWnd = Application.hwnd
-UFHWnd = FindWindowEx(AppHWnd, 0&, C_USERFORM_CLASSNAME, Cap)
-If UFHWnd <> 0 Then
-    IFormControl_HWndOfUserForm = UFHWnd
-    Exit Function
-End If
+    ' First, look in top level windows
+    UFHWnd = FindWindow(C_USERFORM_CLASSNAME, Cap)
+    If UFHWnd <> 0 Then
+        HWndOfUserForm = UFHWnd
+        Exit Function
+    End If
+    ' Not a top level window. Search for child of application.
+    AppHWnd = Application.hWnd
+    UFHWnd = FindWindowEx(AppHWnd, 0&, C_USERFORM_CLASSNAME, Cap)
+    If UFHWnd <> 0 Then
+        HWndOfUserForm = UFHWnd
+        Exit Function
+    End If
 
-' Not a child of the application.
-' Search for child of ActiveWindow (Excel's ActiveWindow, not
-' Window's ActiveWindow).
-If Application.ActiveWindow Is Nothing Then
-    IFormControl_HWndOfUserForm = 0
-    Exit Function
-End If
-WinHWnd = WindowHWnd(Application.ActiveWindow)
-UFHWnd = FindWindowEx(WinHWnd, 0&, C_USERFORM_CLASSNAME, Cap)
-IFormControl_HWndOfUserForm = UFHWnd
+    ' Not a child of the application.
+    ' Search for child of ActiveWindow (Excel's ActiveWindow, not
+    ' Window's ActiveWindow).
+    If Application.ActiveWindow Is Nothing Then
+        HWndOfUserForm = 0
+        Exit Function
+    End If
+    WinHWnd = WindowHWnd(Application.ActiveWindow)
+    UFHWnd = FindWindowEx(WinHWnd, 0&, C_USERFORM_CLASSNAME, Cap)
+    HWndOfUserForm = UFHWnd
 
 End Function
 
@@ -745,7 +776,7 @@ End Function
 ' This returns the Caption of the Excel.Window W with the ".xls" extension removed
 ' if required. The string returned by this function is suitable for use by
 ' the FindWindowEx API regardless of the value of the Windows "Hide Extensions" setting.
-Private Function WindowCaption(W As Excel.Window) As String
+Private Function WindowCaption(ByRef W As Excel.Window) As String
 
     Dim HideExt As Boolean
     Dim Cap As String
@@ -766,9 +797,9 @@ End Function
 
 ' This returns the HWnd of the Window referenced by W.
 #If VBA7 Then
-Private Function WindowHWnd(W As Excel.Window) As LongPtr
+Private Function WindowHWnd(ByRef W As Excel.Window) As LongPtr
 #Else
-Private Function WindowHWnd(W As Excel.Window) As Long
+Private Function WindowHWnd(ByRef W As Excel.Window) As Long
 #End If
 
 #If VBA7 Then
@@ -779,27 +810,27 @@ Private Function WindowHWnd(W As Excel.Window) As Long
     Dim WHWnd As Long
 #End If
     
-Dim AppHWnd As Long
-Dim Cap As String
-    
-AppHWnd = Application.hwnd
-DeskHWnd = FindWindowEx(AppHWnd, 0&, C_EXCEL_DESK_CLASSNAME, vbNullString)
-If DeskHWnd > 0 Then
-    Cap = WindowCaption(W)
-    WHWnd = FindWindowEx(DeskHWnd, 0&, C_EXCEL_WINDOW_CLASSNAME, Cap)
-End If
-WindowHWnd = WHWnd
+    Dim AppHWnd As Long
+    Dim Cap As String
+        
+    AppHWnd = Application.hWnd
+    DeskHWnd = FindWindowEx(AppHWnd, 0&, C_EXCEL_DESK_CLASSNAME, vbNullString)
+    If DeskHWnd > 0 Then
+        Cap = WindowCaption(W)
+        WHWnd = FindWindowEx(DeskHWnd, 0&, C_EXCEL_WINDOW_CLASSNAME, Cap)
+    End If
+    WindowHWnd = WHWnd
 
 End Function
 
 ' This just wraps up GetWindowText.
-Private Function WindowText(hwnd As Long) As String
+Private Function WindowText(ByRef hWnd As Long) As String
 
     Dim s As String
     Dim N As Long
     N = 255
     s = VBA.String$(N, vbNullChar)
-    N = GetWindowText(hwnd, s, N)
+    N = GetWindowText(hWnd, s, N)
     If N > 0 Then
         WindowText = VBA.Strings.Left(s, N)
     Else
@@ -808,13 +839,13 @@ Private Function WindowText(hwnd As Long) As String
 End Function
 
 ' This just wraps up GetClassName.
-Private Function WindowClassName(hwnd As Long) As String
+Private Function WindowClassName(ByRef hWnd As Long) As String
 
     Dim s As String
     Dim N As Long
     N = 255
     s = VBA.String$(N, vbNullChar)
-    N = GetClassName(hwnd, s, N)
+    N = GetClassName(hWnd, s, N)
     If N > 0 Then
         WindowClassName = VBA.Strings.Left(s, N)
     Else

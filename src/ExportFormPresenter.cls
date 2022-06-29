@@ -30,16 +30,16 @@ Private Type TExportFormComponents
     Model As ExportFormModel
 End Type
 
-Private this As TExportFormComponents
+Private This As TExportFormComponents
 
 '-------------------------------------------------------------------------
 
 Private Property Get Model() As ExportFormModel
-    Set Model = this.Model
+    Set Model = This.Model
 End Property
 
 Private Property Set Model(ByVal vNewValue As ExportFormModel)
-    Set this.Model = vNewValue
+    Set This.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
