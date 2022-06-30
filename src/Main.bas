@@ -34,22 +34,22 @@ End Sub
 Private Sub OpenApplication(ByVal Progress As ProgressIndicator)
 
     Progress.Update 30, "Application State ..."
-    Dim Context As IAppContext
-    Set Context = AppContext.Create
+    Dim context As IAppContext
+    Set context = AppContext.Create
     
     Progress.Update 50, "Validating Data ..."
-    If Not Context.IsRepositoryReachable Then GoTo CleanExit
+    If Not context.IsRepositoryReachable Then GoTo CleanExit
     
     Progress.Update 60, "Loading Model ..."
     Dim Model As AppModel
-    Set Model = AppModel.Create(Context)
+    Set Model = AppModel.Create(context)
     
     Progress.Update 70, "Building View ..."
     Dim View As IView
-    Set View = PriceApprovalView.Create(Model)
+    Set View = PriceApprovalView.Create(Model, HeightInPercent.vbHeight45, WidthInPercent.vbWidth45)
     
     Progress.Update 80, "Opening App ..."
-    Set Presenter = AppPresenter.Create(Context, Model, View)
+    Set Presenter = AppPresenter.Create(context, Model, View)
     
     Progress.Update 100, "Application Status = OK"
     GlobalResources.WaitForOneSecond

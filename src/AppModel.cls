@@ -49,24 +49,24 @@ Attribute Class.VB_Description = "Returns class reference"
 End Property
 
 '@Description "Creates a new application context."
-Public Function Create(ByVal Context As IAppContext) As AppModel
+Public Function Create(ByVal context As IAppContext) As AppModel
 Attribute Create.VB_Description = "Creates a new application context."
     Guard.NonDefaultInstance AppModel
-    Guard.NullReference Context
+    Guard.NullReference context
     
     Dim result As AppModel
     Set result = New AppModel
     
-    InitializeAppModel result, Context
+    InitializeAppModel result, context
     
     Set Create = result
 End Function
 
-Private Sub InitializeAppModel(ByVal Model As AppModel, ByVal Context As IAppContext)
+Private Sub InitializeAppModel(ByVal Model As AppModel, ByVal context As IAppContext)
                     
     'Tables of The Applications
-    Model.mainTable = Context.MainService.GetListOfAllRecordsFromContextTable
-    Model.usersTable = Context.UserService.GetListOfAllRecordsFromContextTable
+    Model.mainTable = context.MainService.GetListOfAllRecordsFromContextTable
+    Model.usersTable = context.UserService.GetListOfAllRecordsFromContextTable
   
     'Single Column Lists for DropDown/ComboBoxes
     Model.CurrenciesList = DataResources.arrListofCurrencies

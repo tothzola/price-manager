@@ -13,33 +13,25 @@ Option Explicit
 '@Exposed
 '@Interface
 
-Public Enum WindowHeightPercent
-    vbHeightPercent20 = 20
-    vbHeightPercent30 = 30
-    vbHeightPercent40 = 40
-    vbHeightPercent50 = 50
-    vbHeightPercent60 = 60
-    vbHeightPercent70 = 70
-    vbHeightPercent80 = 80
+Public Enum HeightInPercent
+    vbHeight45 = 45
+    vbHeight50 = 50
+    vbHeight55 = 55
 End Enum
 
-Public Enum WindowWidthPercent
-    vbWidthPercent20 = 20
-    vbWidthPercent30 = 30
-    vbWidthPercent40 = 40
-    vbWidthPercent50 = 50
-    vbWidthPercent60 = 60
-    vbWidthPercent70 = 70
-    vbWidthPercent80 = 80
+Public Enum WidthInPercent
+    vbWidth45 = 45
+    vbWidth50 = 50
+    vbWidth55 = 55
 End Enum
 
 Public Sub InitializeResize()
 End Sub
 
-Public Sub SetResolutionPercent(ByVal View As Object)
+Public Sub BindControlLayout(ByVal FormControl As MSForms.Control, ByVal Anchor As AnchorEdges)
 End Sub
 
-Public Sub BindControlLayout(ByVal FormControl As MSForms.Control, ByVal Anchor As AnchorEdges)
+Public Sub SetResolutionPercent(ByVal View As Object)
 End Sub
 
 Public Function IsViewResizable(ByVal View As Object, ByRef isMinimized As Boolean) As Boolean

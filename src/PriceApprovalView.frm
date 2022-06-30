@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PriceApprovalView 
    Caption         =   "Price Approval Demo"
-   ClientHeight    =   19410
+   ClientHeight    =   22815
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   39765
+   ClientWidth     =   20520
    OleObjectBlob   =   "PriceApprovalView.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -65,8 +65,11 @@ Public Event ExportReport()
 'VIEW SETTINGS
 '-------------------------------------------------------------------------
 
-Const MESSAGE_WELCOMESCREEN_LOGOUT_STATE As String = "Welcome to The Price Approval Manager"
-Const MESSAGE_WELCOMESCREEN_LOGIN_STATE As String = "Welcome "
+Private Const FORM_DEF_HEIGHT As Double = 480
+Private Const FORM_DEF_WIDTH As Double = 600
+Private Const FRAME_MARGIN_SIDE As Long = 6
+Private Const MESSAGE_WELCOMESCREEN_LOGOUT_STATE As String = "Welcome to The Price Approval Manager"
+Private Const MESSAGE_WELCOMESCREEN_LOGIN_STATE As String = "Welcome "
 
 '-------------------------------------------------------------------------
 'private type
@@ -236,20 +239,21 @@ Attribute Class.VB_Description = "Returns class reference"
 End Property
 
 '@Description "Creates a new instance of this form."
-Public Function Create(ByVal Model As AppModel) As IView
-Attribute Create.VB_Description = "Creates a new instance of this form."
+Public Function Create(ByVal Model As AppModel, _
+    Optional ByVal Height As HeightInPercent = vbHeight50, _
+    Optional ByVal Width As WidthInPercent = vbWidth50) As IView
+    
     Guard.NonDefaultInstance Me
     Guard.NullReference Model
     
     Dim result As PriceApprovalView
     Set result = New PriceApprovalView
-
+    
     Set result.MainModel = Model
     Set result.ViewExtended = New MultiFrameViewExtended
-    Set result.Resizer = ResizeView.Create(result, vbHeightPercent50, vbWidthPercent50)
-
-    'Create Extended Methods
-    CreateViewExtended result
+    Set result.Resizer = ResizeView.Create(result, Height, Width)
+    
+        InitilizeViewExtended result
 
     Set Create = result
 
@@ -258,35 +262,47 @@ End Function
 '-------------------------------------------------------------------------
 'InIt View Method
 '-------------------------------------------------------------------------
-Private Sub CreateViewExtended(ByVal Context As PriceApprovalView)
+Private Sub InitilizeViewExtended(ByVal context As PriceApprovalView)
     
-    With Context.ViewExtended
+    With context.ViewExtended
         'Re-Dimension UserForm
-        Set .TargetForm = Context
-        .formWidth = 600
-        .formHeight = 480
+        Set .TargetForm = context
+        .formWidth = FORM_DEF_WIDTH
+        .formHeight = FORM_DEF_HEIGHT
         .ReDimensionForm
         'Always On Frame Properties
-        Set .frameAlwaysOn = Context.frameInfo
-        .alwaysOnTop = 6
-        .alwaysOnLeft = 6
+        Set .frameAlwaysOn = context.frameInfo
+        .alwaysOnTop = FRAME_MARGIN_SIDE
+        .alwaysOnLeft = FRAME_MARGIN_SIDE
         .alwaysOnWidth = 140
         .alwaysOnHeight = 78
         'Side Panel Frames Properties
         .sideFrameTop = 90
-        .sideFrameLeft = 6
+        .sideFrameLeft = FRAME_MARGIN_SIDE
         .sideFrameWidth = 140
-        .sideFrameHeight = 354
+        .sideFrameHeight = context.InsideHeight - .alwaysOnHeight - 18 '354
         'Main Panel Frames Properties
-        .mainFrameTop = 6
+        .mainFrameTop = FRAME_MARGIN_SIDE
         .mainFrameLeft = 152
-        .mainFrameWidth = 430
-        .mainFrameHeight = 438
+        .mainFrameWidth = context.InsideWidth - .sideFrameWidth - 18  '430
+        .mainFrameHeight = context.InsideHeight - 12  '438
         'plug static data sources to the relative comboboxes
-        .HydrateComboBox Context.cmbCurrency, DataResources.arrListofCurrencies
-        .HydrateComboBox Context.cmbUnitOfMeasure, DataResources.arrListOfUnitOfMeasure
+        .HydrateComboBox context.cmbCurrency, DataResources.arrListofCurrencies
+        .HydrateComboBox context.cmbUnitOfMeasure, DataResources.arrListOfUnitOfMeasure
         'InIt Interface
-        .ActivateFrames Context.frameLogin, Context.frameWelcome
+        .ActivateFrames context.frameLogin, context.frameWelcome
+        
+        .SetDefaultFrameSize context.frameLogin, "SIDE"
+        .SetDefaultFrameSize context.frameClient, "SIDE"
+        .SetDefaultFrameSize context.frameApprover, "SIDE"
+        .SetDefaultFrameSize context.frameWelcome, "MAIN"
+        .SetDefaultFrameSize context.frameLoginInterface, "MAIN"
+        .SetDefaultFrameSize context.framePasswordManager, "MAIN"
+        .SetDefaultFrameSize context.framePriceForm, "MAIN"
+        .SetDefaultFrameSize context.frameRecordsContainer, "MAIN"
+        .SetDefaultFrameSize context.frameExportUtility, "MAIN"
+        .SetDefaultFrameSize context.frameUserManager, "MAIN"
+        
         UpdateWelcomeFrame FORM_LOGIN
     End With
     
@@ -296,20 +312,20 @@ Private Sub CreateViewExtended(ByVal Context As PriceApprovalView)
     For i = 1 To 42
         This.Calendar.Add New DatePickerFunctions, "titel" & i
         '@Ignore DefaultMemberRequired
-        Set This.Calendar("titel" & i).LabelBackground = Context("dpLabel" & i)
+        Set This.Calendar("titel" & i).LabelBackground = context("dpLabel" & i)
         If i < 8 Then
             '@Ignore DefaultMemberRequired
-            Context("dpLabel5" & i).Caption = VBA.Left$(VBA.WeekdayName(i, True, 2), 1)
+            context("dpLabel5" & i).Caption = VBA.Left$(VBA.WeekdayName(i, True, 2), 1)
         End If
     Next
-    
+
     Dim defaultSizeSet As Boolean
     
-    defaultSizeSet = FormControl.MakeFormResizable(Context, True)
-    defaultSizeSet = FormControl.ShowMinimizeButton(Context, False)
-    defaultSizeSet = FormControl.ShowMaximizeButton(Context, False)
+    defaultSizeSet = FormControl.MakeFormResizable(context, True)
+    defaultSizeSet = FormControl.ShowMinimizeButton(context, False)
+    defaultSizeSet = FormControl.ShowMaximizeButton(context, False)
     
-    Context.IsDefaultSizeSet = defaultSizeSet
+    context.IsDefaultSizeSet = defaultSizeSet
     
 End Sub
 
@@ -327,6 +343,71 @@ Private Sub MonthsSelector_Change()
     Next
 End Sub
 
+Private Sub BindControlLayout()
+
+    With Resizer
+        .BindControlLayout Me.frameInfo, TopAnchor
+        .BindControlLayout Me.frameWelcome, AnchorAll
+        
+        .BindControlLayout Me.frameLogin, TopAnchor + BottomAnchor
+        .BindControlLayout Me.cmdOpenLoginInterface, TopAnchor
+        .BindControlLayout Me.cmdExit, TopAnchor
+        
+        .BindControlLayout Me.frameClient, TopAnchor + BottomAnchor
+        .BindControlLayout Me.cmdOpenPriceForm, TopAnchor
+        .BindControlLayout Me.cmdOpenClientHistory, TopAnchor
+        .BindControlLayout Me.cmdOpenPasswordManager, TopAnchor
+        .BindControlLayout Me.cmdClientLogout, TopAnchor
+        
+        .BindControlLayout Me.frameApprover, TopAnchor + BottomAnchor
+        .BindControlLayout Me.cmdOpenPendingList, TopAnchor
+        .BindControlLayout Me.cmdOpenAllHistory, TopAnchor
+        .BindControlLayout Me.cmdOpenExportUtility, TopAnchor
+        .BindControlLayout Me.cmdOpenUserManager, TopAnchor
+        .BindControlLayout Me.cmdApproverLogout, TopAnchor
+        
+        .BindControlLayout Me.frameLoginInterface, AnchorAll
+        .BindControlLayout Me.LoginInterfaceTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdCancelFromLoginInterface, RightAnchor
+        
+        .BindControlLayout Me.framePasswordManager, AnchorAll
+        .BindControlLayout Me.PasswordManagerTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdCancelPasswordManager, RightAnchor
+        
+        .BindControlLayout Me.framePriceForm, AnchorAll
+        .BindControlLayout Me.PriceFormTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdAddNewRecord, LeftAnchor
+        .BindControlLayout Me.cmdUpdateRecord, LeftAnchor
+        .BindControlLayout Me.cmdDeleteRecord, LeftAnchor
+        .BindControlLayout Me.cmdResetPriceForm, RightAnchor
+        .BindControlLayout Me.cmdCancelPriceFormInterface, RightAnchor
+        
+        .BindControlLayout Me.frameRecordsContainer, AnchorAll
+        .BindControlLayout Me.RecordsContainerTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdEditRecord, LeftAnchor
+        .BindControlLayout Me.cmdResetDataForm, RightAnchor
+        .BindControlLayout Me.cmdCancelRecordContainer, RightAnchor
+        .BindControlLayout Me.LabelRecordToEdit, RightAnchor
+        .BindControlLayout Me.lstRecordsContainer, AnchorAll
+        
+        .BindControlLayout Me.frameExportUtility, AnchorAll
+        .BindControlLayout Me.ExportUtilityTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdResetExportForm, RightAnchor
+        .BindControlLayout Me.cmdCancelExportUtility, RightAnchor
+        .BindControlLayout Me.lblMessage, RightAnchor
+        .BindControlLayout Me.LabelNotes, LeftAnchor + RightAnchor
+        
+        .BindControlLayout Me.frameUserManager, AnchorAll
+        .BindControlLayout Me.UserManagerTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdResetUserManager, RightAnchor
+        .BindControlLayout Me.cmdCancelUserManager, RightAnchor
+        .BindControlLayout Me.LabelItemToUpdate, RightAnchor
+        .BindControlLayout Me.lstUsers, AnchorAll
+        
+    End With
+
+End Sub
+
 Private Sub InitializeResize()
     If MainModel Is Nothing Then Exit Sub
     BindControlLayout
@@ -334,30 +415,8 @@ Private Sub InitializeResize()
     Resizer.SetResolutionPercent Me
 End Sub
 
-Private Sub BindControlLayout()
-    With Resizer
-        .BindControlLayout Me.frameInfo, TopAnchor
-        .BindControlLayout Me.frameWelcome, AnchorAll
-        .BindControlLayout Me.frameLogin, TopAnchor + BottomAnchor
-        .BindControlLayout Me.cmdOpenLoginInterface, TopAnchor
-        .BindControlLayout Me.cmdExit, BottomAnchor
-        .BindControlLayout Me.frameClient, TopAnchor + BottomAnchor
-        .BindControlLayout Me.frameApprover, TopAnchor + BottomAnchor
-        
-        .BindControlLayout Me.frameLoginInterface, LeftAnchor
-        
-'        .BindControlLayout Me.framePasswordManager, AnchorAll
-'        .BindControlLayout Me.framePriceForm, AnchorAll
-'
-'        .BindControlLayout Me.frameRecordsContainer, AnchorAll
-'        .BindControlLayout Me.frameExportUtility, AnchorAll
-'        .BindControlLayout Me.frameUserManager, AnchorAll
-        
-    End With
-End Sub
-
 Private Sub RedrawView()
-
+    
     Dim viewMinimized As Boolean
     If Not Resizer.IsViewResizable(Me, viewMinimized) Then
         If Not viewMinimized Then
@@ -671,7 +730,7 @@ End Sub
 
 Private Sub lblGeneratePassword_Click()
     Dim dummyPassword As String
-    dummyPassword = AppMethods.RandomString(8)
+    dummyPassword = AppMethods.RandomString(10)
     Me.txtSetPassword = dummyPassword
 End Sub
 
@@ -935,6 +994,7 @@ Private Sub txtValidTo_Enter()
     PozitionCalendar Me.txtValidTo, Me.framePriceForm
     Me.DatePicker.Visible = True
     If Not Me.lblActiveUserType.Caption = "APPROVER" Then Me.txtValidTo.Locked = True
+    If Me.Height < FORM_DEF_HEIGHT Then Me.Height = FORM_DEF_HEIGHT + FRAME_MARGIN_SIDE
 End Sub
 
 Private Sub txtValidTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
@@ -1123,9 +1183,6 @@ Public Sub UserWantsToOpenLoginFrame(ByVal LoginFrameModel As LoginFormModel)
     Call This.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameLoginInterface)
     'RESET login frame
     Call ResetLoginFrame(LoginFrameModel)
-    
-    RedrawView
-    
 End Sub
 
 Public Sub UserWantsToOpenPasswordManagerFrame(ByVal PasswordManagerFormModel As PasswordManagerModel)

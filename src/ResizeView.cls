@@ -123,7 +123,7 @@ Public Property Get Class() As ResizeView
     Set Class = ResizeView
 End Property
 
-Public Function Create(ByVal View As Object, ByVal PercentHeight As WindowHeightPercent, ByVal PercentWidth As WindowWidthPercent) As IResizeView
+Public Function Create(ByVal View As Object, ByVal PercentHeight As HeightInPercent, ByVal PercentWidth As WidthInPercent) As IResizeView
     Guard.NonDefaultInstance Me
     
     Dim result As ResizeView
@@ -156,29 +156,28 @@ End Sub
 
 Public Function IsViewResizable(ByVal View As Object, ByRef isMinimized As Boolean) As Boolean
     Guard.NullReference View
-
+    
     On Error Resume Next
-    If View.Width < This.MinWidth - 5 Then
+    If View.Width < This.MinWidth Then
         View.Width = This.MinWidth
         If Err.Number = 384 Then isMinimized = True: Exit Function 'Minimizeing View, resize runtime error
-        IsViewResizable = False
-        Exit Function
+        IsViewResizable = False: Exit Function
+    End If
+    
+    If View.Height < This.MinHeight Then
+        View.Height = This.MinHeight
+        If Err.Number = 384 Then isMinimized = True: Exit Function 'Minimizeing View, resize runtime error
+        IsViewResizable = False: Exit Function
     End If
     
     On Error GoTo CleanFail
-    If View.Height < This.MinHeight - 5 Then
-        View.Height = This.MinHeight
-        IsViewResizable = False
-        Exit Function
-    End If
-    
     Dim Layout As ControlLayout
     For Each Layout In LayoutBindings
         Layout.Resize View
     Next
-    IsViewResizable = True
     
 CleanExit:
+    IsViewResizable = True
     Exit Function
 
 CleanFail:
@@ -192,7 +191,6 @@ End Function
 
 '@Description "Get Points Per Pixel Screen resloution."
 Private Function PointsPerPixel() As Double
-Attribute PointsPerPixel.VB_Description = "Get Points Per Pixel Screen resloution."
 
     #If VBA7 Then
         '@Ignore UseMeaningfulName
@@ -267,3 +265,4 @@ End Function
 Private Sub IDisposable_Dispose()
     Dispose
 End Sub
+

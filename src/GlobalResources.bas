@@ -173,12 +173,12 @@ Private Function EnumDateFormatsProc(ByVal lpDateFormatString As Long) As Boolea
     EnumDateFormatsProc = True
 End Function
 
-Public Function GetDateFormat(Optional ByVal Format As DateFormat = DateFormat.ShortDate, Optional ByVal Context As SettingContext = SettingContext.UserDefault) As String
+Public Function GetDateFormat(Optional ByVal Format As DateFormat = DateFormat.ShortDate, Optional ByVal context As SettingContext = SettingContext.UserDefault) As String
 
     Dim apiRetVal As Boolean
     m_dateFormat = vbNullString
     
-    apiRetVal = EnumDateFormatsA(AddressOf EnumDateFormatsProc, Context, Format)
+    apiRetVal = EnumDateFormatsA(AddressOf EnumDateFormatsProc, context, Format)
     
     If apiRetVal Then
         GetDateFormat = m_dateFormat
