@@ -23,14 +23,14 @@ Private Type TManager
 
 End Type
 
-Private this As TManager
+Private This As TManager
 
 Public Property Get Ribbon() As Office.IRibbonUI
-    Set Ribbon = this.Ribbon
+    Set Ribbon = This.Ribbon
 End Property
 
 Public Property Set Ribbon(ByVal RHS As Office.IRibbonUI)
-    Set this.Ribbon = RHS
+    Set This.Ribbon = RHS
 End Property
 
 Public Property Get AppVersion() As Long
@@ -38,7 +38,7 @@ Public Property Get AppVersion() As Long
 End Property
 
 Public Property Get Invalidated() As Boolean
-    Invalidated = this.Invalidated
+    Invalidated = This.Invalidated
 End Property
 
 Public Function Create(ByVal RibbonUI As Office.IRibbonUI) As IRibbon
@@ -58,7 +58,7 @@ Public Function Self() As IRibbon
 End Function
 
 Private Sub Class_Terminate()
-    Set this.Ribbon = Nothing
+    Set This.Ribbon = Nothing
     #If LateBind Then
         Debug.Print TypeName(Me) & " is terminating"
     #End If
@@ -66,7 +66,7 @@ End Sub
 
 Private Sub IRibbon_Invalidate()
     Ribbon.Invalidate
-    this.Invalidated = True
+    This.Invalidated = True
 End Sub
 
 '@Description "Determine the text to go along with your Tab, Groups, and Buttons"

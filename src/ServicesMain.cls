@@ -27,56 +27,56 @@ Private Type TMainServicesComponents
     Disposed As Boolean
 End Type
 
-Private this As TMainServicesComponents
+Private This As TMainServicesComponents
 
 '-------------------------------------------------------------------------
 
 Private Property Get IServices_IsEverythingOkayInEngine() As Boolean
-    IServices_IsEverythingOkayInEngine = this.IsEverythingOkayInEngine
+    IServices_IsEverythingOkayInEngine = This.IsEverythingOkayInEngine
 End Property
 
 Private Property Let IServices_IsEverythingOkayInEngine(ByVal RHS As Boolean)
-    this.IsEverythingOkayInEngine = RHS
+    This.IsEverythingOkayInEngine = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get RepositoryTypes() As RepositoryType
-    RepositoryTypes = this.RepositoryTypes
+    RepositoryTypes = This.RepositoryTypes
 End Property
 
 Private Property Let RepositoryTypes(ByVal RHS As RepositoryType)
-    this.RepositoryTypes = RHS
+    This.RepositoryTypes = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get Repository() As IRepository
-    Set Repository = this.Repository
+    Set Repository = This.Repository
 End Property
 
 Private Property Set Repository(ByVal RHS As IRepository)
-    Set this.Repository = RHS
+    Set This.Repository = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get ConnectionString() As String
-    ConnectionString = this.ConnectionString
+    ConnectionString = This.ConnectionString
 End Property
 
 Private Property Let ConnectionString(ByVal RHS As String)
-    this.ConnectionString = RHS
+    This.ConnectionString = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get ContextTableName() As String
-    ContextTableName = this.ContextTableName
+    ContextTableName = This.ContextTableName
 End Property
 
 Private Property Let ContextTableName(ByVal RHS As String)
-    this.ContextTableName = RHS
+    This.ContextTableName = RHS
 End Property
 
 '-------------------------------------------------------------------------
@@ -86,13 +86,13 @@ Private Property Get ContextTableHeaders() As Variant
     Dim i As Long
     ReDim tmp(1 To 1, 1 To 16)
     For i = 1 To UBound(tmp, 2)
-        tmp(1, i) = this.ContextTableHeaders(i - 1)
+        tmp(1, i) = This.ContextTableHeaders(i - 1)
     Next i
     ContextTableHeaders = tmp
 End Property
 
 Private Property Let ContextTableHeaders(ByVal RHS As Variant)
-    this.ContextTableHeaders = RHS
+    This.ContextTableHeaders = RHS
 End Property
 
 '-------------------------------------------------------------------------
@@ -163,8 +163,8 @@ Private Sub IServices_AddNewRecordToContextTable(ParamArray ContextLineItems() A
     IServices_IsEverythingOkayInEngine = Repository.IsEverythingOkay
 End Sub
 
-Private Sub IServices_UpdateRecordOfContextTable(ByVal index As Long, ParamArray ContextLineItems() As Variant)
-    Call Repository.UpdateRecord(index, _
+Private Sub IServices_UpdateRecordOfContextTable(ByVal Index As Long, ParamArray ContextLineItems() As Variant)
+    Call Repository.UpdateRecord(Index, _
                                  ContextLineItems(0), _
                                  ContextLineItems(1), _
                                  ContextLineItems(2), _
@@ -183,8 +183,8 @@ Private Sub IServices_UpdateRecordOfContextTable(ByVal index As Long, ParamArray
     IServices_IsEverythingOkayInEngine = Repository.IsEverythingOkay
 End Sub
 
-Private Sub IServices_DeleteRecordofContextTable(ByVal index As Long)
-    Call Repository.DeleteRecord(index)
+Private Sub IServices_DeleteRecordofContextTable(ByVal Index As Long)
+    Call Repository.DeleteRecord(Index)
     IServices_IsEverythingOkayInEngine = Repository.IsEverythingOkay
 End Sub
 
@@ -193,23 +193,23 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    If Not this.Disposed Then Dispose
+    If Not This.Disposed Then Dispose
 End Sub
 
 Private Sub Dispose()
 
-    If this.Disposed Then
+    If This.Disposed Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
         Exit Sub
     End If
 
-    If Not this.Repository Is Nothing Then
-        Disposable.TryDispose this.Repository
-        Set this.Repository = Nothing
+    If Not This.Repository Is Nothing Then
+        Disposable.TryDispose This.Repository
+        Set This.Repository = Nothing
     End If
 
     
-    this.Disposed = True
+    This.Disposed = True
     
     #If TestMode Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"

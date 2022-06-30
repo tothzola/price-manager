@@ -22,7 +22,7 @@ Private Type TPriceFormModelComponents
     salesOrganizationList As Variant
     distributionChannelList As Variant
     'Fields
-    index As Long
+    Index As Long
     RecordID As String
     userID As String
     recordStatus As String
@@ -43,227 +43,227 @@ Private Type TPriceFormModelComponents
     
 End Type
 
-Private this As TPriceFormModelComponents
+Private This As TPriceFormModelComponents
 
 '-------------------------------------------------------------------------
 
 Public Property Get mainTable() As Variant
-    mainTable = this.mainTable
+    mainTable = This.mainTable
 End Property
 
 Public Property Let mainTable(ByVal vNewValue As Variant)
-    this.mainTable = vNewValue
+    This.mainTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get curenciesList() As Variant
-    curenciesList = this.curenciesList
+    curenciesList = This.curenciesList
 End Property
 
 Public Property Let curenciesList(ByVal vNewValue As Variant)
-    this.curenciesList = vNewValue
+    This.curenciesList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get unitOfMeasuresList() As Variant
-    unitOfMeasuresList = this.unitOfMeasuresList
+    unitOfMeasuresList = This.unitOfMeasuresList
 End Property
 
 Public Property Let unitOfMeasuresList(ByVal vNewValue As Variant)
-    this.unitOfMeasuresList = vNewValue
+    This.unitOfMeasuresList = vNewValue
 End Property
 
 
 '-------------------------------------------------------------------------
 
 Public Property Get distributionChannelList() As Variant
-    distributionChannelList = this.distributionChannelList
+    distributionChannelList = This.distributionChannelList
 End Property
 
 Public Property Let distributionChannelList(ByVal vNewValue As Variant)
-    this.distributionChannelList = vNewValue
+    This.distributionChannelList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get salesOrganizationList() As Variant
-    salesOrganizationList = this.salesOrganizationList
+    salesOrganizationList = This.salesOrganizationList
 End Property
 
 Public Property Let salesOrganizationList(ByVal vNewValue As Variant)
-    this.salesOrganizationList = vNewValue
+    This.salesOrganizationList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get index() As Long
-    index = this.index
+Public Property Get Index() As Long
+    Index = This.Index
 End Property
 
-Public Property Let index(ByVal vNewValue As Long)
-    this.index = vNewValue
+Public Property Let Index(ByVal vNewValue As Long)
+    This.Index = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get RecordID() As String
-    RecordID = this.RecordID
+    RecordID = This.RecordID
 End Property
 
 Public Property Let RecordID(ByVal vNewValue As String)
-    this.RecordID = vNewValue
+    This.RecordID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userID() As String
-    userID = this.userID
+    userID = This.userID
 End Property
 
 Public Property Let userID(ByVal vNewValue As String)
-    this.userID = vNewValue
+    This.userID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get recordStatus() As String
-    recordStatus = this.recordStatus
+    recordStatus = This.recordStatus
 End Property
 
 Public Property Let recordStatus(ByVal vNewValue As String)
-    this.recordStatus = vNewValue
+    This.recordStatus = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get statusChangeDate() As String
-    statusChangeDate = this.statusChangeDate
+    statusChangeDate = This.statusChangeDate
 End Property
 
 Public Property Let statusChangeDate(ByVal vNewValue As String)
-    this.statusChangeDate = vNewValue
+    This.statusChangeDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get distributionChannel() As String
-    distributionChannel = this.distributionChannel
+    distributionChannel = This.distributionChannel
 End Property
 
 Public Property Let distributionChannel(ByVal vNewValue As String)
-    this.distributionChannel = vNewValue
+    This.distributionChannel = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get salesOrganization() As String
-    salesOrganization = this.salesOrganization
+    salesOrganization = This.salesOrganization
 End Property
 
 Public Property Let salesOrganization(ByVal vNewValue As String)
-    this.salesOrganization = vNewValue
+    This.salesOrganization = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get conditionType() As String
-    conditionType = this.conditionType
+    conditionType = This.conditionType
 End Property
 
 Public Property Let conditionType(ByVal vNewValue As String)
-    this.conditionType = vNewValue
+    This.conditionType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get customerID() As String
-    customerID = this.customerID
+    customerID = This.customerID
 End Property
 
 Public Property Let customerID(ByVal vNewValue As String)
-    this.customerID = vNewValue
+    This.customerID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get materialID() As String
-    materialID = this.materialID
+    materialID = This.materialID
 End Property
 
 Public Property Let materialID(ByVal vNewValue As String)
-    this.materialID = vNewValue
+    This.materialID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get price() As String
-    price = this.price
+    price = This.price
 End Property
 
 Public Property Let price(ByVal vNewValue As String)
-    this.price = vNewValue
+    This.price = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get currencyType() As String
-    currencyType = this.currencyType
+    currencyType = This.currencyType
 End Property
 
 Public Property Let currencyType(ByVal vNewValue As String)
-    this.currencyType = vNewValue
+    This.currencyType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get unitOfPrice() As String
-    unitOfPrice = this.unitOfPrice
+    unitOfPrice = This.unitOfPrice
 End Property
 
 Public Property Let unitOfPrice(ByVal vNewValue As String)
-    this.unitOfPrice = vNewValue
+    This.unitOfPrice = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get unitOfMeasure() As String
-    unitOfMeasure = this.unitOfMeasure
+    unitOfMeasure = This.unitOfMeasure
 End Property
 
 Public Property Let unitOfMeasure(ByVal vNewValue As String)
-    this.unitOfMeasure = vNewValue
+    This.unitOfMeasure = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get validFromDate() As String
-    validFromDate = this.validFromDate
+    validFromDate = This.validFromDate
 End Property
 
 Public Property Let validFromDate(ByVal vNewValue As String)
-    this.validFromDate = vNewValue
+    This.validFromDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get validToDate() As String
-    validToDate = this.validToDate
+    validToDate = This.validToDate
 End Property
 
 Public Property Let validToDate(ByVal vNewValue As String)
-    this.validToDate = vNewValue
+    This.validToDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get operation() As FormOperation
-    operation = this.operation
+    operation = This.operation
 End Property
 
 Public Property Let operation(ByVal vNewValue As FormOperation)
-    this.operation = vNewValue
+    This.operation = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -281,12 +281,12 @@ Public Sub InItModel(ByVal mainData As Variant, _
     Me.unitOfMeasuresList = ListOfUnits
     Me.salesOrganizationList = ListOfSalesOrganizations
     Me.distributionChannelList = ListOfDistributionChannels
-    Me.index = TargetIndex
+    Me.Index = TargetIndex
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
-    Call AppMethods.ResetSingleDimensionalArray(this.CheckFields)
+    Call AppMethods.ResetSingleDimensionalArray(This.CheckFields)
     'Keep Not-Mendatory Field Always True!
-    this.CheckFields(MainTableFields.COL_MAIN_unitOfPrice) = True 'Unit of Price!
+    This.CheckFields(MainTableFields.COL_MAIN_unitOfPrice) = True 'Unit of Price!
     
 End Sub
 
@@ -299,7 +299,7 @@ Public Sub SetPropertiesToNewRecordState(ByVal ActiveUserID As String)
     Call SetPropertiesToNullState
     With Me
         .operation = OPERATION_NEW
-        .index = 0
+        .Index = 0
         .recordStatus = RECORDSTATUS_PENDING
         .userID = ActiveUserID
         .statusChangeDate = VBA.Format$(VBA.Now, DATEFORMAT_BACKEND)
@@ -316,7 +316,7 @@ Public Sub SetPropertiesToUpdateRecordState()
     Call SetPropertiesToNullState
     'update operation begins
     Dim TargetRow As Long
-    TargetRow = AppMethods.GetTargetRowIndex(Me.mainTable, Me.index, MainTableFields.COL_MAIN_INDEX)
+    TargetRow = AppMethods.GetTargetRowIndex(Me.mainTable, Me.Index, MainTableFields.COL_MAIN_INDEX)
     With Me
         .operation = OPERATION_UPDATE
         .RecordID = Me.mainTable(TargetRow, MainTableFields.COL_MAIN_recordID)
@@ -362,7 +362,7 @@ End Sub
 '-------------------------------------------------------------------------
 
 Public Function IsEverythingOkayToSaveRecord() As Variant
-    IsEverythingOkayToSaveRecord = ValidationServices.IsEverythingOkay(this.CheckFields, _
+    IsEverythingOkayToSaveRecord = ValidationServices.IsEverythingOkay(This.CheckFields, _
                                                               DataResources.arrListOfColumns_MAIN_Table, _
                                                               MainTableFields.COL_MAIN_ConditionType, _
                                                               MainTableFields.COL_MAIN_validToDate)
@@ -373,7 +373,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
     Dim endDate As Date
     
     'Reset CheckField's State to False
-    this.CheckFields(FieldIndex) = False
+    This.CheckFields(FieldIndex) = False
     
     'Check the validation of field based on field index
     Select Case FieldIndex
@@ -450,7 +450,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
             IsValidField = ValidationServices.IsNotNullValue(Me.unitOfPrice, VBA.TypeName(Me.unitOfPrice))
             If IsValidField = False Then
                 IsValidField = True
-                this.CheckFields(FieldIndex) = True
+                This.CheckFields(FieldIndex) = True
                 Exit Function
             End If
             'Check 2
@@ -514,7 +514,7 @@ Public Function IsValidField(ByVal FieldIndex As MainTableFields) As Boolean
     End Select
     
     'If All Goes Well!
-    this.CheckFields(FieldIndex) = True
+    This.CheckFields(FieldIndex) = True
     
 End Function
 

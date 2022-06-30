@@ -43,7 +43,7 @@ Private Type TProgressIndicator
     CurrentProgressValue As Double
 End Type
 
-Private this As TProgressIndicator
+Private This As TProgressIndicator
 '@MemberAttribute VB_VarHelpID, -1
 Private WithEvents View As SplashView
 Attribute View.VB_VarHelpID = -1
@@ -56,7 +56,7 @@ End Sub
 
 Private Sub Class_Terminate()
     Set View = Nothing
-    Set this.Instance = Nothing
+    Set This.Instance = Nothing
 End Sub
 
 Private Function QualifyMacroName(ByVal Book As Workbook, ByVal Procedure As String) As String
@@ -98,56 +98,56 @@ Friend Property Get ProgressView() As SplashView
 End Property
 
 Friend Property Get ProcedureName() As String
-    ProcedureName = this.Procedure
+    ProcedureName = This.Procedure
 End Property
 
 Friend Property Let ProcedureName(ByVal Value As String)
-    this.Procedure = Value
+    This.Procedure = Value
 End Property
 
 Friend Property Get Parameter() As String
-    Parameter = this.Parameter
+    Parameter = This.Parameter
 End Property
 
 Friend Property Let Parameter(ByVal Value As String)
-    this.Parameter = Value
+    This.Parameter = Value
 End Property
 
 Friend Property Get OwnerInstance() As Object
-    Set OwnerInstance = this.Instance
+    Set OwnerInstance = This.Instance
 End Property
 
 Friend Property Set OwnerInstance(ByVal Value As Object)
-    Set this.Instance = Value
+    Set This.Instance = Value
 End Property
 
 Friend Property Get SleepMilliseconds() As Long
-    SleepMilliseconds = this.SleepDelay
+    SleepMilliseconds = This.SleepDelay
 End Property
 
 Friend Property Let SleepMilliseconds(ByVal Value As Long)
-    this.SleepDelay = Value
+    This.SleepDelay = Value
 End Property
 
 Public Property Get CurrentProgress() As Double
-    CurrentProgress = this.CurrentProgressValue
+    CurrentProgress = This.CurrentProgressValue
 End Property
 
 Public Property Get CanCellable() As Boolean
-    CanCellable = this.CanCancel
+    CanCellable = This.CanCancel
 End Property
 
 Friend Property Let CanCellable(ByVal Value As Boolean)
-    this.CanCancel = Value
+    This.CanCancel = Value
 End Property
 
 Public Property Get IsCancelRequested() As Boolean
-    IsCancelRequested = this.CanCelling
+    IsCancelRequested = This.CanCelling
 End Property
 
 Public Sub AbortCancellation()
-    Debug.Assert this.CanCelling
-    this.CanCelling = False
+    Debug.Assert This.CanCelling
+    This.CanCelling = False
 End Sub
 
 Public Sub Execute()
@@ -164,9 +164,9 @@ Public Sub Update(ByVal percentValue As Double, Optional ByVal labelValue As Str
     ThrowIfNotInitialized
 
     ValidatePercentValue percentValue
-    this.CurrentProgressValue = percentValue
+    This.CurrentProgressValue = percentValue
  
-    View.Update this.CurrentProgressValue, labelValue
+    View.Update This.CurrentProgressValue, labelValue
 
 CleanExit:
     If percentValue = 1 Then Sleep 1000          ' pause on completion
@@ -190,7 +190,7 @@ Private Sub ValidatePercentValue(ByRef percentValue As Double)
 End Sub
 
 Private Sub ThrowIfNotInitialized()
-    If this.Procedure = vbNullString Then
+    If This.Procedure = vbNullString Then
         Err.Raise ProgressIndicatorError.Error_NotInitialized, TypeName(Me), ERR_NOT_INITIALIZED
         LogManager.Log ErrorLevel, "Error: " & ProgressIndicatorError.Error_NotInitialized & ". " & ERR_NOT_INITIALIZED
     End If
@@ -201,10 +201,10 @@ Private Sub View_Activated()
     On Error GoTo CleanFail
     ThrowIfNotInitialized
  
-    If Not this.Instance Is Nothing Then
+    If Not This.Instance Is Nothing Then
         ExecuteInstanceMethod
     Else
-        ExecuteMacro this.Parameter
+        ExecuteMacro This.Parameter
     End If
  
 CleanExit:
@@ -220,8 +220,8 @@ CleanFail:
 End Sub
 
 Private Sub Cancelled()
-    If Not this.CanCancel Then Exit Sub
-    this.CanCelling = True
+    If Not This.CanCancel Then Exit Sub
+    This.CanCelling = True
 End Sub
 
 Private Sub ExecuteMacro(Optional ByVal Param As Variant)
@@ -231,9 +231,9 @@ Private Sub ExecuteMacro(Optional ByVal Param As Variant)
     Set App = Excel.Application
     
     If Param = Empty Then
-        App.Run this.Procedure, Me
+        App.Run This.Procedure, Me
     Else
-        App.Run this.Procedure, Me, Param
+        App.Run This.Procedure, Me, Param
     End If
 CleanExit:
     Exit Sub
@@ -258,7 +258,7 @@ Private Sub ExecuteInstanceMethod()
     Set Param = Me 'Me cannot be passed to CallByName directly
     
     '@Ignore ValueRequired
-    VBA.CallByName this.Instance, this.Procedure, VbMethod, Param
+    VBA.CallByName This.Instance, This.Procedure, VbMethod, Param
 
 CleanExit:
     Exit Sub
@@ -277,8 +277,8 @@ CleanFail:
 End Sub
 
 Private Sub View_Cancelled()
-    If Not this.CanCancel Then Exit Sub
-    this.CanCelling = True
+    If Not This.CanCancel Then Exit Sub
+    This.CanCelling = True
 End Sub
 
 

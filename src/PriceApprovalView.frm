@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PriceApprovalView 
-   Caption         =   "Price Approval Manager"
-   ClientHeight    =   19410
+   Caption         =   "Price Approval Demo"
+   ClientHeight    =   22815
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   39765
+   ClientWidth     =   20520
    OleObjectBlob   =   "PriceApprovalView.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -19,6 +19,7 @@ Option Explicit
 
 Implements IView
 Implements ICancellable
+Implements IDisposable
 
 '-------------------------------------------------------------------------
 'Public Events
@@ -64,8 +65,11 @@ Public Event ExportReport()
 'VIEW SETTINGS
 '-------------------------------------------------------------------------
 
-Const MESSAGE_WELCOMESCREEN_LOGOUT_STATE As String = "Welcome to The Price Approval Manager"
-Const MESSAGE_WELCOMESCREEN_LOGIN_STATE As String = "Welcome "
+Private Const FORM_DEF_HEIGHT As Double = 480
+Private Const FORM_DEF_WIDTH As Double = 600
+Private Const FRAME_MARGIN_SIDE As Long = 6
+Private Const MESSAGE_WELCOMESCREEN_LOGOUT_STATE As String = "Welcome to The Price Approval Manager"
+Private Const MESSAGE_WELCOMESCREEN_LOGIN_STATE As String = "Welcome "
 
 '-------------------------------------------------------------------------
 'private type
@@ -73,6 +77,8 @@ Const MESSAGE_WELCOMESCREEN_LOGIN_STATE As String = "Welcome "
 
 Private Type TView
     IsCancelled As Boolean
+    Resizer As IResizeView
+    IsDefaultSizeSet As Boolean
     ViewExtended As MultiFrameViewExtended
     MainModel As AppModel
     LoginModel As LoginFormModel
@@ -82,9 +88,10 @@ Private Type TView
     DataModel As DataFormModel
     ExportModel As ExportFormModel
     Calendar As VBA.Collection
+    Disposed As Boolean
 End Type
 
-Private this As TView
+Private This As TView
 
 '-------------------------------------------------------------------------
 'Private Variables/Objects
@@ -97,79 +104,131 @@ Private EventStop As Boolean
 '-------------------------------------------------------------------------
 
 Public Property Get MainModel() As AppModel
-    Set MainModel = this.MainModel
+    Guard.DefaultInstance Me
+    Set MainModel = This.MainModel
 End Property
 
-Public Property Set MainModel(ByVal vNewValue As AppModel)
-    Set this.MainModel = vNewValue
+Public Property Set MainModel(ByVal RHS As AppModel)
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.MainModel
+    Guard.NullReference RHS
+    Set This.MainModel = RHS
 End Property
 
 Public Property Get ViewExtended() As MultiFrameViewExtended
-    Set ViewExtended = this.ViewExtended
+    Guard.DefaultInstance Me
+    Set ViewExtended = This.ViewExtended
 End Property
 
 Public Property Set ViewExtended(ByVal RHS As MultiFrameViewExtended)
-    Set this.ViewExtended = RHS
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.ViewExtended
+    Guard.NullReference RHS
+    Set This.ViewExtended = RHS
+End Property
+
+Public Property Get Resizer() As IResizeView
+    Guard.DefaultInstance Me
+    Set Resizer = This.Resizer
+End Property
+
+Public Property Set Resizer(ByVal RHS As IResizeView)
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.Resizer
+    Guard.NullReference RHS
+    Set This.Resizer = RHS
+End Property
+
+Public Property Get IsDefaultSizeSet() As Boolean
+    IsDefaultSizeSet = This.IsDefaultSizeSet
+End Property
+
+Public Property Let IsDefaultSizeSet(ByVal RHS As Boolean)
+    This.IsDefaultSizeSet = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get LoginModel() As LoginFormModel
-    Set LoginModel = this.LoginModel
+    Guard.DefaultInstance Me
+    Set LoginModel = This.LoginModel
 End Property
 
-Private Property Set LoginModel(ByVal vNewValue As LoginFormModel)
-    Set this.LoginModel = vNewValue
+Private Property Set LoginModel(ByVal RHS As LoginFormModel)
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.LoginModel
+    Guard.NullReference RHS
+    Set This.LoginModel = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get PasswordModel() As PasswordManagerModel
-    Set PasswordModel = this.PasswordModel
+    Guard.DefaultInstance Me
+    Set PasswordModel = This.PasswordModel
 End Property
 
-Private Property Set PasswordModel(ByVal vNewValue As PasswordManagerModel)
-    Set this.PasswordModel = vNewValue
+Private Property Set PasswordModel(ByVal RHS As PasswordManagerModel)
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.PasswordModel
+    Guard.NullReference RHS
+    Set This.PasswordModel = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get UserModel() As UserManagerModel
-    Set UserModel = this.UserModel
+    Guard.DefaultInstance Me
+    Set UserModel = This.UserModel
 End Property
 
-Private Property Set UserModel(ByVal vNewValue As UserManagerModel)
-    Set this.UserModel = vNewValue
+Private Property Set UserModel(ByVal RHS As UserManagerModel)
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.UserModel
+    Guard.NullReference RHS
+    Set This.UserModel = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get PriceModel() As PriceFormModel
-    Set PriceModel = this.PriceModel
+    Guard.DefaultInstance Me
+    Set PriceModel = This.PriceModel
 End Property
 
-Private Property Set PriceModel(ByVal vNewValue As PriceFormModel)
-    Set this.PriceModel = vNewValue
+Private Property Set PriceModel(ByVal RHS As PriceFormModel)
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.PriceModel
+    Guard.NullReference RHS
+    Set This.PriceModel = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get DataModel() As DataFormModel
-    Set DataModel = this.DataModel
+    Guard.DefaultInstance Me
+    Set DataModel = This.DataModel
 End Property
 
-Private Property Set DataModel(ByVal vNewValue As DataFormModel)
-    Set this.DataModel = vNewValue
+Private Property Set DataModel(ByVal RHS As DataFormModel)
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.DataModel
+    Guard.NullReference RHS
+    Set This.DataModel = RHS
 End Property
 
 '-------------------------------------------------------------------------
 
 Private Property Get ExportModel() As ExportFormModel
-    Set ExportModel = this.ExportModel
+    Guard.DefaultInstance Me
+    Set ExportModel = This.ExportModel
 End Property
 
-Private Property Set ExportModel(ByVal vNewValue As ExportFormModel)
-    Set this.ExportModel = vNewValue
+Private Property Set ExportModel(ByVal RHS As ExportFormModel)
+    Guard.DefaultInstance Me
+    Guard.DoubleInitialization This.ExportModel
+    Guard.NullReference RHS
+    Set This.ExportModel = RHS
 End Property
 
 '@Ignore ProcedureNotUsed
@@ -180,8 +239,10 @@ Attribute Class.VB_Description = "Returns class reference"
 End Property
 
 '@Description "Creates a new instance of this form."
-Public Function Create(ByVal Model As AppModel) As PriceApprovalView
-Attribute Create.VB_Description = "Creates a new instance of this form."
+Public Function Create(ByVal Model As AppModel, _
+    Optional ByVal Height As HeightInPercent = vbHeight50, _
+    Optional ByVal Width As WidthInPercent = vbWidth50) As IView
+    
     Guard.NonDefaultInstance Me
     Guard.NullReference Model
     
@@ -190,10 +251,10 @@ Attribute Create.VB_Description = "Creates a new instance of this form."
     
     Set result.MainModel = Model
     Set result.ViewExtended = New MultiFrameViewExtended
+    Set result.Resizer = ResizeView.Create(result, Height, Width)
     
-    'Init Extended Methods
-    ExtendView result
-            
+        InitilizeViewExtended result
+
     Set Create = result
 
 End Function
@@ -201,50 +262,70 @@ End Function
 '-------------------------------------------------------------------------
 'InIt View Method
 '-------------------------------------------------------------------------
-Private Sub ExtendView(ByVal Context As PriceApprovalView)
-
-    With Context.ViewExtended
+Private Sub InitilizeViewExtended(ByVal context As PriceApprovalView)
+    
+    With context.ViewExtended
         'Re-Dimension UserForm
-        Set .TargetForm = Context
-        .formWidth = 600
-        .formHeight = 480
+        Set .TargetForm = context
+        .formWidth = FORM_DEF_WIDTH
+        .formHeight = FORM_DEF_HEIGHT
         .ReDimensionForm
         'Always On Frame Properties
-        Set .frameAlwaysOn = Context.frameInfo
-        .alwaysOnTop = 6
-        .alwaysOnLeft = 6
+        Set .frameAlwaysOn = context.frameInfo
+        .alwaysOnTop = FRAME_MARGIN_SIDE
+        .alwaysOnLeft = FRAME_MARGIN_SIDE
         .alwaysOnWidth = 140
         .alwaysOnHeight = 78
         'Side Panel Frames Properties
         .sideFrameTop = 90
-        .sideFrameLeft = 6
+        .sideFrameLeft = FRAME_MARGIN_SIDE
         .sideFrameWidth = 140
-        .sideFrameHeight = 354
+        .sideFrameHeight = context.InsideHeight - .alwaysOnHeight - 18 '354
         'Main Panel Frames Properties
-        .mainFrameTop = 6
+        .mainFrameTop = FRAME_MARGIN_SIDE
         .mainFrameLeft = 152
-        .mainFrameWidth = 430
-        .mainFrameHeight = 438
+        .mainFrameWidth = context.InsideWidth - .sideFrameWidth - 18  '430
+        .mainFrameHeight = context.InsideHeight - 12  '438
         'plug static data sources to the relative comboboxes
-        .HydrateComboBox Context.cmbCurrency, DataResources.arrListofCurrencies
-        .HydrateComboBox Context.cmbUnitOfMeasure, DataResources.arrListOfUnitOfMeasure
+        .HydrateComboBox context.cmbCurrency, DataResources.arrListofCurrencies
+        .HydrateComboBox context.cmbUnitOfMeasure, DataResources.arrListOfUnitOfMeasure
         'InIt Interface
-        .ActivateFrames Context.frameLogin, Context.frameWelcome
+        .ActivateFrames context.frameLogin, context.frameWelcome
+        
+        .SetDefaultFrameSize context.frameLogin, "SIDE"
+        .SetDefaultFrameSize context.frameClient, "SIDE"
+        .SetDefaultFrameSize context.frameApprover, "SIDE"
+        .SetDefaultFrameSize context.frameWelcome, "MAIN"
+        .SetDefaultFrameSize context.frameLoginInterface, "MAIN"
+        .SetDefaultFrameSize context.framePasswordManager, "MAIN"
+        .SetDefaultFrameSize context.framePriceForm, "MAIN"
+        .SetDefaultFrameSize context.frameRecordsContainer, "MAIN"
+        .SetDefaultFrameSize context.frameExportUtility, "MAIN"
+        .SetDefaultFrameSize context.frameUserManager, "MAIN"
+        
         UpdateWelcomeFrame FORM_LOGIN
     End With
     
     'Intit DatePicker
-    Set this.Calendar = New VBA.Collection
+    Set This.Calendar = New VBA.Collection
     Dim i As Integer
     For i = 1 To 42
-        this.Calendar.Add New DatePickerFunctions, "titel" & i
+        This.Calendar.Add New DatePickerFunctions, "titel" & i
         '@Ignore DefaultMemberRequired
-        Set this.Calendar("titel" & i).LabelBackground = Context("dpLabel" & i)
+        Set This.Calendar("titel" & i).LabelBackground = context("dpLabel" & i)
         If i < 8 Then
             '@Ignore DefaultMemberRequired
-            Context("dpLabel5" & i).Caption = VBA.Left$(VBA.WeekdayName(i, True, 2), 1)
+            context("dpLabel5" & i).Caption = VBA.Left$(VBA.WeekdayName(i, True, 2), 1)
         End If
     Next
+
+    Dim defaultSizeSet As Boolean
+    
+    defaultSizeSet = FormControl.MakeFormResizable(context, True)
+    defaultSizeSet = FormControl.ShowMinimizeButton(context, False)
+    defaultSizeSet = FormControl.ShowMaximizeButton(context, False)
+    
+    context.IsDefaultSizeSet = defaultSizeSet
     
 End Sub
 
@@ -260,6 +341,90 @@ Private Sub MonthsSelector_Change()
         '@Ignore DefaultMemberRequired
         Me("dpLabel" & j + 1).ForeColor = VBA.IIf(Month(InitDate) = VBA.Month(InitDate - VBA.Weekday(InitDate, 2) + 1 + j), &H80000012, &H80000010)
     Next
+End Sub
+
+Private Sub BindControlLayout()
+
+    With Resizer
+        .BindControlLayout Me.frameInfo, TopAnchor
+        .BindControlLayout Me.frameWelcome, AnchorAll
+        
+        .BindControlLayout Me.frameLogin, TopAnchor + BottomAnchor
+        .BindControlLayout Me.cmdOpenLoginInterface, TopAnchor
+        .BindControlLayout Me.cmdExit, TopAnchor
+        
+        .BindControlLayout Me.frameClient, TopAnchor + BottomAnchor
+        .BindControlLayout Me.cmdOpenPriceForm, TopAnchor
+        .BindControlLayout Me.cmdOpenClientHistory, TopAnchor
+        .BindControlLayout Me.cmdOpenPasswordManager, TopAnchor
+        .BindControlLayout Me.cmdClientLogout, TopAnchor
+        
+        .BindControlLayout Me.frameApprover, TopAnchor + BottomAnchor
+        .BindControlLayout Me.cmdOpenPendingList, TopAnchor
+        .BindControlLayout Me.cmdOpenAllHistory, TopAnchor
+        .BindControlLayout Me.cmdOpenExportUtility, TopAnchor
+        .BindControlLayout Me.cmdOpenUserManager, TopAnchor
+        .BindControlLayout Me.cmdApproverLogout, TopAnchor
+        
+        .BindControlLayout Me.frameLoginInterface, AnchorAll
+        .BindControlLayout Me.LoginInterfaceTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdCancelFromLoginInterface, RightAnchor
+        
+        .BindControlLayout Me.framePasswordManager, AnchorAll
+        .BindControlLayout Me.PasswordManagerTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdCancelPasswordManager, RightAnchor
+        
+        .BindControlLayout Me.framePriceForm, AnchorAll
+        .BindControlLayout Me.PriceFormTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdAddNewRecord, LeftAnchor
+        .BindControlLayout Me.cmdUpdateRecord, LeftAnchor
+        .BindControlLayout Me.cmdDeleteRecord, LeftAnchor
+        .BindControlLayout Me.cmdResetPriceForm, RightAnchor
+        .BindControlLayout Me.cmdCancelPriceFormInterface, RightAnchor
+        
+        .BindControlLayout Me.frameRecordsContainer, AnchorAll
+        .BindControlLayout Me.RecordsContainerTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdEditRecord, LeftAnchor
+        .BindControlLayout Me.cmdResetDataForm, RightAnchor
+        .BindControlLayout Me.cmdCancelRecordContainer, RightAnchor
+        .BindControlLayout Me.LabelRecordToEdit, RightAnchor
+        .BindControlLayout Me.lstRecordsContainer, AnchorAll
+        
+        .BindControlLayout Me.frameExportUtility, AnchorAll
+        .BindControlLayout Me.ExportUtilityTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdResetExportForm, RightAnchor
+        .BindControlLayout Me.cmdCancelExportUtility, RightAnchor
+        .BindControlLayout Me.lblMessage, RightAnchor
+        .BindControlLayout Me.LabelNotes, LeftAnchor + RightAnchor
+        
+        .BindControlLayout Me.frameUserManager, AnchorAll
+        .BindControlLayout Me.UserManagerTopPanel, LeftAnchor + RightAnchor
+        .BindControlLayout Me.cmdResetUserManager, RightAnchor
+        .BindControlLayout Me.cmdCancelUserManager, RightAnchor
+        .BindControlLayout Me.LabelItemToUpdate, RightAnchor
+        .BindControlLayout Me.lstUsers, AnchorAll
+        
+    End With
+
+End Sub
+
+Private Sub InitializeResize()
+    If MainModel Is Nothing Then Exit Sub
+    BindControlLayout
+    Resizer.InitializeResize
+    Resizer.SetResolutionPercent Me
+End Sub
+
+Private Sub RedrawView()
+    
+    Dim viewMinimized As Boolean
+    If Not Resizer.IsViewResizable(Me, viewMinimized) Then
+        If Not viewMinimized Then
+            MsgBox "Minimum View Size Reached." & VBA.vbNewLine & "This is the default minimum size.", _
+                vbInformation, SIGN
+        End If
+    End If
+
 End Sub
 
 Private Sub PozitionCalendar(ByVal Ancor As Variant, ByVal Parent As Variant)
@@ -555,7 +720,7 @@ Private Sub txtDateFrom_Change()
     'Hydrate model property
     ExportModel.FromDate = Me.txtDateFrom.Text
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtDateFrom, _
+    This.ViewExtended.UpdateControlAfterValidation Me.txtDateFrom, _
                                                    ExportModel.IsValidField(ExportFormFields.FIELD_FROMDATE), _
                                                    TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
                                                    "Date format must be [" & GetDateFormat & "] and Date should be between " & _
@@ -565,7 +730,7 @@ End Sub
 
 Private Sub lblGeneratePassword_Click()
     Dim dummyPassword As String
-    dummyPassword = AppMethods.RandomString(8)
+    dummyPassword = AppMethods.RandomString(10)
     Me.txtSetPassword = dummyPassword
 End Sub
 
@@ -588,7 +753,7 @@ Private Sub txtDateTo_Change()
     'Hydrate model property
     ExportModel.ToDate = Me.txtDateTo.Text
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtDateTo, _
+    This.ViewExtended.UpdateControlAfterValidation Me.txtDateTo, _
                                                    ExportModel.IsValidField(ExportFormFields.FIELD_TODATE), _
                                                    TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
                                                    "Date format must be [" & GetDateFormat & "] and Date should be between " & _
@@ -615,21 +780,21 @@ Private Sub cmbCustomerID_Change()
     'hydrate model property
     ExportModel.customerID = Me.cmbCustomerID.Text
     'Validate field
-    this.ViewExtended.UpdateControlAfterValidation Me.cmbCustomerID, ExportModel.IsValidField(ExportFormFields.FIELD_CUSTOMERID), TYPE_NA
+    This.ViewExtended.UpdateControlAfterValidation Me.cmbCustomerID, ExportModel.IsValidField(ExportFormFields.FIELD_CUSTOMERID), TYPE_NA
 End Sub
 
 Private Sub cmbUserID_Change()
     'hydrate model property
     ExportModel.userID = Me.cmbUserID.Text
     'Validate field
-    this.ViewExtended.UpdateControlAfterValidation Me.cmbUserID, ExportModel.IsValidField(ExportFormFields.FIELD_USERID), TYPE_NA
+    This.ViewExtended.UpdateControlAfterValidation Me.cmbUserID, ExportModel.IsValidField(ExportFormFields.FIELD_USERID), TYPE_NA
 End Sub
 
 Private Sub cmbStatus_Change()
     'hydrate model property
     ExportModel.recordStatus = Me.cmbStatus.Text
     'Validate field
-    this.ViewExtended.UpdateControlAfterValidation Me.cmbStatus, ExportModel.IsValidField(ExportFormFields.FIELD_RECORDSTATUS), TYPE_NA
+    This.ViewExtended.UpdateControlAfterValidation Me.cmbStatus, ExportModel.IsValidField(ExportFormFields.FIELD_RECORDSTATUS), TYPE_NA
 End Sub
 
 '------------------------------------------------------------------------------
@@ -640,7 +805,7 @@ Private Sub lstRecordsContainer_Click()
     With Me.lstRecordsContainer
         'Hydrate model property
         If .ListIndex > 0 Then
-            DataModel.index = .List(.ListIndex, 0)
+            DataModel.Index = .List(.ListIndex, 0)
             If .List(.ListIndex, 0) = Empty Then
                 Me.cmdEditRecord.Enabled = False
             Else
@@ -663,7 +828,7 @@ End Sub
 Private Sub cmbColumns_Change()
     If Me.cmbColumns.ListIndex > 0 Then
         'Reset Values Combobox Because Columns Combobox has been changed!
-        this.ViewExtended.SetStateofControlsToNullState Me.cmbValues
+        This.ViewExtended.SetStateofControlsToNullState Me.cmbValues
         'Rehydrate Properties
         DataModel.selectedColumn = Me.cmbColumns.Value
         DataModel.selectedValue = Me.cmbValues.Value
@@ -687,7 +852,7 @@ Private Sub txtConditionType_Change()
     'Hydrate Model Property
     PriceModel.conditionType = Me.txtConditionType.Value
     'Validate field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.txtConditionType, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_ConditionType), _
         TYPE_FIXEDLENGTHSTRING, 4
@@ -697,7 +862,7 @@ Private Sub cmbSalesOrganization_Change()
     'Hydrate model property
     PriceModel.salesOrganization = Me.cmbSalesOrganization.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.cmbSalesOrganization, _
+    This.ViewExtended.UpdateControlAfterValidation Me.cmbSalesOrganization, _
                                                    PriceModel.IsValidField(MainTableFields.COL_MAIN_SalesOrganization), _
                                                    TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
                                                    "This is required field! Please select one option!"
@@ -707,7 +872,7 @@ Private Sub cmbDistributionChannel_Change()
     'Hydrate model property
     PriceModel.distributionChannel = Me.cmbDistributionChannel.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.cmbDistributionChannel, _
         PriceModel.IsValidField(MainTableFields.COL_Main_DistributionChannel), _
         TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
@@ -718,7 +883,7 @@ Private Sub txtCustomerID_Change()
     'Hydrate model property
     PriceModel.customerID = Me.txtCustomerID.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.txtCustomerID, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_customerID), _
         TYPE_CUSTOM, _
@@ -729,7 +894,7 @@ Private Sub txtMaterialID_Change()
     'Hydrate model property
     PriceModel.materialID = Me.txtMaterialID.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.txtMaterialID, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_materialID), _
         TYPE_CUSTOM, _
@@ -741,11 +906,11 @@ Private Sub txtPrice_Change()
         'Event handle mechanism
         EventStop = True
         'Apply formatting
-        Me.txtPrice.Value = this.ViewExtended.ApplyFormat(Me.txtPrice.Text, TYPE_CURRENCY)
+        Me.txtPrice.Value = This.ViewExtended.ApplyFormat(Me.txtPrice.Text, TYPE_CURRENCY)
         'Hydrate model property
         PriceModel.price = Me.txtPrice.Value
         'Validate Field
-        this.ViewExtended.UpdateControlAfterValidation _
+        This.ViewExtended.UpdateControlAfterValidation _
         Me.txtPrice, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_price), _
         TYPE_CUSTOM, _
@@ -759,7 +924,7 @@ Private Sub cmbCurrency_Change()
     'Hydrate model property
     PriceModel.currencyType = Me.cmbCurrency.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.cmbCurrency, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_currency), _
         TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
@@ -770,7 +935,7 @@ Private Sub cmbUnitOfMeasure_Change()
     'Hydrate model property
     PriceModel.unitOfMeasure = Me.cmbUnitOfMeasure.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.cmbUnitOfMeasure, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_unitOfMeasure), _
         TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
@@ -781,7 +946,7 @@ Private Sub txtPriceUnit_Change()
     'Hydrate model property
     PriceModel.unitOfPrice = Me.txtPriceUnit.Value
     'validate field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.txtPriceUnit, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_unitOfPrice), _
         TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
@@ -792,7 +957,7 @@ Private Sub txtValidFrom_Change()
     'Hydrate model property
     PriceModel.validFromDate = Me.txtValidFrom.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.txtValidFrom, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_validFromDate), _
         TYPE_CUSTOM, _
@@ -818,7 +983,7 @@ Private Sub txtValidTo_Change()
     'Hydrate model property
     PriceModel.validToDate = Me.txtValidTo.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.txtValidTo, _
         PriceModel.IsValidField(MainTableFields.COL_MAIN_validToDate), _
         TYPE_CUSTOM, _
@@ -829,6 +994,7 @@ Private Sub txtValidTo_Enter()
     PozitionCalendar Me.txtValidTo, Me.framePriceForm
     Me.DatePicker.Visible = True
     If Not Me.lblActiveUserType.Caption = "APPROVER" Then Me.txtValidTo.Locked = True
+    If Me.Height < FORM_DEF_HEIGHT Then Me.Height = FORM_DEF_HEIGHT + FRAME_MARGIN_SIDE
 End Sub
 
 Private Sub txtValidTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
@@ -848,7 +1014,7 @@ Private Sub cmbUserStatus_Change()
     'Hydrate model property
     UserModel.userStatus = Me.cmbUserStatus.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation _
+    This.ViewExtended.UpdateControlAfterValidation _
         Me.cmbUserStatus, _
         UserModel.IsValidField(COL_userStatus), _
         TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
@@ -859,7 +1025,7 @@ Private Sub cmbUserType_Change()
     'Hydrate model property
     UserModel.UserType = Me.cmbUserType.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.cmbUserType, _
+    This.ViewExtended.UpdateControlAfterValidation Me.cmbUserType, _
                                                    UserModel.IsValidField(COL_userType), _
                                                    TYPE_AllowBlankButIfValueIsNotNullThenConditionApplied, _
                                                    "This is required field! Please select one option!"
@@ -869,7 +1035,7 @@ Private Sub txtSetUsername_Change()
     'Hydrate model property
     UserModel.UserName = Me.txtSetUsername.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtSetUsername, _
+    This.ViewExtended.UpdateControlAfterValidation Me.txtSetUsername, _
                                                    UserModel.IsValidField(COL_userName), _
                                                    TYPE_CUSTOM, _
                                                    "Username should have minimum 6 characters and it shold be UNIQUE as well."
@@ -879,14 +1045,14 @@ Private Sub txtSetPassword_Change()
     'hydrate model property
     UserModel.userPassword = Me.txtSetPassword.Value
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtSetPassword, UserModel.IsValidField(COL_password), TYPE_WRONGPASSWORDPATTERN
+    This.ViewExtended.UpdateControlAfterValidation Me.txtSetPassword, UserModel.IsValidField(COL_password), TYPE_WRONGPASSWORDPATTERN
 End Sub
 
 Private Sub txtUserEmail_Change()
     'hydrate model property
     UserModel.userEmail = Me.txtUserEmail.Value
     'validate field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. username@hostname.domain"
+    This.ViewExtended.UpdateControlAfterValidation Me.txtUserEmail, UserModel.IsValidField(COL_email), TYPE_CUSTOM, "E.g. username@hostname.domain"
 End Sub
 
 Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
@@ -895,7 +1061,7 @@ Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
             If .List(.ListIndex, UsersTableFields.COL_userId - 1) = 100 Or _
                                                                     .List(.ListIndex, UsersTableFields.COL_userId - 1) = 101 Then
                 'Just for the safetly that they couldn't be able to edit dev's information
-                Call this.ViewExtended.ShowMessage("You are not allowed to Update them!", TYPE_INFORMATION)
+                Call This.ViewExtended.ShowMessage("You are not allowed to Update them!", TYPE_INFORMATION)
             Else
                 'hydrate model property
                 UserModel.userIndex = .List(.ListIndex, 0)
@@ -914,7 +1080,7 @@ Private Sub txtCurrentPassword_Change()
     'Hydrate model property
     PasswordModel.insertedPassword = Me.txtCurrentPassword.Text
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtCurrentPassword, PasswordModel.IsValidField(1), TYPE_STRINGSNOTMATCHED
+    This.ViewExtended.UpdateControlAfterValidation Me.txtCurrentPassword, PasswordModel.IsValidField(1), TYPE_STRINGSNOTMATCHED
 End Sub
 
 Private Sub txtNewPassword_Change()
@@ -924,14 +1090,14 @@ Private Sub txtNewPassword_Change()
     Me.txtConfirmNewPassword.Value = vbNullString
     PasswordModel.confirmNewPassword = Me.txtConfirmNewPassword.Text
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtNewPassword, PasswordModel.IsValidField(2), TYPE_WRONGPASSWORDPATTERN
+    This.ViewExtended.UpdateControlAfterValidation Me.txtNewPassword, PasswordModel.IsValidField(2), TYPE_WRONGPASSWORDPATTERN
 End Sub
 
 Private Sub txtConfirmNewPassword_Change()
     'Hydrate model property
     PasswordModel.confirmNewPassword = Me.txtConfirmNewPassword.Text
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtConfirmNewPassword, PasswordModel.IsValidField(3), TYPE_STRINGSNOTMATCHED
+    This.ViewExtended.UpdateControlAfterValidation Me.txtConfirmNewPassword, PasswordModel.IsValidField(3), TYPE_STRINGSNOTMATCHED
 End Sub
 
 '-------------------------------------------------------------------------
@@ -942,14 +1108,14 @@ Private Sub txtPassword_Change()
     'Hydrate model property
     LoginModel.Password = Me.txtPassword.Text
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtPassword, LoginModel.IsValidPassword, TYPE_NA
+    This.ViewExtended.UpdateControlAfterValidation Me.txtPassword, LoginModel.IsValidPassword, TYPE_NA
 End Sub
 
 Private Sub txtUsername_Change()
     'hydrate model property
     LoginModel.UserName = Me.txtUsername.Text
     'Validate Field
-    this.ViewExtended.UpdateControlAfterValidation Me.txtUsername, LoginModel.IsValidUsername, TYPE_NA
+    This.ViewExtended.UpdateControlAfterValidation Me.txtUsername, LoginModel.IsValidUsername, TYPE_NA
 End Sub
 
 '-------------------------------------------------------------------------
@@ -958,7 +1124,7 @@ End Sub
 
 Public Sub UserWantsToLogout()
     'Logout State
-    Call this.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameWelcome)
+    Call This.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameWelcome)
     Call UpdateWelcomeFrame(FORM_LOGIN)
 End Sub
 
@@ -968,35 +1134,35 @@ Public Sub UserWantsToCloseFrame(ByVal FrameIdentifier As ApplicationForms)
     Select Case FrameIdentifier
     
     Case ApplicationForms.FORM_LOGIN
-        Call this.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameWelcome)
+        Call This.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameWelcome)
         Call UpdateWelcomeFrame(FORM_LOGIN)
             
     Case ApplicationForms.FORM_PASSWORDMANAGER
-        Call this.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
+        Call This.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
         Call UpdateWelcomeFrame
             
     Case ApplicationForms.FORM_USERMANAGER
-        Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+        Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
         Call UpdateWelcomeFrame
             
     Case ApplicationForms.FORM_PRICEFORM
         If MainModel.ActiveUserType = USERTYPE_CLIENT Then
-            Call this.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
+            Call This.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
         Else
-            Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+            Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
         End If
         Call UpdateWelcomeFrame
             
     Case ApplicationForms.FORM_DATAFORM
         If MainModel.ActiveUserType = USERTYPE_CLIENT Then
-            Call this.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
+            Call This.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
         Else
-            Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+            Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
         End If
         Call UpdateWelcomeFrame
             
     Case ApplicationForms.FORM_EXPORTUTILITY
-        Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+        Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
         Call UpdateWelcomeFrame
             
     End Select
@@ -1014,21 +1180,21 @@ End Sub
 
 Public Sub UserWantsToOpenLoginFrame(ByVal LoginFrameModel As LoginFormModel)
     'open login interface
-    Call this.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameLoginInterface)
+    Call This.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameLoginInterface)
     'RESET login frame
     Call ResetLoginFrame(LoginFrameModel)
 End Sub
 
 Public Sub UserWantsToOpenPasswordManagerFrame(ByVal PasswordManagerFormModel As PasswordManagerModel)
     'open password manager for the client
-    Call this.ViewExtended.ActivateFrames(Me.frameClient, Me.framePasswordManager)
+    Call This.ViewExtended.ActivateFrames(Me.frameClient, Me.framePasswordManager)
     'RESET Password manager frame
     Call ResetPasswordManagerFrame(PasswordManagerFormModel)
 End Sub
 
 Public Sub UserWantsToOpenUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel)
     'open user manager for the client
-    Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameUserManager)
+    Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameUserManager)
     'reset user manager frame
     Call ResetUserManagerFrame(UserManagerFormModel, OPERATION_NEW)
 End Sub
@@ -1036,9 +1202,9 @@ End Sub
 Public Sub UserWantsToOpenPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel, ByVal operation As FormOperation)
     'open Price Form Interface
     If MainModel.ActiveUserType = USERTYPE_CLIENT Then
-        Call this.ViewExtended.ActivateFrames(Me.frameClient, Me.framePriceForm)
+        Call This.ViewExtended.ActivateFrames(Me.frameClient, Me.framePriceForm)
     Else
-        Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.framePriceForm)
+        Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.framePriceForm)
     End If
     'Reset Price Form Frame
     If operation = OPERATION_NEW Then
@@ -1050,7 +1216,7 @@ End Sub
 
 Public Sub UserWantsToOpenExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
     'open export form interface
-    Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameExportUtility)
+    Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameExportUtility)
     'Reset Export Form Frame
     Call ResetExportFormFrame(ExportFormFrameModel)
 End Sub
@@ -1061,15 +1227,15 @@ Public Sub UserWantsToOpenDataFormFrame(ByVal DataFormFrameModel As DataFormMode
     
     Case DataContainer.FOR_CLIENTHISTORY
         'open client history interface
-        Call this.ViewExtended.ActivateFrames(Me.frameClient, Me.frameRecordsContainer)
+        Call This.ViewExtended.ActivateFrames(Me.frameClient, Me.frameRecordsContainer)
             
     Case DataContainer.FOR_PENDINGAPPROVALS
         'open pending list for approver
-        Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
+        Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
             
     Case DataContainer.FOR_ALLHISTORY
         'open client history interface
-        Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
+        Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameRecordsContainer)
             
     End Select
     'Reset Price Form Frame
@@ -1085,7 +1251,7 @@ Private Sub ResetLoginFrame(ByVal LoginFrameModel As LoginFormModel)
         'Attach Model
         If LoginModel Is Nothing Then Set LoginModel = LoginFrameModel
         'clear values of login frame fields
-        Call this.ViewExtended.SetStateofControlsToNullState(.txtUsername, .txtPassword)
+        Call This.ViewExtended.SetStateofControlsToNullState(.txtUsername, .txtPassword)
         'set focus
         .txtUsername.SetFocus
     End With
@@ -1096,7 +1262,7 @@ Private Sub ResetPasswordManagerFrame(ByVal PasswordManagerFormModel As Password
         'Attach Model
         If PasswordModel Is Nothing Then Set PasswordModel = PasswordManagerFormModel
         'clear values of Password manager frame fields
-        Call this.ViewExtended.SetStateofControlsToNullState(.txtCurrentPassword, .txtNewPassword, .txtConfirmNewPassword)
+        Call This.ViewExtended.SetStateofControlsToNullState(.txtCurrentPassword, .txtNewPassword, .txtConfirmNewPassword)
         'set focus
         .txtCurrentPassword.SetFocus
     End With
@@ -1107,7 +1273,7 @@ Private Sub ResetUserManagerFrame(ByVal UserManagerFormModel As UserManagerModel
         'Attach Model
         If UserModel Is Nothing Then Set UserModel = UserManagerFormModel
         'clear values of user manager frame fields
-        Call this.ViewExtended.SetStateofControlsToNullState(.txtSetUsername, .txtSetPassword, .cmbUserStatus, .cmbUserType, .txtUserEmail, lstUsers)
+        Call This.ViewExtended.SetStateofControlsToNullState(.txtSetUsername, .txtSetPassword, .cmbUserStatus, .cmbUserType, .txtUserEmail, lstUsers)
         'Repopulate ComboBoxes and Listbox
         .cmbUserStatus.List = UserModel.userStatusList
         .cmbUserType.List = UserModel.userTypesList
@@ -1134,7 +1300,7 @@ Private Sub ResetPriceFormFrame(ByVal PriceFormFrameModel As PriceFormModel, ByV
         'Attach Model
         If PriceModel Is Nothing Then Set PriceModel = PriceFormFrameModel
         'clear values of Price form frame fields
-        this.ViewExtended.SetStateofControlsToNullState .lblMainRecordStatus, _
+        This.ViewExtended.SetStateofControlsToNullState .lblMainRecordStatus, _
                                                         .txtConditionType, _
                                                         .cmbSalesOrganization, _
                                                         .cmbDistributionChannel, _
@@ -1168,7 +1334,7 @@ Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
         'Attach Model
         If DataModel Is Nothing Then Set DataModel = DataFormFrameModel
         'Clear Data Form Controls
-        Call this.ViewExtended.SetStateofControlsToNullState(.lstRecordsContainer, .cmbColumns, .cmbValues)
+        Call This.ViewExtended.SetStateofControlsToNullState(.lstRecordsContainer, .cmbColumns, .cmbValues)
         'Repopulate ListBox and hydrate some of data model properties
         .lblListType = DataModel.ListTitle
         'Filling up listbox with criteria
@@ -1198,7 +1364,7 @@ Private Sub ResetExportFormFrame(ByVal ExportFormFrameModel As ExportFormModel)
         'Attach Model
         If ExportModel Is Nothing Then Set ExportModel = ExportFormFrameModel
         'Clear Data Form Controls
-        Call this.ViewExtended.SetStateofControlsToNullState(.txtDateFrom, .txtDateTo, .cmbCustomerID, .cmbUserID, .cmbStatus, .lblMessage)
+        Call This.ViewExtended.SetStateofControlsToNullState(.txtDateFrom, .txtDateTo, .cmbCustomerID, .cmbUserID, .cmbStatus, .lblMessage)
         'repopulate comboboxes
         .cmbCustomerID.List = ExportModel.customerIDsList
         .cmbUserID.List = ExportModel.userIDsList
@@ -1222,7 +1388,7 @@ Public Sub UserWantsToUpdateUserManagerRecord()
 End Sub
 
 Public Sub ShowWarning(ByVal message As String, ByVal typeOfMessage As messageType)
-    Call this.ViewExtended.ShowMessage(message, typeOfMessage)
+    Call This.ViewExtended.ShowMessage(message, typeOfMessage)
 End Sub
 
 Public Sub UserWantsToLogin()
@@ -1234,10 +1400,10 @@ Public Sub UserWantsToLogin()
             Call OpenNextInterfaceAfterSuccessfulLogin
             Exit Sub
         Else
-            Call this.ViewExtended.ShowMessage("Not authorized to LOGIN! Please contact business to know more details.", TYPE_CRITICAL)
+            Call This.ViewExtended.ShowMessage("Not authorized to LOGIN! Please contact business to know more details.", TYPE_CRITICAL)
         End If
     Else
-        Call this.ViewExtended.ShowMessage(response, TYPE_CRITICAL)
+        Call This.ViewExtended.ShowMessage(response, TYPE_CRITICAL)
     End If
 End Sub
 
@@ -1249,7 +1415,7 @@ End Sub
 Public Sub UserWantsToFilterAndSortDataFormList()
     With Me
         'Clear Data Form Controls
-        Call this.ViewExtended.SetStateofControlsToNullState(.lstRecordsContainer)
+        Call This.ViewExtended.SetStateofControlsToNullState(.lstRecordsContainer)
         'Update Listbox
         With .lstRecordsContainer
             .ColumnCount = 16
@@ -1274,9 +1440,9 @@ End Sub
 Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     'Open Frame based on client type
     If LoginModel.UserType = USERTYPE_CLIENT Then
-        Call this.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
+        Call This.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
     Else
-        Call this.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+        Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
     End If
     'Update Active User Frame
     With LoginModel
@@ -1291,7 +1457,7 @@ End Sub
 Public Sub AfterChangePasswordOperation()
     MsgBox "Password has been changed successfully! Please Sign-In again.", vbInformation, SIGN
     'Go back to logout state
-    Call this.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameWelcome)
+    Call This.ViewExtended.ActivateFrames(Me.frameLogin, Me.frameWelcome)
     Call UpdateWelcomeFrame(FORM_LOGIN)
 End Sub
 
@@ -1384,7 +1550,7 @@ Private Sub StateForNewRecordForPriceForm()
         'Hide Buttons
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
-            this.ViewExtended.FormEditingState False, _
+            This.ViewExtended.FormEditingState False, _
                                                .txtConditionType, _
                                                .cmbSalesOrganization, _
                                                .cmbDistributionChannel, _
@@ -1396,7 +1562,7 @@ Private Sub StateForNewRecordForPriceForm()
                                                .cmbUnitOfMeasure
         Else
             Call ShowApprovalRejectionButtons(False)
-            this.ViewExtended.FormEditingState True, _
+            This.ViewExtended.FormEditingState True, _
                                                .txtConditionType, _
                                                .cmbSalesOrganization, _
                                                .cmbDistributionChannel, _
@@ -1437,7 +1603,7 @@ Private Sub StateForUpdateRecordForPriceForm()
         'Hide Buttons & Form Lock Decision
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             Call ShowApprovalRejectionButtons(True)
-            this.ViewExtended.FormEditingState False, _
+            This.ViewExtended.FormEditingState False, _
                                                .txtConditionType, _
                                                .cmbSalesOrganization, _
                                                .cmbDistributionChannel, _
@@ -1455,7 +1621,7 @@ Private Sub StateForUpdateRecordForPriceForm()
             .cmdResetPriceForm.Enabled = False
         Else
             Call ShowApprovalRejectionButtons(False)
-            this.ViewExtended.FormEditingState True, _
+            This.ViewExtended.FormEditingState True, _
                                                .txtConditionType, _
                                                .cmbSalesOrganization, _
                                                .cmbDistributionChannel, _
@@ -1521,7 +1687,7 @@ Private Sub UpdateWelcomeFrame(Optional FrameIdentifier As ApplicationForms = 0)
         End With
     Else
         'Update Welcome Message While User is Still Logged In
-        Call this.ViewExtended.ChangeControlProperties(Me.lblWelcomeMessage, MESSAGE_WELCOMESCREEN_LOGIN_STATE & Me.lblActiveUsername.Caption, &H8000000D)
+        Call This.ViewExtended.ChangeControlProperties(Me.lblWelcomeMessage, MESSAGE_WELCOMESCREEN_LOGIN_STATE & Me.lblActiveUsername.Caption, &H8000000D)
     End If
 End Sub
 
@@ -1554,14 +1720,69 @@ End Sub
 Private Sub ReformatListBoxWithAppropriateDataTypesForMainTable()
     With Me
         'Edit Change Date
-        Call this.ViewExtended.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_statusChangeDate, TYPE_DATE)
+        Call This.ViewExtended.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_statusChangeDate, TYPE_DATE)
         'price column
-        Call this.ViewExtended.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_price, TYPE_CURRENCY)
+        Call This.ViewExtended.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_price, TYPE_CURRENCY)
         'From Date Column
-        Call this.ViewExtended.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validFromDate, TYPE_DATE)
+        Call This.ViewExtended.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validFromDate, TYPE_DATE)
         'To Date Column
-        Call this.ViewExtended.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validToDate, TYPE_DATE)
+        Call This.ViewExtended.ReformatListBoxColumns(.lstRecordsContainer, MainTableFields.COL_MAIN_validToDate, TYPE_DATE)
     End With
+End Sub
+
+Private Sub Dispose()
+
+    If This.Disposed Then
+        LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
+        Exit Sub
+    End If
+    
+    If Not This.ViewExtended Is Nothing Then
+        Disposable.TryDispose This.ViewExtended
+        Set This.ViewExtended = Nothing
+    End If
+    
+    If Not This.MainModel Is Nothing Then
+        Disposable.TryDispose This.MainModel
+        Set This.MainModel = Nothing
+    End If
+    
+    If Not This.LoginModel Is Nothing Then
+        Disposable.TryDispose This.LoginModel
+        Set This.LoginModel = Nothing
+    End If
+    
+    If Not This.UserModel Is Nothing Then
+        Disposable.TryDispose This.UserModel
+        Set This.UserModel = Nothing
+    End If
+    
+    If Not This.PriceModel Is Nothing Then
+        Disposable.TryDispose This.PriceModel
+        Set This.PriceModel = Nothing
+    End If
+
+    If Not This.DataModel Is Nothing Then
+        Disposable.TryDispose This.DataModel
+        Set This.DataModel = Nothing
+    End If
+    
+    If Not This.ExportModel Is Nothing Then
+        Disposable.TryDispose This.ExportModel
+        Set This.ExportModel = Nothing
+    End If
+
+    If Not This.Resizer Is Nothing Then
+        Disposable.TryDispose This.Resizer
+        Set This.Resizer = Nothing
+    End If
+    
+    This.Disposed = True
+    
+    #If TestMode Then
+        LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"
+    #End If
+    
 End Sub
 
 '-------------------------------------------------------------------------
@@ -1575,22 +1796,16 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     End If
 End Sub
 
-Private Sub UserForm_Terminate()
-    Set MultiFrameViewExtended = Nothing
-    Set MainModel = Nothing
-    Set LoginModel = Nothing
-    Set UserModel = Nothing
-    Set PriceModel = Nothing
-    Set DataModel = Nothing
-    Set ExportModel = Nothing
+Private Sub Class_Terminate()
+    If Not This.Disposed Then Dispose
 End Sub
 
-Private Function IView_ShowDialog() As Boolean
-    Me.Show vbModeless
-    IView_ShowDialog = Not this.IsCancelled
-End Function
+Private Sub UserForm_Resize()
+    If IsDefaultSizeSet Then RedrawView
+End Sub
 
 Private Sub IView_Show()
+    InitializeResize
     Me.Show vbModeless
 End Sub
 
@@ -1599,9 +1814,14 @@ Private Sub IView_Hide()
 End Sub
 
 Private Property Get ICancellable_IsCancelled() As Boolean
-    ICancellable_IsCancelled = this.IsCancelled
+    ICancellable_IsCancelled = This.IsCancelled
 End Property
 
 Private Sub ICancellable_OnCancel()
     OnCancel
 End Sub
+
+Private Sub IDisposable_Dispose()
+    Dispose
+End Sub
+

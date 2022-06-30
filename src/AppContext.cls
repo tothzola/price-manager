@@ -38,7 +38,7 @@ Private Type TState
     Disposed As Boolean
 End Type
 
-Private this As TState
+Private This As TState
 
 '@Ignore ProcedureNotUsed
 '@Description("Returns class reference")
@@ -117,60 +117,60 @@ End Function
 
 Public Property Get DBConnectionType() As RepositoryType
     Guard.DefaultInstance Me
-    DBConnectionType = this.DBConnectionType
+    DBConnectionType = This.DBConnectionType
 End Property
 
 Public Property Let DBConnectionType(ByVal RHS As RepositoryType)
     Guard.DefaultInstance Me
-    this.DBConnectionType = RHS
+    This.DBConnectionType = RHS
 End Property
 
 '@Description "Gets/sets the Services Main reference."
 Public Property Get MainService() As IServices
 Attribute MainService.VB_Description = "Gets/sets the Services Main reference."
     Guard.DefaultInstance Me
-    Set MainService = this.MainService
+    Set MainService = This.MainService
 End Property
 
 Public Property Set MainService(ByVal RHS As IServices)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization this.MainService
+    Guard.DoubleInitialization This.MainService
     Guard.NullReference RHS
-    Set this.MainService = RHS
+    Set This.MainService = RHS
 End Property
 
 '@Description "Gets/sets the Services User reference."
 Public Property Get UserService() As IServices
 Attribute UserService.VB_Description = "Gets/sets the Services User reference."
     Guard.DefaultInstance Me
-    Set UserService = this.UserService
+    Set UserService = This.UserService
 End Property
 
 Public Property Set UserService(ByVal RHS As IServices)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization this.UserService
+    Guard.DoubleInitialization This.UserService
     Guard.NullReference RHS
-    Set this.UserService = RHS
+    Set This.UserService = RHS
 End Property
 
 Private Sub Dispose()
 
-    If this.Disposed Then
+    If This.Disposed Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
         Exit Sub
     End If
 
-    If Not this.MainService Is Nothing Then
-        Disposable.TryDispose this.MainService
-        Set this.MainService = Nothing
+    If Not This.MainService Is Nothing Then
+        Disposable.TryDispose This.MainService
+        Set This.MainService = Nothing
     End If
     
-    If Not this.UserService Is Nothing Then
-        Disposable.TryDispose this.UserService
-        Set this.UserService = Nothing
+    If Not This.UserService Is Nothing Then
+        Disposable.TryDispose This.UserService
+        Set This.UserService = Nothing
     End If
     
-    this.Disposed = True
+    This.Disposed = True
     
     #If TestMode Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"
@@ -179,7 +179,7 @@ Private Sub Dispose()
 End Sub
 
 Private Sub Class_Terminate()
-    If Not this.Disposed Then Dispose
+    If Not This.Disposed Then Dispose
 End Sub
 
 Private Property Get IAppContext_MainService() As IServices

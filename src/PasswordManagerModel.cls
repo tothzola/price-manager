@@ -22,48 +22,48 @@ Private Type TPasswordManagerFormModelComponents
     
 End Type
 
-Private this As TPasswordManagerFormModelComponents
+Private This As TPasswordManagerFormModelComponents
 
 '-------------------------------------------------------------------------
 'Properties
 '-------------------------------------------------------------------------
 
 Public Property Get confirmNewPassword() As String
-    confirmNewPassword = this.confirmNewPassword
+    confirmNewPassword = This.confirmNewPassword
 End Property
 
 Public Property Let confirmNewPassword(ByVal vNewValue As String)
-    this.confirmNewPassword = vNewValue
+    This.confirmNewPassword = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get NewPassword() As String
-    NewPassword = this.NewPassword
+    NewPassword = This.NewPassword
 End Property
 
 Public Property Let NewPassword(ByVal vNewValue As String)
-    this.NewPassword = vNewValue
+    This.NewPassword = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get insertedPassword() As String
-    insertedPassword = this.insertedPassword
+    insertedPassword = This.insertedPassword
 End Property
 
 Public Property Let insertedPassword(ByVal vNewValue As String)
-    this.insertedPassword = vNewValue
+    This.insertedPassword = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get Password() As String
-    Password = this.Password
+    Password = This.Password
 End Property
 
 Public Property Let Password(ByVal vNewValue As String)
-    this.Password = vNewValue
+    This.Password = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -74,7 +74,7 @@ Public Sub InItModel(ByVal ActiveUserPassword As String)
     Me.Password = ActiveUserPassword
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
-    Call AppMethods.ResetSingleDimensionalArray(this.CheckFields)
+    Call AppMethods.ResetSingleDimensionalArray(This.CheckFields)
 End Sub
 
 '-------------------------------------------------------------------------
@@ -82,7 +82,7 @@ End Sub
 '-------------------------------------------------------------------------
 
 Public Function IsEverythingOkayToChangePassword() As Variant
-    IsEverythingOkayToChangePassword = ValidationServices.IsEverythingOkay(this.CheckFields, _
+    IsEverythingOkayToChangePassword = ValidationServices.IsEverythingOkay(This.CheckFields, _
                                                                 DataResources.arrListOfFields_PASSWORD_MANAGER, _
                                                                 PasswordManagerFields.PM_CURRENT_PASSWORD, _
                                                                 PasswordManagerFields.PM_CONFIRM_NEW_PASSWORD)
@@ -90,7 +90,7 @@ End Function
 
 Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boolean
     'Reset CheckField's State to False
-    this.CheckFields(FieldIndex) = False
+    This.CheckFields(FieldIndex) = False
     'Check the validation of field based on field index
     Select Case FieldIndex
         Case PasswordManagerFields.PM_CURRENT_PASSWORD
@@ -119,7 +119,7 @@ Public Function IsValidField(ByVal FieldIndex As PasswordManagerFields) As Boole
             
     End Select
     'If All Goes Well!
-    this.CheckFields(FieldIndex) = True
+    This.CheckFields(FieldIndex) = True
 End Function
 
 

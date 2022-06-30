@@ -21,7 +21,7 @@ Private Type TDataFormModelComponents
     selectedColumn As Variant
     selectedValue As Variant
     'Fields
-    index As Long
+    Index As Long
     RecordID As String
     userID As String
     recordStatus As String
@@ -43,46 +43,46 @@ Private Type TDataFormModelComponents
     
 End Type
 
-Private this As TDataFormModelComponents
+Private This As TDataFormModelComponents
 
 '-------------------------------------------------------------------------
 
 Public Property Get dataTable() As Variant
-    dataTable = this.dataTable
+    dataTable = This.dataTable
 End Property
 
 Public Property Let dataTable(ByVal vNewValue As Variant)
-    this.dataTable = vNewValue
+    This.dataTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get usersTable() As Variant
-    usersTable = this.usersTable
+    usersTable = This.usersTable
 End Property
 
 Public Property Let usersTable(ByVal vNewValue As Variant)
-    this.usersTable = vNewValue
+    This.usersTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get DataColumnsList() As Variant
-    DataColumnsList = this.DataColumnsList
+    DataColumnsList = This.DataColumnsList
 End Property
 
 Public Property Let DataColumnsList(ByVal vNewValue As Variant)
-    this.DataColumnsList = vNewValue
+    This.DataColumnsList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ValuesList() As Variant
-    ValuesList = this.ValuesList
+    ValuesList = This.ValuesList
 End Property
 
 Public Property Let ValuesList(ByVal vNewValue As Variant)
-    this.ValuesList = vNewValue
+    This.ValuesList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -90,195 +90,195 @@ End Property
 Public Property Get selectedValue() As Variant
     Select Case Me.selectedColumn
     Case MainTableFields.COL_MAIN_statusChangeDate
-        If this.selectedValue <> vbNullString Then selectedValue = VBA.Format$(this.selectedValue, GetDateFormat)
+        If This.selectedValue <> vbNullString Then selectedValue = VBA.Format$(This.selectedValue, GetDateFormat)
         
     Case Else
-        selectedValue = this.selectedValue
+        selectedValue = This.selectedValue
     End Select
 End Property
 
 Public Property Let selectedValue(ByVal vNewValue As Variant)
-    this.selectedValue = vNewValue
+    This.selectedValue = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get selectedColumn() As Variant
-    selectedColumn = AppMethods.GetTargetColumnIndex(this.selectedColumn, DataResources.arrListOfColumnsMainTableFull)
+    selectedColumn = AppMethods.GetTargetColumnIndex(This.selectedColumn, DataResources.arrListOfColumnsMainTableFull)
 End Property
 
 Public Property Let selectedColumn(ByVal vNewValue As Variant)
-    this.selectedColumn = vNewValue
+    This.selectedColumn = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get index() As Long
-    index = this.index
+Public Property Get Index() As Long
+    Index = This.Index
 End Property
 
-Public Property Let index(ByVal vNewValue As Long)
-    this.index = vNewValue
+Public Property Let Index(ByVal vNewValue As Long)
+    This.Index = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get RecordID() As String
-    RecordID = this.RecordID
+    RecordID = This.RecordID
 End Property
 
 Public Property Let RecordID(ByVal vNewValue As String)
-    this.RecordID = vNewValue
+    This.RecordID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userID() As String
-    userID = this.userID
+    userID = This.userID
 End Property
 
 Public Property Let userID(ByVal vNewValue As String)
-    this.userID = vNewValue
+    This.userID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get recordStatus() As String
-    recordStatus = this.recordStatus
+    recordStatus = This.recordStatus
 End Property
 
 Public Property Let recordStatus(ByVal vNewValue As String)
-    this.recordStatus = vNewValue
+    This.recordStatus = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get statusChangeDate() As String
-    statusChangeDate = this.statusChangeDate
+    statusChangeDate = This.statusChangeDate
 End Property
 
 Public Property Let statusChangeDate(ByVal vNewValue As String)
-    this.statusChangeDate = vNewValue
+    This.statusChangeDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get distributionChannel() As String
-    distributionChannel = this.distributionChannel
+    distributionChannel = This.distributionChannel
 End Property
 
 Public Property Let distributionChannel(ByVal vNewValue As String)
-    this.distributionChannel = vNewValue
+    This.distributionChannel = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get salesOrganization() As String
-    salesOrganization = this.salesOrganization
+    salesOrganization = This.salesOrganization
 End Property
 
 Public Property Let salesOrganization(ByVal vNewValue As String)
-    this.salesOrganization = vNewValue
+    This.salesOrganization = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get conditionType() As String
-    conditionType = this.conditionType
+    conditionType = This.conditionType
 End Property
 
 Public Property Let conditionType(ByVal vNewValue As String)
-    this.conditionType = vNewValue
+    This.conditionType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get customerID() As String
-    customerID = this.customerID
+    customerID = This.customerID
 End Property
 
 Public Property Let customerID(ByVal vNewValue As String)
-    this.customerID = vNewValue
+    This.customerID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get materialID() As String
-    materialID = this.materialID
+    materialID = This.materialID
 End Property
 
 Public Property Let materialID(ByVal vNewValue As String)
-    this.materialID = vNewValue
+    This.materialID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get price() As String
-    price = this.price
+    price = This.price
 End Property
 
 Public Property Let price(ByVal vNewValue As String)
-    this.price = vNewValue
+    This.price = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get currencyType() As String
-    currencyType = this.currencyType
+    currencyType = This.currencyType
 End Property
 
 Public Property Let currencyType(ByVal vNewValue As String)
-    this.currencyType = vNewValue
+    This.currencyType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get unitOfPrice() As String
-    unitOfPrice = this.unitOfPrice
+    unitOfPrice = This.unitOfPrice
 End Property
 
 Public Property Let unitOfPrice(ByVal vNewValue As String)
-    this.unitOfPrice = vNewValue
+    This.unitOfPrice = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get unitOfMeasure() As String
-    unitOfMeasure = this.unitOfMeasure
+    unitOfMeasure = This.unitOfMeasure
 End Property
 
 Public Property Let unitOfMeasure(ByVal vNewValue As String)
-    this.unitOfMeasure = vNewValue
+    This.unitOfMeasure = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get validFromDate() As String
-    validFromDate = this.validFromDate
+    validFromDate = This.validFromDate
 End Property
 
 Public Property Let validFromDate(ByVal vNewValue As String)
-    this.validFromDate = vNewValue
+    This.validFromDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get validToDate() As String
-    validToDate = this.validToDate
+    validToDate = This.validToDate
 End Property
 
 Public Property Let validToDate(ByVal vNewValue As String)
-    this.validToDate = vNewValue
+    This.validToDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveDataContainer() As Long
-    ActiveDataContainer = this.ActiveDataContainer
+    ActiveDataContainer = This.ActiveDataContainer
 End Property
 
 Public Property Let ActiveDataContainer(ByVal vNewValue As Long)
-    this.ActiveDataContainer = vNewValue
+    This.ActiveDataContainer = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -297,11 +297,11 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get IsApprover() As Boolean
-    IsApprover = this.IsApprover
+    IsApprover = This.IsApprover
 End Property
 
 Public Property Let IsApprover(ByVal vNewValue As Boolean)
-    this.IsApprover = vNewValue
+    This.IsApprover = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -318,7 +318,7 @@ Public Function IsValidRecordToEdit() As Variant
     Dim i               As Long
     
     'Calculate driving paramters
-    TargetIndex = AppMethods.GetTargetRowIndex(Me.dataTable, Me.index, MainTableFields.COL_MAIN_INDEX)
+    TargetIndex = AppMethods.GetTargetRowIndex(Me.dataTable, Me.Index, MainTableFields.COL_MAIN_INDEX)
     firstRow = LBound(Me.dataTable, 1)
     LastRow = UBound(Me.dataTable, 1)
     

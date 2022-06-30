@@ -29,16 +29,16 @@ Private Type TPasswordManagerComponents
     Model As PasswordManagerModel
 End Type
 
-Private this As TPasswordManagerComponents
+Private This As TPasswordManagerComponents
 
 '-------------------------------------------------------------------------
 
 Private Property Get Model() As PasswordManagerModel
-    Set Model = this.Model
+    Set Model = This.Model
 End Property
 
 Private Property Set Model(ByVal vNewValue As PasswordManagerModel)
-    Set this.Model = vNewValue
+    Set This.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------

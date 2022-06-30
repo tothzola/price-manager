@@ -34,16 +34,16 @@ Private Type TPriceFormComponents
     Model As PriceFormModel
 End Type
 
-Private this As TPriceFormComponents
+Private This As TPriceFormComponents
 
 '-------------------------------------------------------------------------
 
 Private Property Get Model() As PriceFormModel
-    Set Model = this.Model
+    Set Model = This.Model
 End Property
 
 Private Property Set Model(ByVal vNewValue As PriceFormModel)
-    Set this.Model = vNewValue
+    Set This.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------

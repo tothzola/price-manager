@@ -16,29 +16,29 @@ Option Explicit
 'Settings
 '-----------------------------------------------------------------------
 
-Const CONTROL_TYPE_FRAME As String = "Frame"
-Const CONTROL_TYPE_TEXTBOX As String = "TextBox"
-Const CONTROL_TYPE_LABEL As String = "Label"
-Const CONTROL_TYPE_COMBOBOX As String = "ComboBox"
-Const CONTROL_TYPE_LISTBOX As String = "ListBox"
-Const PANEL_TYPE_ALWAYSON As String = "INFO"
-Const PANEL_TYPE_SIDE As String = "SIDE"
-Const PANEL_TYPE_MAIN As String = "MAIN"
-Const SYMBOL_OK As String = "ü"
-Const CONTROL_NAME_OK As String = "OK"
+Private Const CONTROL_TYPE_FRAME As String = "Frame"
+Private Const CONTROL_TYPE_TEXTBOX As String = "TextBox"
+Private Const CONTROL_TYPE_LABEL As String = "Label"
+Private Const CONTROL_TYPE_COMBOBOX As String = "ComboBox"
+Private Const CONTROL_TYPE_LISTBOX As String = "ListBox"
+Private Const PANEL_TYPE_ALWAYSON As String = "INFO"
+Private Const PANEL_TYPE_SIDE As String = "SIDE"
+Private Const PANEL_TYPE_MAIN As String = "MAIN"
+Private Const SYMBOL_OK As String = "ü"
+Private Const CONTROL_NAME_OK As String = "OK"
 
 'Colors
-Const INVALID_FIELD_BORDERCOLOR As Long = COLOR_OF_NOT_OKAY
-Const INVALID_FIELD_FONTCOLOR As Long = COLOR_OF_NOT_OKAY
-Const VALID_FIELD_BORDERCOLOR As Long = &HC0C0C0
-Const VALID_FIELD_FONTCOLOR As Long = vbBlack
+Private Const INVALID_FIELD_BORDERCOLOR As Long = COLOR_OF_NOT_OKAY
+Private Const INVALID_FIELD_FONTCOLOR As Long = COLOR_OF_NOT_OKAY
+Private Const VALID_FIELD_BORDERCOLOR As Long = &HC0C0C0
+Private Const VALID_FIELD_FONTCOLOR As Long = vbBlack
 
 '-----------------------------------------------------------------------
 'Public Properties
 '-----------------------------------------------------------------------
 
 'Userform Properties
-Public TargetForm As Object 'Instance of User Form/VIEW
+Public TargetForm As Object 'Instance of User Form/View
 Public formWidth As Integer
 Public formHeight As Integer
 
@@ -66,8 +66,7 @@ Public mainFrameHeight As Integer
 'Public Methods
 '-----------------------------------------------------------------------
 
-'Data feed into listbox will be in raw format, so we change then format a column by using this method
-
+'@Description("Data feed into listbox will be in raw format, so we change then format a column by using this method")
 Public Sub ReformatListBoxColumns(ByVal ctrl As MSForms.ListBox, ByVal ColumnIndex As Long, ByVal formatType As DataTypes)
     Dim i As Long
     With ctrl
@@ -77,8 +76,7 @@ Public Sub ReformatListBoxColumns(ByVal ctrl As MSForms.ListBox, ByVal ColumnInd
     End With
 End Sub
 
-'Following function will return string in selected format!
-
+'@Description("Following function will return string in selected format!")
 Public Function ApplyFormat(ByVal InputValue As String, ByVal formatType As DataTypes) As String
     If InputValue <> vbNullString Then InputValue = VBA.Trim$(InputValue)
     
@@ -95,9 +93,8 @@ Public Function ApplyFormat(ByVal InputValue As String, ByVal formatType As Data
     End Select
 End Function
 
-'For approver, we do not want him to edit the record so by using this function we can _
-enabled disabled the controls based on user type
-
+'@Description("For approver, we do not want him to edit the record so by using this function we can _
+enabled disabled the controls based on user type")
 Public Sub FormEditingState(ByVal LockState As Boolean, ParamArray ctrls() As Variant)
     Dim ctrl As Variant
     For Each ctrl In ctrls
@@ -106,8 +103,7 @@ Public Sub FormEditingState(ByVal LockState As Boolean, ParamArray ctrls() As Va
     Set ctrl = Nothing
 End Sub
 
-'this method will show popup message
-
+'@Description("This method will show popup message")
 Public Sub ShowMessage(ByVal message As String, ByVal typeOfMessage As messageType)
     Select Case typeOfMessage
         Case messageType.TYPE_CRITICAL
@@ -117,8 +113,7 @@ Public Sub ShowMessage(ByVal message As String, ByVal typeOfMessage As messageTy
     End Select
 End Sub
 
-'Following method will check and generate warning labels
-
+'@Description("Following method will check and generate warning labels")
 Public Sub UpdateControlAfterValidation(ByVal ctrl As MSForms.Control, ByVal valid As Boolean, Optional warning As WarningType, Optional warningMessage As String = vbNullString)
     With ctrl
         Select Case VBA.TypeName(ctrl)
@@ -140,8 +135,7 @@ Public Sub UpdateControlAfterValidation(ByVal ctrl As MSForms.Control, ByVal val
     End With
 End Sub
 
-'Following method will set the dimention of the userform
-
+'@Description("Following method will set the dimention of the userform")
 Public Sub ReDimensionForm()
     With TargetForm
         .Width = formWidth
@@ -149,14 +143,12 @@ Public Sub ReDimensionForm()
     End With
 End Sub
 
-'Hydrate Comboboxes
-
+'@Description("Hydrate Comboboxes")
 Public Sub HydrateComboBox(ByVal cmb As MSForms.ComboBox, ByVal Data As Variant)
     cmb.List = Data
 End Sub
 
-'Change Control's Value and Font Color
-
+'@Description("Change Control's Value and Font Color")
 Public Sub ChangeControlProperties(ByVal ctrl As MSForms.Control, ByVal ctrlValue As Variant, Optional ctrlFontColor As Long = vbBlack, Optional ctrlBackColor As Long = vbWhite)
     With ctrl
         Select Case VBA.TypeName(ctrl)
@@ -170,8 +162,7 @@ Public Sub ChangeControlProperties(ByVal ctrl As MSForms.Control, ByVal ctrlValu
     End With
 End Sub
 
-'Null control's Properties in Bulk
-
+'@Description("Null control's Properties in Bulk")
 Public Sub SetStateofControlsToNullState(ParamArray ctrls() As Variant)
     Dim ctrl As Variant
     For Each ctrl In ctrls
@@ -190,23 +181,35 @@ Public Sub SetStateofControlsToNullState(ParamArray ctrls() As Variant)
     Next ctrl
 End Sub
 
-'Following Procedure will update make frames visible and also give them predefined dimensions
+'@Description("Following Procedure will update set the frames default dimensions")
+Public Sub SetDefaultFrameSize(ByVal panelFrame As MSForms.Frame, ByVal nature As String)
 
+    Select Case nature
+        Case PANEL_TYPE_SIDE
+            RedimensioningOfFramesBasedOnNature panelFrame, PANEL_TYPE_SIDE
+
+        Case PANEL_TYPE_MAIN
+            RedimensioningOfFramesBasedOnNature panelFrame, PANEL_TYPE_MAIN
+
+    End Select
+
+End Sub
+
+
+'@Description("Following Procedure will update make frames visible and also give them predefined dimensions")
 Public Sub ActivateFrames(ByVal sidePanelFrame As MSForms.Frame, ByVal mainPanelFrame As MSForms.Frame)
     Dim ctrl As MSForms.Control
     For Each ctrl In TargetForm.Controls
         If VBA.TypeName(ctrl) = CONTROL_TYPE_FRAME Then
             Select Case ctrl.Name
                 Case sidePanelFrame.Name
-                    Call RedimensioningOfFramesBasedOnNature(sidePanelFrame, PANEL_TYPE_SIDE)
                     If ctrl.Visible = False Then ctrl.Visible = True
                 Case mainPanelFrame.Name
-                    Call RedimensioningOfFramesBasedOnNature(mainPanelFrame, PANEL_TYPE_MAIN)
                     If ctrl.Visible = False Then ctrl.Visible = True
                 Case frameAlwaysOn.Name
                     If IsAlwaysOnFrameVisible = False Then
                         IsAlwaysOnFrameVisible = True
-                        Call RedimensioningOfFramesBasedOnNature(frameAlwaysOn, PANEL_TYPE_ALWAYSON)
+                        RedimensioningOfFramesBasedOnNature frameAlwaysOn, PANEL_TYPE_ALWAYSON
                         ctrl.Visible = True
                     End If
                 Case Else
@@ -221,8 +224,7 @@ End Sub
 'Private abstract methods
 '-----------------------------------------------------------------------
 
-'Following method will add label on runtime. if it present then it will only change the visible property of the label
-
+'@Description("Following method will add label on runtime. if it present then it will only change the visible property of the label")
 Private Sub InsertWarningLabel(ByVal ctrl As MSForms.Control, Optional warning As WarningType, Optional warningMessage As String)
     Select Case warning
         Case WarningType.TYPE_NA
@@ -248,8 +250,7 @@ Private Sub InsertWarningLabel(ByVal ctrl As MSForms.Control, Optional warning A
     End Select
 End Sub
 
-'Following method wiil remove label runtime.
-
+'@Description("Following method wiil remove label runtime.")
 Private Sub RemoveWarningLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As String)
     Select Case ctrlName
         Case WarningType.TYPE_NA
@@ -274,8 +275,7 @@ Private Sub RemoveWarningLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As 
     End If
 End Sub
 
-'Inserting Warning Label
-
+'@Description("Inserting Warning Label")
 Private Sub InsertingLabel(ctrl As MSForms.Control, ByVal ctrlName As String, ByVal message As String, Optional IsItSymbol As Boolean = False)
     Dim TargetTop As Long
     Dim TargetLeft As Long
@@ -321,8 +321,7 @@ Private Sub InsertingLabel(ctrl As MSForms.Control, ByVal ctrlName As String, By
     Set warningLabel = Nothing
 End Sub
 
-'Removing Warning Labels
-
+'@Description("Removing Warning Labels")
 Private Sub HidingLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As String)
     Dim warningLabel As MSForms.Label
     Dim LabelName As String
@@ -335,16 +334,14 @@ Private Sub HidingLabel(ByVal ctrl As MSForms.Control, ByVal ctrlName As String)
     Set warningLabel = Nothing
 End Sub
 
-'Following method will distribute frame dimensions based on their nature
-
+'@Description("Following method will distribute frame dimensions based on their nature")
 Private Sub RedimensioningOfFramesBasedOnNature(ByVal ctrl As MSForms.Control, ByVal nature As String)
     If nature = PANEL_TYPE_SIDE Then RedimensionTheFrame ctrl, sideFrameTop, sideFrameLeft, sideFrameWidth, sideFrameHeight
     If nature = PANEL_TYPE_MAIN Then RedimensionTheFrame ctrl, mainFrameTop, mainFrameLeft, mainFrameWidth, mainFrameHeight
     If nature = PANEL_TYPE_ALWAYSON Then RedimensionTheFrame ctrl, alwaysOnTop, alwaysOnLeft, alwaysOnWidth, alwaysOnHeight
 End Sub
 
-'redim the frame
-
+'@Description("Redim the frame")
 Private Sub RedimensionTheFrame(ByVal ctrl As MSForms.Control, ByVal Top As Integer, ByVal Left As Integer, ByVal Width As Integer, ByVal Height As Integer)
     With ctrl
         .Top = Top
