@@ -13,31 +13,8 @@ Attribute VB_Ext_KEY = "Rubberduck" ,"Predeclared Class Module"
 '@Exposed
 Option Explicit
 
-#If VBA7 Then
-    Private Declare PtrSafe Function GetSystemMetrics32 Lib "user32" Alias "GetSystemMetrics" ( _
-    ByVal nIndex As Long) As Long
-    Private Declare PtrSafe Function GetDC Lib "user32" ( _
-    ByVal hWnd As Long) As Long
-    Private Declare PtrSafe Function GetDeviceCaps Lib "gdi32" ( _
-    ByVal hDC As LongPtr, ByVal nIndex As Long) As Long
-    Private Declare PtrSafe Function ReleaseDC Lib "user32" ( _
-    ByVal hWnd As Long, ByVal hDC As LongPtr) As Long
-#Else
-    Private Declare Function GetSystemMetrics32 Lib "user32" Alias "GetSystemMetrics" ( _
-                            ByVal nIndex As Long) As Long
-    Private Declare Function GetDC Lib "user32" ( _
-                            ByVal hWnd As Long) As Long
-    Private Declare Function GetDeviceCaps Lib "gdi32" ( _
-                            ByVal hDC As Long, ByVal nIndex As Long) As Long
-    Private Declare Function ReleaseDC Lib "user32" ( _
-                            ByVal hWnd As Long, ByVal hDC As Long) As Long
-#End If
-
 Implements IResizeView
 Implements IDisposable
-
-Private Const LOGPIXELSX As Long = 88             'Pixels/inch in X
-Private Const POINTS_PER_INCH As Long = 72        'A point is defined as 1/72 inches
 
 Private Type TResizeView
     View As Object
@@ -45,8 +22,6 @@ Private Type TResizeView
     
     MinWidth As Double
     MinHeight As Double
-    PercentHeight As Long
-    PercentWidth As Long
 
     Disposed As Boolean
 End Type
@@ -62,17 +37,6 @@ Public Property Set View(ByVal RHS As Object)
     Guard.DefaultInstance Me
     Guard.NullReference RHS
     Set This.View = RHS
-End Property
-
-Public Property Get LayoutBindings() As VBA.Collection
-    Guard.DefaultInstance Me
-    Set LayoutBindings = This.LayoutBindings
-End Property
-
-Public Property Set LayoutBindings(ByVal RHS As VBA.Collection)
-    Guard.DefaultInstance Me
-    Guard.NullReference RHS
-    Set This.LayoutBindings = RHS
 End Property
 
 Public Property Get MinWidth() As Double
@@ -91,29 +55,13 @@ Public Property Let MinHeight(ByVal RHS As Double)
     This.MinHeight = RHS
 End Property
 
-Public Property Get PercentHeight() As Long
-    PercentHeight = This.PercentHeight
-End Property
-
-Public Property Let PercentHeight(ByVal RHS As Long)
-    This.PercentHeight = RHS
-End Property
-
-Public Property Get PercentWidth() As Long
-    PercentWidth = This.PercentWidth
-End Property
-
-Public Property Let PercentWidth(ByVal RHS As Long)
-    This.PercentWidth = RHS
-End Property
-
 Private Property Get IsDefaultInstance() As Boolean
     IsDefaultInstance = Me Is ResizeView
 End Property
 
 Private Sub Class_Initialize()
     If Not IsDefaultInstance Then
-        Set LayoutBindings = New VBA.Collection
+        Set This.LayoutBindings = New VBA.Collection
     End If
 End Sub
 
@@ -123,23 +71,19 @@ Public Property Get Class() As ResizeView
     Set Class = ResizeView
 End Property
 
-Public Function Create(ByVal View As Object, ByVal PercentHeight As HeightInPercent, ByVal PercentWidth As WidthInPercent) As IResizeView
+Public Function Create(ByVal View As Object, ByVal DefaultHeight As Double, ByVal DefaultWidth As Double) As IResizeView
     Guard.NonDefaultInstance Me
     
     Dim result As ResizeView
     Set result = New ResizeView
     Set result.View = View
-    result.PercentHeight = PercentHeight
-    result.PercentWidth = PercentWidth
+    result.MinHeight = DefaultHeight
+    result.MinWidth = DefaultWidth
     
     Set Create = result
 End Function
 
-Private Sub InitializeResize()
-    ResizeViewResolutionPercent
-End Sub
-
-Private Sub SetResolutionPercent(ByVal View As Object)
+Private Sub SetDefaultSize(ByVal View As Object)
     View.Width = This.MinWidth
     View.Height = This.MinHeight
 End Sub
@@ -172,7 +116,7 @@ Public Function IsViewResizable(ByVal View As Object, ByRef isMinimized As Boole
     
     On Error GoTo CleanFail
     Dim Layout As ControlLayout
-    For Each Layout In LayoutBindings
+    For Each Layout In This.LayoutBindings
         Layout.Resize View
     Next
     
@@ -188,31 +132,6 @@ CleanFail:
     Resume
     
 End Function
-
-'@Description "Get Points Per Pixel Screen resloution."
-Private Function PointsPerPixel() As Double
-
-    #If VBA7 Then
-        '@Ignore UseMeaningfulName
-        Dim hDC As LongPtr
-        '@Ignore HungarianNotation
-        Dim lDotsPerInch As LongPtr
-    #Else
-        Dim hDC As Long
-        Dim lDotsPerInch As Long
-    #End If
-
-    hDC = GetDC(0)
-    lDotsPerInch = GetDeviceCaps(hDC, LOGPIXELSX)
-    PointsPerPixel = POINTS_PER_INCH / lDotsPerInch
-    ReleaseDC 0, hDC
-
-End Function
-
-Private Sub ResizeViewResolutionPercent()
-    MinWidth = GetSystemMetrics32(0) * PointsPerPixel * (PercentWidth / 100) 'UF Width in Resolution * DPI * PercentWidth
-    MinHeight = GetSystemMetrics32(1) * PointsPerPixel * (PercentHeight / 100) 'UF Height in Resolution * DPI * PercentHeight
-End Sub
 
 Private Sub Dispose()
 
@@ -246,12 +165,8 @@ Private Sub Class_Terminate()
     If Not This.Disposed Then Dispose
 End Sub
 
-Private Sub IResizeView_InitializeResize()
-    InitializeResize
-End Sub
-
-Private Sub IResizeView_SetResolutionPercent(ByVal View As Object)
-    SetResolutionPercent View
+Private Sub IResizeView_SetDefaultSize(ByVal View As Object)
+    SetDefaultSize View
 End Sub
 
 Private Sub IResizeView_BindControlLayout(ByVal FormControl As MSForms.Control, ByVal Anchor As AnchorEdges)
