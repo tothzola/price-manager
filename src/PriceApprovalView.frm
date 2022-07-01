@@ -67,7 +67,10 @@ Public Event ExportReport()
 
 Private Const FORM_DEF_HEIGHT As Double = 480
 Private Const FORM_DEF_WIDTH As Double = 600
-Private Const FRAME_MARGIN_SIDE As Long = 6
+Private Const FRAME_INFO_HEIGHT As Double = 78
+Private Const FRAME_MARGIN_SIDE As Double = 6
+Private Const FRAME_MARGIN_DOUBLE As Double = 12
+Private Const FRAME_SIDE_WIDTH As Double = 140
 Private Const MESSAGE_WELCOMESCREEN_LOGOUT_STATE As String = "Welcome to The Price Approval Manager"
 Private Const MESSAGE_WELCOMESCREEN_LOGIN_STATE As String = "Welcome "
 
@@ -239,9 +242,7 @@ Attribute Class.VB_Description = "Returns class reference"
 End Property
 
 '@Description "Creates a new instance of this form."
-Public Function Create(ByVal Model As AppModel, _
-    Optional ByVal Height As HeightInPercent = vbHeight50, _
-    Optional ByVal Width As WidthInPercent = vbWidth50) As IView
+Public Function Create(ByVal Model As AppModel) As IView
     
     Guard.NonDefaultInstance Me
     Guard.NullReference Model
@@ -251,7 +252,7 @@ Public Function Create(ByVal Model As AppModel, _
     
     Set result.MainModel = Model
     Set result.ViewExtended = New MultiFrameViewExtended
-    Set result.Resizer = ResizeView.Create(result, Height, Width)
+    Set result.Resizer = ResizeView.Create(result, FORM_DEF_HEIGHT, FORM_DEF_WIDTH)
     
         InitilizeViewExtended result
 
@@ -274,28 +275,28 @@ Private Sub InitilizeViewExtended(ByVal context As PriceApprovalView)
         Set .frameAlwaysOn = context.frameInfo
         .alwaysOnTop = FRAME_MARGIN_SIDE
         .alwaysOnLeft = FRAME_MARGIN_SIDE
-        .alwaysOnWidth = 140
-        .alwaysOnHeight = 78
+        .alwaysOnWidth = FRAME_SIDE_WIDTH
+        .alwaysOnHeight = FRAME_INFO_HEIGHT
         'Side Panel Frames Properties
-        .sideFrameTop = 90
+        .sideFrameTop = FRAME_INFO_HEIGHT + FRAME_MARGIN_DOUBLE
         .sideFrameLeft = FRAME_MARGIN_SIDE
-        .sideFrameWidth = 140
-        .sideFrameHeight = context.InsideHeight - .alwaysOnHeight - 18 '354
+        .sideFrameWidth = FRAME_SIDE_WIDTH
+        .sideFrameHeight = context.InsideHeight - .alwaysOnHeight - FRAME_MARGIN_DOUBLE - FRAME_MARGIN_SIDE
         'Main Panel Frames Properties
         .mainFrameTop = FRAME_MARGIN_SIDE
-        .mainFrameLeft = 152
-        .mainFrameWidth = context.InsideWidth - .sideFrameWidth - 18  '430
-        .mainFrameHeight = context.InsideHeight - 12  '438
+        .mainFrameLeft = FRAME_SIDE_WIDTH + FRAME_MARGIN_DOUBLE
+        .mainFrameWidth = context.InsideWidth - .sideFrameWidth - FRAME_MARGIN_DOUBLE - FRAME_MARGIN_SIDE
+        .mainFrameHeight = context.InsideHeight - (FRAME_MARGIN_DOUBLE)
         'plug static data sources to the relative comboboxes
         .HydrateComboBox context.cmbCurrency, DataResources.arrListofCurrencies
         .HydrateComboBox context.cmbUnitOfMeasure, DataResources.arrListOfUnitOfMeasure
+        
         'InIt Interface
         .ActivateFrames context.frameLogin, context.frameWelcome
-        
+        .SetDefaultFrameSize context.frameWelcome, "MAIN"
         .SetDefaultFrameSize context.frameLogin, "SIDE"
         .SetDefaultFrameSize context.frameClient, "SIDE"
         .SetDefaultFrameSize context.frameApprover, "SIDE"
-        .SetDefaultFrameSize context.frameWelcome, "MAIN"
         .SetDefaultFrameSize context.frameLoginInterface, "MAIN"
         .SetDefaultFrameSize context.framePasswordManager, "MAIN"
         .SetDefaultFrameSize context.framePriceForm, "MAIN"
@@ -348,7 +349,7 @@ Private Sub BindControlLayout()
     With Resizer
         .BindControlLayout Me.frameInfo, TopAnchor
         .BindControlLayout Me.frameWelcome, AnchorAll
-        
+        .BindControlLayout Me.lblWelcomeMessage, TopAnchor + LeftAnchor + RightAnchor
         .BindControlLayout Me.frameLogin, TopAnchor + BottomAnchor
         .BindControlLayout Me.cmdOpenLoginInterface, TopAnchor
         .BindControlLayout Me.cmdExit, TopAnchor
@@ -373,7 +374,7 @@ Private Sub BindControlLayout()
         .BindControlLayout Me.framePasswordManager, AnchorAll
         .BindControlLayout Me.PasswordManagerTopPanel, LeftAnchor + RightAnchor
         .BindControlLayout Me.cmdCancelPasswordManager, RightAnchor
-        
+
         .BindControlLayout Me.framePriceForm, AnchorAll
         .BindControlLayout Me.PriceFormTopPanel, LeftAnchor + RightAnchor
         .BindControlLayout Me.cmdAddNewRecord, LeftAnchor
@@ -403,7 +404,6 @@ Private Sub BindControlLayout()
         .BindControlLayout Me.cmdCancelUserManager, RightAnchor
         .BindControlLayout Me.LabelItemToUpdate, RightAnchor
         .BindControlLayout Me.lstUsers, AnchorAll
-        
     End With
 
 End Sub
@@ -411,8 +411,7 @@ End Sub
 Private Sub InitializeResize()
     If MainModel Is Nothing Then Exit Sub
     BindControlLayout
-    Resizer.InitializeResize
-    Resizer.SetResolutionPercent Me
+    Resizer.SetDefaultSize Me
 End Sub
 
 Private Sub RedrawView()
@@ -994,7 +993,6 @@ Private Sub txtValidTo_Enter()
     PozitionCalendar Me.txtValidTo, Me.framePriceForm
     Me.DatePicker.Visible = True
     If Not Me.lblActiveUserType.Caption = "APPROVER" Then Me.txtValidTo.Locked = True
-    If Me.Height < FORM_DEF_HEIGHT Then Me.Height = FORM_DEF_HEIGHT + FRAME_MARGIN_SIDE
 End Sub
 
 Private Sub txtValidTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
