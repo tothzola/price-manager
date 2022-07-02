@@ -1,9 +1,11 @@
-# price-manager
+# Price Approval Add-In Excel Application
 
 ## Instaling Add-In and registration
-- To use this Add-In first the PostgreSQl ODCB Driver needs to be installed.
+- To use this Add-In first the PostgreSQL ODCB Driver needs to be installed.
   [ODBC Driver Folder](https://github.com/tothzola/price-manager/tree/main/database/postgreSQL/ODBC%20Drive%20for%20PostgreSQL_Windows_13_02_0000)
 - There is no user registration posibility. Requests to acces can be made under issues.
+
+# Application Wiki
 
 ## Datamanagement System
 - MS Access
