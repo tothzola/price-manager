@@ -26,7 +26,7 @@ Private Sub UserForm_Activate()
     
     With FormControl
         .ShowTitleBar outForm:=Me, HideTitle:=True
-        .SetFormOpacity outForm:=Me, Opacity:=250
+        .SetFormOpacity outForm:=Me, Opacity:=180
     End With
     
     ProgressBar.Width = 0                        ' it's set to 10 to be visible at design-time
