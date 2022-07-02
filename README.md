@@ -1,45 +1,45 @@
 # price-manager
 
-Application User Interface 
-- ex.: Excel 
-- 
+## Instaling Add-In and registration
+- To use this Add-In first the PostgreSQl ODCB Driver needs to be installed.
+  [ODBC Driver Folder](https://github.com/tothzola/price-manager/tree/main/database/postgreSQL/ODBC%20Drive%20for%20PostgreSQL_Windows_13_02_0000)
+- There is no user registration posibility. Requests to acces can be made under issues.
 
-Datamanagement System
-- MS Excel Tables
+## Datamanagement System
 - MS Access
 - PostgreSQL (https://heroku.com)
 
-# Workflow
+## Workflow
 ![Price Manager](https://github.com/tothzola/price-manager/blob/main/pictures/WorkFlow_PriceApprovalManager.jpg)
 
-# I. Client opens application:
+## I. Client opens application:
 - Complets form data
 - Saves data (data to database)
  -Auto Notify Approver 
 
-# II. Approver opens application:
+## II. Approver opens application:
 - List of all prices (Data from database)
 - Filters 
 - Approve (marks as aproved) 
 - Decline (marks as unaproved, notifies responsable user)
 - Export filtered data to new excel workbook   
 
-# Application Form Context:	
-## Client Fields (features and validation)
+## Application Form Context:	
+### Client Fields (features and validation)
 
-### Condition Type
+#### Condition Type
 
 **Feature:** entry is required, default value "0001", prefilled.
 
-### Sales Organization
+#### Sales Organization
 
 **Feature:** entry is required, selection value "0201", prefilled.
 
-### Distribution Channel
+#### Distribution Channel
 
 **Feature:** entry is required, selection values "01", "02", "03"
 
-### Customer
+#### Customer
 
 **Feature:** entry is required, numeric filed (format: "######")
 
@@ -58,7 +58,7 @@ Datamanagement System
 >lenght is = 6, and in range.
 ---
 
-### Material
+#### Material
 
 **Feature:** entry is required, numeric field (format: "########")
 
@@ -77,7 +77,7 @@ Datamanagement System
 >lenght is = 8, and in range.
 ---
 
-### Price
+#### Price
 
 **Feature:** entry is required, string field (format: "#.###,00") is currency
 
@@ -96,12 +96,12 @@ Datamanagement System
 >lenght is = 6,  values displayed = [0,12] [5,12] [51,23] [5.443,21]
 ---
 
-### Currency
+#### Currency
 
 **Feature:** selection is required, dropdownlist 
 - list values: EUR, USD, GBP
 
-### Price Unit
+#### Price Unit
 
 **Feature:** no entry is required, numeric field (format: "####"), prefilled value is "1"
 
@@ -120,13 +120,13 @@ Datamanagement System
 >lenght is < 4
 ---
 
-### Unit of Measure
+#### Unit of Measure
 
 **Feature:** selection is required if Price Unit field hase a valid value, dropdownlist 
 - list values: CAR, RO, PC, KG, LM, M2
 ---
 
-### Valid from
+#### Valid from
 
 **Feature:** entry is required, numeric field (format: "##.##.####") is date, autocompeted as todays date, user is allowed to change the entry.
 
@@ -145,7 +145,7 @@ Datamanagement System
 >lenght is = 10 and it is a valid date.
 ---
 
-### Valid to
+#### Valid to
 
 **Feature:** entry is required, numeric field (format: "##.##.####") is date, autocompeted as [31.12.9999] date, user is allowed to change the entry.
 
@@ -165,13 +165,13 @@ Datamanagement System
 >lenght is = 10, and it is a valid date.
 ---
 
-## Buttons
+### Buttons
 - Add Button
 - Edit Button
 - List (Currently added prices)
 - Save Button
 
-## Fields available for approver
+### Fields available for approver
 - Customer Filter 
 - Approved/declined Filter
 - Approved/declined Date Filter
