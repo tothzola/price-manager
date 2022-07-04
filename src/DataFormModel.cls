@@ -40,7 +40,7 @@ Private Type TDataFormModelComponents
     'Attributes
     ActiveDataContainer As Long
     IsApprover As Boolean
-    
+    IsManager As Boolean
 End Type
 
 Private This As TDataFormModelComponents
@@ -305,6 +305,16 @@ Public Property Let IsApprover(ByVal vNewValue As Boolean)
 End Property
 
 '-------------------------------------------------------------------------
+
+Public Property Get IsManager() As Boolean
+    IsManager = This.IsManager
+End Property
+
+Public Property Let IsManager(ByVal RHS As Boolean)
+    This.IsManager = IsManager
+End Property
+
+'-------------------------------------------------------------------------
 'Validations
 '-------------------------------------------------------------------------
 
@@ -337,7 +347,7 @@ Public Function IsValidRecordToEdit() As Variant
     Case RECORDSTATUS_APPROVED
         IsValidRecordToEdit = "Your record has been already Approved! You have no permission to edit it further!"
         'Overriding
-        If IsApprover Then IsValidRecordToEdit = True
+        If IsApprover Or IsManager Then IsValidRecordToEdit = True
     Case RECORDSTATUS_REJECTED
         IsValidRecordToEdit = True               'We are allowing client to edit Rejected records!
     Case RECORDSTATUS_PROCESSED

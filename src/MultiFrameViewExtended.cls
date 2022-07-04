@@ -197,7 +197,9 @@ End Sub
 
 
 '@Description("Following Procedure will update make frames visible and also give them predefined dimensions")
-Public Sub ActivateFrames(ByVal sidePanelFrame As MSForms.Frame, ByVal mainPanelFrame As MSForms.Frame)
+Public Sub ActivateFrames(ByVal sidePanelFrame As MSForms.Frame, ByVal mainPanelFrame As MSForms.Frame, _
+Optional ByVal userType As String)
+
     Dim ctrl As MSForms.Control
     For Each ctrl In TargetForm.Controls
         If VBA.TypeName(ctrl) = CONTROL_TYPE_FRAME Then
@@ -218,6 +220,20 @@ Public Sub ActivateFrames(ByVal sidePanelFrame As MSForms.Frame, ByVal mainPanel
         End If
     Next ctrl
     Set ctrl = Nothing
+    
+    If userType = "MANAGER" Then
+        TargetForm.cmdOpenPasswordManager2.Visible = False
+        TargetForm.cmdOpenExportUtility.Visible = True
+        TargetForm.cmdOpenExportUtility.Top = 96
+        TargetForm.cmdOpenUserManager.Visible = True
+        TargetForm.cmdOpenUserManager.Top = 126
+
+    ElseIf userType = "APPROVER" Then
+        TargetForm.cmdOpenExportUtility.Visible = False
+        TargetForm.cmdOpenUserManager.Visible = False
+        TargetForm.cmdOpenPasswordManager2.Visible = True
+    End If
+    
 End Sub
 
 '-----------------------------------------------------------------------

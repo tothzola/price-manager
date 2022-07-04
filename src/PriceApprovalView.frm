@@ -363,6 +363,7 @@ Private Sub BindControlLayout()
         .BindControlLayout Me.frameApprover, TopAnchor + BottomAnchor
         .BindControlLayout Me.cmdOpenPendingList, TopAnchor
         .BindControlLayout Me.cmdOpenAllHistory, TopAnchor
+        .BindControlLayout Me.cmdOpenPasswordManager2, TopAnchor
         .BindControlLayout Me.cmdOpenExportUtility, TopAnchor
         .BindControlLayout Me.cmdOpenUserManager, TopAnchor
         .BindControlLayout Me.cmdApproverLogout, TopAnchor
@@ -507,6 +508,13 @@ End Sub
 
 'Password Manager
 Private Sub cmdOpenPasswordManager_Click()
+    Me.MousePointer = fmMousePointerAppStarting
+    VBA.DoEvents
+    RaiseEvent OpenPasswordManagerFrame
+    Me.MousePointer = fmMousePointerDefault
+End Sub
+
+Private Sub cmdOpenPasswordManager2_Click()
     Me.MousePointer = fmMousePointerAppStarting
     VBA.DoEvents
     RaiseEvent OpenPasswordManagerFrame
@@ -1021,7 +1029,7 @@ End Sub
 
 Private Sub cmbUserType_Change()
     'Hydrate model property
-    UserModel.UserType = Me.cmbUserType.Value
+    UserModel.userType = Me.cmbUserType.Value
     'Validate Field
     This.ViewExtended.UpdateControlAfterValidation Me.cmbUserType, _
                                                    UserModel.IsValidField(COL_userType), _
@@ -1056,16 +1064,15 @@ End Sub
 Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     With Me.lstUsers
         If .ListIndex > 0 Then
-            If .List(.ListIndex, UsersTableFields.COL_userId - 1) = 100 Or _
-                                                                    .List(.ListIndex, UsersTableFields.COL_userId - 1) = 101 Then
+'            If .List(.ListIndex, UsersTableFields.COL_userId - 1) = 100 Then
                 'Just for the safetly that they couldn't be able to edit dev's information
-                Call This.ViewExtended.ShowMessage("You are not allowed to Update them!", TYPE_INFORMATION)
-            Else
+'                Call This.ViewExtended.ShowMessage("You are not allowed to Update them!", TYPE_INFORMATION)
+'            Else
                 'hydrate model property
                 UserModel.userIndex = .List(.ListIndex, 0)
                 'Update Record
                 RaiseEvent UpdateUserManagerFrameRecord
-            End If
+'            End If
         End If
     End With
 End Sub
@@ -1167,8 +1174,6 @@ Public Sub UserWantsToCloseFrame(ByVal FrameIdentifier As ApplicationForms)
 End Sub
 
 Public Sub OnCancel()
-    'Cleaning dependencies from memory
-    Disposable.TryDispose Presenter
     Me.Hide
 End Sub
 
@@ -1345,6 +1350,8 @@ Private Sub ResetDataFormFrame(ByVal DataFormFrameModel As DataFormModel)
         'Allow Approver in any case to Approve or Reject Again!
         If MainModel.ActiveUserType = USERTYPE_APPROVER Then
             DataModel.IsApprover = True
+        ElseIf MainModel.ActiveUserType = USERTYPE_MANAGER Then
+            DataModel.IsManager = True
         Else
             DataModel.IsApprover = False
         End If
@@ -1437,14 +1444,14 @@ End Sub
 
 Private Sub OpenNextInterfaceAfterSuccessfulLogin()
     'Open Frame based on client type
-    If LoginModel.UserType = USERTYPE_CLIENT Then
+    If LoginModel.userType = USERTYPE_CLIENT Then
         Call This.ViewExtended.ActivateFrames(Me.frameClient, Me.frameWelcome)
     Else
-        Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome)
+        Call This.ViewExtended.ActivateFrames(Me.frameApprover, Me.frameWelcome, LoginModel.userType)
     End If
     'Update Active User Frame
     With LoginModel
-        Call UpdateActiveUserInfomation(.UserName, .UserType, .userStatus, .userID, .Password, .userEmail)
+        Call UpdateActiveUserInfomation(.UserName, .userType, .userStatus, .userID, .Password, .userEmail)
     End With
     'Update Welcome Frame with Username
     Call UpdateWelcomeFrame
@@ -1546,7 +1553,7 @@ Private Sub StateForNewRecordForPriceForm()
         .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
         
         'Hide Buttons
-        If MainModel.ActiveUserType = USERTYPE_APPROVER Then
+        If MainModel.ActiveUserType = USERTYPE_APPROVER Or MainModel.ActiveUserType = USERTYPE_MANAGER Then
             Call ShowApprovalRejectionButtons(True)
             This.ViewExtended.FormEditingState False, _
                                                .txtConditionType, _
@@ -1599,7 +1606,7 @@ Private Sub StateForUpdateRecordForPriceForm()
         .txtValidTo.Value = VBA.Format$(PriceModel.validToDate, GetDateFormat)
         
         'Hide Buttons & Form Lock Decision
-        If MainModel.ActiveUserType = USERTYPE_APPROVER Then
+        If MainModel.ActiveUserType = USERTYPE_APPROVER Or MainModel.ActiveUserType = USERTYPE_MANAGER Then
             Call ShowApprovalRejectionButtons(True)
             This.ViewExtended.FormEditingState False, _
                                                .txtConditionType, _
@@ -1645,7 +1652,7 @@ Private Sub StateForNewRecordForUserManager()
         Call UserModel.SetPropertiesToNewUserState
         'Input Field State
         .cmbUserStatus.Value = UserModel.userStatus
-        .cmbUserType.Value = UserModel.UserType
+        .cmbUserType.Value = UserModel.userType
         'Buttons State
         .cmdAddNewUser.Enabled = True
         .cmdUpdateUser.Enabled = False
@@ -1659,7 +1666,7 @@ Private Sub StateForUpdateRecordForUserManager()
         Call UserModel.SetPropertiesToUpdateUserState
         'input field state
         .cmbUserStatus.Value = UserModel.userStatus
-        .cmbUserType.Value = UserModel.UserType
+        .cmbUserType.Value = UserModel.userType
         .txtSetUsername.Value = UserModel.UserName
         .txtUserEmail.Value = UserModel.userEmail
         'Button State

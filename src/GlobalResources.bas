@@ -45,8 +45,9 @@ Public Const SEPERATOR_ITEM As String = "<ITEM>"
 Public Const USERSTATUS_ACTIVE As String = "ACTIVE"
 Public Const USERSTATUS_INACTIVE As String = "INACTIVE"
 
-Public Const USERTYPE_CLIENT As String = "CLIENT"
+Public Const USERTYPE_MANAGER As String = "MANAGER"
 Public Const USERTYPE_APPROVER As String = "APPROVER"
+Public Const USERTYPE_CLIENT As String = "CLIENT"
 
 Public Const RECORDSTATUS_PENDING As String = "PENDING"
 Public Const RECORDSTATUS_APPROVED As String = "APPROVED"
