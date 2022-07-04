@@ -202,7 +202,7 @@ Public Function arrListofCurrencies() As Variant
 End Function
 
 Public Function arrListofTypesOfUser() As Variant
-    arrListofTypesOfUser = Array("CLIENT", "APPROVER")
+    arrListofTypesOfUser = Array("CLIENT", "APPROVER", "MANAGER")
 End Function
 
 Public Function arrListofStatusOfUser() As Variant

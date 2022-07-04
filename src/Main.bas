@@ -3,13 +3,7 @@ Attribute VB_Name = "Main"
 Option Explicit
 Option Private Module
 
-'@ModuleDescription("As we want our Main View to be VbModeless, We have to take out our main driving object _
-which is nothing but the Presenter! Yes The whole Application is dependent on the scope _
-of Presenter object. So, What happens when Form becomes vbmodeless, it simply allow _
-compiler to run next steps. So to preven Presenter to go out of scope, we have to take _
-out the object defination from the Mehtod and keep it as Public Object.")
-
-Public Presenter As IAppPresenter
+Private Presenter As IAppPresenter
 
 '@EntryPoint
 Public Sub StartApp()
