@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PriceApprovalView 
    Caption         =   "Price Approval Demo"
-   ClientHeight    =   22815
+   ClientHeight    =   24510
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   20520
@@ -395,8 +395,8 @@ Private Sub BindControlLayout()
         .BindControlLayout Me.ExportUtilityTopPanel, LeftAnchor + RightAnchor
         .BindControlLayout Me.cmdResetExportForm, RightAnchor
         .BindControlLayout Me.cmdCancelExportUtility, RightAnchor
-        .BindControlLayout Me.lblMessage, RightAnchor
-        .BindControlLayout Me.LabelNotes, LeftAnchor + RightAnchor
+        .BindControlLayout Me.lblMessage, LeftAnchor + RightAnchor
+        .BindControlLayout Me.LabelNotes, LeftAnchor + RightAnchor + BottomAnchor
         
         .BindControlLayout Me.frameUserManager, AnchorAll
         .BindControlLayout Me.UserManagerTopPanel, LeftAnchor + RightAnchor
