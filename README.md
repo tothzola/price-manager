@@ -8,11 +8,11 @@
 # Application Wiki
 
 ## Datamanagement System
-- MS Access
-- PostgreSQL (https://heroku.com)
+- [DB MS Access](https://github.com/tothzola/price-manager/blob/main/database/databaseAccess/PriceApprovalDatabase.accdb)
+- [DB PostgreSQL](https://heroku.com)
 
 ## Workflow
-![Price Manager](https://github.com/tothzola/price-manager/blob/main/pictures/WorkFlow_PriceApprovalManager.jpg)
+![Price Manager](https://github.com/tothzola/price-manager/blob/main/pictures/PriceApproval_WorkFlow.jpg)
 
 ## I. Client opens application:
 - Complets form data
