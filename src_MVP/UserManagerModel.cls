@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder("AppObjects.Model.UserManager")
+'@Folder("MVP.Model.UserManager")
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Private Type TUserManagerFormModelComponents
     userIndex As Long
     userID As String
     userStatus As String
-    UserType As String
+    userType As String
     UserName As String
     userPassword As String
     userEmail As String
@@ -96,12 +96,12 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get UserType() As String
-    UserType = This.UserType
+Public Property Get userType() As String
+    userType = This.userType
 End Property
 
-Public Property Let UserType(ByVal vNewValue As String)
-    This.UserType = vNewValue
+Public Property Let userType(ByVal vNewValue As String)
+    This.userType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -167,7 +167,7 @@ Public Sub SetPropertiesToNewUserState()
         .operation = OPERATION_NEW
         .userIndex = 0
         .userStatus = USERSTATUS_ACTIVE
-        .UserType = USERTYPE_CLIENT
+        .userType = USERTYPE_CLIENT
     End With
 End Sub
 
@@ -184,7 +184,7 @@ Public Sub SetPropertiesToUpdateUserState()
         .userPassword = Me.usersTable(TargetRow, UsersTableFields.COL_password)
         .userEmail = Me.usersTable(TargetRow, UsersTableFields.COL_email)
         .userStatus = Me.usersTable(TargetRow, UsersTableFields.COL_userStatus)
-        .UserType = Me.usersTable(TargetRow, UsersTableFields.COL_userType)
+        .userType = Me.usersTable(TargetRow, UsersTableFields.COL_userType)
     End With
 End Sub
 
@@ -194,7 +194,7 @@ Private Sub SetPropertiesToNullState()
         .UserName = vbNullString
         .userPassword = vbNullString
         .userStatus = vbNullString
-        .UserType = vbNullString
+        .userType = vbNullString
         .userEmail = vbNullString
     End With
 End Sub
@@ -215,7 +215,7 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             
        Case UsersTableFields.COL_userType
             'Check 1
-            IsValidField = ValidationServices.IsNotNullValue(Me.UserType, VBA.TypeName(Me.UserType))
+            IsValidField = ValidationServices.IsNotNullValue(Me.userType, VBA.TypeName(Me.userType))
             If Not IsValidField = True Then Exit Function
             
         Case UsersTableFields.COL_userName

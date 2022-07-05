@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
-'@Folder("AppObjects.Services")
+'@Folder("MVP.Services")
 '@Interface
 '@Exposed
 Option Explicit

@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '@PredeclaredId
-'@Folder("AppObjects.Services")
+'@Folder("MVP.Services")
 Option Explicit
 
 Private Const DEVELOPERS As String = "Zoltan.To@outlook.com;kamal.9328093207@gmail.com"

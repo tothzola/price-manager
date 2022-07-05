@@ -12,7 +12,7 @@ Attribute VB_Ext_KEY = "Rubberduck" ,"Predeclared Class Module"
 
 '@ModuleAttribute VB_Ext_KEY, "Rubberduck", "Predeclared Class Module"
 '@ModuleDescription "An object keeping the AppState in scope."
-'@Folder("AppObjects.Model")
+'@Folder("MVP.Model")
 '@PredeclaredId
 '@Exposed
 Option Explicit

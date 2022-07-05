@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder("AppObjects.Model.ExportForm")
+'@Folder("MVP.Model.ExportForm")
 Option Explicit
 
 Private Type TExportFormModelComponents

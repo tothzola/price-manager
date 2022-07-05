@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder("AppObjects.Model.PriceForm")
+'@Folder("MVP.Model.PriceForm")
 Option Explicit
 
 '-------------------------------------------------------------------------

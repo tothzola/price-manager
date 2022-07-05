@@ -13,7 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'@Folder("AppObjects.View")
+'@Folder("MVP.View")
 '@Exposed
 Option Explicit
 
@@ -1000,7 +1000,10 @@ End Sub
 Private Sub txtValidTo_Enter()
     PozitionCalendar Me.txtValidTo, Me.framePriceForm
     Me.DatePicker.Visible = True
-    If Not Me.lblActiveUserType.Caption = "APPROVER" Then Me.txtValidTo.Locked = True
+    If Not Me.lblActiveUserType.Caption = "APPROVER" Or _
+       Not Me.lblActiveUserType.Caption = "MANAGER" Then
+        Me.txtValidTo.Locked = True
+    End If
 End Sub
 
 Private Sub txtValidTo_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
@@ -1064,15 +1067,15 @@ End Sub
 Private Sub lstUsers_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     With Me.lstUsers
         If .ListIndex > 0 Then
-'            If .List(.ListIndex, UsersTableFields.COL_userId - 1) = 100 Then
+            If .List(.ListIndex, UsersTableFields.COL_userId - 1) < 102 Then
                 'Just for the safetly that they couldn't be able to edit dev's information
-'                Call This.ViewExtended.ShowMessage("You are not allowed to Update them!", TYPE_INFORMATION)
-'            Else
+                Call This.ViewExtended.ShowMessage("You are not allowed to Update them!", TYPE_INFORMATION)
+            Else
                 'hydrate model property
                 UserModel.userIndex = .List(.ListIndex, 0)
                 'Update Record
                 RaiseEvent UpdateUserManagerFrameRecord
-'            End If
+            End If
         End If
     End With
 End Sub
@@ -1692,7 +1695,9 @@ Private Sub UpdateWelcomeFrame(Optional FrameIdentifier As ApplicationForms = 0)
         End With
     Else
         'Update Welcome Message While User is Still Logged In
-        Call This.ViewExtended.ChangeControlProperties(Me.lblWelcomeMessage, MESSAGE_WELCOMESCREEN_LOGIN_STATE & Me.lblActiveUsername.Caption, &H8000000D)
+        Dim propperUserName As String
+        propperUserName = VBA.Strings.StrConv(Me.lblActiveUsername.Caption, VBA.vbProperCase)
+        Call This.ViewExtended.ChangeControlProperties(Me.lblWelcomeMessage, MESSAGE_WELCOMESCREEN_LOGIN_STATE & propperUserName, &H8000000D)
     End If
 End Sub
 
@@ -1701,8 +1706,8 @@ Private Sub UpdateActiveUserInfomation(ByVal uName As String, _
 
     'Show Active user info on Always On Frame
     With MultiFrameViewExtended
-        Call .ChangeControlProperties(Me.lblActiveUsername, uName)
-        Call .ChangeControlProperties(Me.lblActiveUserType, uType)
+        Call .ChangeControlProperties(Me.lblActiveUsername, VBA.UCase$(uName))
+        Call .ChangeControlProperties(Me.lblActiveUserType, VBA.UCase$(uType))
         Call .ChangeControlProperties(Me.lblActiveUserID, uID)
         Call .ChangeControlProperties(Me.lblActiveUserPassword, uPassword)
         If uStatus = USERSTATUS_ACTIVE Then
