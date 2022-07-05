@@ -1,0 +1,93 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "FileLogger"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+'@Folder("System.Logger")
+'@PredeclaredId
+'@Exposed
+
+Option Explicit
+
+Private Type TFileLogger
+    Name As String
+    MinLevel As LogLevel
+    LOGFILE As String
+    Writer As TextWriter
+End Type
+
+Private This As TFileLogger
+
+Implements ILogger
+
+Public Function Create(ByVal loggerName As String, ByVal loggerMinLevel As LogLevel, ByVal Path As String) As ILogger
+
+    Dim result As FileLogger
+    Set result = New FileLogger
+    result.Name = loggerName
+    result.MinLevel = loggerMinLevel
+    Set result.Writer = TextWriter.Create
+    result.LOGFILE = Path
+    Set Create = result
+
+End Function
+
+'@Ignore ProcedureNotUsed
+Friend Property Get Name() As String
+    Name = This.Name
+End Property
+
+Friend Property Let Name(ByVal Value As String)
+    This.Name = Value
+End Property
+
+'@Ignore ProcedureNotUsed
+Friend Property Get MinLevel() As LogLevel
+    MinLevel = This.MinLevel
+End Property
+
+Friend Property Let MinLevel(ByVal Value As LogLevel)
+    This.MinLevel = Value
+End Property
+
+'@Ignore ProcedureNotUsed
+Friend Property Get LOGFILE() As String
+    LOGFILE = This.LOGFILE
+End Property
+
+Friend Property Let LOGFILE(ByVal Value As String)
+    This.LOGFILE = Value
+End Property
+
+'@Ignore ProcedureNotUsed
+Friend Property Get Writer() As TextWriter
+    Set Writer = This.Writer
+End Property
+
+Friend Property Set Writer(ByVal Value As TextWriter)
+    Set This.Writer = Value
+End Property
+
+Private Sub ILogger_Log(ByVal output As String)
+    If This.Writer.OpenFile(This.LOGFILE) Then
+
+        This.Writer.WriteLine output
+        This.Writer.CloseFile
+
+    Else
+        Err.Raise CouldNotOpen, "ILogger.Log", "FileLogger.LogFile could not be opened."
+    End If
+End Sub
+
+Private Property Get ILogger_MinLevel() As LogLevel
+    ILogger_MinLevel = This.MinLevel
+End Property
+
+Private Property Get ILogger_Name() As String
+    ILogger_Name = This.Name
+End Property
+
