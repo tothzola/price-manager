@@ -41,8 +41,8 @@ End Function
 
 
 Private Sub Class_Initialize()
-    Dim This As TError
-    With This
+    Dim this As TError
+    With this
         .trapped = Not Me Is Guard.Self 'Enforce the singleton pattern
         If .trapped Then
             .Name = "SingletonErr"
@@ -50,7 +50,7 @@ Private Sub Class_Initialize()
             .Source = TypeName(Me) & " type"
             .message = "Singleton already instantiated"
             .Description = "Creation of non-default instances is not supported. Use predeclared instance."
-            RaiseError This
+            RaiseError this
         End If
     End With
 End Sub

@@ -26,33 +26,33 @@ Private Type TResizeView
     Disposed As Boolean
 End Type
 
-Private This As TResizeView
+Private this As TResizeView
 
 Public Property Get View() As Object
     Guard.DefaultInstance Me
-    Set View = This.View
+    Set View = this.View
 End Property
 
 Public Property Set View(ByVal RHS As Object)
     Guard.DefaultInstance Me
     Guard.NullReference RHS
-    Set This.View = RHS
+    Set this.View = RHS
 End Property
 
 Public Property Get MinWidth() As Double
-    MinWidth = This.MinWidth
+    MinWidth = this.MinWidth
 End Property
 
 Public Property Let MinWidth(ByVal RHS As Double)
-    This.MinWidth = RHS
+    this.MinWidth = RHS
 End Property
 
 Public Property Get MinHeight() As Double
-    MinHeight = This.MinHeight
+    MinHeight = this.MinHeight
 End Property
 
 Public Property Let MinHeight(ByVal RHS As Double)
-    This.MinHeight = RHS
+    this.MinHeight = RHS
 End Property
 
 Private Property Get IsDefaultInstance() As Boolean
@@ -61,7 +61,7 @@ End Property
 
 Private Sub Class_Initialize()
     If Not IsDefaultInstance Then
-        Set This.LayoutBindings = New VBA.Collection
+        Set this.LayoutBindings = New VBA.Collection
     End If
 End Sub
 
@@ -84,8 +84,8 @@ Public Function Create(ByVal View As Object, ByVal DefaultHeight As Double, ByVa
 End Function
 
 Private Sub SetDefaultSize(ByVal View As Object)
-    View.Width = This.MinWidth
-    View.Height = This.MinHeight
+    View.Width = this.MinWidth
+    View.Height = this.MinHeight
 End Sub
 
 Private Sub BindControlLayout(ByVal FormControl As MSForms.Control, ByVal Anchor As AnchorEdges)
@@ -93,30 +93,30 @@ Private Sub BindControlLayout(ByVal FormControl As MSForms.Control, ByVal Anchor
 
     Dim Layout As ControlLayout
     Set Layout = New ControlLayout
-    Layout.Bind This.View, FormControl, Anchor
+    Layout.Bind this.View, FormControl, Anchor
     
-    This.LayoutBindings.Add Layout
+    this.LayoutBindings.Add Layout
 End Sub
 
 Public Function IsViewResizable(ByVal View As Object, ByRef isMinimized As Boolean) As Boolean
     Guard.NullReference View
     
     On Error Resume Next
-    If View.Width < This.MinWidth Then
-        View.Width = This.MinWidth
+    If View.Width < this.MinWidth Then
+        View.Width = this.MinWidth
         If Err.Number = 384 Then isMinimized = True: Exit Function 'Minimizeing View, resize runtime error
         IsViewResizable = False: Exit Function
     End If
     
-    If View.Height < This.MinHeight Then
-        View.Height = This.MinHeight
+    If View.Height < this.MinHeight Then
+        View.Height = this.MinHeight
         If Err.Number = 384 Then isMinimized = True: Exit Function 'Minimizeing View, resize runtime error
         IsViewResizable = False: Exit Function
     End If
     
     On Error GoTo CleanFail
     Dim Layout As ControlLayout
-    For Each Layout In This.LayoutBindings
+    For Each Layout In this.LayoutBindings
         Layout.Resize View
     Next
     
@@ -135,25 +135,25 @@ End Function
 
 Private Sub Dispose()
 
-    If This.Disposed Then
+    If this.Disposed Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
         Exit Sub
     End If
     
-    If Not This.LayoutBindings Is Nothing Then
-        This.Disposed = Disposable.TryDispose(This.LayoutBindings)
+    If Not this.LayoutBindings Is Nothing Then
+        this.Disposed = Disposable.TryDispose(this.LayoutBindings)
 
         '@Ignore VariableNotUsed
         Dim i As Long
-        For i = 1 To This.LayoutBindings.Count
-            Disposable.TryDispose This.LayoutBindings.Item(This.LayoutBindings.Count)
-            This.LayoutBindings.Remove This.LayoutBindings.Count
+        For i = 1 To this.LayoutBindings.Count
+            Disposable.TryDispose this.LayoutBindings.Item(this.LayoutBindings.Count)
+            this.LayoutBindings.Remove this.LayoutBindings.Count
         Next i
     
-        Set This.LayoutBindings = Nothing
+        Set this.LayoutBindings = Nothing
     End If
     
-    This.Disposed = True
+    this.Disposed = True
     
     #If TestMode Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"
@@ -162,7 +162,7 @@ Private Sub Dispose()
 End Sub
 
 Private Sub Class_Terminate()
-    If Not This.Disposed Then Dispose
+    If Not this.Disposed Then Dispose
 End Sub
 
 Private Sub IResizeView_SetDefaultSize(ByVal View As Object)

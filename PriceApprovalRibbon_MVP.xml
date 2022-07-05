@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="yes"?>
+<!--Custom Ribbon for Custom Tools -->
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="CustomRibbon.MVPPriceApprovalRibbon">
+   <!-- startFromScratch="true" hides all of the Ribbon tabs and it hide the QAT.-->
+   <ribbon startFromScratch="false">
+      <tabs>
+         <tab id="MVP_PriceApprovalTab" getLabel="MVPPriceApprovalGetLabel" insertAfterMso="TabView" tag="MVP_PriceApprovalTab">
+            <group id="MVP_PriceApprovalGroupA" getVisible="MVPPriceApprovalGetVisible" getLabel="MVPPriceApprovalGetLabel">
+               <button id="ButtonA_01" getLabel="MVPPriceApprovalGetLabel" onAction="MVPPriceApprovalOnAction" getImage="MVPPriceApprovalGetImage" getSize="MVPPriceApprovalGetSize" getScreentip="MVPPriceApprovalGetScreentip" getVisible="MVPPriceApprovalGetVisible" tag="MVP_PriceApproval"/>
+               <separator id="MVP_PriceApprovalGroupASeperator_01"/>
+               <labelControl id="LabelA_01" getLabel="MVPPriceApprovalGetLabel" getScreentip="MVPPriceApprovalGetScreentip" getVisible="MVPPriceApprovalGetVisible"/>
+               <button id="ButtonA_02" getLabel="MVPPriceApprovalGetLabel" onAction="MVPPriceApprovalOnAction" getImage="MVPPriceApprovalGetImage" getSize="MVPPriceApprovalGetSize" getScreentip="MVPPriceApprovalGetScreentip" getVisible="MVPPriceApprovalGetVisible" tag="MVP_PriceApproval"/>
+            </group>
+            <group id="MVP_PriceApprovalGroupB" getVisible="MVPPriceApprovalGetVisible" getLabel="MVPPriceApprovalGetLabel">
+               <button id="ButtonB_01" getLabel="MVPPriceApprovalGetLabel" onAction="MVPPriceApprovalOnAction" getImage="MVPPriceApprovalGetImage" getSize="MVPPriceApprovalGetSize" getScreentip="MVPPriceApprovalGetScreentip" getVisible="MVPPriceApprovalGetVisible" tag="MVP_PriceApproval"/>
+               <separator id="MVP_PriceApprovalGroupBSeperator_01"/>
+               <button id="ButtonB_02" getLabel="MVPPriceApprovalGetLabel" onAction="MVPPriceApprovalOnAction" getImage="MVPPriceApprovalGetImage" getSize="MVPPriceApprovalGetSize" getScreentip="MVPPriceApprovalGetScreentip" getVisible="MVPPriceApprovalGetVisible" tag="MVP_PriceApproval"/>
+            </group>
+         </tab>
+      </tabs>
+   </ribbon>
+</customUI>

@@ -32,116 +32,116 @@ Private Type TUserManagerFormModelComponents
     
 End Type
 
-Private This As TUserManagerFormModelComponents
+Private this As TUserManagerFormModelComponents
 
 '-------------------------------------------------------------------------
 
 Public Property Get usersTable() As Variant
-    usersTable = This.usersTable
+    usersTable = this.usersTable
 End Property
 
 Public Property Let usersTable(ByVal vNewValue As Variant)
-    This.usersTable = vNewValue
+    this.usersTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userStatusList() As Variant
-    userStatusList = This.userStatusList
+    userStatusList = this.userStatusList
 End Property
 
 Public Property Let userStatusList(ByVal vNewValue As Variant)
-    This.userStatusList = vNewValue
+    this.userStatusList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userTypesList() As Variant
-    userTypesList = This.userTypesList
+    userTypesList = this.userTypesList
 End Property
 
 Public Property Let userTypesList(ByVal vNewValue As Variant)
-    This.userTypesList = vNewValue
+    this.userTypesList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userIndex() As Long
-    userIndex = This.userIndex
+    userIndex = this.userIndex
 End Property
 
 Public Property Let userIndex(ByVal vNewValue As Long)
-    This.userIndex = vNewValue
+    this.userIndex = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userID() As String
-    userID = This.userID
+    userID = this.userID
 End Property
 
 Public Property Let userID(ByVal vNewValue As String)
-    This.userID = vNewValue
+    this.userID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userStatus() As String
-    userStatus = This.userStatus
+    userStatus = this.userStatus
 End Property
 
 Public Property Let userStatus(ByVal vNewValue As String)
-    This.userStatus = vNewValue
+    this.userStatus = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userType() As String
-    userType = This.userType
+    userType = this.userType
 End Property
 
 Public Property Let userType(ByVal vNewValue As String)
-    This.userType = vNewValue
+    this.userType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get UserName() As String
-    UserName = This.UserName
+    UserName = this.UserName
 End Property
 
 Public Property Let UserName(ByVal vNewValue As String)
-    This.UserName = vNewValue
+    this.UserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userPassword() As String
-    userPassword = This.userPassword
+    userPassword = this.userPassword
 End Property
 
 Public Property Let userPassword(ByVal vNewValue As String)
-    This.userPassword = vNewValue
+    this.userPassword = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userEmail() As String
-    userEmail = This.userEmail
+    userEmail = this.userEmail
 End Property
 
 Public Property Let userEmail(ByVal vNewValue As String)
-    This.userEmail = vNewValue
+    this.userEmail = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get operation() As FormOperation
-    operation = This.operation
+    operation = this.operation
 End Property
 
 Public Property Let operation(ByVal vNewValue As FormOperation)
-    This.operation = vNewValue
+    this.operation = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -154,7 +154,7 @@ Public Sub InItModel(ByVal usersData As Variant, ByVal StatusOfUser As Variant, 
     userTypesList = TypesOfUser
     'reset check field array
     'Changed this to approach because earlier code wasn't resetting the each items of the array to false!
-    Call AppMethods.ResetSingleDimensionalArray(This.CheckFields)
+    Call AppMethods.ResetSingleDimensionalArray(this.CheckFields)
     
 End Sub
 
@@ -205,7 +205,7 @@ End Sub
 
 Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
     'Reset CheckField's State to False
-    This.CheckFields(FieldIndex) = False
+    this.CheckFields(FieldIndex) = False
     'Check the validation of field based on field index
     Select Case FieldIndex
         Case UsersTableFields.COL_userStatus
@@ -249,18 +249,18 @@ Public Function IsValidField(ByVal FieldIndex As UsersTableFields) As Boolean
             
     End Select
     'If All Goes Well!
-    This.CheckFields(FieldIndex) = True
+    this.CheckFields(FieldIndex) = True
 End Function
 
 Public Function IsEverythingOkayToSaveUser(ByVal currentOperation As FormOperation) As Variant
     
     'Bypass Field checking for Deletion Process
     If currentOperation = OPERATION_DELETE Then
-        This.CheckFields(UsersTableFields.COL_password) = True
+        this.CheckFields(UsersTableFields.COL_password) = True
     End If
 
     'Check Everything
-    IsEverythingOkayToSaveUser = ValidationServices.IsEverythingOkay(This.CheckFields, _
+    IsEverythingOkayToSaveUser = ValidationServices.IsEverythingOkay(this.CheckFields, _
                                                             DataResources.arrListOfColumns_USERS_TABLE, _
                                                             UsersTableFields.COL_userStatus, _
                                                             UsersTableFields.COL_email)

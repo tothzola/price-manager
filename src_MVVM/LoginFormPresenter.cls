@@ -32,16 +32,16 @@ End Type
 
 '-------------------------------------------------------------------------
 
-Private This As TLoginFormComponents
+Private this As TLoginFormComponents
 
 '-------------------------------------------------------------------------
 
 Private Property Get Model() As LoginFormModel
-    Set Model = This.Model
+    Set Model = this.Model
 End Property
 
 Private Property Set Model(ByVal vNewValue As LoginFormModel)
-    Set This.Model = vNewValue
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------

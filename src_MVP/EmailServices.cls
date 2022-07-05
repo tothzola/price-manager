@@ -145,7 +145,7 @@ Private Sub AssambleEmail(ByVal mailTo As String, ByVal mailSubject As String, _
         If mailDisplay Then
             .Display
         Else
-            .Send
+            .send
         End If
     End With
     

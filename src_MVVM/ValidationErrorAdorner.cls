@@ -37,7 +37,7 @@ Private Type TState
     
 End Type
 
-Private This As TState
+Private this As TState
 
 Public Function Create(ByVal Target As MSForms.Control, _
 Optional ByVal TargetFormatter As IValidationErrorFormatter = Nothing, _
@@ -176,25 +176,25 @@ Private Property Get DefaultIconPosition() As IDynamicPosition
 End Property
 
 Friend Property Get Target() As Object
-    Set Target = This.Target
+    Set Target = this.Target
 End Property
 
 Friend Property Set Target(ByVal RHS As Object)
     'GuardClauses.GuardDefaultInstance Me, ValidationErrorAdorner
     'GuardClauses.GuardDoubleInitialization This.Target, TypeName(Me)
-    Set This.Target = RHS
+    Set this.Target = RHS
 End Property
 
 Friend Property Get TargetFormatter() As IValidationErrorFormatter
-    Set TargetFormatter = This.TargetFormatter
+    Set TargetFormatter = this.TargetFormatter
 End Property
 
 Friend Property Set TargetFormatter(ByVal RHS As IValidationErrorFormatter)
-    Set This.TargetFormatter = RHS
+    Set this.TargetFormatter = RHS
 End Property
 
 Public Property Get Visible() As Boolean
-    Visible = This.Visible
+    Visible = this.Visible
 End Property
 
 Private Sub PositionAdornerControlX(ByVal Target As MSForms.Control, ByVal Adorner As MSForms.Control, ByVal Position As IDynamicPosition)
@@ -251,73 +251,73 @@ Private Sub PositionAdornerControlY(ByVal Target As MSForms.Control, ByVal Adorn
 End Sub
 
 Friend Property Get AdornerLabel() As MSForms.Label
-    Set AdornerLabel = This.AdornerLabel
+    Set AdornerLabel = this.AdornerLabel
 End Property
 
 Friend Property Set AdornerLabel(ByVal RHS As MSForms.Label)
-    Set This.AdornerLabel = RHS
-    Set This.LabelControl = RHS
+    Set this.AdornerLabel = RHS
+    Set this.LabelControl = RHS
 End Property
 
 Friend Property Get AdornerLabelFormatter() As IValidationErrorFormatter
-    Set AdornerLabelFormatter = This.LabelFormatter
+    Set AdornerLabelFormatter = this.LabelFormatter
 End Property
 
 Friend Property Set AdornerLabelFormatter(ByVal RHS As IValidationErrorFormatter)
-    Set This.LabelFormatter = RHS
+    Set this.LabelFormatter = RHS
 End Property
 
 Friend Property Get AdornerLabelPosition() As IDynamicPosition
-    Set AdornerLabelPosition = This.LabelPosition
+    Set AdornerLabelPosition = this.LabelPosition
 End Property
 
 Friend Property Set AdornerLabelPosition(ByVal RHS As IDynamicPosition)
-    Set This.LabelPosition = RHS
+    Set this.LabelPosition = RHS
 End Property
 
 Friend Property Get AdornerIcon() As MSForms.Image
-    Set AdornerIcon = This.AdornerIcon
+    Set AdornerIcon = this.AdornerIcon
 End Property
 
 Friend Property Set AdornerIcon(ByVal RHS As MSForms.Image)
-    Set This.AdornerIcon = RHS
-    Set This.IconControl = RHS
+    Set this.AdornerIcon = RHS
+    Set this.IconControl = RHS
 End Property
 
 Friend Property Get AdornerIconFormatter() As IValidationErrorFormatter
-    Set AdornerIconFormatter = This.IconFormatter
+    Set AdornerIconFormatter = this.IconFormatter
 End Property
 
 Friend Property Set AdornerIconFormatter(ByVal RHS As IValidationErrorFormatter)
-    Set This.IconFormatter = RHS
+    Set this.IconFormatter = RHS
 End Property
 
 Friend Property Get AdornerIconPosition() As IDynamicPosition
-    Set AdornerIconPosition = This.IconPosition
+    Set AdornerIconPosition = this.IconPosition
 End Property
 
 Friend Property Set AdornerIconPosition(ByVal RHS As IDynamicPosition)
-    Set This.IconPosition = RHS
+    Set this.IconPosition = RHS
 End Property
 
 Private Sub IDisposable_Dispose()
-    Set This.Target = Nothing
-    Set This.AdornerIcon = Nothing
-    Set This.AdornerLabel = Nothing
-    Set This.IconControl = Nothing
-    Set This.LabelControl = Nothing
+    Set this.Target = Nothing
+    Set this.AdornerIcon = Nothing
+    Set this.AdornerLabel = Nothing
+    Set this.IconControl = Nothing
+    Set this.LabelControl = Nothing
 End Sub
 
 Private Sub IDynamicAdorner_Hide()
-    If Not This.Visible Then Exit Sub
+    If Not this.Visible Then Exit Sub
     'GuardClauses.GuardDefaultInstance Me, ValidationErrorAdorner
     'GuardClauses.GuardNullReference This.TargetFormatter, TypeName(Me), "TargetFormatter is not set for this instance."
     
-    This.TargetFormatter.Restore This.Target
-    If Not This.IconControl Is Nothing Then This.IconFormatter.Restore This.IconControl
-    If Not This.LabelControl Is Nothing Then This.LabelFormatter.Restore This.LabelControl
+    this.TargetFormatter.Restore this.Target
+    If Not this.IconControl Is Nothing Then this.IconFormatter.Restore this.IconControl
+    If Not this.LabelControl Is Nothing Then this.LabelFormatter.Restore this.LabelControl
 
-    This.Visible = False
+    this.Visible = False
 End Sub
 
 Private Sub IDynamicAdorner_Show(ByVal Message As String)
@@ -325,28 +325,28 @@ Private Sub IDynamicAdorner_Show(ByVal Message As String)
     'GuardClauses.GuardDefaultInstance Me, ValidationErrorAdorner
     'GuardClauses.GuardNullReference This.TargetFormatter, TypeName(Me), "TargetFormatter is not set for this instance."
     
-    This.TargetFormatter.Apply This.Target, Message
-    If Not This.LabelControl Is Nothing Then ShowAdornerLabel Message
-    If Not This.IconControl Is Nothing Then ShowAdornerIcon Message
+    this.TargetFormatter.Apply this.Target, Message
+    If Not this.LabelControl Is Nothing Then ShowAdornerLabel Message
+    If Not this.IconControl Is Nothing Then ShowAdornerIcon Message
     
-    This.Visible = True
+    this.Visible = True
 End Sub
 
 Private Sub ShowAdornerLabel(ByVal Message As String)
-    This.LabelFormatter.Apply This.LabelControl, Message
-    If Not This.LabelPositionSet Then
-        PositionAdornerControlX This.Target, This.AdornerLabel, This.LabelPosition
-        PositionAdornerControlY This.Target, This.AdornerLabel, This.LabelPosition
-        This.LabelPositionSet = True
+    this.LabelFormatter.Apply this.LabelControl, Message
+    If Not this.LabelPositionSet Then
+        PositionAdornerControlX this.Target, this.AdornerLabel, this.LabelPosition
+        PositionAdornerControlY this.Target, this.AdornerLabel, this.LabelPosition
+        this.LabelPositionSet = True
     End If
 End Sub
 
 Private Sub ShowAdornerIcon(ByVal Message As String)
-    This.IconFormatter.Apply This.IconControl, Message
-    If Not This.IconPositionSet Then
-        PositionAdornerControlX This.Target, This.AdornerIcon, This.IconPosition
-        PositionAdornerControlY This.Target, This.AdornerIcon, This.IconPosition
-        This.IconPositionSet = True
+    this.IconFormatter.Apply this.IconControl, Message
+    If Not this.IconPositionSet Then
+        PositionAdornerControlX this.Target, this.AdornerIcon, this.IconPosition
+        PositionAdornerControlY this.Target, this.AdornerIcon, this.IconPosition
+        this.IconPositionSet = True
     End If
 End Sub
 

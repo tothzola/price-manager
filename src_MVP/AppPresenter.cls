@@ -53,7 +53,7 @@ Private Type TAppPresenterComponents
     Disposed As Boolean
 End Type
 
-Private This As TAppPresenterComponents
+Private this As TAppPresenterComponents
 
 '@Ignore ProcedureNotUsed
 '@Description("Returns class reference")
@@ -68,9 +68,9 @@ End Property
 
 Public Property Set MainView(ByVal RHS As IView)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization This.MainView
+    Guard.DoubleInitialization this.MainView
     Guard.NullReference RHS
-    Set This.MainView = RHS
+    Set this.MainView = RHS
     Set View = RHS
 End Property
 
@@ -78,38 +78,38 @@ End Property
 
 Public Property Get Model() As AppModel
     Guard.DefaultInstance Me
-    Set Model = This.Model
+    Set Model = this.Model
 End Property
 
 Public Property Set Model(ByVal RHS As AppModel)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization This.Model
+    Guard.DoubleInitialization this.Model
     Guard.NullReference RHS
-    Set This.Model = RHS
+    Set this.Model = RHS
 End Property
 
 Public Property Get context() As IAppContext
     Guard.DefaultInstance Me
-    Set context = This.context
+    Set context = this.context
 End Property
 
 Public Property Set context(ByVal RHS As IAppContext)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization This.context
+    Guard.DoubleInitialization this.context
     Guard.NullReference RHS
-    Set This.context = RHS
+    Set this.context = RHS
 End Property
 
 Public Property Get Report() As DocumentGeneratorExcel
     Guard.DefaultInstance Me
-    Set Report = This.Report
+    Set Report = this.Report
 End Property
 
 Public Property Set Report(ByVal RHS As DocumentGeneratorExcel)
     Guard.DefaultInstance Me
-    Guard.DoubleInitialization This.Report
+    Guard.DoubleInitialization this.Report
     Guard.NullReference RHS
-    Set This.Report = RHS
+    Set this.Report = RHS
 End Property
 
 
@@ -945,34 +945,34 @@ End Sub
 '-------------------------------------------------------------------------
 
 Private Sub Class_Terminate()
-    If Not This.Disposed Then Dispose
+    If Not this.Disposed Then Dispose
 End Sub
 
 Private Sub Dispose()
 
-    If This.Disposed Then
+    If this.Disposed Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
         Exit Sub
     End If
     
-    If Not This.Model Is Nothing Then
-        Disposable.TryDispose This.Model
-        Set This.Model = Nothing
+    If Not this.Model Is Nothing Then
+        Disposable.TryDispose this.Model
+        Set this.Model = Nothing
     End If
 
-    If Not This.context Is Nothing Then
-        Disposable.TryDispose This.context
-        Set This.context = Nothing
+    If Not this.context Is Nothing Then
+        Disposable.TryDispose this.context
+        Set this.context = Nothing
     End If
 
-    If Not This.Report Is Nothing Then
-        Disposable.TryDispose This.Report
-        Set This.Report = Nothing
+    If Not this.Report Is Nothing Then
+        Disposable.TryDispose this.Report
+        Set this.Report = Nothing
     End If
 
-    If Not This.MainView Is Nothing Then
-        Disposable.TryDispose This.MainView
-        Set This.MainView = Nothing
+    If Not this.MainView Is Nothing Then
+        Disposable.TryDispose this.MainView
+        Set this.MainView = Nothing
 
         Set PresenterExportFormFrame = Nothing
         Set PresenterDataFormFrame = Nothing
@@ -984,7 +984,7 @@ Private Sub Dispose()
         
     End If
     
-    This.Disposed = True
+    this.Disposed = True
     
     #If TestMode Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"
@@ -997,5 +997,5 @@ Private Sub IDisposable_Dispose()
 End Sub
 
 Private Sub IAppPresenter_ShowView()
-    This.MainView.Show
+    this.MainView.Show
 End Sub

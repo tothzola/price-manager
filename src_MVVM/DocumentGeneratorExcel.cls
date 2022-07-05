@@ -31,86 +31,86 @@ Private Type TDocumentGeneratorComponents
     CURRENCYFORMAT As String
 End Type
 
-Private This As TDocumentGeneratorComponents
+Private this As TDocumentGeneratorComponents
 
 '----------------------------------------------------------------------------
 
 Public Property Get IsReportGeneratedSuccessfully() As Boolean
-    IsReportGeneratedSuccessfully = This.IsReportGeneratedSuccessfully
+    IsReportGeneratedSuccessfully = this.IsReportGeneratedSuccessfully
 End Property
 
 Public Property Let IsReportGeneratedSuccessfully(ByVal vNewValue As Boolean)
-    This.IsReportGeneratedSuccessfully = vNewValue
+    this.IsReportGeneratedSuccessfully = vNewValue
 End Property
 
 '----------------------------------------------------------------------------
 
 Private Property Get TargetSheet() As Worksheet
-    Set TargetSheet = This.TargetSheet
+    Set TargetSheet = this.TargetSheet
 End Property
 
 Private Property Set TargetSheet(ByVal vNewValue As Worksheet)
-    Set This.TargetSheet = vNewValue
+    Set this.TargetSheet = vNewValue
 End Property
 
 '----------------------------------------------------------------------------
 
 Public Property Get LoadData() As Variant
-    LoadData = This.LoadData
+    LoadData = this.LoadData
 End Property
 
 Public Property Let LoadData(ByVal vNewValue As Variant)
-    This.LoadData = vNewValue
+    this.LoadData = vNewValue
 End Property
 
 '----------------------------------------------------------------------------
 
 Public Property Get Headers() As Variant
-    Headers = This.Headers
+    Headers = this.Headers
 End Property
 
 Public Property Let Headers(ByVal vNewValue As Variant)
-    This.Headers = vNewValue
+    this.Headers = vNewValue
 End Property
 
 '----------------------------------------------------------------------------
 
 Public Property Get DateColumns() As Variant
-    DateColumns = This.DateColumns
+    DateColumns = this.DateColumns
 End Property
 
 Public Property Let DateColumns(ByVal vNewValue As Variant)
-    This.DateColumns = vNewValue
+    this.DateColumns = vNewValue
 End Property
 
 '----------------------------------------------------------------------------
 
 Public Property Get DateFormat() As String
-    DateFormat = This.DateFormat
+    DateFormat = this.DateFormat
 End Property
 
 Public Property Let DateFormat(ByVal vNewValue As String)
-    This.DateFormat = vNewValue
+    this.DateFormat = vNewValue
 End Property
 
 '----------------------------------------------------------------------------
 
 Public Property Get CurrencyColumns() As Variant
-    CurrencyColumns = This.CurrencyColumns
+    CurrencyColumns = this.CurrencyColumns
 End Property
 
 Public Property Let CurrencyColumns(ByVal vNewValue As Variant)
-    This.CurrencyColumns = vNewValue
+    this.CurrencyColumns = vNewValue
 End Property
 
 '----------------------------------------------------------------------------
 
 Public Property Get CURRENCYFORMAT() As String
-    CURRENCYFORMAT = This.CURRENCYFORMAT
+    CURRENCYFORMAT = this.CURRENCYFORMAT
 End Property
 
 Public Property Let CURRENCYFORMAT(ByVal vNewValue As String)
-    This.CURRENCYFORMAT = vNewValue
+    this.CURRENCYFORMAT = vNewValue
 End Property
 
 '----------------------------------------------------------------------------

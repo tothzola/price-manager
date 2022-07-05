@@ -43,46 +43,46 @@ Private Type TDataFormModelComponents
     IsManager As Boolean
 End Type
 
-Private This As TDataFormModelComponents
+Private this As TDataFormModelComponents
 
 '-------------------------------------------------------------------------
 
 Public Property Get dataTable() As Variant
-    dataTable = This.dataTable
+    dataTable = this.dataTable
 End Property
 
 Public Property Let dataTable(ByVal vNewValue As Variant)
-    This.dataTable = vNewValue
+    this.dataTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get usersTable() As Variant
-    usersTable = This.usersTable
+    usersTable = this.usersTable
 End Property
 
 Public Property Let usersTable(ByVal vNewValue As Variant)
-    This.usersTable = vNewValue
+    this.usersTable = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get DataColumnsList() As Variant
-    DataColumnsList = This.DataColumnsList
+    DataColumnsList = this.DataColumnsList
 End Property
 
 Public Property Let DataColumnsList(ByVal vNewValue As Variant)
-    This.DataColumnsList = vNewValue
+    this.DataColumnsList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ValuesList() As Variant
-    ValuesList = This.ValuesList
+    ValuesList = this.ValuesList
 End Property
 
 Public Property Let ValuesList(ByVal vNewValue As Variant)
-    This.ValuesList = vNewValue
+    this.ValuesList = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -90,195 +90,195 @@ End Property
 Public Property Get selectedValue() As Variant
     Select Case Me.selectedColumn
     Case MainTableFields.COL_MAIN_statusChangeDate
-        If This.selectedValue <> vbNullString Then selectedValue = VBA.Format$(This.selectedValue, GetDateFormat)
+        If this.selectedValue <> vbNullString Then selectedValue = VBA.Format$(this.selectedValue, GetDateFormat)
         
     Case Else
-        selectedValue = This.selectedValue
+        selectedValue = this.selectedValue
     End Select
 End Property
 
 Public Property Let selectedValue(ByVal vNewValue As Variant)
-    This.selectedValue = vNewValue
+    this.selectedValue = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get selectedColumn() As Variant
-    selectedColumn = AppMethods.GetTargetColumnIndex(This.selectedColumn, DataResources.arrListOfColumnsMainTableFull)
+    selectedColumn = AppMethods.GetTargetColumnIndex(this.selectedColumn, DataResources.arrListOfColumnsMainTableFull)
 End Property
 
 Public Property Let selectedColumn(ByVal vNewValue As Variant)
-    This.selectedColumn = vNewValue
+    this.selectedColumn = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get Index() As Long
-    Index = This.Index
+    Index = this.Index
 End Property
 
 Public Property Let Index(ByVal vNewValue As Long)
-    This.Index = vNewValue
+    this.Index = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get RecordID() As String
-    RecordID = This.RecordID
+    RecordID = this.RecordID
 End Property
 
 Public Property Let RecordID(ByVal vNewValue As String)
-    This.RecordID = vNewValue
+    this.RecordID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get userID() As String
-    userID = This.userID
+    userID = this.userID
 End Property
 
 Public Property Let userID(ByVal vNewValue As String)
-    This.userID = vNewValue
+    this.userID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get recordStatus() As String
-    recordStatus = This.recordStatus
+    recordStatus = this.recordStatus
 End Property
 
 Public Property Let recordStatus(ByVal vNewValue As String)
-    This.recordStatus = vNewValue
+    this.recordStatus = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get statusChangeDate() As String
-    statusChangeDate = This.statusChangeDate
+    statusChangeDate = this.statusChangeDate
 End Property
 
 Public Property Let statusChangeDate(ByVal vNewValue As String)
-    This.statusChangeDate = vNewValue
+    this.statusChangeDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get distributionChannel() As String
-    distributionChannel = This.distributionChannel
+    distributionChannel = this.distributionChannel
 End Property
 
 Public Property Let distributionChannel(ByVal vNewValue As String)
-    This.distributionChannel = vNewValue
+    this.distributionChannel = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get salesOrganization() As String
-    salesOrganization = This.salesOrganization
+    salesOrganization = this.salesOrganization
 End Property
 
 Public Property Let salesOrganization(ByVal vNewValue As String)
-    This.salesOrganization = vNewValue
+    this.salesOrganization = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get conditionType() As String
-    conditionType = This.conditionType
+    conditionType = this.conditionType
 End Property
 
 Public Property Let conditionType(ByVal vNewValue As String)
-    This.conditionType = vNewValue
+    this.conditionType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get customerID() As String
-    customerID = This.customerID
+    customerID = this.customerID
 End Property
 
 Public Property Let customerID(ByVal vNewValue As String)
-    This.customerID = vNewValue
+    this.customerID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get materialID() As String
-    materialID = This.materialID
+    materialID = this.materialID
 End Property
 
 Public Property Let materialID(ByVal vNewValue As String)
-    This.materialID = vNewValue
+    this.materialID = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get price() As String
-    price = This.price
+    price = this.price
 End Property
 
 Public Property Let price(ByVal vNewValue As String)
-    This.price = vNewValue
+    this.price = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get currencyType() As String
-    currencyType = This.currencyType
+    currencyType = this.currencyType
 End Property
 
 Public Property Let currencyType(ByVal vNewValue As String)
-    This.currencyType = vNewValue
+    this.currencyType = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get unitOfPrice() As String
-    unitOfPrice = This.unitOfPrice
+    unitOfPrice = this.unitOfPrice
 End Property
 
 Public Property Let unitOfPrice(ByVal vNewValue As String)
-    This.unitOfPrice = vNewValue
+    this.unitOfPrice = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get unitOfMeasure() As String
-    unitOfMeasure = This.unitOfMeasure
+    unitOfMeasure = this.unitOfMeasure
 End Property
 
 Public Property Let unitOfMeasure(ByVal vNewValue As String)
-    This.unitOfMeasure = vNewValue
+    this.unitOfMeasure = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get validFromDate() As String
-    validFromDate = This.validFromDate
+    validFromDate = this.validFromDate
 End Property
 
 Public Property Let validFromDate(ByVal vNewValue As String)
-    This.validFromDate = vNewValue
+    this.validFromDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get validToDate() As String
-    validToDate = This.validToDate
+    validToDate = this.validToDate
 End Property
 
 Public Property Let validToDate(ByVal vNewValue As String)
-    This.validToDate = vNewValue
+    this.validToDate = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get ActiveDataContainer() As Long
-    ActiveDataContainer = This.ActiveDataContainer
+    ActiveDataContainer = this.ActiveDataContainer
 End Property
 
 Public Property Let ActiveDataContainer(ByVal vNewValue As Long)
-    This.ActiveDataContainer = vNewValue
+    this.ActiveDataContainer = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
@@ -297,21 +297,21 @@ End Property
 '-------------------------------------------------------------------------
 
 Public Property Get IsApprover() As Boolean
-    IsApprover = This.IsApprover
+    IsApprover = this.IsApprover
 End Property
 
 Public Property Let IsApprover(ByVal vNewValue As Boolean)
-    This.IsApprover = vNewValue
+    this.IsApprover = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get IsManager() As Boolean
-    IsManager = This.IsManager
+    IsManager = this.IsManager
 End Property
 
 Public Property Let IsManager(ByVal RHS As Boolean)
-    This.IsManager = IsManager
+    this.IsManager = IsManager
 End Property
 
 '-------------------------------------------------------------------------

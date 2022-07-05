@@ -21,41 +21,41 @@ Public Enum AsciiEscapeBase
     Hexadecimal
 End Enum
 
-Private This As tEscapeSequence
+Private this As tEscapeSequence
 Option Explicit
 
 Public Property Get EscapeString() As String
-    EscapeString = This.EscapeString
+    EscapeString = this.EscapeString
 End Property
 
 Friend Property Let EscapeString(ByVal Value As String)
-    This.EscapeString = Value
+    this.EscapeString = Value
 End Property
 
 Public Property Get ReplacementString() As String
-    ReplacementString = This.ReplacementString
+    ReplacementString = this.ReplacementString
 End Property
 
 Friend Property Let ReplacementString(ByVal Value As String)
-    This.ReplacementString = Value
+    this.ReplacementString = Value
 End Property
 
 '@Ignore ProcedureNotUsed
 Public Property Get IsAsciiCharacter() As Boolean
-    IsAsciiCharacter = This.IsAsciiCharacter
+    IsAsciiCharacter = this.IsAsciiCharacter
 End Property
 
 Friend Property Let IsAsciiCharacter(ByVal Value As Boolean)
-    This.IsAsciiCharacter = Value
+    this.IsAsciiCharacter = Value
 End Property
 
 '@Ignore ProcedureNotUsed
 Public Property Get AsciiBase() As AsciiEscapeBase
-    AsciiBase = This.AsciiBase
+    AsciiBase = this.AsciiBase
 End Property
 
 Friend Property Let AsciiBase(ByVal Value As AsciiEscapeBase)
-    This.AsciiBase = Value
+    this.AsciiBase = Value
 End Property
 
 Public Function Create(ByVal Escape As String, ByVal replacement As String, _
@@ -79,11 +79,11 @@ Public Function Execute(ByVal stringValue As String) As String
     
     Dim result As String
     
-    If This.IsAsciiCharacter Then
-        result = ProcessAsciiEscape(stringValue, This.EscapeString)
+    If this.IsAsciiCharacter Then
+        result = ProcessAsciiEscape(stringValue, this.EscapeString)
 
-    ElseIf StringType.Contains(stringValue, This.EscapeString) Then
-        result = Replace(stringValue, This.EscapeString, This.ReplacementString)
+    ElseIf StringType.Contains(stringValue, this.EscapeString) Then
+        result = Replace(stringValue, this.EscapeString, this.ReplacementString)
 
     End If
 
@@ -104,7 +104,7 @@ Private Function ProcessAsciiEscape(ByVal FormatString As String, _
     regex.Global = True
 
     Dim prefix As String
-    Select Case This.AsciiBase
+    Select Case this.AsciiBase
     Case AsciiEscapeBase.Octal
         prefix = "&O"
 

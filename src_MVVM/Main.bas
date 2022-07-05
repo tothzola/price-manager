@@ -8,6 +8,11 @@ Private Presenter As IAppPresenter
 '@EntryPoint
 Public Sub StartApp()
 
+    Dim skipAppStartIfUpdate As Boolean
+    UpdateResolver.AutoUpdate skipAppStartIfUpdate
+
+    If skipAppStartIfUpdate Then GoTo CleanExit
+
     On Error GoTo CleanFail:
     With ProgressIndicator.Create("OpenApplication", CanCancel:=True)
         .Execute

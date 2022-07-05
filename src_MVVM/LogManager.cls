@@ -28,21 +28,21 @@ Private Type TLogManager
     Disposed As Boolean
 End Type
 
-Private This As TLogManager
+Private this As TLogManager
 
 '@Ignore ProcedureNotUsed
 Public Property Get Formatter() As ILogMessageFormatter
-    Set Formatter = This.Formatter
+    Set Formatter = this.Formatter
 End Property
 
 '@Ignore ProcedureNotUsed
 Public Property Set Formatter(ByVal Value As ILogMessageFormatter)
-    Set This.Formatter = Value
+    Set this.Formatter = Value
 End Property
 
 Public Sub UnRegister(ByVal Logger As String)
-    If This.Loggers.exists(Logger) Then
-        This.Loggers.Remove Logger
+    If this.Loggers.exists(Logger) Then
+        this.Loggers.Remove Logger
     Else
         '"There was no logger Initialized"
         Debug.Print "There was no logger Initialized"
@@ -50,8 +50,8 @@ Public Sub UnRegister(ByVal Logger As String)
 End Sub
 
 Public Sub Register(ByVal Logger As ILogger)
-    If Not This.Loggers.exists(Logger.Name) Then
-        This.Loggers.Add Logger.Name, Logger
+    If Not this.Loggers.exists(Logger.Name) Then
+        this.Loggers.Add Logger.Name, Logger
     Else
         Err.Raise LoggerAlreadyRegistered, "LogManager.Register", "There is already a logger registered with name '" & Logger.Name & "'."
     End If
@@ -61,7 +61,7 @@ Public Function IsEnabled(ByVal level As LogLevel) As Boolean
 
     Dim Logger As ILogger
     Dim Item As Variant
-    For Each Item In This.Loggers.Items
+    For Each Item In this.Loggers.Items
         Set Logger = Item
         If level >= Logger.MinLevel Then
             IsEnabled = True
@@ -77,13 +77,13 @@ Public Sub Log(ByVal level As LogLevel, ByVal Message As String, Optional ByVal 
     If loggerName = VBA.Constants.vbNullString Then
 
         Dim Item As Variant
-        For Each Item In This.Loggers.Items
+        For Each Item In this.Loggers.Items
             Set Logger = Item
             LogWith Logger, level, Message
         Next
 
-    ElseIf This.Loggers.exists(loggerName) Then
-        LogWith This.Loggers.Item(loggerName), level, Message
+    ElseIf this.Loggers.exists(loggerName) Then
+        LogWith this.Loggers.Item(loggerName), level, Message
     Else
         Err.Raise NoRegisteredLogger, "LogManager.Log", "There is no registered logger named '" & loggerName & "'."
     End If
@@ -97,10 +97,10 @@ Private Sub LogWith(ByVal Logger As ILogger, ByVal level As LogLevel, ByVal Mess
 End Sub
 
 Friend Function FormatMessage(ByVal level As LogLevel, ByVal loggerName As String, ByVal Message As String) As String
-    FormatMessage = This.Formatter.FormatMessage(level, loggerName, Message)
+    FormatMessage = this.Formatter.FormatMessage(level, loggerName, Message)
 End Function
 
 Private Sub Class_Initialize()
-    Set This.Formatter = New DefaultLogMessageFormatter
+    Set this.Formatter = New DefaultLogMessageFormatter
 End Sub
 

@@ -20,7 +20,7 @@ Private Type TFileLogger
     Writer As TextWriter
 End Type
 
-Private This As TFileLogger
+Private this As TFileLogger
 
 Implements ILogger
 
@@ -38,45 +38,45 @@ End Function
 
 '@Ignore ProcedureNotUsed
 Friend Property Get Name() As String
-    Name = This.Name
+    Name = this.Name
 End Property
 
 Friend Property Let Name(ByVal Value As String)
-    This.Name = Value
+    this.Name = Value
 End Property
 
 '@Ignore ProcedureNotUsed
 Friend Property Get MinLevel() As LogLevel
-    MinLevel = This.MinLevel
+    MinLevel = this.MinLevel
 End Property
 
 Friend Property Let MinLevel(ByVal Value As LogLevel)
-    This.MinLevel = Value
+    this.MinLevel = Value
 End Property
 
 '@Ignore ProcedureNotUsed
 Friend Property Get LOGFILE() As String
-    LOGFILE = This.LOGFILE
+    LOGFILE = this.LOGFILE
 End Property
 
 Friend Property Let LOGFILE(ByVal Value As String)
-    This.LOGFILE = Value
+    this.LOGFILE = Value
 End Property
 
 '@Ignore ProcedureNotUsed
 Friend Property Get Writer() As TextWriter
-    Set Writer = This.Writer
+    Set Writer = this.Writer
 End Property
 
 Friend Property Set Writer(ByVal Value As TextWriter)
-    Set This.Writer = Value
+    Set this.Writer = Value
 End Property
 
 Private Sub ILogger_Log(ByVal output As String)
-    If This.Writer.OpenFile(This.LOGFILE) Then
+    If this.Writer.OpenFile(this.LOGFILE) Then
 
-        This.Writer.WriteLine output
-        This.Writer.CloseFile
+        this.Writer.WriteLine output
+        this.Writer.CloseFile
 
     Else
         Err.Raise CouldNotOpen, "ILogger.Log", "FileLogger.LogFile could not be opened."
@@ -84,10 +84,10 @@ Private Sub ILogger_Log(ByVal output As String)
 End Sub
 
 Private Property Get ILogger_MinLevel() As LogLevel
-    ILogger_MinLevel = This.MinLevel
+    ILogger_MinLevel = this.MinLevel
 End Property
 
 Private Property Get ILogger_Name() As String
-    ILogger_Name = This.Name
+    ILogger_Name = this.Name
 End Property
 

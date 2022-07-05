@@ -17,36 +17,36 @@ Private Type TSideMargins
     TopMargin As Double
 End Type
 
-Private This As TSideMargins
+Private this As TSideMargins
 
 Public Property Get BottomMargin() As Double
-    BottomMargin = This.BottomMargin
+    BottomMargin = this.BottomMargin
 End Property
 
 Public Property Let BottomMargin(ByVal Bottom As Double)
-    This.BottomMargin = Bottom
+    this.BottomMargin = Bottom
 End Property
 
 Public Property Get LeftMargin() As Double
-    LeftMargin = This.LeftMargin
+    LeftMargin = this.LeftMargin
 End Property
 
 Public Property Let LeftMargin(ByVal Left As Double)
-    This.LeftMargin = Left
+    this.LeftMargin = Left
 End Property
 
 Public Property Get RightMargin() As Double
-    RightMargin = This.RightMargin
+    RightMargin = this.RightMargin
 End Property
 
 Public Property Let RightMargin(ByVal Right As Double)
-    This.RightMargin = Right
+    this.RightMargin = Right
 End Property
 
 Public Property Get TopMargin() As Double
-    TopMargin = This.TopMargin
+    TopMargin = this.TopMargin
 End Property
 
 Public Property Let TopMargin(ByVal Top As Double)
-    This.TopMargin = Top
+    this.TopMargin = Top
 End Property

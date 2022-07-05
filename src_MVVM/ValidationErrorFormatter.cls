@@ -46,7 +46,7 @@ Private Type TState
     
 End Type
 
-Private This As TState
+Private this As TState
 
 Private Property Get IsDefaultInstance() As Boolean
     IsDefaultInstance = Me Is ValidationErrorFormatter
@@ -61,8 +61,8 @@ Attribute WithErrorBackgroundColor.VB_Description = "A builder method to create 
         Set result = result.WithErrorBackgroundColor(Color)
     Else
         Set result = Me
-        This.ErrorBackgroundColor = Color
-        This.FormatBackgroundColor = True
+        this.ErrorBackgroundColor = Color
+        this.FormatBackgroundColor = True
     End If
     Set WithErrorBackgroundColor = result
 End Function
@@ -76,8 +76,8 @@ Attribute WithErrorBorderColor.VB_Description = "A builder method to create or c
         Set result = result.WithErrorBorderColor(Color)
     Else
         Set result = Me
-        This.ErrorBorderColor = Color
-        This.FormatBorderColor = True
+        this.ErrorBorderColor = Color
+        this.FormatBorderColor = True
     End If
     Set WithErrorBorderColor = result
 End Function
@@ -91,8 +91,8 @@ Attribute WithErrorBorderWidth.VB_Description = "A builder method to create or c
         Set result = result.WithErrorBorderWidth(Width)
     Else
         Set result = Me
-        This.ErrorBorderWidth = Width
-        This.FormatBorderColor = True
+        this.ErrorBorderWidth = Width
+        this.FormatBorderColor = True
     End If
     Set WithErrorBorderWidth = result
 End Function
@@ -106,8 +106,8 @@ Attribute WithErrorForeColor.VB_Description = "A builder method to create or con
         Set result = result.WithErrorForeColor(Color)
     Else
         Set result = Me
-        This.ErrorForeColor = Color
-        This.FormatForeColor = True
+        this.ErrorForeColor = Color
+        this.FormatForeColor = True
     End If
     Set WithErrorForeColor = result
 End Function
@@ -121,8 +121,8 @@ Attribute WithErrorBoldFont.VB_Description = "A builder method to create or conf
         Set result = result.WithErrorBoldFont
     Else
         Set result = Me
-        This.FormatFontBold = True
-        This.ErrorFontBold = True
+        this.FormatFontBold = True
+        this.ErrorFontBold = True
     End If
     Set WithErrorBoldFont = result
 End Function
@@ -136,7 +136,7 @@ Attribute WithTargetOnlyVisibleOnError.VB_Description = "A builder method to cre
         Set result = result.WithTargetOnlyVisibleOnError
     Else
         Set result = Me
-        This.TargetOnlyVisibleOnError = True
+        this.TargetOnlyVisibleOnError = True
     End If
     Set WithTargetOnlyVisibleOnError = result
 End Function
@@ -149,47 +149,47 @@ Private Sub StoreInitialFormat(ByVal RHS As Object)
         Case TypeOf RHS Is MSForms.TextBox
             Dim TextBoxTarget As MSForms.TextBox
             Set TextBoxTarget = RHS
-            This.InitialBackgroundColor = TextBoxTarget.BackColor
-            This.InitialBorderColor = TextBoxTarget.BorderColor
-            This.InitialFontBold = TextBoxTarget.Font.Bold
-            This.InitialForeColor = TextBoxTarget.ForeColor
+            this.InitialBackgroundColor = TextBoxTarget.BackColor
+            this.InitialBorderColor = TextBoxTarget.BorderColor
+            this.InitialFontBold = TextBoxTarget.Font.Bold
+            this.InitialForeColor = TextBoxTarget.ForeColor
             
         Case TypeOf RHS Is MSForms.CheckBox 'NOTE: MSForms.OptionButton also matches this interface
             Dim CheckBoxTarget As MSForms.CheckBox
             Set CheckBoxTarget = RHS
-            This.InitialFontBold = CheckBoxTarget.Font.Bold
-            This.InitialForeColor = CheckBoxTarget.ForeColor
+            this.InitialFontBold = CheckBoxTarget.Font.Bold
+            this.InitialForeColor = CheckBoxTarget.ForeColor
             
         Case TypeOf RHS Is MSForms.Label
             Dim LabelTarget As MSForms.Label
             Set LabelTarget = RHS
-            This.InitialBackgroundColor = LabelTarget.BackColor
-            This.InitialBorderColor = LabelTarget.BorderColor
-            This.InitialFontBold = LabelTarget.Font.Bold
-            This.InitialForeColor = LabelTarget.ForeColor
+            this.InitialBackgroundColor = LabelTarget.BackColor
+            this.InitialBorderColor = LabelTarget.BorderColor
+            this.InitialFontBold = LabelTarget.Font.Bold
+            this.InitialForeColor = LabelTarget.ForeColor
             
         Case TypeOf RHS Is MSForms.Frame
             Dim FrameTarget As MSForms.Frame
             Set FrameTarget = RHS
-            This.InitialBackgroundColor = FrameTarget.BackColor
-            This.InitialBorderColor = FrameTarget.BorderColor
-            This.InitialFontBold = FrameTarget.Font.Bold
-            This.InitialForeColor = FrameTarget.ForeColor
+            this.InitialBackgroundColor = FrameTarget.BackColor
+            this.InitialBorderColor = FrameTarget.BorderColor
+            this.InitialFontBold = FrameTarget.Font.Bold
+            this.InitialForeColor = FrameTarget.ForeColor
         
         Case TypeOf RHS Is MSForms.Image
             Dim ImageTarget As MSForms.Image
             Set ImageTarget = RHS
-            This.InitialBackgroundColor = ImageTarget.BackColor
-            This.InitialBorderColor = ImageTarget.BorderColor
+            this.InitialBackgroundColor = ImageTarget.BackColor
+            this.InitialBorderColor = ImageTarget.BorderColor
             
         Case TypeOf RHS Is Excel.Range
             Dim RangeTarget As Excel.Range
             Set RangeTarget = RHS
-            This.InitialBackgroundColor = RangeTarget.Interior.Color
-            This.InitialBorderColor = RangeTarget.Borders.Color
-            This.InitialBorderWidth = RangeTarget.Borders.Weight
-            This.InitialFontBold = RangeTarget.Font.Bold
-            This.InitialForeColor = RangeTarget.Font.Color
+            this.InitialBackgroundColor = RangeTarget.Interior.Color
+            this.InitialBorderColor = RangeTarget.Borders.Color
+            this.InitialBorderWidth = RangeTarget.Borders.Weight
+            this.InitialFontBold = RangeTarget.Font.Bold
+            this.InitialForeColor = RangeTarget.Font.Color
             
         Case Else
             Debug.Print TypeName(Me) & ": Target of type " & TypeName(RHS) & " is not currently supported."
@@ -200,13 +200,13 @@ End Sub
 
 Private Sub IValidationErrorFormatter_Apply(ByVal Target As Object, ByVal Message As String)
 
-    If This.Applied Then Exit Sub
+    If this.Applied Then Exit Sub
     StoreInitialFormat Target
     
     If TypeOf Target Is MSForms.Control Then
         Dim Control As MSForms.Control
         Set Control = Target
-        If Not This.TargetOnlyVisibleOnError Then
+        If Not this.TargetOnlyVisibleOnError Then
             Control.ControlTipText = Message
         End If
     End If
@@ -216,67 +216,67 @@ Private Sub IValidationErrorFormatter_Apply(ByVal Target As Object, ByVal Messag
         Case TypeOf Target Is MSForms.TextBox
             Dim TextBoxTarget As MSForms.TextBox
             Set TextBoxTarget = Target
-            If This.FormatBackgroundColor Then TextBoxTarget.BackColor = This.ErrorBackgroundColor
-            If This.FormatBorderColor Then TextBoxTarget.BorderColor = This.ErrorBorderColor
-            If This.FormatFontBold Then TextBoxTarget.Font.Bold = This.ErrorFontBold
-            If This.FormatForeColor Then TextBoxTarget.ForeColor = This.ErrorForeColor
-            This.Applied = True
+            If this.FormatBackgroundColor Then TextBoxTarget.BackColor = this.ErrorBackgroundColor
+            If this.FormatBorderColor Then TextBoxTarget.BorderColor = this.ErrorBorderColor
+            If this.FormatFontBold Then TextBoxTarget.Font.Bold = this.ErrorFontBold
+            If this.FormatForeColor Then TextBoxTarget.ForeColor = this.ErrorForeColor
+            this.Applied = True
             
         Case TypeOf Target Is MSForms.CheckBox 'NOTE: MSForms.OptionButton also matches this interface
             Dim CheckBoxTarget As MSForms.CheckBox
             Set CheckBoxTarget = Target
-            If This.FormatFontBold Then CheckBoxTarget.Font.Bold = This.ErrorFontBold
-            If This.FormatForeColor Then CheckBoxTarget.ForeColor = This.ErrorForeColor
-            This.Applied = True
+            If this.FormatFontBold Then CheckBoxTarget.Font.Bold = this.ErrorFontBold
+            If this.FormatForeColor Then CheckBoxTarget.ForeColor = this.ErrorForeColor
+            this.Applied = True
             
         Case TypeOf Target Is MSForms.Label
             Dim LabelTarget As MSForms.Label
             Set LabelTarget = Target
-            If This.FormatBackgroundColor Then LabelTarget.BackColor = This.ErrorBackgroundColor
-            If This.FormatBorderColor Then LabelTarget.BorderColor = This.ErrorBorderColor
-            If This.FormatFontBold Then LabelTarget.Font.Bold = This.ErrorFontBold
-            If This.FormatForeColor Then LabelTarget.ForeColor = This.ErrorForeColor
-            If This.TargetOnlyVisibleOnError Then LabelTarget.Caption = Message
-            This.Applied = True
+            If this.FormatBackgroundColor Then LabelTarget.BackColor = this.ErrorBackgroundColor
+            If this.FormatBorderColor Then LabelTarget.BorderColor = this.ErrorBorderColor
+            If this.FormatFontBold Then LabelTarget.Font.Bold = this.ErrorFontBold
+            If this.FormatForeColor Then LabelTarget.ForeColor = this.ErrorForeColor
+            If this.TargetOnlyVisibleOnError Then LabelTarget.Caption = Message
+            this.Applied = True
             
         Case TypeOf Target Is MSForms.Frame
             Dim FrameTarget As MSForms.Frame
             Set FrameTarget = Target
-            If This.FormatBackgroundColor Then FrameTarget.BackColor = This.ErrorBackgroundColor
-            If This.FormatBorderColor Then FrameTarget.BorderColor = This.ErrorBorderColor
-            If This.FormatFontBold Then FrameTarget.Font.Bold = This.ErrorFontBold
-            If This.FormatForeColor Then FrameTarget.ForeColor = This.ErrorForeColor
-            This.Applied = True
+            If this.FormatBackgroundColor Then FrameTarget.BackColor = this.ErrorBackgroundColor
+            If this.FormatBorderColor Then FrameTarget.BorderColor = this.ErrorBorderColor
+            If this.FormatFontBold Then FrameTarget.Font.Bold = this.ErrorFontBold
+            If this.FormatForeColor Then FrameTarget.ForeColor = this.ErrorForeColor
+            this.Applied = True
             
         Case TypeOf Target Is MSForms.Image
             Dim ImageTarget As MSForms.Image
             Set ImageTarget = Target
-            If This.FormatBackgroundColor Then ImageTarget.BackColor = This.ErrorBackgroundColor
-            If This.FormatBorderColor Then ImageTarget.BorderColor = This.ErrorBorderColor
-            This.Applied = True
+            If this.FormatBackgroundColor Then ImageTarget.BackColor = this.ErrorBackgroundColor
+            If this.FormatBorderColor Then ImageTarget.BorderColor = this.ErrorBorderColor
+            this.Applied = True
             
         Case TypeOf Target Is Excel.Range
             Dim RangeTarget As Excel.Range
             Set RangeTarget = Target
-            If This.FormatBackgroundColor Then RangeTarget.Interior.Color = This.ErrorBackgroundColor
-            If This.FormatBorderColor Then
-                RangeTarget.Borders.Color = This.ErrorBorderColor
-                RangeTarget.Borders.Weight = This.ErrorBorderWidth
+            If this.FormatBackgroundColor Then RangeTarget.Interior.Color = this.ErrorBackgroundColor
+            If this.FormatBorderColor Then
+                RangeTarget.Borders.Color = this.ErrorBorderColor
+                RangeTarget.Borders.Weight = this.ErrorBorderWidth
             End If
-            If This.FormatFontBold Then RangeTarget.Font.Bold = This.ErrorFontBold
-            If This.FormatForeColor Then RangeTarget.Font.Color = This.ErrorForeColor
+            If this.FormatFontBold Then RangeTarget.Font.Bold = this.ErrorFontBold
+            If this.FormatForeColor Then RangeTarget.Font.Color = this.ErrorForeColor
     
     End Select
     
-    If This.TargetOnlyVisibleOnError And Not Control Is Nothing Then
-        Control.Visible = This.Applied
+    If this.TargetOnlyVisibleOnError And Not Control Is Nothing Then
+        Control.Visible = this.Applied
     End If
 
 End Sub
 
 
 Private Sub IValidationErrorFormatter_Restore(ByVal Target As Object)
-    If Not This.Applied Then Exit Sub
+    If Not this.Applied Then Exit Sub
     
     If TypeOf Target Is MSForms.Control Then
         Dim Control As MSForms.Control
@@ -289,64 +289,64 @@ Private Sub IValidationErrorFormatter_Restore(ByVal Target As Object)
         Case TypeOf Target Is MSForms.TextBox
             Dim TextBoxTarget As MSForms.TextBox
             Set TextBoxTarget = Target
-            If This.FormatBackgroundColor Then TextBoxTarget.BackColor = This.InitialBackgroundColor
-            If This.FormatBorderColor Then TextBoxTarget.BorderColor = This.InitialBorderColor
-            If This.FormatFontBold Then TextBoxTarget.Font.Bold = This.InitialFontBold
-            If This.FormatForeColor Then TextBoxTarget.ForeColor = This.InitialForeColor
+            If this.FormatBackgroundColor Then TextBoxTarget.BackColor = this.InitialBackgroundColor
+            If this.FormatBorderColor Then TextBoxTarget.BorderColor = this.InitialBorderColor
+            If this.FormatFontBold Then TextBoxTarget.Font.Bold = this.InitialFontBold
+            If this.FormatForeColor Then TextBoxTarget.ForeColor = this.InitialForeColor
             
-            This.Applied = False
+            this.Applied = False
             
         Case TypeOf Target Is MSForms.CheckBox 'NOTE: MSForms.OptionButton also matches this interface
             Dim CheckBoxTarget As MSForms.CheckBox
             Set CheckBoxTarget = Target
-            If This.FormatFontBold Then CheckBoxTarget.Font.Bold = This.InitialFontBold
-            If This.FormatForeColor Then CheckBoxTarget.ForeColor = This.InitialForeColor
+            If this.FormatFontBold Then CheckBoxTarget.Font.Bold = this.InitialFontBold
+            If this.FormatForeColor Then CheckBoxTarget.ForeColor = this.InitialForeColor
             
-            This.Applied = False
+            this.Applied = False
             
         Case TypeOf Target Is MSForms.Label
             Dim LabelTarget As MSForms.Label
             Set LabelTarget = Target
-            If This.FormatBackgroundColor Then LabelTarget.BackColor = This.InitialBackgroundColor
-            If This.FormatBorderColor Then LabelTarget.BorderColor = This.InitialBorderColor
-            If This.FormatFontBold Then LabelTarget.Font.Bold = This.InitialFontBold
-            If This.FormatForeColor Then LabelTarget.ForeColor = This.InitialForeColor
+            If this.FormatBackgroundColor Then LabelTarget.BackColor = this.InitialBackgroundColor
+            If this.FormatBorderColor Then LabelTarget.BorderColor = this.InitialBorderColor
+            If this.FormatFontBold Then LabelTarget.Font.Bold = this.InitialFontBold
+            If this.FormatForeColor Then LabelTarget.ForeColor = this.InitialForeColor
             
-            This.Applied = False
+            this.Applied = False
             
         Case TypeOf Target Is MSForms.Frame
             Dim FrameTarget As MSForms.Frame
             Set FrameTarget = Target
-            If This.FormatBackgroundColor Then FrameTarget.BackColor = This.InitialBackgroundColor
-            If This.FormatBorderColor Then FrameTarget.BorderColor = This.InitialBorderColor
-            If This.FormatFontBold Then FrameTarget.Font.Bold = This.InitialFontBold
-            If This.FormatForeColor Then FrameTarget.ForeColor = This.InitialForeColor
+            If this.FormatBackgroundColor Then FrameTarget.BackColor = this.InitialBackgroundColor
+            If this.FormatBorderColor Then FrameTarget.BorderColor = this.InitialBorderColor
+            If this.FormatFontBold Then FrameTarget.Font.Bold = this.InitialFontBold
+            If this.FormatForeColor Then FrameTarget.ForeColor = this.InitialForeColor
         
-            This.Applied = False
+            this.Applied = False
             
         Case TypeOf Target Is MSForms.Image
             Dim ImageTarget As MSForms.Image
             Set ImageTarget = Target
-            If This.FormatBackgroundColor Then ImageTarget.BackColor = This.InitialBackgroundColor
-            If This.FormatBorderColor Then ImageTarget.BorderColor = This.InitialBorderColor
+            If this.FormatBackgroundColor Then ImageTarget.BackColor = this.InitialBackgroundColor
+            If this.FormatBorderColor Then ImageTarget.BorderColor = this.InitialBorderColor
             
-            This.Applied = False
+            this.Applied = False
             
         Case TypeOf Target Is Excel.Range
             Dim RangeTarget As Excel.Range
             Set RangeTarget = Target
-            If This.FormatBackgroundColor Then RangeTarget.Interior.Color = This.InitialBackgroundColor
-            If This.FormatBorderColor Then
-                RangeTarget.Borders.Color = This.InitialBorderColor
-                RangeTarget.Borders.Weight = This.InitialBorderWidth
+            If this.FormatBackgroundColor Then RangeTarget.Interior.Color = this.InitialBackgroundColor
+            If this.FormatBorderColor Then
+                RangeTarget.Borders.Color = this.InitialBorderColor
+                RangeTarget.Borders.Weight = this.InitialBorderWidth
             End If
-            If This.FormatFontBold Then RangeTarget.Font.Bold = This.InitialFontBold
-            If This.FormatForeColor Then RangeTarget.Font.Color = This.InitialForeColor
+            If this.FormatFontBold Then RangeTarget.Font.Bold = this.InitialFontBold
+            If this.FormatForeColor Then RangeTarget.Font.Color = this.InitialForeColor
             
     End Select
 
-    If This.TargetOnlyVisibleOnError And Not Control Is Nothing Then
-        Control.Visible = This.Applied
+    If this.TargetOnlyVisibleOnError And Not Control Is Nothing Then
+        Control.Visible = this.Applied
     End If
 
 End Sub

@@ -23,22 +23,22 @@ Private Type TManager
 
 End Type
 
-Private This As TManager
+Private this As TManager
 
 Public Property Get Ribbon() As Office.IRibbonUI
-    Set Ribbon = This.Ribbon
+    Set Ribbon = this.Ribbon
 End Property
 
 Public Property Set Ribbon(ByVal RHS As Office.IRibbonUI)
-    Set This.Ribbon = RHS
+    Set this.Ribbon = RHS
 End Property
 
 Public Property Get AppVersion() As Long
-    AppVersion = ThisWorkbook.Names("PRICEAPPROVAL_APPVERSION").RefersToRange.Value
+    AppVersion = ThisWorkbook.Names("MVVM_PRICEAPPROVAL_APPVERSION").RefersToRange.Value
 End Property
 
 Public Property Get Invalidated() As Boolean
-    Invalidated = This.Invalidated
+    Invalidated = this.Invalidated
 End Property
 
 Public Function Create(ByVal RibbonUI As Office.IRibbonUI) As IRibbon
@@ -58,7 +58,7 @@ Public Function Self() As IRibbon
 End Function
 
 Private Sub Class_Terminate()
-    Set This.Ribbon = Nothing
+    Set this.Ribbon = Nothing
     #If LateBind Then
         Debug.Print TypeName(Me) & " is terminating"
     #End If
@@ -66,7 +66,7 @@ End Sub
 
 Private Sub IRibbon_Invalidate()
     Ribbon.Invalidate
-    This.Invalidated = True
+    this.Invalidated = True
 End Sub
 
 '@Description "Determine the text to go along with your Tab, Groups, and Buttons"
@@ -75,13 +75,13 @@ Attribute IRibbon_GetLabel.VB_Description = "Determine the text to go along with
 
     Select Case Identifier
     
-    Case Is = "PriceApprovalTab": outLabel = "Price Approval"
-    Case Is = "PriceApprovalGroupA": outLabel = "Support"
+    Case Is = "MVVM_PriceApprovalTab": outLabel = "Price Approval MVVM"
+    Case Is = "MVVM_PriceApprovalGroupA": outLabel = "Support"
     Case Is = "ButtonA_01": outLabel = "Send Feedback"
     Case Is = "LabelA_01": outLabel = "App. Version: " & AppVersion
     Case Is = "ButtonA_02": outLabel = "Check for Updates"
     
-    Case Is = "PriceApprovalGroupB": outLabel = "Application"
+    Case Is = "MVVM_PriceApprovalGroupB": outLabel = "Application"
     Case Is = "ButtonB_01": outLabel = "User Guide"
     Case Is = "ButtonB_02": outLabel = "Price Manager"
 
@@ -107,7 +107,7 @@ Attribute IRibbon_OnAction.VB_Description = "Tell each button which macro subrou
         
         'Support
         Case Is = "ButtonA_01": EmailServices.EmailFeedback
-        Case Is = "ButtonA_02": MsgBox "Not Implementd", vbInformation, SIGN
+        Case Is = "ButtonA_02": UpdateResolver.ManualUpdate
         
         'Application
         Case Is = "ButtonB_01": MsgBox "Not Implementd", vbInformation, SIGN
@@ -188,13 +188,13 @@ Attribute IRibbon_IsVisible.VB_Description = "Show/Hide buttons based on how man
 
     Select Case Control.ID
     
-    Case Is = "PriceApprovalTab": outBoolean = True
-    Case Is = "PriceApprovalGroupA": outBoolean = True
+    Case Is = "MVVM_PriceApprovalTab": outBoolean = True
+    Case Is = "MVVM_PriceApprovalGroupA": outBoolean = True
     Case Is = "ButtonA_01": outBoolean = True
     Case Is = "LabelA_01": outBoolean = True
     Case Is = "ButtonA_02": outBoolean = True
     
-    Case Is = "PriceApprovalGroupB": outBoolean = True
+    Case Is = "MVVM_PriceApprovalGroupB": outBoolean = True
     Case Is = "ButtonB_01": outBoolean = True
     Case Is = "ButtonB_02": outBoolean = True
     
