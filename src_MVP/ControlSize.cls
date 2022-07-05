@@ -15,21 +15,21 @@ Private Type TControlSize
     Width As Single
 End Type
 
-Private This As TControlSize
+Private this As TControlSize
 
 Public Property Get Height() As Single
-    Height = This.Height
+    Height = this.Height
 End Property
 
 Public Property Let Height(ByVal Height As Single)
-    This.Height = Height
+    this.Height = Height
 End Property
 
 Public Property Get Width() As Single
-    Width = This.Width
+    Width = this.Width
 End Property
 
 Public Property Let Width(ByVal Width As Single)
-    This.Width = Width
+    this.Width = Width
 End Property
 

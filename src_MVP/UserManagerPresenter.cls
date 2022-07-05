@@ -33,16 +33,16 @@ Private Type TUserManagerComponents
     Model As UserManagerModel
 End Type
 
-Private This As TUserManagerComponents
+Private this As TUserManagerComponents
 
 '-------------------------------------------------------------------------
 
 Private Property Get Model() As UserManagerModel
-    Set Model = This.Model
+    Set Model = this.Model
 End Property
 
 Private Property Set Model(ByVal vNewValue As UserManagerModel)
-    Set This.Model = vNewValue
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------

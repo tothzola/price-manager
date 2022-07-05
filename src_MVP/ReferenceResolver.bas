@@ -180,7 +180,7 @@ End Sub
 
 
 '@Ignore ProcedureNotUsed
-Public Sub PrintAllReferences(ByVal project As Object) ' "ReferenceResolver.PrintAllReferences VBAWorkbook.VBProject" <- run to get values in Debug window
+Public Sub PrintAllReferences(ByVal project As Object) ' "ReferenceResolver.PrintAllReferences thisworkbook.VBProject" <- run to get values in Debug window
     Dim ref As Object
     For Each ref In project.References
         If Not ref.BuiltIn Then

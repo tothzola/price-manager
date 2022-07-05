@@ -31,16 +31,16 @@ Private Type TDataFormComponents
     Model As DataFormModel
 End Type
 
-Private This As TDataFormComponents
+Private this As TDataFormComponents
 
 '-------------------------------------------------------------------------
 
 Private Property Get Model() As DataFormModel
-    Set Model = This.Model
+    Set Model = this.Model
 End Property
 
 Private Property Set Model(ByVal vNewValue As DataFormModel)
-    Set This.Model = vNewValue
+    Set this.Model = vNewValue
 End Property
 
 '-------------------------------------------------------------------------

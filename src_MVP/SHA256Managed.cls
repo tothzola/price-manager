@@ -22,7 +22,7 @@ Private Type TSHA256Managed
     Disposed As Boolean
 End Type
 
-Private This As TSHA256Managed
+Private this As TSHA256Managed
 
 '@Description("Factory method creates and returns a new instance of this class.")
 Public Function Create() As IHashAlgorithm
@@ -31,7 +31,7 @@ Attribute Create.VB_Description = "Factory method creates and returns a new inst
 End Function
 
 Private Sub Class_Initialize()
-    Set This.Base = New HashAlgorithmBase
+    Set this.Base = New HashAlgorithmBase
 End Sub
 
 Private Function IHashAlgorithm_ComputeHash(ByVal Value As String) As String
@@ -44,23 +44,23 @@ Private Function IHashAlgorithm_ComputeHash(ByVal Value As String) As String
     Dim buffer() As Byte
     buffer = Algo.ComputeHash_2(bytes)
         
-    IHashAlgorithm_ComputeHash = This.Base.ToHexString(buffer)
+    IHashAlgorithm_ComputeHash = this.Base.ToHexString(buffer)
     
 End Function
 
 Private Sub Dispose()
 
-    If This.Disposed Then
+    If this.Disposed Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " instance was already disposed."
         Exit Sub
     End If
 
-    If Not This.Base Is Nothing Then
-        Disposable.TryDispose This.Base
-        Set This.Base = Nothing
+    If Not this.Base Is Nothing Then
+        Disposable.TryDispose this.Base
+        Set this.Base = Nothing
     End If
     
-    This.Disposed = True
+    this.Disposed = True
     
     #If TestMode Then
         LogManager.Log InfoLevel, VBA.Information.TypeName(Me) & " is terminating"
@@ -69,7 +69,7 @@ Private Sub Dispose()
 End Sub
 
 Private Sub Class_Terminate()
-    If Not This.Disposed Then Dispose
+    If Not this.Disposed Then Dispose
 End Sub
 
 Private Sub IDisposable_Dispose()
