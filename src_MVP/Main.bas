@@ -1,5 +1,5 @@
 Attribute VB_Name = "Main"
-'@Folder("PAMXLAM")
+'@Folder("Main")
 Option Explicit
 Option Private Module
 
@@ -27,22 +27,21 @@ End Sub
 
 Private Sub OpenApplication(ByVal Progress As ProgressIndicator)
 
-    Progress.Update 30, "Application State ..."
     Dim context As IAppContext
     Set context = AppContext.Create
     
-    Progress.Update 50, "Validating Data ..."
+    Progress.Update 30, "Validating Data ..."
     If Not context.IsRepositoryReachable Then GoTo CleanExit
     
-    Progress.Update 60, "Loading Model ..."
+    Progress.Update 40, "Loading Model ..."
     Dim Model As AppModel
     Set Model = AppModel.Create(context)
     
-    Progress.Update 70, "Building View ..."
+    Progress.Update 50, "Building View ..."
     Dim View As IView
     Set View = PriceApprovalView.Create(Model)
     
-    Progress.Update 80, "Opening App ..."
+    Progress.Update 70, "Opening App ..."
     Set Presenter = AppPresenter.Create(context, Model, View)
     
     Progress.Update 100, "Application Status = OK"

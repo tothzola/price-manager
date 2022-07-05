@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder("AppObjects.Model.LoginForm")
+'@Folder("MVP.Model.LoginForm")
 Option Explicit
 
 '-------------------------------------------------------------------------
@@ -67,8 +67,8 @@ End Property
 
 '-------------------------------------------------------------------------
 
-Public Property Get UserType() As String
-    UserType = Me.usersData(Me.TargetIndex, UsersTableFields.COL_userType)
+Public Property Get userType() As String
+    userType = Me.usersData(Me.TargetIndex, UsersTableFields.COL_userType)
 End Property
 
 '-------------------------------------------------------------------------

@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Option Explicit
 
-'@Folder("AppObjects.Model")
+'@Folder("MVP.Model")
 '@Exposed
 '@Interface
 

@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'@Folder("AppObjects.Services")
+'@Folder("MVP.Services")
 Option Explicit
 
 'This Document Generator Class is designed for the reports where we have to _

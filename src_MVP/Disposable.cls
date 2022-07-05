@@ -11,7 +11,7 @@ Attribute VB_Description = "An object that encapsulates the necessary casting op
 Attribute VB_Ext_KEY = "Rubberduck" ,"Predeclared Class Module"
 '@ModuleAttribute VB_Ext_KEY, "Rubberduck", "Predeclared Class Module"
 '@ModuleDescription "An object that encapsulates the necessary casting operation to invoke IDisposable.Dispose."
-'@Folder("AppObjects.Model")
+'@Folder("MVP.Model")
 '@PredeclaredId
 '@Exposed
 'Copyright (c) 2020 Mathieu Guindon

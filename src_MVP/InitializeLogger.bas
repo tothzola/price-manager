@@ -3,8 +3,8 @@ Attribute VB_Name = "InitializeLogger"
 Option Explicit
 Option Private Module
     
-Public Const LOGGER_NAME As String = "PriceApprovalManagerLogger"
-Private Const LOGFILE As String = "PriceApprovalManagerLogger.log"
+Public Const LOGGER_NAME As String = "PriceApprovalLogger"
+Private Const LOGFILE As String = "PriceApprovalLogger.log"
 
 '@EntryPoint
 Public Sub InitLogger()

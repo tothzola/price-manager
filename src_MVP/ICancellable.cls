@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Attribute VB_Description = "Describes an object that encapsulates 'IsCancelled' state."
 '@ModuleDescription "Describes an object that encapsulates 'IsCancelled' state."
-'@Folder("AppObjects.View")
+'@Folder("MVP.View")
 '@Interface
 '@Exposed
 Option Explicit

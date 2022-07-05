@@ -5,18 +5,29 @@ Attribute VB_Description = "Internal methods used to configure this addin on sta
 Option Explicit
 Option Private Module
 
-Public Const APP_NAME As String = "PriceApprovalManager"
+Public Const APP_NAME As String = "PriceApproval_MVP"
 Public Const APP_ADDIN_NAME As String = APP_NAME & ".xlam"
+
+Public Const DEVELOPER_ZOLTAN As String = "Toth, Zoltan"
+Public Const DEVELOPER_KAMAL As String = "Bharakhda, Kamal"
+
+Public Const DEVELOPER_NAME As String = "Developer Name"
+Public Const DEVELOPER_EMAIL As String = "developer@Email.com"
 
 '@EntryPoint
 Public Function CheckReferenceCompatibility() As Boolean
 
-    Dim result As Boolean
-    
     On Error GoTo CleanFail
     
-    If Not IsValidApplicationFileName(ThisWorkbook.Name, APP_ADDIN_NAME) And _
-        Not ReferenceResolver.TryAddDllReferences(dllReference:= _
+    Dim result As Boolean
+    
+    If Not IsValidApplicationFileName(ThisWorkbook.Name, APP_ADDIN_NAME) Then
+        ExitApp
+    Else
+        result = True
+    End If
+    
+    If Not ReferenceResolver.TryAddDllReferences(dllReference:= _
                                                  CommonDllVbProjectReference.AdoDbRef + _
                                                  CommonDllVbProjectReference.AdoDDlExtRef + _
                                                  CommonDllVbProjectReference.ScriptingRuntimeRef + _
@@ -27,7 +38,7 @@ Public Function CheckReferenceCompatibility() As Boolean
                                                  CommonDllVbProjectReference.Outlook) _
         Then
         
-        ReferenceResolver.DisplayReferenceError "Developer", "Developer E-mail"
+        ReferenceResolver.DisplayReferenceError DEVELOPER_NAME, DEVELOPER_EMAIL
         ExitApp
     Else
         result = True
@@ -60,7 +71,7 @@ Public Function IsValidApplicationFileName(ByVal currentApplicationFileName As S
                "Clicking 'Okay' will automatically exit this application. " & _
                "Once closed, you MUST restore the name " & _
                "to the one mentioned above.", _
-               vbCritical, "Error: Unauthorized Name Change"
+               vbCritical, SIGN & " - Error: Unauthorized Name Change"
 
     End If
     
@@ -71,19 +82,13 @@ End Function
 Public Sub ExitApp()
 
     Dim isDevelopers As Boolean
-    If Application.UserName = "Zoltan, Toth" Or "Bharakhda, Kamal" Then
-        isDevelopers = True
-        MsgBox "Application is in development mode closeing app cancelled."
-    End If
+    isDevelopers = (Application.UserName = DEVELOPER_ZOLTAN) Or (Application.UserName = DEVELOPER_KAMAL)
     
-    If Not isDevelopers Then
-        If Application.Workbooks.Count = 1 Then
-            Application.EnableEvents = False     'this will reset itself when Excel is opened again
-            Application.Quit
-        Else
-            ThisWorkbook.Saved = True
-            ThisWorkbook.Close
-        End If
+    If isDevelopers Then
+        MsgBox "Application is opened by Developers." & vbNewLine & "App Autoclose cancelled.", vbInformation, SIGN
+    Else
+        ThisWorkbook.Saved = True
+        ThisWorkbook.Close
     End If
     
 End Sub
@@ -92,7 +97,7 @@ Private Sub ManageApplicationStartupError()
     MsgBox "Application StartUp Error" & VBA.Constants.vbNewLine & VBA.Constants.vbNewLine & _
            "An error occured while this application was attempting to load. " & _
            "If this issue persists, please contact the developer of this project. " & VBA.Constants.vbNewLine & VBA.Constants.vbNewLine & _
-           "This application will now exit.", vbCritical, VBA.Constants.vbNullString
+           "This application will now exit.", vbCritical, SIGN
            
     ExitApp
 End Sub

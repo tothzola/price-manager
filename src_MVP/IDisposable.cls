@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Attribute VB_Description = "Represents an object that can be (or must be) explicitly terminated."
 '@ModuleDescription "Represents an object that can be (or must be) explicitly terminated."
-'@Folder("AppObjects.Model")
+'@Folder("MVP.Model")
 '@Interface
 '@Exposed
 'Copyright (c) 2020 Mathieu Guindon

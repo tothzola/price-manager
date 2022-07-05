@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-'@Folder("AppObjects.Services")
+'@Folder("MVP.Services")
 '@PredeclaredId
 Option Explicit
 

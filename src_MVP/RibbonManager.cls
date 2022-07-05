@@ -34,7 +34,7 @@ Public Property Set Ribbon(ByVal RHS As Office.IRibbonUI)
 End Property
 
 Public Property Get AppVersion() As Long
-    AppVersion = ThisWorkbook.Names("PAM_AppVersion").RefersToRange.Value
+    AppVersion = ThisWorkbook.Names("PRICEAPPROVAL_APPVERSION").RefersToRange.Value
 End Property
 
 Public Property Get Invalidated() As Boolean

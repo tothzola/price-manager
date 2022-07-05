@@ -44,6 +44,8 @@ Attribute PriceApprovalInvalidateRibbon.VB_Description = "Ribbon Invalidate & Re
 
     On Error GoTo CleanFail
     
+    If Not ReferenceCheck.CheckReferenceCompatibility Then Exit Sub
+    
     If Ribbon Is Nothing Then
         Dim WeakRibbon As Office.IRibbonUI
         Set WeakRibbon = WeakReference.Ribbon

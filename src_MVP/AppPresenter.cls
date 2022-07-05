@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '@ModuleAttribute VB_Ext_KEY, "Rubberduck", "Predeclared Class Module"
-'@Folder("AppObjects.Presenter")
+'@Folder("MVP.Presenter")
 '@PredeclaredId
 Option Explicit
 
@@ -319,7 +319,7 @@ Private Sub PresenterUserManagerFrame_AddNewUserFromUserManagerForm(ByVal TypeOf
         
         context.UserService.AddNewRecordToContextTable Model.GetNewID(TablesOfThisApplication.TABLE_USERS), _
         .userStatus, _
-        .UserType, _
+        .userType, _
         .UserName, _
         .userPassword, _
         .userEmail
@@ -345,7 +345,7 @@ Private Sub PresenterUserManagerFrame_UpdateUserFromUserManagerForm(ByVal TypeOf
             context.UserService.UpdateRecordOfContextTable .userIndex, _
                 .userID, _
                 .userStatus, _
-                .UserType, _
+                .userType, _
                 .UserName, _
                 .userPassword, _
                 .userEmail

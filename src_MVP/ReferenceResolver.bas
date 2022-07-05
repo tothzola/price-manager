@@ -24,7 +24,10 @@ Public Const REFERENCE_EXISTS_ERROR_NUMBER As Long = 32813
 Private Const DEBUG_REFERENCE_SEPARATOR As String = "--------------------------------------------------------------------------" & VBA.Constants.vbNewLine
 
 Public Function TryAddDllReferences(ByVal dllReference As CommonDllVbProjectReference) As Boolean
+
     Dim result As Boolean
+    
+    If Not IsTrustVbaSet Then Exit Function
     
     'OLE Automation
     If EnumHasFlag(dllReference, CommonDllVbProjectReference.VbScriptRegExpRef) _
@@ -106,18 +109,75 @@ Public Function TryAddDllReference(ByVal GUID As String, ByVal majorVersion As L
     ThisWorkbook.VBProject.References.AddFromGuid GUID, majorVersion, minorVersion
     TryAddDllReference = ((VBA.Information.Err.Number = REFERENCE_EXISTS_ERROR_NUMBER) Or (VBA.Information.Err.Number = 0))
     On Error GoTo 0
+
 End Function
 
 Public Sub DisplayReferenceError(ByVal developerName As String, ByVal developerEmailAddress As String)
     MsgBox "An error occured while attempting to add External reference(s) required " & _
-           "for this Application." & VBA.Constants.vbNewLine & VBA.Constants.vbNewLine & _
-           "Please contact " & developerName & " at " & developerEmailAddress, _
-           vbCritical, VBA.Constants.vbNullString
+           "for this Application or Trust access to the VBA project object model is not set." & VBA.Constants.vbNewLine & VBA.Constants.vbNewLine & _
+           "Please contact " & developerName & " at " & developerEmailAddress, vbCritical, SIGN
 End Sub
 
 Private Function EnumHasFlag(ByVal flagsOrDefault As Long, ByVal searchFlag As Long) As Boolean
     EnumHasFlag = ((flagsOrDefault And searchFlag) = searchFlag)
 End Function
+
+Private Function IsTrustVbaSet() As Boolean
+
+    Dim abort As Boolean
+    Do Until CheckIfTrusted(abort)
+        If abort Then Exit Do
+    Loop
+    IsTrustVbaSet = Not abort
+    
+End Function
+
+Private Function CheckIfTrusted(ByRef abort As Boolean) As Boolean
+    
+    On Error Resume Next
+    Dim result As Boolean
+    result = (ThisWorkbook.VBProject.VBE.VBProjects.Count) > 0
+    On Error GoTo 0
+    
+    If Not result Then
+
+        Dim userSelection As Long
+        userSelection = MsgBox( _
+                    Prompt:="Programmatic access to Visual Basic Project is not trusted." & VBA.Constants.vbNewLine & VBA.Constants.vbNewLine & _
+                             "To resolve, Click ""Retry""" & VBA.Constants.vbNewLine & _
+                             "Macro Settings -> Select: ""Enable all macros""" & VBA.Constants.vbNewLine & _
+                             "Developer Macro Settings -> Check: ""Trust access to the VBA project object model""", _
+                             Buttons:=vbOKCancel + vbDefaultButton1 + vbCritical, Title:=SIGN & " - Trust VBA is not set!")
+
+        If userSelection = 1 Then                    'Ok
+            Application.CommandBars.ExecuteMso "MacroSecurity"
+            
+        End If
+        
+        If userSelection = 2 Then                    'Canceled
+            abort = True
+            Exit Function
+        End If
+        
+    End If
+    
+    On Error Resume Next
+    result = (ThisWorkbook.VBProject.VBE.VBProjects.Count) > 0
+    On Error GoTo 0
+    
+    CheckIfTrusted = result
+    
+End Function
+
+'@Ignore ProcedureNotUsed
+Public Sub CheckVBATrustedState()
+    If Not IsTrustVbaSet Then
+        Debug.Print "VBA 'IS NOT Trusted'"
+    Else
+        Debug.Print "VBA 'IS Trusted'"
+    End If
+End Sub
+
 
 '@Ignore ProcedureNotUsed
 Public Sub PrintAllReferences(ByVal project As Object) ' "ReferenceResolver.PrintAllReferences VBAWorkbook.VBProject" <- run to get values in Debug window
