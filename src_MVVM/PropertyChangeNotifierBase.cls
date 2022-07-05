@@ -18,23 +18,23 @@ Implements IDisposable
 Private Type TState
     Handlers As Collection
 End Type
-Private This As TState
+Private this As TState
 
 Private Sub Class_Initialize()
-    Set This.Handlers = New Collection
+    Set this.Handlers = New Collection
 End Sub
 
 Private Sub IDisposable_Dispose()
-    Set This.Handlers = Nothing
+    Set this.Handlers = Nothing
 End Sub
 
 Private Sub INotifyPropertyChanged_OnPropertyChanged(ByVal Source As Object, ByVal PropertyName As String)
     Dim Handler As IHandlePropertyChanged
-    For Each Handler In This.Handlers
+    For Each Handler In this.Handlers
         Handler.HandlePropertyChanged Source, PropertyName
     Next
 End Sub
 
 Private Sub INotifyPropertyChanged_RegisterHandler(ByVal Handler As IHandlePropertyChanged)
-    This.Handlers.Add Handler
+    this.Handlers.Add Handler
 End Sub

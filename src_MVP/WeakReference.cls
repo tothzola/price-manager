@@ -35,14 +35,14 @@ Private Type TReference
     
 End Type
 
-Private This As TReference
+Private this As TReference
 
 '@Description("Default instance factory method.")
 Public Function Create(ByVal Instance As Object) As IWeakReference
 Attribute Create.VB_Description = "Default instance factory method."
 
     With New WeakReference
-        .WorkbookPointer.Add Name:="PRICEAPPROVAL_RIBBONPOINTER", RefersTo:=VBA.ObjPtr(Instance)
+        .WorkbookPointer.Add Name:="MVP_PRICEAPPROVAL_RIBBONPOINTER", RefersTo:=VBA.ObjPtr(Instance)
         
         ThisWorkbook.Saved = True
 
@@ -70,9 +70,9 @@ Private Property Get IWeakReference_Ribbon() As Object
     On Error GoTo CleanFail
     
     #If VBA7 Then
-        This.Pointer = CLngPtr(VBA.Strings.Replace(WorkbookPointer.Item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
+        this.Pointer = CLngPtr(VBA.Strings.Replace(WorkbookPointer.Item("MVP_PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
     #Else
-        This.Pointer = CLng(VBA.Strings.Replace(WorkbookPointer.Item("PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
+        this.Pointer = CLng(VBA.Strings.Replace(WorkbookPointer.Item("MVP_PRICEAPPROVAL_RIBBONPOINTER").Value, "=", VBA.Constants.vbNullString))
     #End If
     
     #If VBA7 Then
@@ -81,10 +81,10 @@ Private Property Get IWeakReference_Ribbon() As Object
         Dim pointerSize As Long
     #End If
     
-    pointerSize = VBA.Strings.LenB(This.Pointer)
+    pointerSize = VBA.Strings.LenB(this.Pointer)
     
     Dim obj As Object
-    CopyMemory obj, This.Pointer, pointerSize
+    CopyMemory obj, this.Pointer, pointerSize
     
     Set IWeakReference_Ribbon = obj
     CopyMemory obj, 0&, pointerSize

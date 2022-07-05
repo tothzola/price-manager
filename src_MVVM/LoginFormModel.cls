@@ -23,46 +23,46 @@ Private Type TLoginFormModelComponents
     
 End Type
 
-Private This As TLoginFormModelComponents
+Private this As TLoginFormModelComponents
 
 '-------------------------------------------------------------------------
 
 Public Property Get usersData() As Variant
-    usersData = This.usersData
+    usersData = this.usersData
 End Property
 
 Public Property Let usersData(ByVal vNewValue As Variant)
-    This.usersData = vNewValue
+    this.usersData = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get UserName() As String
-    UserName = This.UserName
+    UserName = this.UserName
 End Property
 
 Public Property Let UserName(ByVal vNewValue As String)
-    This.UserName = vNewValue
+    this.UserName = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get Password() As String
-    Password = This.Password
+    Password = this.Password
 End Property
 
 Public Property Let Password(ByVal vNewValue As String)
-    This.Password = vNewValue
+    this.Password = vNewValue
 End Property
 
 '-------------------------------------------------------------------------
 
 Public Property Get TargetIndex() As Long
-    TargetIndex = This.TargetIndex
+    TargetIndex = this.TargetIndex
 End Property
 
 Public Property Let TargetIndex(ByVal vNewValue As Long)
-    This.TargetIndex = vNewValue
+    this.TargetIndex = vNewValue
 End Property
 
 '-------------------------------------------------------------------------

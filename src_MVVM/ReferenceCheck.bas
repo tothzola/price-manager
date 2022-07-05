@@ -34,6 +34,7 @@ Public Function CheckReferenceCompatibility() As Boolean
                                                  CommonDllVbProjectReference.VbScriptRegExpRef + _
                                                  CommonDllVbProjectReference.MSForms + _
                                                  CommonDllVbProjectReference.MSOffice + _
+                                                 CommonDllVbProjectReference.MSXML + _
                                                  CommonDllVbProjectReference.RefEdit + _
                                                  CommonDllVbProjectReference.Outlook) _
         Then

@@ -19,7 +19,7 @@ Private Type TAppMethods
     Algo As IHashAlgorithm
 End Type
 
-Private This As TAppMethods
+Private this As TAppMethods
 
 '@Ignore ProcedureNotUsed
 '@Description("Returns class reference")
@@ -33,18 +33,18 @@ Private Sub Class_Initialize()
 End Sub
 
 Public Property Get ObjRegEx() As Object
-    If This.ObjRegEx Is Nothing Then
-        Set This.ObjRegEx = CreateObject("vbscript.regexp")
+    If this.ObjRegEx Is Nothing Then
+        Set this.ObjRegEx = CreateObject("vbscript.regexp")
     End If
-    Set ObjRegEx = This.ObjRegEx
+    Set ObjRegEx = this.ObjRegEx
     
 End Property
 
 Public Property Get Algo() As IHashAlgorithm
-    If This.Algo Is Nothing Then
-        Set This.Algo = SHA256Managed.Create()
+    If this.Algo Is Nothing Then
+        Set this.Algo = SHA256Managed.Create()
     End If
-    Set Algo = This.Algo
+    Set Algo = this.Algo
     
 End Property
 
@@ -593,6 +593,6 @@ Private Function NumberOfArrayDimensions(Arr As Variant) As Integer
 End Function
 
 Private Sub Class_Terminate()
-    Set This.ObjRegEx = Nothing
-    Disposable.TryDispose This.Algo
+    Set this.ObjRegEx = Nothing
+    Disposable.TryDispose this.Algo
 End Sub

@@ -23,7 +23,7 @@ Private Type TState
     BottomMargin As Double
 End Type
 
-Private This As TState
+Private this As TState
 
 Public Function Create(ByVal Position As RelativePosition, ByVal LeftMargin As Double, Optional ByVal TopMargin As Variant, Optional ByVal RightMargin As Variant, Optional ByVal BottomMargin As Variant) As IDynamicPosition
     'GuardClauses..GuardNonDefaultInstance Me, DynamicControlPosition
@@ -67,35 +67,35 @@ End Function
 Public Property Get Margin(ByVal Side As MarginSide) As Double
     Select Case Side
         Case MarginSide.BottomSide
-            Margin = This.BottomMargin
+            Margin = this.BottomMargin
         Case MarginSide.LeftSide
-            Margin = This.LeftMargin
+            Margin = this.LeftMargin
         Case MarginSide.RightSide
-            Margin = This.RightMargin
+            Margin = this.RightMargin
         Case MarginSide.TopSide
-            Margin = This.TopMargin
+            Margin = this.TopMargin
     End Select
 End Property
 
 Friend Property Let Margin(ByVal Side As MarginSide, ByVal RHS As Double)
     Select Case Side
         Case MarginSide.BottomSide
-            This.BottomMargin = RHS
+            this.BottomMargin = RHS
         Case MarginSide.LeftSide
-            This.LeftMargin = RHS
+            this.LeftMargin = RHS
         Case MarginSide.RightSide
-            This.RightMargin = RHS
+            this.RightMargin = RHS
         Case MarginSide.TopSide
-            This.TopMargin = RHS
+            this.TopMargin = RHS
     End Select
 End Property
 
 Public Property Get Position() As RelativePosition
-    Position = This.Position
+    Position = this.Position
 End Property
 
 Friend Property Let Position(ByVal RHS As RelativePosition)
-    This.Position = RHS
+    this.Position = RHS
 End Property
 
 Private Property Get IDynamicPosition_Margin(ByVal Side As MarginSide) As Double
@@ -103,5 +103,5 @@ Private Property Get IDynamicPosition_Margin(ByVal Side As MarginSide) As Double
 End Property
 
 Private Property Get IDynamicPosition_Position() As RelativePosition
-    IDynamicPosition_Position = This.Position
+    IDynamicPosition_Position = this.Position
 End Property
