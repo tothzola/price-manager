@@ -117,7 +117,7 @@ CleanExit:
     
 CleanFail:
     If Err.Description Like "Access is denied*" Then
-        MsgBox "Could not acces version information!", vbExclamation + vbOKOnly, SIGN
+        'MsgBox "Could not acces version information!", vbExclamation + vbOKOnly, SIGN
     End If
     Resume CleanExit
     Resume
