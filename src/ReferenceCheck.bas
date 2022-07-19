@@ -1,27 +1,35 @@
 Attribute VB_Name = "ReferenceCheck"
 Attribute VB_Description = "Internal methods used to configure this addin on startup."
-'@Folder("System.Settings")
+'@Folder("System.Reference")
 '@ModuleDescription("Internal methods used to configure this addin on startup.")
 Option Explicit
-Option Private Module
 
-Public Const APP_NAME As String = "PriceApproval_MVP"
-Public Const APP_ADDIN_NAME As String = APP_NAME & ".xlam"
+'*******************************************************************************
+'Allows developer to save if the shift is pressed
+#If VBA7 Then
+    Private Declare PtrSafe Function GetKeyState Lib "user32" (ByVal vKey As Long) As Long
+#Else
+    Private Declare Function GetKeyState Lib "user32" (ByVal vKey As Long) As Long
+#End If
 
-Public Const DEVELOPER_ZOLTAN As String = "Toth, Zoltan"
+Public DoSave As Boolean
+
 Public Const DEVELOPER_KAMAL As String = "Bharakhda, Kamal"
 
-Public Const DEVELOPER_NAME As String = "Developer Name"
-Public Const DEVELOPER_EMAIL As String = "developer@Email.com"
+Public Const DEVELOPER_NAME As String = "Toth, Zoltan"
+Public Const DEVELOPER_EMAIL As String = "Zoltan.Toth@freudenberg-pm.com"
+
+Private Const KEY_MASK As Long = &HFF80
+Private Const SHIFT_KEY As Long = &H10
 
 '@EntryPoint
-Public Function CheckReferenceCompatibility() As Boolean
+Public Function SystemCompatibility(ByVal AppName As String) As Boolean
 
     On Error GoTo CleanFail
     
     Dim result As Boolean
     
-    If Not IsValidApplicationFileName(ThisWorkbook.Name, APP_ADDIN_NAME) Then
+    If Not IsValidApplicationFileName(ThisWorkbook.Name, AppName) Then
         ExitApp
     Else
         result = True
@@ -46,7 +54,7 @@ Public Function CheckReferenceCompatibility() As Boolean
     End If
 
 CleanExit:
-    CheckReferenceCompatibility = result
+    SystemCompatibility = result
     Exit Function
 
 CleanFail:
@@ -72,7 +80,7 @@ Public Function IsValidApplicationFileName(ByVal currentApplicationFileName As S
                "Clicking 'Okay' will automatically exit this application. " & _
                "Once closed, you MUST restore the name " & _
                "to the one mentioned above.", _
-               vbCritical, SIGN & " - Error: Unauthorized Name Change"
+               vbCritical, PriceApprovalSignature & " - Error: Unauthorized Name Change"
 
     End If
     
@@ -80,13 +88,38 @@ Public Function IsValidApplicationFileName(ByVal currentApplicationFileName As S
     
 End Function
 
+Public Function AllowWorkbookSave(Optional ByVal warningMessage As String = "In order to preserve the structure of this application, saving has been disabled.") As Boolean
+    
+    If DoSave Then AllowWorkbookSave = DoSave: Exit Function
+    
+    Dim result As Boolean
+    'only allows user to save if they are holding down shift AND they are the admin
+    If CBool(GetKeyState(SHIFT_KEY) And KEY_MASK) Then
+        If IsApplicationDeveloper(DEVELOPER_NAME) Then
+            result = True
+        Else
+            MsgBox warningMessage, vbExclamation + vbOKOnly, "Requires admin privileges"
+            result = False
+        End If
+    Else
+        MsgBox warningMessage, vbExclamation + vbOKOnly, "Requires admin privileges"
+        result = False
+    End If
+    AllowWorkbookSave = result
+    
+End Function
+
+Public Function IsApplicationDeveloper(ByVal expectedDeveloperUserName As String) As Boolean
+    IsApplicationDeveloper = (VBA.UCase$(VBA.Trim$(DEVELOPER_NAME)) = VBA.UCase$(VBA.Trim$(expectedDeveloperUserName)))
+End Function
+
 Public Sub ExitApp()
 
     Dim isDevelopers As Boolean
-    isDevelopers = (Application.UserName = DEVELOPER_ZOLTAN) Or (Application.UserName = DEVELOPER_KAMAL)
+    isDevelopers = (Application.UserName = DEVELOPER_NAME) Or (Application.UserName = DEVELOPER_KAMAL)
     
     If isDevelopers Then
-        MsgBox "Application is opened by Developers." & vbNewLine & "App Autoclose cancelled.", vbInformation, SIGN
+        MsgBox "Application is opened by Developers." & vbNewLine & "App Autoclose cancelled.", vbInformation, APP_SIGNATURE
     Else
         ThisWorkbook.Saved = True
         ThisWorkbook.Close
@@ -98,7 +131,7 @@ Private Sub ManageApplicationStartupError()
     MsgBox "Application StartUp Error" & VBA.Constants.vbNewLine & VBA.Constants.vbNewLine & _
            "An error occured while this application was attempting to load. " & _
            "If this issue persists, please contact the developer of this project. " & VBA.Constants.vbNewLine & VBA.Constants.vbNewLine & _
-           "This application will now exit.", vbCritical, SIGN
+           "This application will now exit.", vbCritical, APP_SIGNATURE
            
     ExitApp
 End Sub

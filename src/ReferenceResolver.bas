@@ -1,6 +1,6 @@
 Attribute VB_Name = "ReferenceResolver"
 Attribute VB_Description = "Internal methods used to resolve commonly used references in a VBproject."
-'@Folder("System.Settings")
+'@Folder("System.Reference")
 '@ModuleDescription("Internal methods used to resolve commonly used references in a VBproject.")
 Option Explicit
 Option Private Module
@@ -115,7 +115,7 @@ End Function
 Public Sub DisplayReferenceError(ByVal developerName As String, ByVal developerEmailAddress As String)
     MsgBox "An error occured while attempting to add External reference(s) required " & _
            "for this Application or Trust access to the VBA project object model is not set." & VBA.Constants.vbNewLine & VBA.Constants.vbNewLine & _
-           "Please contact " & developerName & " at " & developerEmailAddress, vbCritical, SIGN
+           "Please contact " & developerName & " at " & developerEmailAddress, vbCritical, APP_SIGNATURE
 End Sub
 
 Private Function EnumHasFlag(ByVal flagsOrDefault As Long, ByVal searchFlag As Long) As Boolean
@@ -147,7 +147,7 @@ Private Function CheckIfTrusted(ByRef abort As Boolean) As Boolean
                              "To resolve, Click ""Retry""" & VBA.Constants.vbNewLine & _
                              "Macro Settings -> Select: ""Enable all macros""" & VBA.Constants.vbNewLine & _
                              "Developer Macro Settings -> Check: ""Trust access to the VBA project object model""", _
-                             Buttons:=vbOKCancel + vbDefaultButton1 + vbCritical, Title:=SIGN & " - Trust VBA is not set!")
+                             Buttons:=vbOKCancel + vbDefaultButton1 + vbCritical, Title:=APP_SIGNATURE & " - Trust VBA is not set!")
 
         If userSelection = 1 Then                    'Ok
             Application.CommandBars.ExecuteMso "MacroSecurity"

@@ -1,0 +1,66 @@
+<?xml version="1.0" standalone="yes"?>
+<!--Custom Ribbon for Custom Tools -->
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="SystemInitialize.PriceApproval_SystemStartup">
+   <!-- startFromScratch="true" hides all of the Ribbon tabs and it hide the QAT.-->
+   <ribbon startFromScratch="false">
+
+      <tabs>
+         <tab id="PriceApproval_Tab" getLabel="PriceApproval_GetLabel" insertBeforeMso="TabDeveloper" tag="PriceApproval_Tab">
+
+            <group id="PriceApproval_GroupA" getVisible="PriceApproval_GetVisible" getLabel="PriceApproval_GetLabel">
+
+               <button id="ButtonA_01" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <button id="ButtonA_02" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <button id="ButtonA_03" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <button id="ButtonA_04" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <button id="ButtonA_05" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+            </group>
+
+            <group id="PriceApproval_GroupB" getVisible="PriceApproval_GetVisible" getLabel="PriceApproval_GetLabel">
+
+               <button id="ButtonB_01" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <separator id="PriceApproval_GroupB_Seperator_01"/>
+
+               <button id="ButtonB_02" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <separator id="PriceApproval_GroupB_Seperator_02"/>
+
+               <labelControl id="LabelB_03" getLabel="PriceApproval_GetLabel" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible"/>
+
+               <button id="ButtonB_03" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <button id="ButtonB_04" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <button id="ButtonB_05" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+            </group>
+
+            <group id="PriceApproval_GroupC" getVisible="PriceApproval_GetVisible" getLabel="PriceApproval_GetLabel" tag="PriceApproval">
+
+               <button id="ButtonC_01" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <separator id="PriceApproval_GroupC_Seperator_01"/>
+
+               <button id="ButtonC_02" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <separator id="PriceApproval_GroupC_Seperator_02"/>
+
+               <button id="ButtonC_03" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <button id="ButtonC_04" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+               <button id="ButtonC_05" getLabel="PriceApproval_GetLabel" onAction="PriceApproval_OnAction" getImage="PriceApproval_GetImage" getSize="PriceApproval_GetSize" getScreentip="PriceApproval_GetScreentip" getVisible="PriceApproval_GetVisible" tag="PriceApproval"/>
+
+            </group>
+
+         </tab>
+      </tabs>
+
+   </ribbon>
+</customUI>
