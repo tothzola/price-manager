@@ -1,0 +1,8 @@
+﻿'@Folder("System.Ribbon")
+Option Explicit
+
+'@Ignore ParameterCanBeByVal, ParameterNotUsed
+Private Sub Workbook_BeforeClose(ByRef cancel As Boolean)
+    LogManager.UnRegister LOGGER_NAME
+    
+End Sub
