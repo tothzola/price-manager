@@ -11,7 +11,7 @@ Attribute VB_Exposed = False
 '@Folder("PriceApproval.Services")
 Option Explicit
 
-Private Const DEVELOPERS As String = "Zoltan.To@outlook.com;kamal.9328093207@gmail.com"
+Private Const DEVELOPERS As String = "email@email.com"
 
 Private Enum olImportance
     olI_Low = 0

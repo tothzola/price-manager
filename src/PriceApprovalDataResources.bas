@@ -5,11 +5,11 @@ Option Private Module
 
 'Data Tables Structure
 
-Private Const ServerAddress As String = "ec2-54-164-40-66.compute-1.amazonaws.com"
-Private Const PortNumber As Integer = 5432
-Private Const DatabaseName As String = "d34l6r35cqkfjd"
-Private Const UserName As String = "lxfsytloshyamh"
-Private Const Password As String = "6501b05101dba6b4ac0b2f32bbc18b81096f716bfc92343856d01cab6078153f"
+Private Const ServerAddress As String = "ServerAddress.com"
+Private Const PortNumber As Integer = 0
+Private Const DatabaseName As String = "DatabaseName"
+Private Const UserName As String = "UserName"
+Private Const Password As String = "Password"
 
 Public Enum TablesOfThisApplication
     TABLE_MAINRECORDS

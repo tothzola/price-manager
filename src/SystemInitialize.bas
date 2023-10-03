@@ -11,8 +11,8 @@ Private Const APP_NAME As String = "PriceApproval"
 Private Const APP_ADDIN_NAME As String = APP_NAME & ".xlam"
 
 Private Const SHAREPOINT_CONNECTION As String = "<LIST><VIEWGUID>{6925B711-7BC0-4090-AB33-27D9659EDA5C}</VIEWGUID><LISTNAME>{8754B0B5-5710-4FFA-B002-DFD1099CE3D3}</LISTNAME><LISTWEB>" & _
-                                 "https://portal.freudenberg-pm.com/sites/sscbrasov/Masterdata/Masterdata/ZoltanToth/_vti_bin</LISTWEB><LISTSUBWEB></LISTSUBWEB>" & _
-                                 "<ROOTFOLDER>/sites/sscbrasov/Masterdata/Masterdata/ZoltanToth/CommonAddIns</ROOTFOLDER></LIST>"
+                                 "https://sharepoint.site.com/_vti_bin</LISTWEB><LISTSUBWEB></LISTSUBWEB>" & _
+                                 "<ROOTFOLDER>/sites/CommonAddIns</ROOTFOLDER></LIST>"
                                  
 Private Ribbon As Office.IRibbonUI
 
