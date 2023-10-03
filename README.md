@@ -3,13 +3,13 @@
 ## Instaling Add-In and registration
 - To use this Add-In first the PostgreSQL ODCB Driver needs to be installed.
   [ODBC Driver Folder](https://github.com/tothzola/price-manager/tree/main/database/postgreSQL/ODBC%20Drive%20for%20PostgreSQL_Windows_13_02_0000)
-- There is no user registration posibility. Requests to acces can be made under issues.
+- ~~There is no user registration posibility. Requests to acces can be made under issues.~~
 
 # Application Wiki
 
 ## Datamanagement System
 - [DB MS Access](https://github.com/tothzola/price-manager/blob/main/database/databaseAccess/PriceApprovalDatabase.accdb)
-- [DB PostgreSQL](https://heroku.com)
+- ~~[DB PostgreSQL](https://heroku.com)~~
 
 ## Workflow
 ![Price Manager](https://github.com/tothzola/price-manager/blob/main/pictures/PriceApproval_WorkFlow.jpg)
